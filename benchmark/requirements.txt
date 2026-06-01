@@ -12,3 +12,4 @@ mapie>=1.4
 crepes>=0.9
 arch>=8.0
 timemachines>=0.20  # provides skaters (microprediction); optional baseline
+# skaters>=...       # lightweight alt (microprediction/skaters); weaker on the regime break here

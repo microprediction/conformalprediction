@@ -27,8 +27,10 @@ except Exception:
 
 
 def _skater_preds(yraw):
-    """Run a skater (microprediction/timemachines) online over the raw series and return
-    one-step-ahead (mu, sd) aligned so that index t is the forecast of y[t]."""
+    """Run a skater (timemachines.skaters; thinking_fast_and_slow) online over the raw
+    series and return one-step-ahead (mu, sd) aligned so index t is the forecast of y[t].
+    A head-to-head (benchmark/skater_shootout.py) found this widens its predictive sd at
+    volatility breaks faster than the lightweight microprediction/skaters policies."""
     s = {}
     mu = np.full(len(yraw), np.nan); sd = np.full(len(yraw), np.nan)
     for t in range(len(yraw)):

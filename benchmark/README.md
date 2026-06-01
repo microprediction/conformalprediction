@@ -81,14 +81,14 @@ scripts; your CSVs may differ in the last digit by seed.
    conditional coverage come from the quantile model or difficulty estimator it wraps.
 
 3. **A plain probabilistic model is competitive on the proper score and returns a full
-   distribution.** An EWMA-volatility Gaussian has the best non-oracle interval score in
-   the time-series test (6.92) *and* yields CRPS/log-score; crepes CPS, built on a
-   difficulty estimator, gets competitive CRPS (0.90 vs oracle 0.88) precisely because it
-   is doing conditional distribution estimation.
+   distribution.** An EWMA-volatility Gaussian beats the conformal repairs on interval
+   score (6.92 vs ~7.0 for ACI/PID) *and* yields CRPS/log-score; crepes CPS, built on a
+   difficulty estimator, gets competitive CRPS (0.90 vs oracle 0.88) because it is doing
+   conditional distribution estimation.
 
 4. **The essay's own experiment, reproduced.** `skaters` (the author's streaming
    forecaster, via `timemachines`) emits an adaptive predictive mean and sd; it lands at
-   near-oracle CRPS (0.86 vs 0.76) and the second-best non-oracle interval score (6.57).
+   near-oracle CRPS (0.86 vs 0.76) and the best non-oracle interval score (6.57).
    Conformalizing it changes nothing for the better: a fair, adaptive (normalized)
    conformal wrap re-levels coverage to 90% at an essentially identical interval score
    (6.58 vs 6.57), while a naive split-conformal wrap on the drifting series collapses
