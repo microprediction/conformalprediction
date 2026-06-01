@@ -114,7 +114,7 @@ three senses in which it is weaker than advertised. Our contributions are:
   the score coordinate untouched. \emph{(A presentation device we find clarifying.)}
 \end{itemize}
 Section~\ref{sec:exch} treats exchangeability and time series; Section~\ref{sec:steel}
-gives the honest converse --- when coverage really is the objective ---
+gives the converse --- when coverage really is the objective ---
 and Section~\ref{sec:scope} bounds the strong claims against the modern conformal
 literature (conformal predictive systems, conformal training, and information-theoretic
 and conditional-coverage advances), each of which buys its gains exactly by the conditional
@@ -387,8 +387,7 @@ $r$, so it cannot change $I(R;X)$.
 \begin{remark}[What this says, and does not say]
 The right-hand side of \eqref{eq:gapA} is exactly the information about the residual
 distribution that remains in $X$ after the location predictor is fixed. Calling this the
-residual-information gap makes the content of ``blind to sharpness'' precise. Three honest
-caveats. (1) \emph{Conformal is not dominated within its class.} The signed CPS is
+residual-information gap makes the content of ``blind to sharpness'' precise. Three caveats. (1) \emph{Conformal is not dominated within its class.} The signed CPS is
 log-score optimal among single-shape location forecasters; the cost is the restriction,
 not the calibration step. The absolute-residual interval system is the one that pays the
 extra $\KL(\bar r\,\|\,h_{\mathrm{sym}})$, for discarding sign information. (2)
@@ -505,7 +504,7 @@ An experiment bears this out, and is fair to the methods (Figure~\ref{fig:ts}). 
 nonstationary series with known $\sigma_t$, fixed split conformal collapses far below
 target once drift sets in, but the genuinely adaptive methods --- ACI, conformal PID
 control, and weighted/Nex\-CP --- recover coverage and are competitive on the interval
-(Winkler) score. They are not straw men. The honest finding is the one the theory predicts:
+(Winkler) score. They are not straw men. The finding is the one the theory predicts:
 a simple probabilistic volatility model (an EWMA-variance Gaussian) matches or beats them
 on the proper score \emph{and} returns a full distribution, and where the conformal methods
 help they do so precisely by adapting the interval to recently realized residuals --- that
@@ -522,6 +521,17 @@ split conformal collapses once the volatility regime arrives, while adaptive con
 recovering methods oscillate around the target rather than holding it pointwise.}
 \label{fig:ts}
 \end{figure}
+
+The same holds for an off-the-shelf probabilistic forecaster. Running the author's
+\texttt{skaters} \citep{cotton_timemachines} --- a streaming package that emits a
+predictive mean and standard deviation at each step --- as a baseline gives near-oracle
+CRPS ($0.86$ against the oracle's $0.76$), because its predicted spread tracks the changing
+volatility. Conformalizing it adds nothing to forecast quality: an adaptive (normalized)
+conformal wrap re-levels its coverage to $1-\alpha$ at an essentially identical interval
+score ($6.58$ versus $6.57$), while a naive split-conformal wrap on the nonstationary
+series collapses (to $60\%$ coverage). This reproduces the experience the introduction
+describes: the value was in the conditional density the forecaster already estimates, and
+the conformal step supplies a coverage certificate, not sharpness.
 
 \section{When coverage \emph{is} the objective}\label{sec:steel}
 
@@ -549,7 +559,7 @@ ideal:
   distribution-free, finite-sample nature of \eqref{eq:marginal} is exactly the value
   added.
 \end{itemize}
-Two caveats keep even these honest. If you trust a calibrated posterior you can form a
+Two caveats temper even these. If you trust a calibrated posterior you can form a
 sharper set yourself --- the smallest region of mass $\ge 1-\alpha$ --- and recover the
 expectations a bare set discards; conformal's marginal value is then purely the
 distribution-free guarantee, useful when you distrust the density and exchangeability
@@ -572,7 +582,7 @@ leave-one-out CRPS. These genuinely produce sharp, shape-adaptive predictive
 distributions --- and they do so by leaving the single-shape class of
 Proposition~\ref{prop:relevel} (a per-bin shape is $X$-dependent) and, in the CRPS case,
 by making the partition criterion a proper score. This is the most pointed case for the
-defence, and the honest concession is real: when the reference class is itself selected by
+defence, and the concession is real: when the reference class is itself selected by
 a proper scoring rule, the conformal \emph{construction} is performing conditional density
 estimation. The category distinction does not vanish; it relocates to ``which component
 estimates the distribution,'' and the answer is the conditional partition, not the

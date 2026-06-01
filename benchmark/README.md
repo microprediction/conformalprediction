@@ -1,6 +1,6 @@
 # Benchmark: do the conformal "skins" actually help?
 
-A reproducible, honest comparison of conformal prediction libraries
+A reproducible comparison of conformal prediction libraries
 ([MAPIE](https://github.com/scikit-learn-contrib/MAPIE),
 [crepes](https://github.com/henrikbostrom/crepes)) and the strong time-series
 conformal methods, against **probabilistic baselines that model the conditional
@@ -34,7 +34,9 @@ scripts; your CSVs may differ in the last digit by seed.
 | method | family | marg. cov | worst-window cov | cond. gap | interval score ↓ | CRPS ↓ |
 |---|---|---|---|---|---|---|
 | oracle (true μ,σ) | oracle | 0.90 | 0.82 | 0.02 | **5.52** | **0.76** |
-| EWMA-vol Gaussian | prob | 0.89 | 0.81 | 0.03 | **6.92** | 0.92 |
+| skaters (Gaussian) | prob | 0.89 | 0.70 | 0.04 | **6.57** | 0.86 |
+| skaters + norm. conformal | cp | 0.89 | 0.69 | 0.04 | 6.58 | – |
+| EWMA-vol Gaussian | prob | 0.89 | 0.81 | 0.03 | 6.92 | 0.92 |
 | conformal PID | cp | 0.90 | 0.82 | **0.01** | 7.00 | – |
 | ACI | cp | 0.90 | 0.83 | 0.01 | 7.00 | – |
 | true σ on *biased* μ̂ | oracle | 0.82 | 0.70 | 0.12 | 7.02 | 0.92 |
@@ -43,6 +45,7 @@ scripts; your CSVs may differ in the last digit by seed.
 | MAPIE EnbPI (online) | cp | 0.84 | 0.36 | 0.20 | 8.87 | – |
 | MAPIE ACI | cp | 0.84 | 0.36 | 0.20 | 8.87 | – |
 | GARCH(1,1) Gaussian | prob | 0.69 | 0.48 | 0.34 | 9.84 | 0.98 |
+| skaters + split conformal | cp | 0.60 | 0.20 | 0.56 | 11.9 | – |
 | static Gaussian (recal) | prob | 0.57 | 0.18 | 0.59 | 13.7 | 1.06 |
 | fixed split (CP) | cp | 0.56 | 0.17 | 0.60 | 13.8 | – |
 
@@ -60,7 +63,7 @@ scripts; your CSVs may differ in the last digit by seed.
 | MAPIE split (absolute) | cp | 0.90 | **1.00** | **0.73** | 0.17 | 8.32 | – |
 | crepes standard | cp | 0.90 | **1.00** | **0.73** | 0.17 | 8.32 | – |
 
-## What the numbers say (the honest reading)
+## What the numbers say
 
 1. **The skins are not straw men, and they genuinely help — when they are the adaptive
    kind.** MAPIE CQR and crepes normalized/CPS reach near-oracle interval score and good
@@ -83,11 +86,20 @@ scripts; your CSVs may differ in the last digit by seed.
    difficulty estimator, gets competitive CRPS (0.90 vs oracle 0.88) precisely because it
    is doing conditional distribution estimation.
 
-4. **Knowing the variance does not rescue a biased mean.** "true σ on a biased μ̂" (7.02)
+4. **The essay's own experiment, reproduced.** `skaters` (the author's streaming
+   forecaster, via `timemachines`) emits an adaptive predictive mean and sd; it lands at
+   near-oracle CRPS (0.86 vs 0.76) and the second-best non-oracle interval score (6.57).
+   Conformalizing it changes nothing for the better: a fair, adaptive (normalized)
+   conformal wrap re-levels coverage to 90% at an essentially identical interval score
+   (6.58 vs 6.57), while a naive split-conformal wrap on the drifting series collapses
+   (60% coverage, 11.9). The value was in the conditional density skaters already
+   estimates; conformal supplies a coverage certificate, not sharpness.
+
+5. **Knowing the variance does not rescue a biased mean.** "true σ on a biased μ̂" (7.02)
    does no better than adaptive conformal — under drift the hard part is the *mean*, and
    methods that calibrate on realized residuals absorb that bias automatically.
 
-5. **None of these achieves per-step conditional coverage.** Even the oracle's
+6. **None of these achieves per-step conditional coverage.** Even the oracle's
    worst-window coverage is ~0.82, because forecasting the mean through regime breaks is
    hard. The conformal repairs deliver long-run/marginal coverage, never coverage *now*
    — consistent with the no-go results.

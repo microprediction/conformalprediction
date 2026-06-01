@@ -55,6 +55,8 @@
     <thead><tr><th>method</th><th>family</th><th>marg.&nbsp;cov</th><th>worst-window</th><th>cond.&nbsp;gap</th><th>interval&nbsp;score&nbsp;↓</th><th>CRPS&nbsp;↓</th></tr></thead>
     <tbody>
       <tr class="best"><td>oracle (true μ,σ)</td><td class="fam-oracle">oracle</td><td>0.90</td><td>0.82</td><td>0.02</td><td>5.52</td><td>0.76</td></tr>
+      <tr><td>skaters (Gaussian)</td><td class="fam-prob">prob</td><td>0.89</td><td>0.70</td><td>0.04</td><td>6.57</td><td>0.86</td></tr>
+      <tr><td>skaters + norm. conformal</td><td class="fam-cp">cp</td><td>0.89</td><td>0.69</td><td>0.04</td><td>6.58</td><td>–</td></tr>
       <tr><td>EWMA-vol Gaussian</td><td class="fam-prob">prob</td><td>0.89</td><td>0.81</td><td>0.03</td><td>6.92</td><td>0.92</td></tr>
       <tr><td>conformal PID</td><td class="fam-cp">cp</td><td>0.90</td><td>0.82</td><td>0.01</td><td>7.00</td><td>–</td></tr>
       <tr><td>ACI</td><td class="fam-cp">cp</td><td>0.90</td><td>0.83</td><td>0.01</td><td>7.00</td><td>–</td></tr>
@@ -64,6 +66,7 @@
       <tr><td>MAPIE EnbPI (online)</td><td class="fam-cp">cp</td><td>0.84</td><td>0.36</td><td>0.20</td><td>8.87</td><td>–</td></tr>
       <tr><td>MAPIE ACI</td><td class="fam-cp">cp</td><td>0.84</td><td>0.36</td><td>0.20</td><td>8.87</td><td>–</td></tr>
       <tr><td>GARCH(1,1) Gaussian</td><td class="fam-prob">prob</td><td>0.69</td><td>0.48</td><td>0.34</td><td>9.84</td><td>0.98</td></tr>
+      <tr class="bad"><td>skaters + split conformal</td><td class="fam-cp">cp</td><td>0.60</td><td>0.20</td><td>0.56</td><td>11.9</td><td>–</td></tr>
       <tr class="bad"><td>fixed split (CP)</td><td class="fam-cp">cp</td><td>0.56</td><td>0.17</td><td>0.60</td><td>13.8</td><td>–</td></tr>
     </tbody>
   </table>
@@ -93,6 +96,7 @@
     <li><strong>The skins genuinely help — when they are the adaptive kind.</strong> CQR and crepes normalized/CPS reach near-oracle interval score and good conditional coverage; ACI and conformal PID recover coverage under drift where fixed split collapses. These are not straw men.</li>
     <li><strong>But the adaptivity comes from conditional modeling, not the conformal step.</strong> The cleanest tell: raw quantile-GBR with <em>no conformal at all</em> (6.52) ties conformalized quantile regression (6.51). Vanilla split conformal is identical to a static Gaussian. The conformal layer supplies the finite-sample marginal certificate; the sharpness comes from the model it wraps.</li>
     <li><strong>A plain probabilistic model is competitive on the proper score and returns a full distribution.</strong> An EWMA-vol Gaussian has the best non-oracle interval score in the time-series test; crepes CPS gets competitive CRPS precisely because it is doing conditional distribution estimation.</li>
+    <li><strong>The essay's own experiment, reproduced.</strong> <a href="https://github.com/microprediction/timemachines">skaters</a> — the author's streaming forecaster, with an adaptive predictive mean and sd — lands at near-oracle CRPS (0.86) and the second-best non-oracle interval score (6.57). Conformalizing it changes nothing for the better: a fair adaptive (normalized) wrap re-levels coverage to 90% at an identical score (6.58), and a naive split-conformal wrap on the drifting series collapses (60%). The value was in the density skaters already estimates.</li>
     <li><strong>None achieves per-step conditional coverage</strong> — even the oracle's worst window is ~0.82. The repairs deliver long-run/marginal coverage, never coverage <em>now</em>, consistent with the <a href="index.html#nogo">no-go results</a>.</li>
   </ol>
 

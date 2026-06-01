@@ -19,6 +19,24 @@ from sklearn.preprocessing import StandardScaler
 import common as C
 import ts_methods as M
 
+try:
+    from timemachines.skaters.simple.thinking import thinking_fast_and_slow as _SKATER
+    _HAVE_SKATER = True
+except Exception:
+    _HAVE_SKATER = False
+
+
+def _skater_preds(yraw):
+    """Run a skater (microprediction/timemachines) online over the raw series and return
+    one-step-ahead (mu, sd) aligned so that index t is the forecast of y[t]."""
+    s = {}
+    mu = np.full(len(yraw), np.nan); sd = np.full(len(yraw), np.nan)
+    for t in range(len(yraw)):
+        x, x_std, s = _SKATER(y=float(yraw[t]), s=s, k=1)   # forecast of y[t+1]
+        if t + 1 < len(yraw):
+            mu[t + 1] = x[0]; sd[t + 1] = max(float(x_std[0]), 1e-6)
+    return mu, sd
+
 OUT = os.path.dirname(__file__)
 os.makedirs(os.path.join(OUT, "results"), exist_ok=True)
 os.makedirs(os.path.join(OUT, "figures"), exist_ok=True)
@@ -64,6 +82,25 @@ def run_once(seed=0, heavy_tail=False):
     lo, hi, m_, s_ = M.ewma_vol(mu_te, y_te, ALPHA, warm=warm); methods["EWMA-vol Gaussian"] = (lo, hi, m_, s_, "prob")
     lo, hi, m_, s_ = M.garch_vol(resid_tr, resid[CAL_END:], mu_te, ALPHA); methods["GARCH(1,1) Gaussian"] = (lo, hi, m_, s_, "prob")
     lo, hi, m_, s_ = M.recal_const(mu_te, resid_cal, ALPHA); methods["static Gaussian (recal)"] = (lo, hi, m_, s_, "prob")
+
+    # --- skaters: a real probabilistic forecaster (the essay's own tool) ---
+    if _HAVE_SKATER:
+        sk_mu_f, sk_sd_f = _skater_preds(d["y"])
+        orig = np.arange(len(yy)) + N_LAGS              # original index of each lag-aligned row
+        sk_mu, sk_sd = sk_mu_f[orig], sk_sd_f[orig]
+        sk_mu_te, sk_sd_te = sk_mu[ts], sk_sd[ts]
+        z = M.Z(ALPHA)
+        methods["skaters (Gaussian)"] = (sk_mu_te - z * sk_sd_te, sk_mu_te + z * sk_sd_te,
+                                         sk_mu_te, sk_sd_te, "prob")
+        sk_resid_cal = yy[FIT_END:CAL_END] - sk_mu[FIT_END:CAL_END]
+        methods["skaters + split conformal"] = (*M.fixed_split(sk_mu_te, sk_resid_cal, y_te, ALPHA), None, None, "cp")
+        # fair, adaptive conformalization: normalized score |resid|/sd keeps skaters' sigma_t
+        sk_sd_cal = sk_sd[FIT_END:CAL_END]
+        norm_scores = np.sort(np.abs(sk_resid_cal) / np.maximum(sk_sd_cal, 1e-6))
+        kk = int(np.ceil((len(norm_scores) + 1) * (1 - ALPHA)))
+        qn = np.inf if kk > len(norm_scores) else norm_scores[kk - 1]
+        methods["skaters + norm. conformal"] = (sk_mu_te - qn * sk_sd_te, sk_mu_te + qn * sk_sd_te,
+                                                None, None, "cp")
 
     # --- MAPIE's own time-series skins (the actual library) ---
     methods.update(_mapie_ts(X, yy, mu, ts))

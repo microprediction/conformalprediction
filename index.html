@@ -31,7 +31,7 @@
   <h1>Marginally Useful</h1>
   <p class="subtitle">Conformal prediction certifies the coverage of a set. It does not estimate a distribution. These demos show you the difference.</p>
 
-  <p class="lead">Conformal prediction is real mathematics with a real guarantee. The trouble is that the guarantee — <em>marginal coverage</em> — is usually not the thing people reach for it to provide. This site is an honest, interactive tour: first we build the method and watch it work, then we watch it answer a question you probably weren&rsquo;t asking.</p>
+  <p class="lead">Conformal prediction is real mathematics with a real guarantee. The trouble is that the guarantee — <em>marginal coverage</em> — is usually not the thing people reach for it to provide. This site is an interactive tour: first we build the method and watch it work, then we watch it answer a question you probably weren&rsquo;t asking.</p>
 
   <blockquote>
     <p>Given exchangeable data, a predictor, and a nonconformity score, split conformal prediction returns a set \(C(X)\) with
@@ -94,7 +94,7 @@
   </div>
 
   <h2>Does it help in practice? A real benchmark</h2>
-  <p>Rhetoric is cheap, so there is also an <a href="benchmark.html">empirical benchmark</a> that puts the actual libraries — <a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a> — and the strong time-series conformal methods on trial against probabilistic baselines and an oracle, scored by conditional coverage and proper scores. The honest finding: the adaptive conformal skins genuinely help, but they help <em>because of the conditional model they wrap</em> — raw quantile regression with no conformal step ties conformalized quantile regression — while the conformal layer supplies the marginal certificate on top. <a href="benchmark.html">See the results &rarr;</a></p>
+  <p>Rhetoric is cheap, so there is also an <a href="benchmark.html">empirical benchmark</a> that puts the actual libraries — <a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a> — and the strong time-series conformal methods on trial against probabilistic baselines and an oracle, scored by conditional coverage and proper scores. The finding: the adaptive conformal skins genuinely help, but they help <em>because of the conditional model they wrap</em> — raw quantile regression with no conformal step ties conformalized quantile regression — while the conformal layer supplies the marginal certificate on top. <a href="benchmark.html">See the results &rarr;</a></p>
 
   <h2>The one-paragraph version</h2>
   <p>Forecast quality decomposes into <strong>calibration</strong> (do stated probabilities match observed frequencies?) and <strong>sharpness</strong> (how concentrated is the prediction?), and a proper scoring rule grades both. Conformal prediction touches only the marginal, coverage-flavored slice of calibration, and is constitutionally blind to sharpness, because the width of its set is inherited wholesale from the base model. So you cannot improve a distribution by conformalizing it — the estimation was already done by the score; conformal merely re-levels. Asking it to &ldquo;estimate the distribution better&rdquo; is asking the calibration knob to do the modeling.</p>
@@ -104,7 +104,7 @@
   </div>
 
   <h2>When conformal prediction <em>is</em> the right tool</h2>
-  <p>This site is skeptical, not dismissive. There is a clean litmus test: <strong>is your loss a function of <em>whether</em> the truth lands in a region, or of <em>where</em> it lands?</strong> If the former — selective prediction with a recall guarantee, retrieval shortlists, anomaly detection as a distribution-free test, compliance certificates — coverage is the native object and conformal prediction is exactly right. Demo 06 and the paper&rsquo;s §7 lay out the honest steelman.</p>
+  <p>This site is skeptical, not dismissive. There is a clean litmus test: <strong>is your loss a function of <em>whether</em> the truth lands in a region, or of <em>where</em> it lands?</strong> If the former — selective prediction with a recall guarantee, retrieval shortlists, anomaly detection as a distribution-free test, compliance certificates — coverage is the native object and conformal prediction is exactly right. Demo 06 and the paper&rsquo;s §7 make the case for it.</p>
 
   <h2 id="references">Key references</h2>
   <ul class="refs">
