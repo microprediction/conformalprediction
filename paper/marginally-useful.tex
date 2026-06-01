@@ -62,7 +62,20 @@ reported region.
 \section{Introduction}
 
 A practitioner maintains a probabilistic forecaster and is told, repeatedly, that
-conformal prediction is the principled, distribution-free way to ``add uncertainty.''
+conformal prediction is the principled, distribution-free way to ``add uncertainty.''%
+\footnote{The reading is pervasive, and not only in blogs. Applied and survey writing
+routinely calls the marginal-coverage guarantee ``well-calibrated'' or ``reliable''
+uncertainty quantification --- the word \emph{calibrated} standing in for coverage
+\citep{bellotti2025trustworthy} --- and tutorial expositions go further, presenting
+conformal prediction as a way to ``add uncertainty'' \citep{tds_adduncertainty}, the one
+thing you need for it \citep{tds_allyouneed}, or even to ``predict full probability
+distributions'' \citep{manokhin_fulldist}. The core \emph{methodological} literature is
+more careful --- it separates \emph{validity} from \emph{efficiency} --- and a growing
+critique strand makes the present point independently: that valid-but-uninformative sets
+have little practical value \citep{pitfalls2025medical}, and that interval length can be
+gamed while marginal coverage is preserved \citep{min2026coveragelength}, a rediscovery of
+the trivial-validity argument of Section~\ref{sec:marginal}. Our quarrel is with the
+conflation, not with conformal prediction.}
 They bolt it on. The number they actually report --- a proper score such as the
 predictive log-likelihood --- does not improve. The natural diagnosis is a tuning
 failure. The correct diagnosis, we argue, is a \emph{category error}: conformal
@@ -107,7 +120,11 @@ three senses in which it is weaker than advertised. Our contributions are:
   the score coordinate untouched. \emph{(A presentation device we find clarifying.)}
 \end{itemize}
 Section~\ref{sec:exch} treats exchangeability and time series; Section~\ref{sec:steel}
-gives the honest converse --- when coverage really is the objective.
+gives the honest converse --- when coverage really is the objective ---
+and Section~\ref{sec:scope} bounds the strong claims against the modern conformal
+literature (conformal predictive systems, conformal training, and information-theoretic
+and conditional-coverage advances), each of which buys its gains exactly by the conditional
+modeling our analysis identifies.
 
 \section{Setup: split conformal and the marginal guarantee}\label{sec:setup}
 
@@ -466,6 +483,70 @@ expectations a bare set discards; conformal's marginal value is then purely the
 distribution-free guarantee, useful when you distrust the density and exchangeability
 holds. And even when coverage is the goal you usually want it conditionally, which
 returns us to the impossibility of Section~\ref{sec:marginal}.
+
+\section{Scope, and the constructive escapes}\label{sec:scope}
+
+Our strong claims target the object that is actually over-sold: \emph{post-hoc, marginal,
+split conformal prediction with a residual score}. A large and active literature builds
+conformal methods that do more, and it is worth saying precisely how they relate, because
+in every case they confirm the paper's mechanism rather than contradict it: they buy
+sharpness or conditional coverage by \emph{conditioning on $X$ or optimizing a proper
+objective}, which is exactly what Propositions~\ref{prop:gap} say is required.
+
+\paragraph{Conformal predictive systems that condition on $X$.}
+Mondrian / binned conformal predictive systems \citep{bostrom2021mondrian} fit a separate
+residual law per region, and \citet{toccaceli2026crps} chooses the bins by minimizing a
+leave-one-out CRPS. These genuinely produce sharp, shape-adaptive predictive
+distributions --- and they do so by leaving the single-shape class of
+Proposition~\ref{prop:relevel} (a per-bin shape is $X$-dependent) and, in the CRPS case,
+by making the partition criterion a proper score. This is the most pointed case for the
+defence, and the honest concession is real: when the reference class is itself selected by
+a proper scoring rule, the conformal \emph{construction} is performing conditional density
+estimation. The category distinction does not vanish; it relocates to ``which component
+estimates the distribution,'' and the answer is the conditional partition, not the
+coverage certificate --- the value is in the estimation, as throughout. Conformalized
+quantile regression \citep{romano2019conformalized} is the same story with a quantile
+model in place of the bins.
+
+\paragraph{End-to-end conformal training.}
+The orthogonality of Proposition~\ref{prop:orth} is a statement about \emph{post-hoc}
+conformalization of a fixed predictor. Conformal training
+\citep{stutz2022learning,correia2024information} deliberately differentiates through the
+conformalizer to minimize expected set size subject to coverage, which couples the
+coverage and efficiency axes by construction. This does not contradict the proposition; it
+illustrates its corollary --- to obtain sharpness you must optimize for it, rather than
+read it off the coverage certificate.
+
+\paragraph{The information in set size.}
+\citet{correia2024information} show that the expected size of a calibrated conformal set
+lower-bounds the conditional entropy $H(Y\mid X)$. This is complementary to our
+Proposition~\ref{prop:gap}: both say conformal \emph{geometry} carries information. It also
+sharpens the two-coordinate plane of Section~\ref{sec:plane} --- the \emph{efficiency}
+(set-size / sharpness) coordinate is the information-bearing one, while the marginal
+\emph{coverage} coordinate, by Proposition~\ref{prop:orth}, is not. Reporting only the
+latter discards exactly the coordinate that encodes aleatoric uncertainty.
+
+\paragraph{Approaching conditional coverage.}
+The no-go result of Section~\ref{sec:marginal} concerns \emph{exact, distribution-free,
+finite-length} conditional coverage. It is not the end of the subject. Diagnostics such as
+the excess-risk-of-target-coverage family \citep{braun2025conditional} quantify and
+decompose the conditional gap, and post-processing via pivotal scores and optimal transport
+\citep{laplante2026pivotal} attains \emph{approximate} conditional coverage by estimating
+the conditional law of the score --- again, conditioning on $X$, and explicitly under the
+structural assumptions the impossibility theorem rules out for the exact, assumption-free
+case. These approach the goalpost; they do not move the one the no-go result defends.
+
+\paragraph{Modern time-series conformal.}
+Beyond the adaptive methods benchmarked in Section~\ref{sec:exch}, methods such as HopCPT
+\citep{auer2023hopcpt} exploit temporal structure to tighten intervals and improve
+empirical adaptivity. Their guarantees remain of the approximate / long-run kind catalogued
+there; the improvement, again, comes from modeling the conditional error law.
+
+\paragraph{Beyond the log-score.}
+We used the log-score for the clean information-theoretic identities, but the
+coverage--score plane and the argument carry over to any strictly proper score; the
+companion benchmark in fact ranks methods by the interval (Winkler) score and CRPS
+\citep{gneiting2007strictly}, on which the same orderings hold.
 
 \section{Conclusion}
 

@@ -54,7 +54,7 @@ const state = {
   drift: 1.0,     // 0 = stationary/exchangeable; larger = stronger nonstationarity
   gamma: 0.03,    // ACI learning rate (matches ts_methods default)
   rho: 0.99,      // NexCP recency weight
-  selected: "fixed",                 // method drawn in the main panel
+  selected: "aci",                   // method drawn in the main panel (a working one by default)
   overlay: { fixed: true, aci: true, pid: false, nexcp: false, ewma: true },
 };
 
