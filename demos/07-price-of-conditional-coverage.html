@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>07 · The price of conditional coverage — Marginally Useful</title>
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Marginally&nbsp;Useful</a>
+    <nav>
+      <a href="../index.html#demos">Demos</a>
+      <a href="../paper/">Paper</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demo 07</p>
+  <h1>The price of conditional coverage</h1>
+  <p class="subtitle">The marginal-vs-conditional gap is not a tuning problem. It is a theorem.</p>
+
+  <p><a href="02-marginal-vs-conditional.html">Demo&nbsp;02</a> showed a constant-width band that over-covers where the data are easy and under-covers where they are hard. The obvious reflex is to <em>localize</em>: chop the input into bins and calibrate a separate conformal quantile in each one &mdash; honest, distribution-free, &ldquo;Mondrian&rdquo; conformal. With \(B\) equal-width \(x\)-bins, each bin \(b\) gets its own band
+  $$C_b(x) = [\,\hat\mu(x) - q_b,\ \hat\mu(x) + q_b\,], \qquad q_b = \big(\text{the } \lceil (n_b+1)(1-\alpha)\rceil\text{-th smallest score in bin } b\big).$$
+  Slide \(B\) up. The per-bin (conditional) coverage really does flatten out toward the target &mdash; the gap closes. But watch the price: \(q_b = \lceil (n_b+1)(1-\alpha)\rceil\)-th smallest score requires \(\lceil (n_b+1)(1-\alpha)\rceil \le n_b\), i.e.\ enough points in the bin. The moment a bin is too sparse, the only finite-sample-valid interval is the whole real line, \(q_b = +\infty\). For \(\alpha = 0.1\) the cutoff is exact: any bin with fewer than \(9\) calibration points must report \(\infty\).</p>
+
+  <div class="demo">
+    <div class="canvas-box tall"><canvas id="main"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <div class="canvas-box med demo"><canvas id="trade"></canvas></div>
+  <p class="note">Above: sweeping the conditioning resolution \(B\) from \(1\) (pure global/marginal conformal) to \(60\) (approaching per-\(x\) conditioning). The <strong>worst-bin coverage</strong> (green) climbs to the target as \(B\) grows &mdash; conditional validity is being achieved. But it climbs <em>in lockstep with</em> the <strong>fraction of test points whose band is \(\infty\)</strong> (red) and the <strong>mean finite band length</strong> (orange, normalized). You buy uniform conditional coverage only by paying unbounded length. The vertical line marks your current \(B\).</p>
+
+  <div class="takeaway">
+    <p><strong>Takeaway.</strong> This is Lei &amp; Wasserman (2014, Lemma&nbsp;1) made tangible: for a continuous \(x\), <em>non-trivial</em> finite-sample <em>conditional</em> validity is impossible distribution-free &mdash; any procedure with exact conditional coverage must have <em>infinite expected interval length</em> at almost every \(x\). The localized &ldquo;fix&rdquo; is not a fix; it <em>is</em> the theorem. As you refine \(B\), bins starve, \(q_b\to\infty\), and the band degenerates to the trivial \((-\infty,\infty)\) exactly where conditioning would have mattered most. This is why <a href="02-marginal-vs-conditional.html">Demo&nbsp;02</a>&rsquo;s gap cannot simply be closed by binning harder. You <em>can</em> approach conditional coverage &mdash; via smoothness assumptions, or quantile-regression scores (CQR) that let band width vary with \(x\) &mdash; but only by leaving the distribution-free setting and trusting a model. The guarantee you keep for free is marginal; the conditional one is for sale, and its distribution-free price is \(\infty\).</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="06-conformal-vs-recalibration.html">&larr; Demo 06: Conformal vs. recalibration</a>
+    <span class="spacer"></span>
+    <a href="08-subgroup-coverage.html">Demo 08: Subgroup coverage buys only a wider band &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demo 07 of 8</span></div></footer>
+
+<script type="module" src="../js/demo07.js"></script>
+</body>
+</html>

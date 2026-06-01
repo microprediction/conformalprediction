@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>02 · Marginal vs. conditional coverage — Marginally Useful</title>
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Marginally&nbsp;Useful</a>
+    <nav>
+      <a href="../index.html#demos">Demos</a>
+      <a href="../paper/">Paper</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demo 02</p>
+  <h1>Marginal vs. conditional coverage</h1>
+  <p class="subtitle">The guarantee is an average over all inputs &mdash; and an average can hide a lot.</p>
+
+  <p>Demo&nbsp;01 delivered on its promise: about \(1-\alpha\) of fresh points land inside the band. But that promise is <em>marginal</em> &mdash; averaged over the whole distribution of \(x\). It says nothing about coverage <em>at a particular \(x\)</em>. Here the noise is <strong>heteroscedastic</strong>: \(\sigma(x)\) grows with \(x\), so the data are tight on the left and fan out on the right. Yet the absolute-residual score \(|y-\hat\mu(x)|\) yields a single number \(q\), hence a band of <strong>constant width</strong>
+  $$C(x) = [\,\hat\mu(x) - q,\ \hat\mu(x) + q\,].$$
+  Watch what that constant width does as you slide the selection window across \(x\). The marginal coverage stays near target; the local coverage does not.</p>
+
+  <div class="demo">
+    <div class="canvas-box tall"><canvas id="main"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <div class="canvas-box med demo"><canvas id="cov"></canvas></div>
+  <p class="note">Above: empirical coverage of the test points in each \(x\)-bin, against the dashed target \(1-\alpha\). The curve starts <em>above</em> target where the data are easy (small \(\sigma\)) and falls <em>below</em> it where they are hard (large \(\sigma\)). This is exactly Lei &amp; Wasserman&rsquo;s observation: a marginally valid band &ldquo;tends to overestimate the set when \(x\) is in the high density area and to underestimate for low density \(x\).&rdquo;</p>
+
+  <div class="takeaway">
+    <p><strong>Takeaway.</strong> A 90% guarantee on average is perfectly consistent with, say, ~99% coverage where the problem is easy and well under target where it is hard. The constant band over-insures the cases you would have gotten right anyway and under-insures the cases you actually built the model for &mdash; and the guarantee is silent about precisely that distinction. Marginal validity is a real property; it is just not the property most people think they are buying. Next, <a href="03-trivial-validity.html">Demo&nbsp;03</a> pushes this generosity to its breaking point.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="01-how-conformal-works.html">&larr; Demo 01: How split conformal works</a>
+    <span class="spacer"></span>
+    <a href="03-trivial-validity.html">Demo 03: The fence is the horizon &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demo 02 of 8</span></div></footer>
+
+<script type="module" src="../js/demo02.js"></script>
+</body>
+</html>

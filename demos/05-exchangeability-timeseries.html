@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>05 · Exchangeability &amp; time series — Marginally Useful</title>
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Marginally&nbsp;Useful</a>
+    <nav>
+      <a href="../index.html#demos">Demos</a>
+      <a href="../paper/">Paper</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demo 05</p>
+  <h1>Exchangeability &amp; time series</h1>
+  <p class="subtitle">The one true guarantee rests on a single assumption. Time series quietly violate it.</p>
+
+  <p>Every coverage statement in conformal prediction is paid for by one assumption: the calibration data and the future point are <strong>exchangeable</strong> — their joint distribution is invariant to reordering. That is plausible for an i.i.d. sample. It is rarely true for a series unfolding in time, where the level trends and occasionally jumps to a new regime. Drop exchangeability and the finite-sample guarantee does not weaken gracefully; it simply stops holding.</p>
+
+  <p>Below we forecast a nonstationary series \(y_t = \text{level}_t + \varepsilon_t\) with a trivial online predictor \(\hat y_t\) (a rolling mean). We calibrate split conformal once on \([0, t_0]\) — the dashed line — taking the band half-width \(q = \lceil (n+1)(1-\alpha)\rceil\)-th smallest of \(|y-\hat y|\), and then freeze it: \(\hat y_t \pm q\) for all \(t>t_0\). Turn up the <em>drift</em> slider and watch the green points go red.</p>
+
+  <div class="demo">
+    <div class="canvas-box tall"><canvas id="main"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <p>The standard repair is <strong>Adaptive Conformal Inference</strong> (Gibbs &amp; Candès, 2021): treat the miscoverage level itself as something to track. Maintain \(\alpha_t\), build the band from the \((1-\alpha_t)\) empirical residual quantile, observe whether you missed, and update
+  $$\alpha_{t+1} = \alpha_t + \gamma\,(\alpha - \mathrm{err}_t), \qquad \mathrm{err}_t = \mathbf 1\{y_t \notin C_t\}.$$
+  Miss too often and \(\alpha_t\) shrinks, widening the next band; over-cover and it grows. This is a control loop, not a guarantee. What it buys you is a theorem about the <em>long-run time average</em> of \(\mathrm{err}_t\) converging to \(\alpha\). Toggle the ACI band on and compare.</p>
+
+  <div class="canvas-box med demo"><canvas id="cov"></canvas></div>
+  <p class="note">Above: rolling coverage in a trailing 40-step window. The fixed band (blue) sits near target while the data are roughly stationary, then <strong>collapses</strong> once the trend and the regime jump bite. ACI&rsquo;s trailing coverage (orange) oscillates around target — sometimes well above, sometimes well below — while its cumulative average (purple, dashed) crawls toward \(1-\alpha\). The average is fine. The window you are standing in is not.</p>
+
+  <div class="takeaway">
+    <p><strong>Takeaway.</strong> Exchangeability is the load-bearing wall. Knock it out and split conformal&rsquo;s finite-sample coverage evaporates out-of-sample. ACI restores only a <em>long-run average</em> miscoverage rate — a far weaker, more diffuse object than the original statement, and one that says nothing about the step in front of you. For forecasting, where you want a sharp predictive distribution <em>now</em>, &ldquo;correct on average over all time&rdquo; is close to the worst guarantee you could be handed. <a href="06-conformal-vs-recalibration.html">Demo&nbsp;06</a> asks whether plain probabilistic recalibration would have served you better all along.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="04-coverage-vs-logscore.html">&larr; Demo 04</a>
+    <span class="spacer"></span>
+    <a href="06-conformal-vs-recalibration.html">Demo 06: Conformal vs. recalibration &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demo 05 of 8</span></div></footer>
+
+<script type="module" src="../js/demo05.js"></script>
+</body>
+</html>

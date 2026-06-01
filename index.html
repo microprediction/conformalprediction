@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Marginally Useful — what conformal prediction actually guarantees</title>
+<meta name="description" content="Interactive demonstrations of conformal prediction, and a careful argument about why marginal coverage is rarely the thing you wanted." />
+<link rel="stylesheet" href="css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="index.html">Marginally&nbsp;Useful</a>
+    <nav>
+      <a href="#demos">Demos</a>
+      <a href="paper/">Paper</a>
+      <a href="#references">References</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <h1>Marginally Useful</h1>
+  <p class="subtitle">Conformal prediction certifies the coverage of a set. It does not estimate a distribution. These demos show you the difference.</p>
+
+  <p class="lead">Conformal prediction is real mathematics with a real guarantee. The trouble is that the guarantee — <em>marginal coverage</em> — is usually not the thing people reach for it to provide. This site is an honest, interactive tour: first we build the method and watch it work, then we watch it answer a question you probably weren&rsquo;t asking.</p>
+
+  <blockquote>
+    <p>Given exchangeable data, a predictor, and a nonconformity score, split conformal prediction returns a set \(C(X)\) with
+    $$\mathbb{P}\big(Y_{n+1}\in C(X_{n+1})\big)\;\ge\;1-\alpha.$$
+    Read the probability carefully: the average is over \(X_{n+1}\) too. It is a statement about the <em>average</em> input — not about the one in front of you.</p>
+  </blockquote>
+
+  <p>Every claim below is something you can move a slider and see for yourself. The companion <a href="paper/">expository paper</a> states the same facts precisely, with citations and three small contributions.</p>
+
+  <h2 id="demos">The demonstrations</h2>
+  <p class="note">Best read in order, but each stands alone. All run entirely in your browser; nothing is sent anywhere.</p>
+
+  <div class="cards">
+    <a class="card" href="demos/01-how-conformal-works.html">
+      <div class="num">01</div>
+      <h3>How split conformal works</h3>
+      <p>Build a prediction band from nonconformity scores and watch it hit 90% coverage. The method is sound and elegant. Hold that thought.</p>
+    </a>
+    <a class="card" href="demos/02-marginal-vs-conditional.html">
+      <div class="num">02</div>
+      <h3>Marginal vs. conditional coverage</h3>
+      <p>90% on average — while over-covering the easy inputs and badly under-covering the hard ones. Drag a window and read the local coverage.</p>
+    </a>
+    <a class="card" href="demos/03-trivial-validity.html">
+      <div class="num">03</div>
+      <h3>The fence is the horizon</h3>
+      <p>A deliberately useless predictor reaches exactly 90% coverage. Validity is not evidence of a good method.</p>
+    </a>
+    <a class="card" href="demos/04-coverage-vs-logscore.html">
+      <div class="num">04</div>
+      <h3>Coverage &perp; log-score</h3>
+      <p>Pin marginal coverage at 90% and move the predictive log-likelihood up and down at will. The two live on independent axes.</p>
+    </a>
+    <a class="card" href="demos/05-exchangeability-timeseries.html">
+      <div class="num">05</div>
+      <h3>Exchangeability &amp; time series</h3>
+      <p>Turn on drift and the one true guarantee evaporates. The adaptive patch restores only a long-run <em>average</em>, never coverage <em>now</em>.</p>
+    </a>
+    <a class="card" href="demos/06-conformal-vs-recalibration.html">
+      <div class="num">06</div>
+      <h3>Conformal vs. recalibration</h3>
+      <p>If you actually wanted a calibrated forecast, distributional recalibration improves the log-score and hands back a density. Conformal just re-levels.</p>
+    </a>
+  </div>
+
+  <h2 id="nogo">Why you can&rsquo;t just fix it: the no-go results</h2>
+  <p>The gaps in Demos 02&ndash;05 are not bugs to be patched — they are theorems. Distribution-free conditional coverage is provably unavailable except by surrendering the very thing that made the interval useful. These two demos make the impossibility tangible.</p>
+
+  <div class="cards">
+    <a class="card" href="demos/07-price-of-conditional-coverage.html">
+      <div class="num">07 · no-go</div>
+      <h3>The price of conditional coverage</h3>
+      <p>Chase per-\(x\) coverage by localizing, and watch the intervals diverge to the whole real line. Lei &amp; Wasserman (2014): conditional validity forces <em>infinite</em> expected length.</p>
+    </a>
+    <a class="card" href="demos/08-subgroup-coverage.html">
+      <div class="num">08 · no-go</div>
+      <h3>Subgroup coverage buys only a wider band</h3>
+      <p>Protect every subgroup distribution-free and all you get is a flat band at the inflated level \(1-\alpha\delta\) — wider, never adaptive. Barber et&nbsp;al. (2021), Theorem&nbsp;3.1.</p>
+    </a>
+  </div>
+
+  <h2>The one-paragraph version</h2>
+  <p>Forecast quality decomposes into <strong>calibration</strong> (do stated probabilities match observed frequencies?) and <strong>sharpness</strong> (how concentrated is the prediction?), and a proper scoring rule grades both. Conformal prediction touches only the marginal, coverage-flavored slice of calibration, and is constitutionally blind to sharpness, because the width of its set is inherited wholesale from the base model. So you cannot improve a distribution by conformalizing it — the estimation was already done by the score; conformal merely re-levels. Asking it to &ldquo;estimate the distribution better&rdquo; is asking the calibration knob to do the modeling.</p>
+
+  <div class="takeaway">
+    <p><strong>If you remember one sentence:</strong> conformal prediction certifies the coverage of a set; it does not estimate a distribution. Confusing the two is a category error — and coverage answers a question, <em>is the truth in this region?</em>, that in forecasting you were usually not asking.</p>
+  </div>
+
+  <h2>When conformal prediction <em>is</em> the right tool</h2>
+  <p>This site is skeptical, not dismissive. There is a clean litmus test: <strong>is your loss a function of <em>whether</em> the truth lands in a region, or of <em>where</em> it lands?</strong> If the former — selective prediction with a recall guarantee, retrieval shortlists, anomaly detection as a distribution-free test, compliance certificates — coverage is the native object and conformal prediction is exactly right. Demo 06 and the paper&rsquo;s §7 lay out the honest steelman.</p>
+
+  <h2 id="references">Key references</h2>
+  <ul class="refs">
+    <li>Vovk, Gammerman &amp; Shafer (2005). <em>Algorithmic Learning in a Random World.</em> Springer. (The book.)</li>
+    <li>Lei &amp; Wasserman (2014). Distribution-free prediction bands for non-parametric regression. <em>JRSS-B</em> 76(1):71–96. (Impossibility of finite-sample conditional validity.)</li>
+    <li>Foygel Barber, Candès, Ramdas &amp; Tibshirani (2021). The limits of distribution-free conditional predictive inference. <em>Information and Inference</em> 10(2):455–482.</li>
+    <li>Gneiting, Balabdaoui &amp; Raftery (2007). Probabilistic forecasts, calibration and sharpness. <em>JRSS-B</em> 69(2):243–268.</li>
+    <li>Tibshirani, Foygel Barber, Candès &amp; Ramdas (2019). Conformal prediction under covariate shift. <em>NeurIPS.</em></li>
+    <li>Gibbs &amp; Candès (2021). Adaptive conformal inference under distribution shift. <em>NeurIPS.</em></li>
+    <li>Kuleshov, Fenner &amp; Ermon (2018). Accurate uncertainties for deep learning using calibrated regression. <em>ICML.</em></li>
+    <li>Angelopoulos &amp; Bates (2023). Conformal prediction: a gentle introduction. <em>FnT in ML</em> 16(4). (The friendly modern survey.)</li>
+  </ul>
+  <p class="note">The full bibliography lives in <a href="paper/references.bib"><code>paper/references.bib</code></a>.</p>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Marginally Useful — an educational project on conformal prediction.</span>
+    <span>Built with vanilla JS. No trackers, no dependencies at runtime except MathJax.</span>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Paper — Marginally Useful</title>
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Marginally&nbsp;Useful</a>
+    <nav>
+      <a href="../index.html#demos">Demos</a>
+      <a href="../index.html#nogo">No-go</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+  <p class="tag">Companion paper</p>
+  <h1>Conformal Prediction Certifies the Coverage of a Set, Not the Quality of a Distribution</h1>
+  <p class="subtitle">An expository paper with three small contributions, accompanying the interactive demonstrations.</p>
+
+  <p>
+    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="marginally-useful.pdf"><strong>📄 Read the PDF</strong></a>
+    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="marginally-useful.tex">LaTeX source</a>
+    <a class="card" style="display:inline-block;padding:10px 16px;" href="references.bib">references.bib</a>
+  </p>
+
+  <h2>Abstract</h2>
+  <p>Conformal prediction is correct mathematics with a genuine guarantee, and it is routinely filed in the wrong drawer. The guarantee it delivers — finite-sample, distribution-free <em>marginal</em> coverage of a set — is not the guarantee that forecasting, density estimation, and decision-making usually require. This paper is mostly expository: we assemble, in one place and with citations, the reasons the marginal guarantee is weaker than it looks (it is provably not conditional; it is trivially satisfiable; it evaporates without exchangeability). We then offer three small contributions.</p>
+  <ul>
+    <li><strong>Orthogonality</strong> (Proposition&nbsp;1). A constructive statement that the conformal set is a function of the nonconformity scores alone, so marginal coverage is statistically independent of every feature of the predictive distribution the score does not encode — sharpness in particular. One can pin coverage at \(1-\alpha\) and send the log-score to \(-\infty\).</li>
+    <li><strong>The sharpness gap</strong> (Propositions&nbsp;2–3). The conformal predictive system re-levels the base model's residual shape; its log-score regret to the oracle equals \(\mathbb{E}_X\,\mathrm{KL}\!\big(r(\cdot\mid X)\,\|\,\bar r\big)\), the expected divergence of the conditional residual law from its marginal — invariant to <em>any</em> marginal recalibration, conformal included, and reducible only by conditioning on the input. Within the class of objects it produces, the conformal system is log-score optimal; the cost is the class, not the calibration.</li>
+    <li><strong>The coverage–sharpness plane</strong> (Section&nbsp;6). A two-axis diagnostic in which conformalization is exactly a horizontal projection: it moves a forecaster left (toward zero coverage error), never up (toward a better score).</li>
+  </ul>
+  <p>A formal no-go lemma (Lemma&nbsp;1) collects the impossibility results of Lei &amp; Wasserman (2014) and Foygel Barber et&nbsp;al. (2021); the two coordinates of each result appear, as finite-sample facts, in <a href="../demos/07-price-of-conditional-coverage.html">Demo&nbsp;7</a> and <a href="../demos/08-subgroup-coverage.html">Demo&nbsp;8</a>. We close with a precise litmus test for when coverage <em>is</em> the objective, and conformal prediction is exactly right.</p>
+
+  <h2>Building from source</h2>
+  <p>The paper builds with <a href="https://tectonic-typesetting.github.io/">Tectonic</a> (which fetches packages and runs BibTeX automatically):</p>
+  <p><code>cd paper &amp;&amp; tectonic marginally-useful.tex</code></p>
+  <p class="note">Any standard TeX distribution works too: <code>pdflatex → bibtex → pdflatex → pdflatex</code>.</p>
+
+  <div class="prevnext">
+    <a href="../index.html">&larr; Back to overview</a>
+    <span class="spacer"></span>
+    <a href="marginally-useful.pdf">Open the PDF &rarr;</a>
+  </div>
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Companion paper</span></div></footer>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.bbl
+*.blg
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+paper/*.aux
+paper/*.log
+paper/*.bbl
+paper/*.blg
+
+# Editor / tooling
+.vscode/
+.idea/
+node_modules/
+
+# Local scratch
+_test_*.mjs
+*.tmp

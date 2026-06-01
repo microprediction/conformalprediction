@@ -1,0 +1,234 @@
+:root {
+  --bg: #fbfbf9;
+  --panel: #ffffff;
+  --ink: #1a1a1a;
+  --muted: #5b5b5b;
+  --line: #e4e2dc;
+  --accent: #1f4ed8;
+  --accent-soft: rgba(31, 78, 216, 0.12);
+  --warn: #c2410c;
+  --good: #15803d;
+  --bad: #b91c1c;
+  --maxw: 860px;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.65 ui-serif, Georgia, "Times New Roman", serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+
+header.site {
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+header.site .wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+header.site a.brand {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-decoration: none;
+}
+header.site nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  margin-left: 16px;
+}
+header.site nav a:hover { color: var(--accent); }
+
+main { padding: 36px 0 80px; }
+
+h1, h2, h3 {
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+h1 { font-size: 2.0rem; margin: 0 0 6px; }
+h2 { font-size: 1.4rem; margin: 2.2em 0 0.5em; }
+h3 { font-size: 1.1rem; margin: 1.6em 0 0.4em; }
+.subtitle { color: var(--muted); font-style: italic; font-size: 1.05rem; margin: 0 0 1.6em; }
+
+p { margin: 0 0 1em; }
+a { color: var(--accent); }
+
+.lead { font-size: 1.12rem; }
+
+ul, ol { padding-left: 1.3em; }
+li { margin: 0.25em 0; }
+
+code, kbd, .mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+}
+code { background: #f0efe9; padding: 0.1em 0.35em; border-radius: 4px; }
+
+blockquote {
+  margin: 1.4em 0;
+  padding: 0.6em 1.1em;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+  font-style: italic;
+}
+blockquote p:last-child { margin-bottom: 0; }
+
+.tag {
+  display: inline-block;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  vertical-align: middle;
+}
+
+/* ---- Demo cards on the landing page ---- */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 1.5em 0; }
+@media (max-width: 640px) { .cards { grid-template-columns: 1fr; } }
+.card {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 20px;
+  background: var(--panel);
+  text-decoration: none;
+  color: var(--ink);
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+.card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.05); }
+.card .num { font-family: ui-monospace, monospace; color: var(--accent); font-size: 13px; }
+.card h3 { margin: 4px 0 6px; font-size: 1.08rem; }
+.card p { margin: 0; color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
+
+/* ---- Demo page apparatus ---- */
+.demo {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  padding: 18px;
+  margin: 1.5em 0;
+}
+.canvas-box { position: relative; width: 100%; }
+canvas { width: 100%; display: block; border-radius: 8px; }
+.canvas-box.tall canvas { height: 380px; }
+.canvas-box.med canvas { height: 300px; }
+.canvas-box.short canvas { height: 200px; }
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px 22px;
+  margin: 16px 2px 4px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+}
+.control { display: flex; flex-direction: column; gap: 4px; }
+.control label { color: var(--muted); display: flex; justify-content: space-between; }
+.control label .val { color: var(--ink); font-family: ui-monospace, monospace; }
+.control input[type=range] { width: 100%; accent-color: var(--accent); }
+.control.checkbox { flex-direction: row; align-items: center; gap: 8px; }
+.control.checkbox input { accent-color: var(--accent); }
+
+button.btn {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--ink);
+}
+button.btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* readouts: big numbers under a chart */
+.readouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 16px 0 2px;
+}
+.readout {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fcfcfb;
+  text-align: center;
+}
+.readout .k {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.readout .v {
+  font-family: ui-monospace, monospace;
+  font-size: 1.55rem;
+  margin-top: 4px;
+}
+.readout .v.good { color: var(--good); }
+.readout .v.warn { color: var(--warn); }
+.readout .v.bad { color: var(--bad); }
+
+.takeaway {
+  border-left: 3px solid var(--warn);
+  background: rgba(194, 65, 12, 0.07);
+  padding: 0.7em 1.1em;
+  border-radius: 0 8px 8px 0;
+  margin: 1.4em 0;
+}
+.takeaway strong { font-family: ui-sans-serif, system-ui, sans-serif; }
+
+.prevnext {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 3em;
+  border-top: 1px solid var(--line);
+  padding-top: 1.2em;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+}
+.prevnext a { text-decoration: none; }
+.prevnext .spacer { flex: 1; }
+
+footer.site {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  padding: 24px 0 40px;
+}
+footer.site .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+.refs { font-size: 0.92rem; color: var(--muted); }
+.refs li { margin: 0.4em 0; }
+
+.note { font-size: 0.92rem; color: var(--muted); }
+
+/* MathJax shouldn't overflow on mobile */
+mjx-container { overflow-x: auto; overflow-y: hidden; max-width: 100%; }
