@@ -18,6 +18,7 @@
     <a class="brand" href="index.html">Marginally&nbsp;Useful</a>
     <nav>
       <a href="#demos">Demos</a>
+      <a href="benchmark.html">Benchmark</a>
       <a href="paper/">Paper</a>
       <a href="#references">References</a>
     </nav>
@@ -91,6 +92,9 @@
       <p>Protect every subgroup distribution-free and all you get is a flat band at the inflated level \(1-\alpha\delta\) — wider, never adaptive. Barber et&nbsp;al. (2021), Theorem&nbsp;3.1.</p>
     </a>
   </div>
+
+  <h2>Does it help in practice? A real benchmark</h2>
+  <p>Rhetoric is cheap, so there is also an <a href="benchmark.html">empirical benchmark</a> that puts the actual libraries — <a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a> — and the strong time-series conformal methods on trial against probabilistic baselines and an oracle, scored by conditional coverage and proper scores. The honest finding: the adaptive conformal skins genuinely help, but they help <em>because of the conditional model they wrap</em> — raw quantile regression with no conformal step ties conformalized quantile regression — while the conformal layer supplies the marginal certificate on top. <a href="benchmark.html">See the results &rarr;</a></p>
 
   <h2>The one-paragraph version</h2>
   <p>Forecast quality decomposes into <strong>calibration</strong> (do stated probabilities match observed frequencies?) and <strong>sharpness</strong> (how concentrated is the prediction?), and a proper scoring rule grades both. Conformal prediction touches only the marginal, coverage-flavored slice of calibration, and is constitutionally blind to sharpness, because the width of its set is inherited wholesale from the base model. So you cannot improve a distribution by conformalizing it — the estimation was already done by the score; conformal merely re-levels. Asking it to &ldquo;estimate the distribution better&rdquo; is asking the calibration knob to do the modeling.</p>

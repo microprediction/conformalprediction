@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Benchmark — do the conformal skins help? · Marginally Useful</title>
+<link rel="stylesheet" href="css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  table.bench { border-collapse: collapse; width: 100%; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 13px; margin: 1em 0; }
+  table.bench th, table.bench td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: right; }
+  table.bench th:first-child, table.bench td:first-child { text-align: left; }
+  table.bench th { color: var(--muted); font-weight: 600; }
+  table.bench tr.best td { background: rgba(21,128,61,0.08); }
+  table.bench tr.bad td { background: rgba(185,28,28,0.06); }
+  .fam-cp { color: var(--accent); } .fam-prob { color: var(--good); } .fam-oracle { color: var(--warn); }
+  figure { margin: 1.5em 0; }
+  figure img { width: 100%; border: 1px solid var(--line); border-radius: 8px; }
+  figcaption { color: var(--muted); font-size: 0.9rem; margin-top: 6px; font-family: ui-sans-serif, system-ui, sans-serif; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="index.html">Marginally&nbsp;Useful</a>
+    <nav>
+      <a href="index.html#demos">Demos</a>
+      <a href="paper/">Paper</a>
+      <a href="benchmark.html">Benchmark</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+  <p class="tag">Empirical benchmark</p>
+  <h1>Do the conformal &ldquo;skins&rdquo; actually help?</h1>
+  <p class="subtitle">A fair fight: MAPIE and crepes, plus the strong time-series conformal methods, against probabilistic baselines that model the conditional distribution — and an oracle that knows the truth.</p>
+
+  <p>It is easy to make conformal prediction look bad by pitting fixed split conformal against a drifting series. That would be a straw man. This benchmark does the opposite: it runs the <em>real</em> libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods (ACI, AgACI, conformal&nbsp;PID, NexCP/weighted, EnbPI) in their intended modes, and judges everyone on the axes that matter: <strong>conditional coverage</strong>, <strong>interval efficiency</strong>, and <strong>proper scores</strong> (interval/Winkler, CRPS, log-score) — not marginal coverage alone, which several methods hit by construction. Because the data are synthetic with a known conditional law, we can also score against a true <strong>oracle</strong>.</p>
+
+  <p class="note">Code and full numbers: <a href="benchmark/README.md"><code>benchmark/</code></a>. Means over 5 seeds, target coverage 0.90.</p>
+
+  <h2>Time series under drift</h2>
+  <figure>
+    <img src="benchmark/figures/ts_coverage.png" alt="rolling coverage over time" />
+    <figcaption>Fixed split conformal (blue) collapses once the volatility regime hits; the adaptive methods (ACI, conformal PID) and a simple EWMA-volatility Gaussian track the target. Coverage <em>now</em>, not just on average.</figcaption>
+  </figure>
+
+  <table class="bench">
+    <thead><tr><th>method</th><th>family</th><th>marg.&nbsp;cov</th><th>worst-window</th><th>cond.&nbsp;gap</th><th>interval&nbsp;score&nbsp;↓</th><th>CRPS&nbsp;↓</th></tr></thead>
+    <tbody>
+      <tr class="best"><td>oracle (true μ,σ)</td><td class="fam-oracle">oracle</td><td>0.90</td><td>0.82</td><td>0.02</td><td>5.52</td><td>0.76</td></tr>
+      <tr><td>EWMA-vol Gaussian</td><td class="fam-prob">prob</td><td>0.89</td><td>0.81</td><td>0.03</td><td>6.92</td><td>0.92</td></tr>
+      <tr><td>conformal PID</td><td class="fam-cp">cp</td><td>0.90</td><td>0.82</td><td>0.01</td><td>7.00</td><td>–</td></tr>
+      <tr><td>ACI</td><td class="fam-cp">cp</td><td>0.90</td><td>0.83</td><td>0.01</td><td>7.00</td><td>–</td></tr>
+      <tr><td>true σ on <em>biased</em> μ̂</td><td class="fam-oracle">oracle</td><td>0.82</td><td>0.70</td><td>0.12</td><td>7.02</td><td>0.92</td></tr>
+      <tr><td>NexCP (weighted)</td><td class="fam-cp">cp</td><td>0.88</td><td>0.70</td><td>0.05</td><td>7.08</td><td>–</td></tr>
+      <tr><td>AgACI</td><td class="fam-cp">cp</td><td>0.86</td><td>0.78</td><td>0.06</td><td>7.15</td><td>–</td></tr>
+      <tr><td>MAPIE EnbPI (online)</td><td class="fam-cp">cp</td><td>0.84</td><td>0.36</td><td>0.20</td><td>8.87</td><td>–</td></tr>
+      <tr><td>MAPIE ACI</td><td class="fam-cp">cp</td><td>0.84</td><td>0.36</td><td>0.20</td><td>8.87</td><td>–</td></tr>
+      <tr><td>GARCH(1,1) Gaussian</td><td class="fam-prob">prob</td><td>0.69</td><td>0.48</td><td>0.34</td><td>9.84</td><td>0.98</td></tr>
+      <tr class="bad"><td>fixed split (CP)</td><td class="fam-cp">cp</td><td>0.56</td><td>0.17</td><td>0.60</td><td>13.8</td><td>–</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Heteroscedastic regression</h2>
+  <figure>
+    <img src="benchmark/figures/tabular_condcov.png" alt="conditional coverage vs x" />
+    <figcaption>Vanilla split conformal (blue) over-covers the easy region (100%) and under-covers the hard one (61%). The adaptive methods (crepes normalized) and a heteroscedastic Gaussian hug the target — because they condition on \(x\).</figcaption>
+  </figure>
+
+  <table class="bench">
+    <thead><tr><th>method</th><th>family</th><th>marg.</th><th>cov low-var</th><th>cov hi-var</th><th>cond.&nbsp;gap</th><th>interval&nbsp;↓</th><th>CRPS&nbsp;↓</th></tr></thead>
+    <tbody>
+      <tr class="best"><td>oracle (true f,s)</td><td class="fam-oracle">oracle</td><td>0.90</td><td>0.90</td><td>0.90</td><td>0.02</td><td>6.39</td><td>0.88</td></tr>
+      <tr><td>MAPIE CQR</td><td class="fam-cp">cp</td><td>0.90</td><td>0.92</td><td>0.89</td><td>0.03</td><td>6.51</td><td>–</td></tr>
+      <tr><td>quantile GBR (<em>no conformal</em>)</td><td class="fam-prob">prob</td><td>0.89</td><td>0.90</td><td>0.88</td><td>0.03</td><td>6.52</td><td>–</td></tr>
+      <tr><td>crepes normalized</td><td class="fam-cp">cp</td><td>0.90</td><td>0.92</td><td>0.87</td><td>0.04</td><td>6.85</td><td>–</td></tr>
+      <tr><td>crepes CPS</td><td class="fam-cp">cp</td><td>0.91</td><td>0.92</td><td>0.88</td><td>0.04</td><td>6.86</td><td>0.90</td></tr>
+      <tr><td>het-Gaussian (mean+var)</td><td class="fam-prob">prob</td><td>0.93</td><td>0.93</td><td>0.89</td><td>0.06</td><td>7.08</td><td>0.90</td></tr>
+      <tr class="bad"><td>MAPIE split (absolute)</td><td class="fam-cp">cp</td><td>0.90</td><td>1.00</td><td>0.73</td><td>0.17</td><td>8.32</td><td>–</td></tr>
+      <tr class="bad"><td>crepes standard</td><td class="fam-cp">cp</td><td>0.90</td><td>1.00</td><td>0.73</td><td>0.17</td><td>8.32</td><td>–</td></tr>
+    </tbody>
+  </table>
+
+  <h2>What the numbers say</h2>
+  <ol>
+    <li><strong>The skins genuinely help — when they are the adaptive kind.</strong> CQR and crepes normalized/CPS reach near-oracle interval score and good conditional coverage; ACI and conformal PID recover coverage under drift where fixed split collapses. These are not straw men.</li>
+    <li><strong>But the adaptivity comes from conditional modeling, not the conformal step.</strong> The cleanest tell: raw quantile-GBR with <em>no conformal at all</em> (6.52) ties conformalized quantile regression (6.51). Vanilla split conformal is identical to a static Gaussian. The conformal layer supplies the finite-sample marginal certificate; the sharpness comes from the model it wraps.</li>
+    <li><strong>A plain probabilistic model is competitive on the proper score and returns a full distribution.</strong> An EWMA-vol Gaussian has the best non-oracle interval score in the time-series test; crepes CPS gets competitive CRPS precisely because it is doing conditional distribution estimation.</li>
+    <li><strong>None achieves per-step conditional coverage</strong> — even the oracle's worst window is ~0.82. The repairs deliver long-run/marginal coverage, never coverage <em>now</em>, consistent with the <a href="index.html#nogo">no-go results</a>.</li>
+  </ol>
+
+  <div class="takeaway">
+    <p><strong>Bottom line.</strong> Conformal prediction&rsquo;s marginal certificate is real and useful, but it is not distributional quality. Where a conformal skin is sharp, it is sharp because of the conditional model underneath; the conformal step adds the coverage guarantee on top. This is the empirical face of the paper&rsquo;s <a href="paper/">residual-information gap</a>.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="index.html">&larr; Overview</a>
+    <span class="spacer"></span>
+    <a href="paper/">The paper &rarr;</a>
+  </div>
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Benchmark · reproducible in <code>benchmark/</code></span></div></footer>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Marginally Useful benchmark dependencies.
+# Tested with Python 3.12. Create an isolated env, e.g.:
+#   python -m venv --system-site-packages .venv && source .venv/bin/activate
+#   pip install -r requirements.txt
+numpy>=1.26
+scipy>=1.11
+pandas>=2.0
+scikit-learn>=1.4
+matplotlib>=3.7
+statsmodels>=0.14
+mapie>=1.4
+crepes>=0.9
+arch>=8.0

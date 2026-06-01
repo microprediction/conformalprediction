@@ -24,3 +24,8 @@ node_modules/
 # Local scratch
 _test_*.mjs
 *.tmp
+
+# Python venv & caches (benchmark)
+benchmark/.venv/
+__pycache__/
+*.pyc

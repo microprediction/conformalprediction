@@ -27,11 +27,23 @@
 
   <p class="tag">Demo 05</p>
   <h1>Exchangeability &amp; time series</h1>
-  <p class="subtitle">The one true guarantee rests on a single assumption. Time series quietly violate it.</p>
+  <p class="subtitle">Fixed split conformal is a straw man here. The adaptive methods are not — so judge everyone on a proper score.</p>
 
-  <p>Every coverage statement in conformal prediction is paid for by one assumption: the calibration data and the future point are <strong>exchangeable</strong> — their joint distribution is invariant to reordering. That is plausible for an i.i.d. sample. It is rarely true for a series unfolding in time, where the level trends and occasionally jumps to a new regime. Drop exchangeability and the finite-sample guarantee does not weaken gracefully; it simply stops holding.</p>
+  <p>Every coverage statement in conformal prediction is paid for by one assumption: the calibration data and the future point are <strong>exchangeable</strong> — their joint distribution is invariant to reordering. That is plausible for an i.i.d. sample. It is rarely true for a series unfolding in time, where the level trends and occasionally jumps to a new regime. A <em>fixed</em> split-conformal band that freezes a single width does not weaken gracefully under drift; it simply stops covering.</p>
 
-  <p>Below we forecast a nonstationary series \(y_t = \text{level}_t + \varepsilon_t\) with a trivial online predictor \(\hat y_t\) (a rolling mean). We calibrate split conformal once on \([0, t_0]\) — the dashed line — taking the band half-width \(q = \lceil (n+1)(1-\alpha)\rceil\)-th smallest of \(|y-\hat y|\), and then freeze it: \(\hat y_t \pm q\) for all \(t>t_0\). Turn up the <em>drift</em> slider and watch the green points go red.</p>
+  <p>But it would be cheap to stop there. The literature has strong online repairs, and a fair test pits them not only against fixed split but against a plain probabilistic model — and scores all of them on a <em>proper</em> criterion, not marginal coverage alone (which several methods hit by construction). So below we forecast a nonstationary series \(y_t = \text{level}_t + \sigma_t\,\varepsilon_t\) with known, time-varying \(\sigma_t\) — a trend, a regime jump at the orange line, and a high-volatility block afterwards. The point forecast \(\hat y_t\) is a trivial rolling mean. We calibrate on \([0,t_0]\) (the dashed line) and then run five methods online over \(t>t_0\), all consuming the same \(\hat y_t\):</p>
+
+  <ul>
+    <li><strong>fixed split (CP)</strong> — constant half-width \(q\) from the calibration residuals. The straw man, kept for contrast.</li>
+    <li><strong>ACI</strong> (Gibbs &amp; Candès, 2021) — online \(\alpha_t\), width from the \((1-\alpha_t)\) quantile of a trailing window of \(|y-\hat y|\), updated by \(\alpha_{t+1}=\operatorname{clip}\!\big(\alpha_t+\gamma(\alpha-\mathrm{err}_t)\big)\).</li>
+    <li><strong>conformal PID</strong> (after Angelopoulos, Candès &amp; Tibshirani, 2024) — trailing-quantile base radius plus an integral correction on the running coverage error.</li>
+    <li><strong>NexCP (weighted)</strong> (Barber et&nbsp;al., 2023) — a recency-weighted quantile of trailing residuals, weights \(\rho^{\,\text{age}}\).</li>
+    <li><strong>EWMA-vol Gaussian</strong> — the yardstick: estimate the conditional sd by RiskMetrics EWMA of squared residuals (\(\lambda=0.94\)) and emit \(\hat y_t \pm z\,\sigma_t\). This models the spread directly, so it also returns a full predictive distribution.</li>
+  </ul>
+
+  <p>Pick the method shown in the main panel; turn up <em>drift</em> and watch the green points go red for fixed split. The readouts report, for the selected method, marginal coverage, the <strong>worst-window</strong> coverage (the local collapse the marginal hides), and the <strong>interval (Winkler) score</strong> at level \(1-\alpha\),
+  $$\mathrm{IS} = \overline{\;(\hat h-\hat\ell) + \tfrac{2}{\alpha}(\hat\ell-y)\mathbf 1\{y<\hat\ell\} + \tfrac{2}{\alpha}(y-\hat h)\mathbf 1\{y>\hat h\}\;},$$
+  a proper score that rewards narrow bands and penalises misses — lower is better.</p>
 
   <div class="demo">
     <div class="canvas-box tall"><canvas id="main"></canvas></div>
@@ -39,15 +51,13 @@
     <div class="controls" id="controls"></div>
   </div>
 
-  <p>The standard repair is <strong>Adaptive Conformal Inference</strong> (Gibbs &amp; Candès, 2021): treat the miscoverage level itself as something to track. Maintain \(\alpha_t\), build the band from the \((1-\alpha_t)\) empirical residual quantile, observe whether you missed, and update
-  $$\alpha_{t+1} = \alpha_t + \gamma\,(\alpha - \mathrm{err}_t), \qquad \mathrm{err}_t = \mathbf 1\{y_t \notin C_t\}.$$
-  Miss too often and \(\alpha_t\) shrinks, widening the next band; over-cover and it grows. This is a control loop, not a guarantee. What it buys you is a theorem about the <em>long-run time average</em> of \(\mathrm{err}_t\) converging to \(\alpha\). Toggle the ACI band on and compare.</p>
+  <p>The second panel overlays the <strong>rolling coverage</strong> (trailing 80 steps) of whichever methods you tick on, against the dashed target. This is where you see fixed split (blue) collapse after the regime jump while ACI, conformal PID and the EWMA model track \(1-\alpha\). They are doing real work — they are not straw men.</p>
 
   <div class="canvas-box med demo"><canvas id="cov"></canvas></div>
-  <p class="note">Above: rolling coverage in a trailing 40-step window. The fixed band (blue) sits near target while the data are roughly stationary, then <strong>collapses</strong> once the trend and the regime jump bite. ACI&rsquo;s trailing coverage (orange) oscillates around target — sometimes well above, sometimes well below — while its cumulative average (purple, dashed) crawls toward \(1-\alpha\). The average is fine. The window you are standing in is not.</p>
+  <p class="note">Fixed split sits near target while the data are roughly stationary, then collapses once the trend and the volatility block bite. The adaptive conformal methods and the EWMA-vol model oscillate around target because they re-estimate the width from recent realized residuals. Note what stays true for <em>all</em> of them: the trailing window dips hard right after the jump. The long-run average recovers; the window you are standing in does not.</p>
 
   <div class="takeaway">
-    <p><strong>Takeaway.</strong> Exchangeability is the load-bearing wall. Knock it out and split conformal&rsquo;s finite-sample coverage evaporates out-of-sample. ACI restores only a <em>long-run average</em> miscoverage rate — a far weaker, more diffuse object than the original statement, and one that says nothing about the step in front of you. For forecasting, where you want a sharp predictive distribution <em>now</em>, &ldquo;correct on average over all time&rdquo; is close to the worst guarantee you could be handed. <a href="06-conformal-vs-recalibration.html">Demo&nbsp;06</a> asks whether plain probabilistic recalibration would have served you better all along.</p>
+    <p><strong>Takeaway.</strong> Two honest readings, both from <a href="../benchmark.html">the full benchmark</a>. First, fixed split conformal really does collapse under drift (≈0.56 marginal, ≈0.17 worst-window) — a straw man. But ACI, conformal PID and NexCP genuinely recover long-run and marginal coverage; they are competitive, not strawmen. Second, the repair is <em>conditional modeling</em>, not the conformal step itself: a plain EWMA-volatility Gaussian matches the adaptive conformal methods on the interval score (≈6.9 vs ≈7.0, against an oracle ≈5.5) <em>and</em> returns a full predictive distribution. Where conformal helps under drift, it helps by adapting the width to recent residuals — local conditional modeling — with conformal supplying the coverage leveling on top. And none of these delivers per-step <em>conditional</em> coverage: even the oracle&rsquo;s worst-window coverage is ~0.82. The repairs buy long-run/marginal coverage, never coverage <em>now</em>. <a href="../paper/">The paper</a> works through why. <a href="06-conformal-vs-recalibration.html">Demo&nbsp;06</a> asks whether plain probabilistic recalibration would have served you better all along.</p>
   </div>
 
   <div class="prevnext">
