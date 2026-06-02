@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <title>Applications — where conformal prediction earns its keep</title>
-<meta name="description" content="Domains where coverage is genuinely the objective and conformal prediction shines: selective prediction, anomaly detection, retrieval and screening, LLM safety, robotics and control, risk control, and scientific discovery — with the papers that do it well." />
+<meta name="description" content="Domains where coverage is genuinely the objective and conformal prediction shines: selective prediction, anomaly detection, retrieval and screening, LLM safety, robotics and control, risk control, scientific discovery, causal inference, and survival analysis — with the papers that do it well." />
 <meta property="og:title" content="Conformal Prediction — applications done right" />
-<meta property="og:description" content="The high-stakes territory where coverage is the objective: selective prediction, anomaly detection, retrieval, LLM safety, robotics, risk control, and scientific discovery — with the papers that do it well." />
+<meta property="og:description" content="The high-stakes territory where coverage is the objective: selective prediction, anomaly detection, retrieval, LLM safety, robotics, risk control, scientific discovery, causal inference, and survival analysis — with the papers that do it well." />
 <meta property="og:type" content="website" />
 <link rel="stylesheet" href="css/style.css" />
 <script>
@@ -48,6 +48,8 @@
     <li>Straitouri, Wang, Okati &amp; Gomez-Rodriguez (2024). <em>Conformal prediction sets improve human decision making.</em> <a href="https://arxiv.org/abs/2401.13744">arXiv:2401.13744</a> &mdash; a pre-registered trial: people decide better with conformal sets than fixed-size sets of equal coverage.</li>
     <li><em>Improving expert predictions with conformal prediction</em> (2022). <a href="https://arxiv.org/abs/2201.12006">arXiv:2201.12006</a> &mdash; the set as decision support, with a calibrated coverage/size trade-off.</li>
     <li><em>Clinically useful conformal prediction for inherited retinal disease</em> (2024) &mdash; sets at a stated confidence, flagging cases for a second opinion.</li>
+    <li>Sadinle, Lei &amp; Wasserman (2019). <em>Least ambiguous set-valued classifiers with bounded error levels.</em> JASA. <a href="https://arxiv.org/abs/1609.00451">arXiv:1609.00451</a> &mdash; the smallest-ambiguity prediction sets at a target coverage; the method behind <a href="demos/09-prediction-sets.html">Demo&nbsp;09</a>.</li>
+    <li>Romano, Sesia &amp; Cand&egrave;s (2020). <em>Classification with valid and adaptive coverage</em> (APS). NeurIPS. <a href="https://arxiv.org/abs/2006.02544">arXiv:2006.02544</a> &mdash; adaptive label sets with markedly better coverage across inputs.</li>
   </ul>
 
   <!-- ============================================================ -->
@@ -76,6 +78,7 @@
     <li>Ren, Dixit, Bodrova, &hellip;, Sadigh, Zeng &amp; Majumdar (2023). <em>Robots that ask for help: uncertainty alignment for LLM planners</em> (KnowNo). CoRL. <a href="https://arxiv.org/abs/2307.01928">arXiv:2307.01928</a> &mdash; conformal sets decide when an LLM-driven agent should defer to a human.</li>
     <li>Quach, Fisch, Schuster, &hellip; Barzilay &amp; Jaakkola (2024). <em>Conformal language modeling.</em> <a href="https://arxiv.org/abs/2306.10193">arXiv:2306.10193</a> &mdash; generation sets with calibrated correctness guarantees.</li>
     <li><em>API is enough: conformal prediction for LLMs without logit access</em> (2024). <a href="https://arxiv.org/abs/2403.01216">arXiv:2403.01216</a> &mdash; coverage-guaranteed answer sets from black-box APIs.</li>
+    <li>Mohri &amp; Hashimoto (2024). <em>Language models with conformal factuality guarantees.</em> ICML. <a href="https://arxiv.org/abs/2402.10978">arXiv:2402.10978</a> &mdash; back off a generation to the subset of claims that is correct with high probability.</li>
   </ul>
 
   <!-- ============================================================ -->
@@ -96,6 +99,7 @@
     <li>Bates, Angelopoulos, Lei, Malik &amp; Jordan (2021). <em>Distribution-free, risk-controlling prediction sets</em> (RCPS). JACM. <a href="https://arxiv.org/abs/2101.02703">arXiv:2101.02703</a> &mdash; the foundation of risk control.</li>
     <li>Online conformal risk control for distributed/remote inference (2024). <a href="https://arxiv.org/abs/2409.07902">arXiv:2409.07902</a> &mdash; worst-case FNR guarantees under communication limits.</li>
     <li>Snell, Bates, &hellip; (2022). <em>Quantile risk control.</em> <a href="https://arxiv.org/abs/2212.13629">arXiv:2212.13629</a> &mdash; control quantiles of a loss, not just the mean.</li>
+    <li>Angelopoulos, Bates, Cand&egrave;s, Jordan &amp; Lei (2021). <em>Learn then test: calibrating predictive algorithms to achieve risk control.</em> <a href="https://arxiv.org/abs/2110.01052">arXiv:2110.01052</a> &mdash; turn any (even non-monotone) risk target into finite-sample control via multiple testing.</li>
   </ul>
 
   <!-- ============================================================ -->
@@ -105,6 +109,22 @@
     <li>Fannjiang, Bates, Angelopoulos, Listgarten &amp; Jordan (2022). <em>Conformal prediction for the design problem.</em> <a href="https://arxiv.org/abs/2202.03613">arXiv:2202.03613</a> &mdash; valid uncertainty when you optimize over designs (feedback covariate shift).</li>
     <li>Jin &amp; Cand&egrave;s (2023). <em>Selection by prediction with conformal p-values.</em> <a href="https://arxiv.org/abs/2210.01408">arXiv:2210.01408</a> &mdash; pick candidates above a threshold with FDR control.</li>
     <li>Conditional calibration for false-discovery-rate control under dependence (2020). <a href="https://arxiv.org/abs/2007.10438">arXiv:2007.10438</a> &mdash; finite-sample FDR with dependent statistics.</li>
+  </ul>
+
+  <!-- ============================================================ -->
+  <h2>8 &middot; Causal inference and counterfactuals</h2>
+  <p>Causal questions are coverage questions wearing a disguise. An individual treatment effect, or a counterfactual outcome, is never observed, so the honest deliverable is an interval guaranteed to contain it. Conformal inference supplies one without a fully specified outcome model, and the better versions degrade gracefully &mdash; widening, not breaking &mdash; when unmeasured confounding is bounded rather than assumed away.</p>
+  <ul class="refs">
+    <li>Lei &amp; Cand&egrave;s (2021). <em>Conformal inference of counterfactuals and individual treatment effects.</em> JRSS-B. <a href="https://arxiv.org/abs/2006.06138">arXiv:2006.06138</a> &mdash; valid intervals for an effect that is never directly seen.</li>
+    <li>Jin, Ren &amp; Cand&egrave;s (2023). <em>Sensitivity analysis of individual treatment effects: a robust conformal inference approach.</em> PNAS. <a href="https://arxiv.org/abs/2111.12161">arXiv:2111.12161</a> &mdash; coverage that holds under a bounded amount of unmeasured confounding.</li>
+  </ul>
+
+  <!-- ============================================================ -->
+  <h2>9 &middot; Survival analysis and time-to-event</h2>
+  <p>Time-to-event data are censored, but a guaranteed <em>lower bound</em> on survival time is exactly a one-sided coverage statement &mdash; and that is what a clinician or a reliability engineer actually acts on. Conformal methods deliver it distribution-free even when follow-up is incomplete, turning a calibrated prognosis into a statement you can stand behind.</p>
+  <ul class="refs">
+    <li>Cand&egrave;s, Lei &amp; Ren (2023). <em>Conformalized survival analysis.</em> JRSS-B. <a href="https://arxiv.org/abs/2103.09763">arXiv:2103.09763</a> &mdash; calibrated lower predictive bounds on survival time under censoring.</li>
+    <li>Gui, Barber &amp; Ma (2024). <em>Conformalized survival analysis with adaptive cut-offs.</em> Biometrika. <a href="https://arxiv.org/abs/2211.01227">arXiv:2211.01227</a> &mdash; tighter bounds via covariate-adaptive calibration.</li>
   </ul>
 
   <div class="takeaway">
