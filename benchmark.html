@@ -44,11 +44,11 @@
 <div class="wrap">
   <p class="tag">A cautionary example</p>
   <h1>Using conformal skin packages: a worked example</h1>
-  <p class="subtitle">One synthetic experiment, built to isolate a single mechanism: where a conformal wrapper looks sharp, the sharpness comes from the model underneath &mdash; not the conformal step.</p>
+  <p class="subtitle">Do MAPIE, crepes, and the time-series conformal methods actually help? One controlled experiment on synthetic data.</p>
 
-  <p>The question is narrow, because that is what a controlled toy can answer well: when a conformal wrapper gives sharp, well-behaved intervals, is it the conformal step or the model underneath? To show it rather than assert it, the experiment runs the real libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods (ACI, AgACI, conformal&nbsp;PID, NexCP/weighted, EnbPI) in their intended modes &mdash; no straw men &mdash; against plain probabilistic baselines and, since the data are synthetic with a known law, a true oracle. Everyone is scored on conditional coverage, interval efficiency, and proper scores (interval/Winkler, CRPS), not marginal coverage alone. One process, a handful of methods, two metrics: read it as an illustration of the mechanism, not a ranking of libraries, and not a guide to how any of them behaves on your data.</p>
+  <p>It runs the real libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods (ACI, AgACI, conformal&nbsp;PID, NexCP/weighted, EnbPI) in their intended modes, against plain probabilistic baselines and &mdash; since the data are synthetic with a known law &mdash; a true oracle. Everyone is scored on conditional coverage, interval efficiency, and proper scores (interval/Winkler, CRPS), not marginal coverage alone.</p>
 
-  <p class="note">Code and full numbers: <a href="benchmark/README.md"><code>benchmark/</code></a>. Means over 5 seeds on a single synthetic setup, target coverage 0.90. The absolute values mean nothing outside this toy; only the comparisons within each table carry the lesson.</p>
+  <p class="note">Code and full numbers: <a href="benchmark/README.md"><code>benchmark/</code></a>. Means over 5 seeds, target coverage 0.90; compare within each table, not across.</p>
 
   <h2>Time series under drift</h2>
   <figure>
@@ -97,7 +97,6 @@
   </table>
 
   <h2>What this one example shows</h2>
-  <p>Scoped to this synthetic setup, and offered as illustration rather than measurement:</p>
   <ol>
     <li>Adaptive skins behave well here. CQR and crepes normalized/CPS reach near-oracle interval score and good conditional coverage; ACI and conformal PID recover coverage under drift where fixed split collapses. None of these is a straw man.</li>
     <li>But the adaptivity comes from the conditional model, not the conformal step. The cleanest tell: raw quantile-GBR with <em>no conformal at all</em> (6.52) ties conformalized quantile regression (6.51). Vanilla split conformal is identical to a static Gaussian. The conformal layer supplies the finite-sample marginal certificate; the sharpness comes from the model it wraps.</li>
