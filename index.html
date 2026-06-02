@@ -123,12 +123,12 @@
   <blockquote><p><strong>Is your loss a function of <em>whether</em> the truth lands in a set, or of <em>where</em> it lands?</strong> When the answer is &ldquo;whether,&rdquo; coverage <em>is</em> the objective, the set is the deliverable, and conformal prediction&rsquo;s distribution-free guarantee is hard to beat.</p></blockquote>
   <p>That covers a great deal of real, high-stakes work:</p>
   <ul>
-    <li><strong>Selective prediction &amp; human-in-the-loop triage.</strong> Return a small candidate set guaranteed to contain the answer 95% of the time and defer the rest to an expert &mdash; medical decision support, content moderation, document review. The guarantee bounds how often the human is handed the wrong shortlist.</li>
-    <li><strong>Anomaly, novelty &amp; out-of-distribution detection.</strong> Conformal \(p\)-values are a distribution-free hypothesis test &ldquo;is this point exchangeable with what I&rsquo;ve seen?&rdquo; with exact Type-I error control. Fraud, fault detection, monitoring &mdash; this is conformal prediction at its cleanest, where it is a <em>test</em>, not a forecaster.</li>
-    <li><strong>Screening &amp; retrieval shortlists.</strong> Drug-candidate triage, search, recommendation: the product <em>is</em> a candidate set, and coverage is recall. A guaranteed-recall shortlist is precisely what conformal gives you.</li>
-    <li><strong>LLM and structured-output safety.</strong> Emit a set of candidate answers guaranteed to contain the correct one with high probability, or abstain when the conformal set grows too large &mdash; a principled, distribution-free handle on hallucination and deferral.</li>
-    <li><strong>Safety envelopes in control &amp; robotics.</strong> Certify that the true state or trajectory lies inside a reachable set with a chosen probability &mdash; the guarantee is about <em>containment</em>, which is exactly conformal&rsquo;s native object.</li>
-    <li><strong>Compliance, audit &amp; risk certificates.</strong> When the deliverable is a contractual, distribution-free, finite-sample promise &mdash; &ldquo;contained 95% of the time&rdquo; &mdash; nothing else provides one so cheaply or under so few assumptions.</li>
+    <li>Selective prediction and human-in-the-loop triage, where you return a small candidate set guaranteed to contain the answer 95% of the time and send the rest to an expert. In medical decision support or content moderation, the guarantee bounds how often the human is handed the wrong shortlist.</li>
+    <li>Anomaly and out-of-distribution detection, where conformal \(p\)-values act as a distribution-free test of whether a new point is exchangeable with what came before, with exact Type-I error control. This is conformal prediction at its cleanest, working as a test rather than a forecaster.</li>
+    <li>Screening and retrieval, where the product is itself a candidate set and coverage is recall. Drug-candidate triage, search and recommendation all want the guaranteed-recall shortlist that conformal prediction provides.</li>
+    <li>Safety for language models and structured outputs, where you emit a set of candidates guaranteed to contain the correct answer with high probability, or abstain when that set grows too large. It is a distribution-free handle on hallucination and deferral.</li>
+    <li>Safety envelopes in control and robotics, certifying that the true state or trajectory lies inside a reachable set with a chosen probability. The guarantee is about containment, which is conformal prediction&rsquo;s native object.</li>
+    <li>Compliance and audit, where the deliverable is the certificate itself: &ldquo;contained 95% of the time,&rdquo; under almost no assumptions, which little else can promise so cheaply.</li>
   </ul>
   <p>In every one of these the marginal coverage guarantee is not a consolation prize &mdash; it is the whole point. The skill is recognizing which column your problem is in. <a href="demos/06-conformal-vs-recalibration.html">Demo&nbsp;06</a> draws the line between this world and forecasting.</p>
 
@@ -156,7 +156,7 @@
   <!-- ============================================================ -->
   <h2>The one-sentence version</h2>
   <div class="takeaway">
-    <p><strong>Conformal prediction certifies the coverage of a set; it does not estimate a distribution.</strong> Use it &mdash; happily &mdash; whenever you need a coverage guarantee. Just don&rsquo;t expect the certificate to make the forecast underneath it any sharper; that work belongs to the model. Genuinely useful, then &mdash; but, in the exact sense of that average over inputs, only <em>marginally</em> so.</p>
+    <p>Conformal prediction certifies the coverage of a set; it does not estimate a distribution. Use it, happily, whenever you need a coverage guarantee. Just don&rsquo;t expect the certificate to make the forecast underneath it any sharper; that work belongs to the model. Genuinely useful, then, but &mdash; in the exact sense of that average over inputs &mdash; only <em>marginally</em> so.</p>
   </div>
 
   <h2 id="references">Key references</h2>
