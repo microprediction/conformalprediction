@@ -7,10 +7,10 @@ Read this first, then keep the house style.
 ## What this project is
 
 A balanced, interactive *guide* to conformal prediction at conformalprediction.net, plus a
-reproducible benchmark, a LaTeX paper ("Marginally Useful?"), and a tiny `conformalprediction`
+reproducible benchmark, a LaTeX paper ("Marginally Useful?"), and a tiny `conformalguide`
 PyPI package. It explains what the coverage guarantee does and does not tell you, where the
 method is the right tool, and how to apply it well. The tone is clear, measured, and
-informative — the guiding principle is *inform, not oversell*.
+informative; the guiding principle is *inform, not oversell*.
 
 ## Repo map
 
@@ -25,7 +25,7 @@ demos/ js/ css/         8 interactive demos (vanilla JS, no build)
 benchmark/              reproducible study (run_timeseries.py, run_tabular.py, common.py,
                         ts_methods.py, skater_shootout.py); .venv is gitignored
 paper/                  marginally-useful.tex, references.bib, figures.py, figures/*.pdf
-conformalprediction/    the pip package (minimal split-conformal core)
+conformalguide/         the pip package (minimal split-conformal core)
 data/cp_papers_labeled.tsv   wheat/chaff labels from the patterns study
 ```
 
@@ -88,8 +88,10 @@ has no undefined references. (The original build did all of this; match it.)
 
 ## The PyPI package
 
-Minimal on purpose (`conformalprediction/core.py`). To release a new version: bump
-`version` in **both** `pyproject.toml` and `conformalprediction/__init__.py`, then
+Minimal on purpose (`conformalguide/core.py`). The PyPI project is named `conformalguide`
+because `conformalprediction` (and its `-`/`_` variants) was blocked by PyPI's
+name-similarity filter. To release a new version: bump `version` in **both**
+`pyproject.toml` and `conformalguide/__init__.py`, then
 `gh workflow run publish.yml` (the workflow builds and uploads with the `PYPI_USERNAME` /
 `PYPI_PASSWORD` repo secrets — `PYPI_USERNAME` must be `__token__` and `PYPI_PASSWORD` a
 PyPI API token). You cannot reuse a version number.

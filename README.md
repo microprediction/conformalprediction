@@ -15,19 +15,19 @@ not give you. The intent is to inform, not to oversell.
 
 ## The package
 
-`pip install conformalprediction` gives you a tiny, dependency-free split-conformal core.
+`pip install conformalguide` gives you a tiny, dependency-free split-conformal core.
 The package is deliberately minimal; the guide is the main event.
 
 ```python
-from conformalprediction import predict_interval, conformal_quantile, coverage
+from conformalguide import predict_interval, conformal_quantile, coverage
 
 # calibration residuals  y - mu_hat(x)
 resid = [-1.0, 0.4, -0.3, 0.9, -0.7, 0.2, 1.1, -0.5]
 lo, hi = predict_interval(point=2.0, residuals_cal=resid, alpha=0.2)
 ```
 
-(With too few calibration points for the level you ask for, the honest answer is an
-infinite interval — the finite-sample correction needs at least ⌈(n+1)(1−α)⌉ ≤ n.)
+(With too few calibration points for the level you ask for, the correct answer is an
+infinite interval: the finite-sample correction needs at least ⌈(n+1)(1−α)⌉ ≤ n.)
 
 ## What's in the repository
 
@@ -35,7 +35,7 @@ A static site (vanilla HTML/CSS/ES-modules, no build step, no runtime dependenci
 MathJax from a CDN), a reproducible benchmark, and a LaTeX paper.
 
 ```
-conformalprediction/        # the pip package (minimal split-conformal core)
+conformalguide/             # the pip package (minimal split-conformal core)
 index.html                  # the guide
 css/ js/                    # styling and the demo modules (one per demonstration)
 demos/                      # eight interactive demonstrations
