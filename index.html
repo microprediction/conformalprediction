@@ -40,14 +40,14 @@
   <h1>Conformal Prediction</h1>
   <p class="subtitle">A practical, interactive guide, built on one premise: to wield conformal prediction well, you have to understand what it isn&rsquo;t.</p>
 
-  <p class="lead">Conformal prediction is one of the most useful ideas in modern uncertainty quantification. From <em>any</em> model, on almost <em>any</em> data, it builds a prediction set that contains the truth with a frequency you choose &mdash; finite-sample, with no distributional assumptions. But the tool is easy to misapply, and using it well takes more than knowing the recipe: it takes a clear sense of its boundaries. So this guide takes its time. We build the method, read its guarantee carefully, see exactly where it is indispensable, and &mdash; the part most often skipped &mdash; we are precise about what the guarantee does <em>not</em> give you, because that is what tells you when to reach for it.</p>
+  <p class="lead">Conformal prediction is one of the most useful ideas in modern uncertainty quantification. From <em>any</em> model, on almost <em>any</em> data, it builds a prediction set that contains the truth with a frequency you choose: finite-sample, with no distributional assumptions. But the tool is easy to misapply, and using it well takes more than knowing the recipe; it takes a clear sense of its boundaries. So this guide takes its time. We build the method, read its guarantee carefully, see exactly where it is indispensable, and then, in the part most often skipped, we are precise about what the guarantee does <em>not</em> give you, because that is what tells you when to reach for it.</p>
 
   <p class="note">The intent of this guide is to inform, not to oversell.</p>
 
   <blockquote>
     <p>Given exchangeable data, a model, and a nonconformity score, split conformal prediction returns a set \(C(X)\) with
     $$\mathbb{P}\big(Y_{n+1}\in C(X_{n+1})\big)\;\ge\;1-\alpha.$$
-    A real and remarkable guarantee. The art is in reading it: the probability averages over the input \(X_{n+1}\), so it describes the <em>average</em> case &mdash; not necessarily the one in front of you.</p>
+    A real and remarkable guarantee. The art is in reading it: the probability averages over the input \(X_{n+1}\), so it describes the <em>average</em> case, not necessarily the one in front of you.</p>
   </blockquote>
 
   <p>Everything below is something you can check by moving a slider. The companion <a href="paper/">paper</a> states it precisely, with proofs and citations; a <a href="benchmark.html">worked example</a> stress-tests the popular libraries on a controlled problem.</p>

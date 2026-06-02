@@ -95,12 +95,12 @@ more than marginal coverage'' \citep{lei2014distribution}.
 Sections~\ref{sec:setup}--\ref{sec:marginal} are expository: the guarantee, and the
 three senses in which it is weaker than advertised. Our contributions are:
 \begin{itemize}
-  \item \textbf{Orthogonality} (Section~\ref{sec:orthogonality},
+  \item \emph{Orthogonality} (Section~\ref{sec:orthogonality},
   Proposition~\ref{prop:orth}). For a residual-based score the conformal set is not a
   functional of the predictive density, so marginal coverage places no constraint on the
   log-score of an accompanying density: one can pin coverage at $1-\alpha$ and send the
   log-score to $-\infty$. \emph{(Folklore made precise.)}
-  \item \textbf{The residual-information gap} (Section~\ref{sec:gap},
+  \item \emph{The residual-information gap} (Section~\ref{sec:gap},
   Propositions~\ref{prop:relevel}--\ref{prop:gap}). A single-shape residual predictive
   system re-levels the base model's residual shape; its log-score regret to the oracle is
   the mutual information $I(R;X)=\E_X\,\KL\!\big(r(\cdot\given X)\,\|\,\bar r\big)$ for the
@@ -109,7 +109,7 @@ three senses in which it is weaker than advertised. Our contributions are:
   that ignores $X$; only conditioning on $X$ reduces it. Within the single-shape class
   the conformal system is log-score optimal. \emph{(A known re-leveling identity made
   two-case; a decomposition we have not seen stated this way.)}
-  \item \textbf{The coverage--score plane} (Section~\ref{sec:plane}). A two-axis
+  \item \emph{The coverage--score plane} (Section~\ref{sec:plane}). A two-axis
   diagnostic in which, for a report consisting of a set and an unchanged density,
   conformalization is a horizontal projection onto the zero-coverage-error line, leaving
   the score coordinate untouched. \emph{(A presentation device we find clarifying.)}
@@ -320,11 +320,11 @@ different objects, and the distinction matters for the gap below.
 Fix a location predictor $\hat\mu$ with residual $R=Y-\hat\mu(X)$ of marginal density
 $g$ and CDF $G$. In the large-calibration limit (under exchangeability):
 \begin{enumerate}
-\item[\textbf{(A)}] \textbf{Signed-residual CPS.} The CPS predictive distribution is
+\item[\emph{(A)}] \emph{Signed-residual CPS.} The CPS predictive distribution is
 $\Pi_x(y)=G\big(y-\hat\mu(x)\big)$ (the calibration ECDF $\widehat G_n\to G$ by
 Glivenko--Cantelli), with density $\pi_x(y)=g\big(y-\hat\mu(x)\big)$: the base location
 forecast re-leveled by the marginal signed-residual law.
-\item[\textbf{(B)}] \textbf{Absolute-residual intervals.} Ordinary split conformal at
+\item[\emph{(B)}] \emph{Absolute-residual intervals.} Ordinary split conformal at
 level $\alpha$ returns the symmetric interval $\hat\mu(x)\pm \hat q_\alpha$, with
 $\hat q_\alpha$ the $(1-\alpha)$-quantile of $|R|$. Read as a predictive distribution
 (by sweeping $\alpha$) it is symmetric about $\hat\mu(x)$ with $|{\cdot}|$ distributed as
@@ -438,15 +438,15 @@ the marginal-coverage error of the \emph{set} and the proper-score performance o
 \citep{gneiting2007probabilistic} is, in this plane, the statement that the two
 coordinates are distinct, and our results read geometrically:
 \begin{itemize}
-  \item \textbf{Residual split conformal is a horizontal projection.} It maps a report
+  \item \emph{Residual split conformal is a horizontal projection.} It maps a report
   $(C_\alpha^{\text{base}},f)$ to $(C_\alpha^{\text{conf}},f)$: it changes the set so that
   $C\to 0$ while leaving the density $f$ (and hence $S$) untouched
   (Proposition~\ref{prop:orth}). It moves a point left, never up.
-  \item \textbf{Conformal predictive systems are different:} they supply their own
+  \item \emph{Conformal predictive systems are different:} they supply their own
   density-valued report, so they do have a vertical coordinate, but that coordinate is
   governed by the single-shape restriction of Proposition~\ref{prop:gap}, capped at the
   oracle minus $I(R;X)$.
-  \item \textbf{Recalibration and better modeling move vertically.} Fitting shape to a
+  \item \emph{Recalibration and better modeling move vertically.} Fitting shape to a
   proper score raises $S$; conditioning on $x$ is the only way to raise it past the
   ceiling set by the residual-information gap \eqref{eq:gapA}.
 \end{itemize}
@@ -475,15 +475,15 @@ Drop exchangeability and \eqref{eq:marginal} is no longer guaranteed. The litera
 repairs are ingenious, and uniform in one respect: they survive by redefining what is
 guaranteed.
 \begin{itemize}
-  \item \textbf{Weighted conformal prediction} \citep{tibshirani2019conformal} restores
+  \item \emph{Weighted conformal prediction} \citep{tibshirani2019conformal} restores
   marginal coverage under covariate shift when the likelihood ratio is known; with
   estimated weights coverage becomes approximate and the effective sample size drops.
-  \item \textbf{Adaptive Conformal Inference} \citep{gibbs2021adaptive} updates the level
+  \item \emph{Adaptive Conformal Inference} \citep{gibbs2021adaptive} updates the level
   online and ``puts no constraints on the data generating distribution,'' but guarantees
   a \emph{long-run time-average} miscoverage frequency,
   $\frac1T\sum_t \mathrm{err}_t\to\alpha$, not a finite-sample statement about
   $\Pr(Y\in C(X))$, and certainly not conditional coverage.
-  \item \textbf{EnbPI} \citep{xu2021conformal} drops exchangeability for approximate
+  \item \emph{EnbPI} \citep{xu2021conformal} drops exchangeability for approximate
   marginal coverage under strong-mixing/stationarity surrogates; later online methods
   \citep{zaffran2022adaptive,gibbs2024conformal} retreat to regret bounds over local
   intervals. The general beyond-exchangeability analysis of \citet{barber2023conformal}
@@ -542,23 +542,23 @@ add sharpness, which is the experience the introduction describes.
 The argument is skeptical, not dismissive, and it comes with a precise converse. The
 litmus is one question:
 \begin{quote}
-\emph{Is your loss a function of \textbf{whether} the truth lands in a region, or of
-\textbf{where} it lands?}
+\emph{Is your loss a function of \emph{whether} the truth lands in a region, or of
+\emph{where} it lands?}
 \end{quote}
 If the former, coverage is the native object and conformal prediction is sound and often
 ideal:
 \begin{itemize}
-  \item \textbf{Selective prediction and risk control.} ``Return a small set guaranteed
+  \item \emph{Selective prediction and risk control.} ``Return a small set guaranteed
   to contain the label $95\%$ of the time; a human checks it.'' The deliverable is a set;
   risk-controlling prediction sets and conformal risk control formalize this
   \citep{angelopoulos2021uncertainty, bates2021distribution, angelopoulos2024conformalrisk}.
-  \item \textbf{Retrieval and shortlisting,} where the product is a candidate set and
+  \item \emph{Retrieval and shortlisting,} where the product is a candidate set and
   coverage is recall.
-  \item \textbf{Anomaly and novelty detection via conformal $p$-values}, conformal
+  \item \emph{Anomaly and novelty detection via conformal $p$-values}, conformal
   prediction's cleanest home, because here it is not a forecaster but a
   distribution-free hypothesis test and coverage is Type-I error control
   \citep{vovk2005algorithmic}.
-  \item \textbf{Compliance and long-run frequency control,} where a certificate of the
+  \item \emph{Compliance and long-run frequency control,} where a certificate of the
   form ``contained $95\%$ of the time on average'' \emph{is} the product, and the
   distribution-free, finite-sample nature of \eqref{eq:marginal} is exactly the value
   added.
