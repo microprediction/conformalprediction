@@ -164,19 +164,23 @@ def _figures(keep, agg):
     plt.tight_layout(); plt.savefig(os.path.join(OUT, "figures", "tabular_condcov.png"), dpi=130); plt.close()
 
     # the plane: conditional-coverage gap vs interval score
-    plt.figure(figsize=(7.6, 5.2))
-    colors = {"cp": "#1f4ed8", "prob": "#15803d", "oracle": "#c2410c"}
-    for _, r in agg.iterrows():
-        plt.scatter(r["cond_cov_gap"], r["interval_score"], c=colors.get(r["family"], "#666"), s=45)
-        plt.annotate(r["method"], (r["cond_cov_gap"], r["interval_score"]), fontsize=7,
-                     xytext=(4, 3), textcoords="offset points")
-    plt.xlabel("worst conditional-coverage gap  (lower = more adaptive)")
-    plt.ylabel("interval (Winkler) score  (lower = better)")
-    plt.title("Tabular: adaptivity vs. efficiency")
     from matplotlib.lines import Line2D
-    plt.legend(handles=[Line2D([0],[0],marker='o',ls='',color=colors[k],
-               label={'cp':'conformal skin','prob':'probabilistic','oracle':'oracle'}[k]) for k in colors], fontsize=8)
-    plt.tight_layout(); plt.savefig(os.path.join(OUT, "figures", "tabular_plane.png"), dpi=130); plt.close()
+    from adjustText import adjust_text
+    fig, ax = plt.subplots(figsize=(7.8, 5.4))
+    colors = {"cp": "#1f4ed8", "prob": "#15803d", "oracle": "#c2410c"}
+    texts = []
+    for _, r in agg.iterrows():
+        c = colors.get(r["family"], "#666")
+        ax.scatter(r["cond_cov_gap"], r["interval_score"], c=c, s=50, zorder=3)
+        texts.append(ax.text(r["cond_cov_gap"], r["interval_score"], r["method"], fontsize=7.5, color=c))
+    ax.set_xlabel("worst conditional-coverage gap  (lower = more adaptive)")
+    ax.set_ylabel("interval (Winkler) score  (lower = better)")
+    ax.set_title("Tabular: adaptivity vs. efficiency")
+    adjust_text(texts, ax=ax, arrowprops=dict(arrowstyle="-", color="0.6", lw=0.5))
+    ax.legend(handles=[Line2D([0],[0],marker='o',ls='',color=colors[k],
+              label={'cp':'conformal skin','prob':'probabilistic','oracle':'oracle'}[k]) for k in colors],
+              loc="upper right", fontsize=8)
+    fig.tight_layout(); fig.savefig(os.path.join(OUT, "figures", "tabular_plane.png"), dpi=130); plt.close(fig)
 
 
 if __name__ == "__main__":

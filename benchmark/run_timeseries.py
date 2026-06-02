@@ -214,21 +214,24 @@ def _figures(keep, agg):
     plt.tight_layout(); plt.savefig(os.path.join(OUT, "figures", "ts_coverage.png"), dpi=130); plt.close()
 
     # 2) the coverage–sharpness plane: interval score vs worst-window coverage
-    plt.figure(figsize=(7.6, 5.2))
+    from matplotlib.lines import Line2D
+    from adjustText import adjust_text
+    fig, ax = plt.subplots(figsize=(7.8, 5.4))
     colors = {"cp": "#1f4ed8", "prob": "#15803d", "oracle": "#c2410c"}
+    texts = []
     for _, r in agg.iterrows():
         c = colors.get(r["family"], "#666")
-        plt.scatter(r["worst_win_cov"], r["interval_score"], c=c, s=45)
-        plt.annotate(r["method"], (r["worst_win_cov"], r["interval_score"]),
-                     fontsize=7, xytext=(4, 3), textcoords="offset points")
-    plt.axvline(1 - ALPHA, color="k", ls="--", lw=1)
-    plt.xlabel("worst rolling-window coverage  (→ conditional coverage)")
-    plt.ylabel("interval (Winkler) score  (lower = better)")
-    plt.title("Time-series: efficiency vs. worst-case coverage")
-    from matplotlib.lines import Line2D
-    plt.legend(handles=[Line2D([0],[0],marker='o',ls='',color=colors[k],
-               label={'cp':'conformal','prob':'probabilistic','oracle':'oracle'}[k]) for k in colors], fontsize=8)
-    plt.tight_layout(); plt.savefig(os.path.join(OUT, "figures", "ts_plane.png"), dpi=130); plt.close()
+        ax.scatter(r["worst_win_cov"], r["interval_score"], c=c, s=50, zorder=3)
+        texts.append(ax.text(r["worst_win_cov"], r["interval_score"], r["method"], fontsize=7.5, color=c))
+    ax.axvline(1 - ALPHA, color="k", ls="--", lw=1)
+    ax.set_xlabel("worst rolling-window coverage  (→ conditional coverage)")
+    ax.set_ylabel("interval (Winkler) score  (lower = better)")
+    ax.set_title("Time-series: efficiency vs. worst-case coverage")
+    adjust_text(texts, ax=ax, arrowprops=dict(arrowstyle="-", color="0.6", lw=0.5))
+    ax.legend(handles=[Line2D([0],[0],marker='o',ls='',color=colors[k],
+              label={'cp':'conformal','prob':'probabilistic','oracle':'oracle'}[k]) for k in colors],
+              loc="lower left", fontsize=8)
+    fig.tight_layout(); fig.savefig(os.path.join(OUT, "figures", "ts_plane.png"), dpi=130); plt.close(fig)
 
     # 3) interval width over time for a few adaptive methods + true 90% band width
     plt.figure(figsize=(9, 4.0))

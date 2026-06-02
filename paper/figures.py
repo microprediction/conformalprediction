@@ -99,8 +99,8 @@ def fig_marginal_conditional():
     a1.scatter(x[te][inside], y[te][inside], s=5, color=GREEN, alpha=0.5)
     a1.scatter(x[te][~inside], y[te][~inside], s=7, color=ORANGE, alpha=0.8, label="missed")
     a1.plot(gx, mu(gx), BLUE, lw=2, label="$\\hat\\mu(x)$")
-    a1.set_xlabel("$x$"); a1.set_ylabel("$y$"); a1.legend(loc="upper left"); a1.set_xlim(0, 4)
-    a1.set_title("constant-width band, 90\\% marginal")
+    a1.set_xlabel("$x$"); a1.set_ylabel("$y$"); a1.legend(loc="lower left", fontsize=8); a1.set_xlim(0, 4)
+    a1.set_title("constant-width band, 90% marginal")
     nb = 14
     edges = np.linspace(0, 4, nb + 1); ctr = 0.5 * (edges[:-1] + edges[1:])
     cov = []
@@ -261,19 +261,22 @@ def fig_plane():
             rows.setdefault(nm, {"fam": fam, "ww": [], "is": []})
             rows[nm]["ww"].append(ww); rows[nm]["is"].append(isc)
     col = {"cp": BLUE, "prob": GREEN, "oracle": ORANGE}
-    fig, ax = plt.subplots(figsize=(6.6, 4.4))
+    from matplotlib.lines import Line2D
+    from adjustText import adjust_text
+    fig, ax = plt.subplots(figsize=(7.4, 5.0))
+    texts = []
     for nm, r in rows.items():
         ww, isc = np.mean(r["ww"]), np.mean(r["is"])
-        ax.scatter(ww, isc, color=col[r["fam"]], s=45, zorder=3)
-        ax.annotate(nm, (ww, isc), fontsize=8, xytext=(4, 3), textcoords="offset points")
+        ax.scatter(ww, isc, color=col[r["fam"]], s=55, zorder=3)
+        texts.append(ax.text(ww, isc, nm, fontsize=8, color=col[r["fam"]]))
     ax.axvline(1 - ALPHA, color="k", ls="--", lw=1)
     ax.set_xlabel("worst rolling-window coverage  ($\\to$ conditional coverage)")
     ax.set_ylabel("interval (Winkler) score  (lower is better)")
-    ax.set_title("The coverage--efficiency plane")
-    from matplotlib.lines import Line2D
+    ax.set_title("The coverage--score plane")
+    adjust_text(texts, ax=ax, arrowprops=dict(arrowstyle="-", color="0.6", lw=0.5))
     ax.legend(handles=[Line2D([0],[0],marker="o",ls="",color=col[k],
               label={"cp":"conformal","prob":"probabilistic","oracle":"oracle"}[k]) for k in col],
-              loc="upper right", fontsize=8)
+              loc="lower left", fontsize=8)
     fig.savefig(os.path.join(FIG, "fig_plane.pdf"))
     plt.close(fig)
     return "plane: drawn"
