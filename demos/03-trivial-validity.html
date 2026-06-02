@@ -37,9 +37,9 @@
   <p>Demo&nbsp;01 showed that split conformal delivers \(1-\alpha\) coverage and asks almost nothing of the predictor \(\hat\mu\). Here we take that generosity to its logical end. Three &ldquo;predictors&rdquo; run side by side, all at the <em>same</em> \(\alpha\) on the <em>same</em> data:</p>
 
   <ul>
-    <li><strong>A — good model + conformal.</strong> A degree-3 fit, score \(s_i=|y_i-\hat\mu(x_i)|\), band \(\hat\mu(x)\pm q\). Tight, ~\(1-\alpha\) coverage.</li>
-    <li><strong>B — garbage + conformal.</strong> Replace \(\hat\mu\) with a deliberately wrong constant. Same conformal machinery. The band balloons to absorb the error — yet coverage is <em>still</em> ~\(1-\alpha\).</li>
-    <li><strong>C — trivial randomized set.</strong> Ignore \(x\) entirely. For each test point emit the whole line with probability \(1-\alpha\), else the empty set. Coverage \(\to 1-\alpha\) by construction. The set conveys nothing.</li>
+    <li>A — good model + conformal. A degree-3 fit, score \(s_i=|y_i-\hat\mu(x_i)|\), band \(\hat\mu(x)\pm q\). Tight, ~\(1-\alpha\) coverage.</li>
+    <li>B — garbage + conformal. Replace \(\hat\mu\) with a deliberately wrong constant. Same conformal machinery. The band balloons to absorb the error — yet coverage is <em>still</em> ~\(1-\alpha\).</li>
+    <li>C — trivial randomized set. Ignore \(x\) entirely. For each test point emit the whole line with probability \(1-\alpha\), else the empty set. Coverage \(\to 1-\alpha\) by construction. The set conveys nothing.</li>
   </ul>
 
   <p>Flip between them. Watch the <em>coverage</em> readout barely move while the <em>band</em> goes from a snug ribbon to a number that runs off the screen to, finally, the whole horizon flickering on and off.</p>
@@ -57,7 +57,7 @@
   </blockquote>
 
   <div class="takeaway">
-    <p><strong>Takeaway.</strong> Validity is cheap. The same \(1-\alpha\) guarantee attaches to a careful fit, to a wrong constant, and to a coin flip over the whole real line. Coverage cannot tell a good predictor from a horizon-sized one — so a coverage number, alone, is not evidence that a method is any good. What <em>would</em> distinguish them is a score that punishes vagueness. <a href="04-coverage-vs-logscore.html">Demo&nbsp;04</a> shows coverage and log-score pulling in different directions.</p>
+    <p>Takeaway. Validity is cheap. The same \(1-\alpha\) guarantee attaches to a careful fit, to a wrong constant, and to a coin flip over the whole real line. Coverage cannot tell a good predictor from a horizon-sized one — so a coverage number, alone, is not evidence that a method is any good. What <em>would</em> distinguish them is a score that punishes vagueness. <a href="04-coverage-vs-logscore.html">Demo&nbsp;04</a> shows coverage and log-score pulling in different directions.</p>
   </div>
 
   <div class="prevnext">

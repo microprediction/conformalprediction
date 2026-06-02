@@ -34,7 +34,7 @@
   <p class="subtitle">What conformal prediction&rsquo;s guarantee does, and does not, tell you. The companion paper to this guide &mdash; mostly expository, with three small contributions.</p>
 
   <p>
-    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="marginally-useful.pdf"><strong>📄 Read the PDF</strong></a>
+    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="marginally-useful.pdf">📄 Read the PDF</a>
     <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="marginally-useful.tex">LaTeX source</a>
     <a class="card" style="display:inline-block;padding:10px 16px;" href="references.bib">references.bib</a>
   </p>
@@ -42,9 +42,9 @@
   <h2>Abstract</h2>
   <p>Conformal prediction supplies a genuine, distribution-free, finite-sample guarantee of <em>marginal</em> coverage for a set. It is easy to read this as more than it is &mdash; as evidence that the underlying forecast has been made sharper or better calibrated as a distribution. This paper separates the two carefully. It assembles, with citations, the senses in which the marginal guarantee is weaker than it first appears (it is not conditional, it is trivially satisfiable, and it relies on exchangeability), and adds three small results.</p>
   <ul>
-    <li><strong>Orthogonality</strong> (Proposition&nbsp;1). For a residual score the conformal set is a function of the nonconformity scores alone, so marginal coverage places no constraint on the log-score of an accompanying density: one can pin coverage at \(1-\alpha\) while the log-score goes to \(-\infty\).</li>
-    <li><strong>The residual-information gap</strong> (Propositions&nbsp;2&ndash;3). A single-shape conformal predictive system re-levels the base model&rsquo;s residual shape; its log-score regret to the oracle is the mutual information \(I(R;X)\) between residual and input, which no recalibration that ignores \(X\) can reduce. Within the class of objects it produces, the system is log-score optimal &mdash; the cost is the class, not the calibration step.</li>
-    <li><strong>The coverage&ndash;score plane</strong> (Section&nbsp;6). A two-axis diagnostic in which conformalizing a fixed model is a horizontal move: toward zero coverage error, never toward a better score.</li>
+    <li>Orthogonality (Proposition&nbsp;1). For a residual score the conformal set is a function of the nonconformity scores alone, so marginal coverage places no constraint on the log-score of an accompanying density: one can pin coverage at \(1-\alpha\) while the log-score goes to \(-\infty\).</li>
+    <li>The residual-information gap (Propositions&nbsp;2&ndash;3). A single-shape conformal predictive system re-levels the base model&rsquo;s residual shape; its log-score regret to the oracle is the mutual information \(I(R;X)\) between residual and input, which no recalibration that ignores \(X\) can reduce. Within the class of objects it produces, the system is log-score optimal &mdash; the cost is the class, not the calibration step.</li>
+    <li>The coverage&ndash;score plane (Section&nbsp;6). A two-axis diagnostic in which conformalizing a fixed model is a horizontal move: toward zero coverage error, never toward a better score.</li>
   </ul>
   <p>A formal no-go lemma (Lemma&nbsp;1) collects the impossibility results of Lei &amp; Wasserman (2014) and Foygel Barber et&nbsp;al. (2021); the two coordinates of each result appear, as finite-sample facts, in <a href="../demos/07-price-of-conditional-coverage.html">Demo&nbsp;7</a> and <a href="../demos/08-subgroup-coverage.html">Demo&nbsp;8</a>. We close with a precise litmus test for when coverage <em>is</em> the objective, and conformal prediction is exactly right.</p>
 

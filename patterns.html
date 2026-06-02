@@ -35,8 +35,8 @@
   <p class="subtitle">A taxonomy of sound patterns and anti-patterns, and a sampled estimate of how often the literature actually misapplies the method.</p>
 
   <p>Conformal prediction is easy to apply and, it turns out, mostly applied well. To check
-  that impression rather than assert it, we drew a systematic sample of <strong>79 of the
-  549 papers</strong> in the field&rsquo;s main bibliography (<a href="https://github.com/valeman/awesome-conformal-prediction">Awesome Conformal Prediction</a>),
+  that impression rather than assert it, we drew a systematic sample of 79 of the
+  549 papers in the field&rsquo;s main bibliography (<a href="https://github.com/valeman/awesome-conformal-prediction">Awesome Conformal Prediction</a>),
   read each abstract, and labelled how it uses the method against the rubric below. The
   per-paper labels are in <a href="data/cp_papers_labeled.tsv"><code>data/cp_papers_labeled.tsv</code></a>.</p>
 
@@ -49,8 +49,8 @@
   </div>
   <p>Of the 79 sampled, 61 were sound, 14 used loose framing, 2 clearly overstated or
   misapplied the guarantee, and 2 turned out not to use conformal prediction at all. Among
-  the papers that actually use it, that is roughly <strong>four in five sound, one in five
-  loose, and about one in forty a clear misuse</strong>. The headline is reassuring: <em>in the
+  the papers that actually use it, that is roughly four in five sound, one in five
+  loose, and about one in forty a clear misuse. The headline is reassuring: <em>in the
   research papers themselves, misuse is rare.</em> Loose framing tends to appear in the
   popular layer &mdash; tutorials, courses, and vendor copy &mdash; which the
   <a href="theory.html">curated lists</a> leave out, more than in the methods literature.</p>
@@ -64,23 +64,23 @@
   <p>Where coverage or containment is genuinely the objective, or the contribution is
   honest methodology. Counts are occurrences in the sample.</p>
   <ul class="refs">
-    <li><strong>Methodology and theory</strong> (39) &mdash; new methods, validity / efficiency / conditional-coverage results, scores; correct by construction and honest about what the guarantee is.</li>
-    <li><strong>The set is the deliverable</strong> (10) &mdash; selective prediction, classification sets, retrieval and recall, screening shortlists; coverage is exactly what is wanted.</li>
-    <li><strong>Safety and containment</strong> (7) &mdash; robotics safe planning, reachable sets, runtime verification; the question is whether the truth lies inside a region.</li>
-    <li><strong>A UQ layer with explicit caveats</strong> (4) &mdash; conformal used as a calibration step, stating the marginal-coverage and exchangeability assumptions plainly.</li>
-    <li><strong>Risk control and deferral</strong> (3) &mdash; controlling a miss rate or false-negative rate, or deciding when to ask for help.</li>
-    <li><strong>Anomaly detection as a test</strong> (3) &mdash; conformal \(p\)-values as a distribution-free hypothesis test, where coverage is Type-I error control.</li>
+    <li>Methodology and theory (39) &mdash; new methods, validity / efficiency / conditional-coverage results, scores; correct by construction and honest about what the guarantee is.</li>
+    <li>The set is the deliverable (10) &mdash; selective prediction, classification sets, retrieval and recall, screening shortlists; coverage is exactly what is wanted.</li>
+    <li>Safety and containment (7) &mdash; robotics safe planning, reachable sets, runtime verification; the question is whether the truth lies inside a region.</li>
+    <li>A UQ layer with explicit caveats (4) &mdash; conformal used as a calibration step, stating the marginal-coverage and exchangeability assumptions plainly.</li>
+    <li>Risk control and deferral (3) &mdash; controlling a miss rate or false-negative rate, or deciding when to ask for help.</li>
+    <li>Anomaly detection as a test (3) &mdash; conformal \(p\)-values as a distribution-free hypothesis test, where coverage is Type-I error control.</li>
   </ul>
 
   <h2>Anti-patterns</h2>
   <p>The ways the guarantee gets overstated. Most of these showed up as <em>loose framing</em>
   rather than outright error; the two clear misuses were both the first kind.</p>
   <ul class="refs">
-    <li><strong>The accuracy-improver</strong> (4) &mdash; presenting conformalization as making the forecast itself better, or evaluating a conformal layer by accuracy / AUROC, when coverage is what it controls.</li>
-    <li><strong>Coverage as quality</strong> (3) &mdash; selling marginal coverage as &ldquo;reliable&rdquo; or &ldquo;well-calibrated&rdquo; uncertainty, with the marginal-versus-conditional distinction left out.</li>
-    <li><strong>The conditional overclaim</strong> (2) &mdash; implying per-instance or conditional validity that is not available distribution-free.</li>
-    <li><strong>Exchangeability ignored</strong> (1) &mdash; asserting the vanilla split-conformal guarantee on time-series or shifted data without adaptation or caveat.</li>
-    <li><strong>The silver bullet</strong> (1) &mdash; framing conformal prediction as the answer to uncertainty quantification in general.</li>
+    <li>The accuracy-improver (4) &mdash; presenting conformalization as making the forecast itself better, or evaluating a conformal layer by accuracy / AUROC, when coverage is what it controls.</li>
+    <li>Coverage as quality (3) &mdash; selling marginal coverage as &ldquo;reliable&rdquo; or &ldquo;well-calibrated&rdquo; uncertainty, with the marginal-versus-conditional distinction left out.</li>
+    <li>The conditional overclaim (2) &mdash; implying per-instance or conditional validity that is not available distribution-free.</li>
+    <li>Exchangeability ignored (1) &mdash; asserting the vanilla split-conformal guarantee on time-series or shifted data without adaptation or caveat.</li>
+    <li>The silver bullet (1) &mdash; framing conformal prediction as the answer to uncertainty quantification in general.</li>
   </ul>
 
   <p>None of this is a knock on the field; if anything it is a credit to it. The point of
