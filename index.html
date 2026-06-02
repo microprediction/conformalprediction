@@ -46,8 +46,6 @@
     A real and remarkable guarantee. The art is in reading it: the probability averages over the input \(X_{n+1}\), so it describes the <em>average</em> case &mdash; not necessarily the one in front of you.</p>
   </blockquote>
 
-  <p>A distribution-free guarantee on <em>any</em> model, from a few hundred calibration points, can sound too good to be true. (So did Bernie Madoff&rsquo;s returns &mdash; which, in fairness, were excellent for a while.) The difference is that this one is entirely real. The only catch is that it&rsquo;s narrower than it first reads, and &mdash; like those returns &mdash; it quietly assumes conditions hold: here, exchangeability.</p>
-
   <p>Everything below is something you can check by moving a slider. The companion <a href="paper/">paper</a> states it precisely, with proofs and citations; the <a href="benchmark.html">benchmark</a> tests the popular libraries on real metrics.</p>
 
   <!-- ============================================================ -->
@@ -106,7 +104,7 @@
 
   <!-- ============================================================ -->
   <h2 id="ts">4 &middot; Time series &amp; distribution shift</h2>
-  <p>The base guarantee needs <em>exchangeability</em>, which time series break. The adaptive variants (ACI, conformal PID, EnbPI) genuinely help, but they recover a long-run <em>average</em> coverage, not coverage for the step in front of you &mdash; useful to know before you deploy.</p>
+  <p>The base guarantee needs <em>exchangeability</em>, which time series break. Conformal coverage can hold beautifully &mdash; right up until the distribution shifts out from under it. (Bernie Madoff&rsquo;s returns were also excellent until conditions changed; the difference is that conformal prediction&rsquo;s guarantee is entirely real, and it names its one assumption in advance.) The adaptive variants (ACI, conformal PID, EnbPI) genuinely help, but they recover a long-run <em>average</em> coverage, not coverage for the step in front of you.</p>
   <div class="cards">
     <a class="card" href="demos/05-exchangeability-timeseries.html">
       <div class="num">05</div>
