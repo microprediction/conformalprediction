@@ -22,8 +22,8 @@
 \newcommand{\given}{\,\vert\,}
 \DeclareMathOperator*{\argmax}{arg\,max}
 
-\title{\textbf{Marginally Useful}\\[2pt]
-\large Conformal Prediction Certifies the Coverage of a Set, \\ Not the Quality of a Distribution}
+\title{\textbf{Marginally Useful?}\\[2pt]
+\large What Conformal Prediction's Guarantee Does, and Does Not, Tell You}
 
 \author{Peter Cotton\thanks{Microprediction. \texttt{peter.cotton@microprediction.com}.
 All figures are produced by the accompanying script \texttt{figures.py} and the experiments
@@ -72,10 +72,11 @@ Section~\ref{sec:marginal} and that is itself long-standing folklore. Our quarre
 the conflation, not with conformal prediction.}
 They bolt it on. The number they actually report (a proper score such as the
 predictive log-likelihood) does not improve. The natural diagnosis is a tuning
-failure. The correct diagnosis, we argue, is a \emph{category error}: conformal
+failure. A more useful diagnosis, we think, is a \emph{category error}: conformal
 prediction is a method for \emph{certifying the coverage of a set}, and it is being
 asked to \emph{estimate a distribution}. These are different kinds of object, graded
-by different instruments, and no amount of tuning converts one into the other.
+by different instruments, and no amount of tuning turns one into the other. None of
+this is a criticism of the method; it is a guide to where the method belongs.
 
 None of this impugns the mathematics. Given exchangeable data, a fitted predictor,
 and a nonconformity score, split conformal prediction returns a set $C_\alpha(x)$ with
@@ -138,8 +139,8 @@ for the absolute-residual score. Exchangeability of the augmented scores makes t
 of $s_{n+1}$ uniform, which yields \eqref{eq:marginal}
 \citep{vovk2005algorithmic,lei2018distribution}. The construction is simple and the
 guarantee is real, and one readily verifies that empirical coverage tracks $1-\alpha$ as
-the sample size, noise level, and $\alpha$ are varied. We do not dispute any of this. We
-dispute what it is taken to mean.
+the sample size, noise level, and $\alpha$ are varied. None of this is in dispute; the
+question is what it is taken to mean.
 
 \section{Three ways the marginal guarantee is weaker than it looks}\label{sec:marginal}
 

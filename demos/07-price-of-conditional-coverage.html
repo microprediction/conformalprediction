@@ -29,7 +29,7 @@
   <h1>The price of conditional coverage</h1>
   <p class="subtitle">The marginal-vs-conditional gap is not a tuning problem. It is a theorem.</p>
 
-  <p><a href="02-marginal-vs-conditional.html">Demo&nbsp;02</a> showed a constant-width band that over-covers where the data are easy and under-covers where they are hard. The obvious reflex is to <em>localize</em>: chop the input into bins and calibrate a separate conformal quantile in each one &mdash; honest, distribution-free, &ldquo;Mondrian&rdquo; conformal. With \(B\) equal-width \(x\)-bins, each bin \(b\) gets its own band
+  <p><a href="02-marginal-vs-conditional.html">Demo&nbsp;02</a> showed a constant-width band that over-covers where the data are easy and under-covers where they are hard. The obvious reflex is to <em>localize</em>: chop the input into bins and calibrate a separate conformal quantile in each one &mdash; distribution-free, &ldquo;Mondrian&rdquo; conformal. With \(B\) equal-width \(x\)-bins, each bin \(b\) gets its own band
   $$C_b(x) = [\,\hat\mu(x) - q_b,\ \hat\mu(x) + q_b\,], \qquad q_b = \big(\text{the } \lceil (n_b+1)(1-\alpha)\rceil\text{-th smallest score in bin } b\big).$$
   Slide \(B\) up. The per-bin (conditional) coverage really does flatten out toward the target &mdash; the gap closes. But watch the price: \(q_b = \lceil (n_b+1)(1-\alpha)\rceil\)-th smallest score requires \(\lceil (n_b+1)(1-\alpha)\rceil \le n_b\), i.e.\ enough points in the bin. The moment a bin is too sparse, the only finite-sample-valid interval is the whole real line, \(q_b = +\infty\). For \(\alpha = 0.1\) the cutoff is exact: any bin with fewer than \(9\) calibration points must report \(\infty\).</p>
 

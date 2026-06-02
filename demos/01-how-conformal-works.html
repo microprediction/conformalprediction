@@ -27,7 +27,7 @@
 
   <p class="tag">Demo 01</p>
   <h1>How split conformal works</h1>
-  <p class="subtitle">We build the method honestly and watch it deliver exactly what it promises.</p>
+  <p class="subtitle">We build the method and watch it deliver exactly what it promises.</p>
 
   <p>Split conformal prediction is simple and correct. Hold out a <strong>calibration</strong> set the model never trained on. For each calibration point compute a <em>nonconformity score</em> — here the absolute residual \(s_i = |y_i - \hat\mu(x_i)|\). Take the score&rsquo;s \(\lceil (n+1)(1-\alpha)\rceil\)-th smallest value, call it \(q\), and emit the band
   $$C(x) = [\,\hat\mu(x) - q,\ \hat\mu(x) + q\,].$$
