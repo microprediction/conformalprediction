@@ -23,7 +23,7 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 
 \title{\textbf{Marginally Useful?}\\[2pt]
-\large What Conformal Prediction's Guarantee Does, and Does Not, Tell You}
+\large Formalizing the Marginal Utility of Conformal Prediction}
 
 \author{Peter Cotton\thanks{Microprediction. \texttt{peter.cotton@microprediction.com}.
 All figures are produced by the accompanying script \texttt{figures.py} and the experiments
@@ -36,20 +36,20 @@ online, but the paper does not depend on them.}}
 \maketitle
 
 \begin{abstract}
-Conformal prediction supplies a genuine guarantee: under exchangeability it gives
-finite-sample, distribution-free \emph{marginal} coverage for a set. We argue that this
-is often misread as evidence of distributional forecast quality, and we make the
-separation precise. After reviewing why the marginal guarantee is narrower than it first appears
-(it is not conditional, conditional coverage is unavailable distribution-free without
-structure, and it requires exchangeability), we give three results for a fixed location
-predictor with a residual score. (i) The conformal set is determined by residual order
-statistics, so its coverage can be held fixed while an accompanying density's log-score
-is sent to $-\infty$. (ii) The log-score regret of a single-shape residual predictive
-system relative to the oracle is the mutual information $I(R;X)$ between residual and
-input, which no recalibration that ignores $X$ can reduce. (iii) A coverage--score
-diagnostic displays conformalization as a horizontal move that corrects coverage without
-improving sharpness. We close with the converse: when coverage \emph{is} the objective,
-conformal prediction is exactly right. All claims are illustrated by reproducible figures.
+Conformal prediction gives finite-sample, distribution-free \emph{marginal} coverage for a
+set. The guarantee is real, and it is often misread as evidence of forecast quality. We
+separate the two with one decomposition, which we call the residual-information gap: for a
+single-shape residual predictive system, the log-score regret relative to the oracle is
+exactly the mutual information $I(R;X)$ between the residual and the input. Conformalization
+re-levels coverage but cannot touch this quantity, because it is a property of the
+predictor's shape class and not of calibration; no recalibration that ignores $X$ reduces
+it. The familiar cautions about conformal prediction then follow as context rather than
+discoveries: marginal coverage is not conditional (and distribution-free conditional
+coverage is impossible without structure), validity is insensitive to sharpness, and the
+guarantee requires exchangeability. On a coverage--score plane, conformalizing a fixed
+model is a purely horizontal move, toward correct coverage and never toward a better score.
+The same decomposition marks the converse: when coverage itself is the objective, the gap is
+irrelevant and conformal prediction is exactly right. All figures are reproducible.
 \end{abstract}
 
 \section{Introduction}
