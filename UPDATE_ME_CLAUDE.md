@@ -22,7 +22,8 @@ applications.html       deep dive: domains where coverage is genuinely the goal;
 patterns.html           sound-patterns / anti-patterns taxonomy + the sampled misuse rate
 theory.html             "Theory" in the nav: the curated METHODS & THEORY reading list
                         (renamed from reading.html; application papers live in applications.html)
-benchmark.html          results page (figures + tables) from benchmark/
+benchmark.html          "Example" in nav: a cautionary worked example (figures + tables)
+                        from benchmark/ — framed as one synthetic experiment, NOT a benchmark
 demos/ js/ css/         12 interactive demos (vanilla JS, no build); 09-12 are the
                         positive "where it shines" demos (sets, anomaly, recall, safety)
 faq.html                objections & FAQ (its own page; linked from the global nav)

@@ -7,7 +7,7 @@
 <title>Conformal Prediction — a practical guide</title>
 <meta name="description" content="A practical, interactive guide to conformal prediction: how it works, what its guarantee really means, where coverage is exactly the right goal, and the one thing it does not do." />
 <meta property="og:title" content="Conformal Prediction — a practical guide" />
-<meta property="og:description" content="How conformal prediction works, what its guarantee really means, the applications where coverage is the goal, and the one thing it doesn't do. Interactive demos, a benchmark, and a paper." />
+<meta property="og:description" content="How conformal prediction works, what its guarantee really means, the applications where coverage is the goal, and the one thing it doesn't do. Interactive demos, a worked example, and a paper." />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <link rel="stylesheet" href="css/style.css" />
@@ -24,7 +24,7 @@
       <a href="/index.html">Guide</a>
       <a href="/theory.html">Theory</a>
       <a href="/applications.html">Applications</a>
-      <a href="/benchmark.html">Benchmark</a>
+      <a href="/benchmark.html">Example</a>
       <a href="/faq.html">FAQ</a>
       <a href="/paper/">Paper</a>
     </nav>
@@ -48,7 +48,7 @@
     A real and remarkable guarantee. The art is in reading it: the probability averages over the input \(X_{n+1}\), so it describes the <em>average</em> case &mdash; not necessarily the one in front of you.</p>
   </blockquote>
 
-  <p>Everything below is something you can check by moving a slider. The companion <a href="paper/">paper</a> states it precisely, with proofs and citations; the <a href="benchmark.html">benchmark</a> tests the popular libraries on real metrics.</p>
+  <p>Everything below is something you can check by moving a slider. The companion <a href="paper/">paper</a> states it precisely, with proofs and citations; a <a href="benchmark.html">worked example</a> stress-tests the popular libraries on a controlled problem.</p>
 
   <!-- ============================================================ -->
   <a id="demos"></a>
@@ -123,7 +123,7 @@
 
   <!-- ============================================================ -->
   <h2 id="practice">5 &middot; Does it help in practice?</h2>
-  <p>A reproducible <a href="benchmark.html">benchmark</a> puts the actual libraries &mdash; <a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a> &mdash; and the strong time-series methods on trial against probabilistic baselines and an oracle, scored by conditional coverage and proper scores (CRPS, interval/Winkler). The takeaway is constructive: the adaptive conformal methods <em>do</em> help, but the help comes from the conditional model they wrap &mdash; raw quantile regression with no conformal step ties conformalized quantile regression &mdash; with the conformal layer adding the marginal certificate on top. <a href="benchmark.html">See the results &rarr;</a></p>
+  <p>One small, reproducible <a href="benchmark.html">worked example</a> &mdash; not a benchmark, just a controlled experiment on synthetic data with a known answer &mdash; runs the actual libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods against probabilistic baselines and an oracle, scored by conditional coverage and proper scores (CRPS, interval/Winkler). It isolates one clean point: the adaptive conformal methods <em>do</em> help, but the help comes from the conditional model they wrap &mdash; raw quantile regression with no conformal step ties conformalized quantile regression &mdash; with the conformal layer adding the marginal certificate on top. <a href="benchmark.html">See the example &rarr;</a></p>
 
   <!-- ============================================================ -->
   <h2 id="applications">6 &middot; When coverage is the goal: the litmus test</h2>
@@ -212,7 +212,7 @@
 <footer class="site">
   <div class="wrap">
     <span>Conformal Prediction &mdash; a practical guide. <span style="font-style:italic">Marginally Useful.</span></span>
-    <span><a href="paper/">Paper</a> &middot; <a href="benchmark.html">Benchmark</a></span>
+    <span><a href="paper/">Paper</a> &middot; <a href="benchmark.html">Example</a></span>
   </div>
 </footer>
 </body>

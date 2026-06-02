@@ -23,7 +23,7 @@
       <a href="/index.html">Guide</a>
       <a href="/theory.html">Theory</a>
       <a href="/applications.html">Applications</a>
-      <a href="/benchmark.html">Benchmark</a>
+      <a href="/benchmark.html">Example</a>
       <a href="/faq.html">FAQ</a>
       <a href="/paper/">Paper</a>
     </nav>
@@ -45,7 +45,7 @@
   <p>It gives the prediction <em>set</em> a coverage guarantee. It does not change your predictive <em>distribution</em>&rsquo;s sharpness, and a proper score (log-likelihood, CRPS) is unmoved by the conformal step. If the model is overconfident, conformal widens the set to hit coverage, but the density it implies is just your model&rsquo;s residual shape, re-levelled.</p>
 
   <h3>But conformal predictive systems and CQR output whole distributions!</h3>
-  <p>They do, and they can be excellent. The point is <em>attribution</em>: their sharpness comes from the conditional model they wrap &mdash; the quantile regressor, the difficulty estimator, the per-region bins &mdash; not from the conformal step, which supplies the coverage certificate. The <a href="/benchmark.html">benchmark</a> shows raw quantile regression matching its conformalized version.</p>
+  <p>They do, and they can be excellent. The point is <em>attribution</em>: their sharpness comes from the conditional model they wrap &mdash; the quantile regressor, the difficulty estimator, the per-region bins &mdash; not from the conformal step, which supplies the coverage certificate. A <a href="/benchmark.html">worked example</a> shows raw quantile regression matching its conformalized version.</p>
 
   <h3>Can I get conditional (per-\(x\)) coverage?</h3>
   <p>Not exactly, and not for free: distribution-free, finite-sample conditional coverage forces infinite-length intervals (<a href="/demos/07-price-of-conditional-coverage.html">Demo&nbsp;07</a>). You can <em>approach</em> it under assumptions &mdash; conformalized quantile regression, normalized/Mondrian conformal, recent pivotal-score and optimal-transport methods &mdash; all of which condition on \(x\).</p>

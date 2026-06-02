@@ -4,7 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<title>Benchmark — do the conformal skins help? · Marginally Useful</title>
+<title>A cautionary example — do the conformal skins help? · Conformal Prediction</title>
+<meta name="description" content="One controlled experiment on synthetic data, included as a cautionary example: where a conformal wrapper looks sharp, the sharpness comes from the conditional model underneath, not the conformal step. Not a benchmark." />
 <link rel="stylesheet" href="css/style.css" />
 <script>
   window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
@@ -31,7 +32,7 @@
       <a href="/index.html">Guide</a>
       <a href="/theory.html">Theory</a>
       <a href="/applications.html">Applications</a>
-      <a href="/benchmark.html">Benchmark</a>
+      <a href="/benchmark.html">Example</a>
       <a href="/faq.html">FAQ</a>
       <a href="/paper/">Paper</a>
     </nav>
@@ -41,13 +42,17 @@
 
 <main>
 <div class="wrap">
-  <p class="tag">Empirical benchmark</p>
-  <h1>Do the conformal &ldquo;skins&rdquo; actually help?</h1>
-  <p class="subtitle">A fair fight: MAPIE and crepes, plus the strong time-series conformal methods, against probabilistic baselines that model the conditional distribution — and an oracle that knows the truth.</p>
+  <p class="tag">A worked example</p>
+  <h1>A cautionary example, not a benchmark</h1>
+  <p class="subtitle">One controlled experiment on synthetic data, included to isolate a single point: where a conformal wrapper looks sharp, the sharpness comes from the model underneath &mdash; not the conformal step.</p>
 
-  <p>It is easy to make conformal prediction look bad by pitting fixed split conformal against a drifting series. That would be a straw man. This benchmark does the opposite: it runs the <em>real</em> libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods (ACI, AgACI, conformal&nbsp;PID, NexCP/weighted, EnbPI) in their intended modes, and judges everyone on the axes that matter: <strong>conditional coverage</strong>, <strong>interval efficiency</strong>, and <strong>proper scores</strong> (interval/Winkler, CRPS, log-score) — not marginal coverage alone, which several methods hit by construction. Because the data are synthetic with a known conditional law, we can also score against a true <strong>oracle</strong>.</p>
+  <div class="takeaway">
+    <p><strong>Read this first.</strong> This is <em>not</em> a benchmark. It is one experiment, on one synthetic data-generating process with a known conditional law, chosen to make a single mechanism visible. It is far too narrow &mdash; one process, a handful of methods, a couple of metrics &mdash; to rank libraries or to predict how anything will behave on your data. A real benchmark needs many datasets, many seeds, pre-registered metrics, and methods tuned by people invested in each. Read the numbers below as an illustration of <em>why</em>, never as evidence of <em>how much</em>.</p>
+  </div>
 
-  <p class="note">Code and full numbers: <a href="benchmark/README.md"><code>benchmark/</code></a>. Means over 5 seeds, target coverage 0.90.</p>
+  <p>What a controlled toy does well is isolate a cause. The question here is deliberately narrow: <strong>when a conformal wrapper produces sharp, well-behaved intervals, is it the conformal step doing the work, or the model underneath it?</strong> To make the answer visible rather than asserted, the experiment runs the real libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods (ACI, AgACI, conformal&nbsp;PID, NexCP/weighted, EnbPI) in their intended modes, alongside plain probabilistic baselines that model the conditional distribution, and scores everyone on <strong>conditional coverage</strong>, <strong>interval efficiency</strong>, and <strong>proper scores</strong> (interval/Winkler, CRPS) &mdash; not marginal coverage alone, which several methods hit by construction. Because the data are synthetic with a known law, there is also a true <strong>oracle</strong> to measure against. Avoiding the obvious straw man (fixed split conformal versus a drifting series) is the point: even given a fair run, the conformal step is not where the sharpness comes from.</p>
+
+  <p class="note">Code and full numbers: <a href="benchmark/README.md"><code>benchmark/</code></a>. Means over 5 seeds on a single synthetic setup, target coverage 0.90. The absolute values mean nothing outside this toy; only the comparisons within each table carry the lesson.</p>
 
   <h2>Time series under drift</h2>
   <figure>
@@ -95,17 +100,18 @@
     </tbody>
   </table>
 
-  <h2>What the numbers say</h2>
+  <h2>What this one example shows</h2>
+  <p>Scoped to this synthetic setup, and offered as illustration rather than measurement:</p>
   <ol>
-    <li><strong>The skins genuinely help — when they are the adaptive kind.</strong> CQR and crepes normalized/CPS reach near-oracle interval score and good conditional coverage; ACI and conformal PID recover coverage under drift where fixed split collapses. These are not straw men.</li>
-    <li><strong>But the adaptivity comes from conditional modeling, not the conformal step.</strong> The cleanest tell: raw quantile-GBR with <em>no conformal at all</em> (6.52) ties conformalized quantile regression (6.51). Vanilla split conformal is identical to a static Gaussian. The conformal layer supplies the finite-sample marginal certificate; the sharpness comes from the model it wraps.</li>
-    <li><strong>A plain probabilistic model is competitive on the proper score and returns a full distribution.</strong> An EWMA-vol Gaussian beats the conformal repairs on interval score (6.92 vs ~7.0); crepes CPS gets competitive CRPS because it is doing conditional distribution estimation.</li>
-    <li><strong>The essay's own experiment, reproduced.</strong> <a href="https://github.com/microprediction/timemachines">skaters</a> — the author's streaming forecaster, with an adaptive predictive mean and sd — lands at near-oracle CRPS (0.86) and the best non-oracle interval score (6.57). Conformalizing it changes nothing for the better: a fair adaptive (normalized) wrap re-levels coverage to 90% at an identical score (6.58), and a naive split-conformal wrap on the drifting series collapses (60%). The value was in the density skaters already estimates.</li>
-    <li><strong>None achieves per-step conditional coverage</strong> — even the oracle's worst window is ~0.82. The repairs deliver long-run/marginal coverage, never coverage <em>now</em>, consistent with the <a href="index.html#nogo">no-go results</a>.</li>
+    <li><strong>Adaptive skins behave well here.</strong> CQR and crepes normalized/CPS reach near-oracle interval score and good conditional coverage; ACI and conformal PID recover coverage under drift where fixed split collapses. None of these is a straw man.</li>
+    <li><strong>But the adaptivity comes from the conditional model, not the conformal step.</strong> The cleanest tell: raw quantile-GBR with <em>no conformal at all</em> (6.52) ties conformalized quantile regression (6.51). Vanilla split conformal is identical to a static Gaussian. The conformal layer supplies the finite-sample marginal certificate; the sharpness comes from the model it wraps.</li>
+    <li><strong>A plain probabilistic model keeps pace on the proper score and returns a full distribution.</strong> An EWMA-vol Gaussian matches the conformal repairs on interval score (6.92 vs ~7.0); crepes CPS gets competitive CRPS because it is doing conditional distribution estimation.</li>
+    <li><strong>The essay&rsquo;s own forecaster, in the same toy.</strong> <a href="https://github.com/microprediction/timemachines">skaters</a> &mdash; a streaming forecaster with an adaptive predictive mean and sd &mdash; lands at near-oracle CRPS (0.86) and the best non-oracle interval score (6.57). Conformalizing it changes nothing for the better: a fair adaptive (normalized) wrap re-levels coverage to 90% at an identical score (6.58), and a naive split-conformal wrap on the drifting series collapses (60%). The value was in the density skaters already estimates.</li>
+    <li><strong>None achieves per-step conditional coverage</strong> &mdash; even the oracle&rsquo;s worst window is ~0.82. The repairs deliver long-run/marginal coverage, never coverage <em>now</em>, consistent with the <a href="index.html#finePrint">no-go results</a>.</li>
   </ol>
 
   <div class="takeaway">
-    <p><strong>Bottom line.</strong> Conformal prediction&rsquo;s marginal certificate is real and useful, but it is not distributional quality. Where a conformal skin is sharp, it is sharp because of the conditional model underneath; the conformal step adds the coverage guarantee on top. This is the empirical face of the paper&rsquo;s <a href="paper/">residual-information gap</a>.</p>
+    <p><strong>The lesson, not a leaderboard.</strong> Conformal prediction&rsquo;s marginal certificate is real and useful, but it is not distributional quality. Where a conformal skin is sharp, it is sharp because of the conditional model underneath; the conformal step adds the coverage guarantee on top. That is the mechanism this toy is built to expose &mdash; the empirical face of the paper&rsquo;s <a href="paper/">residual-information gap</a>. For a number you can act on, run the comparison on <em>your</em> data, with many splits and pre-registered metrics; the code in <a href="benchmark/README.md"><code>benchmark/</code></a> is a starting point, not a verdict.</p>
   </div>
 
   <div class="prevnext">
@@ -116,6 +122,6 @@
 </div>
 </main>
 
-<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Benchmark · reproducible in <code>benchmark/</code></span></div></footer>
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>A worked example · reproducible in <code>benchmark/</code></span></div></footer>
 </body>
 </html>
