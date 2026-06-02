@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Applications — where conformal prediction is exactly right</title>
+<meta name="description" content="Domains where coverage is genuinely the objective and conformal prediction shines: selective prediction, anomaly detection, retrieval and screening, LLM safety, robotics and control, risk control, and scientific discovery — with the papers that do it well." />
+<meta property="og:title" content="Conformal Prediction — applications done right" />
+<meta property="og:description" content="Where coverage is the objective and conformal prediction is the right tool: selective prediction, anomaly detection, retrieval, LLM safety, robotics, risk control, discovery." />
+<meta property="og:type" content="website" />
+<link rel="stylesheet" href="css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Guide</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/reading.html">Reading</a>
+      <a href="/benchmark.html">Benchmark</a>
+      <a href="/paper/">Paper</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Applications</p>
+  <h1>Where conformal prediction is exactly right</h1>
+  <p class="subtitle">The guide spends a while on what the guarantee doesn&rsquo;t give you. Here is the other side: the large, high-stakes territory where coverage is precisely the objective, and conformal prediction is hard to beat.</p>
+
+  <p>One test decides it. <strong>Is your loss a function of <em>whether</em> the truth lands in a set, or of <em>where</em> it lands?</strong> When the answer is &ldquo;whether,&rdquo; the set <em>is</em> the deliverable, a coverage guarantee is exactly what you want, and conformal prediction supplies it distribution-free and finite-sample. A surprising amount of real work lives in that column. The papers below are ones that, on inspection, use the tool for what it does &mdash; drawn from a survey of the literature (see the <a href="reading.html">reading list</a>; the <a href="patterns.html">patterns study</a> has the wider tally).</p>
+
+  <!-- ============================================================ -->
+  <h2>1 &middot; Selective prediction and human-in-the-loop decisions</h2>
+  <p>The cleanest use. Instead of one answer, return a small set guaranteed to contain the truth (say) 95% of the time, and route the hard cases &mdash; the large sets &mdash; to a human. The contract is exactly a coverage guarantee: the human is handed the right shortlist with controlled probability, and set size becomes a calibrated &ldquo;how sure are we&rdquo; signal. This is the form behind medical triage, content moderation, and document review.</p>
+  <ul class="refs">
+    <li>Angelopoulos, Bates, Jordan &amp; Malik (2021). <em>Uncertainty sets for image classifiers using conformal prediction</em> (RAPS). ICLR. <a href="https://arxiv.org/abs/2009.14193">arXiv:2009.14193</a> &mdash; small, stable label sets for deep classifiers.</li>
+    <li>Straitouri, Wang, Okati &amp; Gomez-Rodriguez (2024). <em>Conformal prediction sets improve human decision making.</em> <a href="https://arxiv.org/abs/2401.13744">arXiv:2401.13744</a> &mdash; a pre-registered trial: people decide better with conformal sets than fixed-size sets of equal coverage.</li>
+    <li><em>Improving expert predictions with conformal prediction</em> (2022). <a href="https://arxiv.org/abs/2201.12006">arXiv:2201.12006</a> &mdash; the set as decision support, with a calibrated coverage/size trade-off.</li>
+    <li><em>Clinically useful conformal prediction for inherited retinal disease</em> (2024) &mdash; sets at a stated confidence, flagging cases for a second opinion.</li>
+  </ul>
+
+  <!-- ============================================================ -->
+  <h2>2 &middot; Anomaly, novelty, and out-of-distribution detection</h2>
+  <p>Here conformal prediction is not a forecaster at all but a <em>distribution-free hypothesis test</em>: the conformal \(p\)-value asks &ldquo;is this new point exchangeable with what I have seen?&rdquo; and coverage becomes exact Type-I error control. This is conformal prediction on its firmest ground, and it powers fraud detection, fault monitoring, and covariate-shift alarms.</p>
+  <ul class="refs">
+    <li>Laxhammar &amp; Falkman (2014). <em>Conformal anomaly detection of trajectories</em> via kernel density nonconformity. <a href="https://link.springer.com/chapter/10.1007/978-3-662-44722-2_29">Springer</a> &mdash; distribution-free anomaly \(p\)-values for sequences.</li>
+    <li>Hu &amp; Lei (2020). <em>A distribution-free test of covariate shift using conformal prediction.</em> <a href="https://arxiv.org/abs/2010.07147">arXiv:2010.07147</a> &mdash; valid Type-I control for detecting shift, no model assumptions.</li>
+    <li>Bates, Cand&egrave;s, Lei, Romano &amp; Sesia (2023). <em>Testing for outliers with conformal p-values.</em> <a href="https://arxiv.org/abs/2104.08279">arXiv:2104.08279</a> &mdash; the formal treatment of conformal outlier testing.</li>
+  </ul>
+
+  <!-- ============================================================ -->
+  <h2>3 &middot; Retrieval, recommendation, and screening</h2>
+  <p>When the product <em>is</em> a candidate set &mdash; a shortlist of items, documents, or molecules &mdash; coverage is recall, and a distribution-free recall (or false-discovery-rate) guarantee is exactly the deliverable. Screening millions of compounds down to a guaranteed-to-contain-the-hits shortlist is the canonical example.</p>
+  <ul class="refs">
+    <li>Angelopoulos, Bates, Fisch, Lei &amp; Schuster (2024). <em>Conformal risk control.</em> ICLR &mdash; control expected recall / FNR, not just coverage.</li>
+    <li>Recommendation with distribution-free reliability guarantees (2022). <a href="https://arxiv.org/abs/2207.01609">arXiv:2207.01609</a> &mdash; return a set of items with finite-sample false-discovery-rate control.</li>
+    <li>Cort&eacute;s-Ciriano &amp; Bender (2019). <em>Concepts and applications of conformal prediction in drug discovery.</em> <a href="https://arxiv.org/abs/1908.03569">arXiv:1908.03569</a> &mdash; conformal screening and applicability domains in cheminformatics.</li>
+    <li>Morsomme &amp; Smirnova (2019). <em>Conformal prediction for students&rsquo; grades in a course recommender.</em> <a href="http://proceedings.mlr.press/v105/morsomme19a/morsomme19a.pdf">PMLR</a> &mdash; valid intervals as a reliability signal for recommendations.</li>
+  </ul>
+
+  <!-- ============================================================ -->
+  <h2>4 &middot; Language models and structured outputs</h2>
+  <p>A fast-growing, genuinely good fit. Emit a set of candidate answers guaranteed to contain the correct one with high probability, or abstain / ask for help when that set grows too large. Coverage becomes a task-completion guarantee, and set size becomes a principled, distribution-free trigger for deferral &mdash; a real handle on hallucination.</p>
+  <ul class="refs">
+    <li>Ren, Dixit, Bodrova, &hellip;, Sadigh, Zeng &amp; Majumdar (2023). <em>Robots that ask for help: uncertainty alignment for LLM planners</em> (KnowNo). CoRL. <a href="https://arxiv.org/abs/2307.01928">arXiv:2307.01928</a> &mdash; conformal sets decide when an LLM-driven agent should defer to a human.</li>
+    <li>Quach, Fisch, Schuster, &hellip; Barzilay &amp; Jaakkola (2024). <em>Conformal language modeling.</em> <a href="https://arxiv.org/abs/2306.10193">arXiv:2306.10193</a> &mdash; generation sets with calibrated correctness guarantees.</li>
+    <li><em>API is enough: conformal prediction for LLMs without logit access</em> (2024). <a href="https://arxiv.org/abs/2403.01216">arXiv:2403.01216</a> &mdash; coverage-guaranteed answer sets from black-box APIs.</li>
+  </ul>
+
+  <!-- ============================================================ -->
+  <h2>5 &middot; Robotics, control, and safety envelopes</h2>
+  <p>This is the richest seam of correct use. The question is <em>containment</em> &mdash; will the true state, trajectory, or obstacle lie inside a region with a chosen probability &mdash; which is conformal prediction&rsquo;s native object. Prediction regions on other agents&rsquo; motion become provably safe controllers; conformal reachable sets certify a planner; runtime monitors flag failures with formal confidence.</p>
+  <ul class="refs">
+    <li>Lindemann, Cleaveland, Shim &amp; Pappas (2023). <em>Safe planning in dynamic environments using conformal prediction.</em> IEEE RA-L. <a href="https://arxiv.org/abs/2210.10254">arXiv:2210.10254</a> &mdash; prediction regions on pedestrian trajectories give a provably safe MPC.</li>
+    <li>Muthali, Leung, &hellip; Pavone &amp; Yang (2023). <em>Multi-agent reachability calibration with conformal prediction.</em> <a href="https://arxiv.org/abs/2304.00432">arXiv:2304.00432</a> &mdash; probabilistically safe, feasible prediction sets for planning.</li>
+    <li>Lin &amp; Bansal (2023). <em>Verification of neural reachable tubes via conformal prediction.</em> <a href="https://arxiv.org/abs/2312.08604">arXiv:2312.08604</a> &mdash; probabilistic safety guarantees, equivalent to scenario optimization.</li>
+    <li>Lindemann et&nbsp;al. (2023). <em>Conformal prediction for STL runtime verification.</em> <a href="https://arxiv.org/abs/2211.01539">arXiv:2211.01539</a> &mdash; formal guarantees for predictive runtime monitoring.</li>
+    <li>Bay-area safety from sparse feedback (2025). <em>Learning robot safety from sparse human feedback.</em> <a href="https://arxiv.org/abs/2501.04823">arXiv:2501.04823</a> &mdash; a warning region with a guaranteed miss rate.</li>
+  </ul>
+
+  <!-- ============================================================ -->
+  <h2>6 &middot; Risk control and certified decisions</h2>
+  <p>Generalize coverage from &ldquo;contain the truth&rdquo; to &ldquo;keep any monotone risk below a budget&rdquo; &mdash; false-negative rate, miss rate, expected loss. The deliverable is a certificate on a decision rule, distribution-free and finite-sample, which is precisely what audited and safety-critical systems need.</p>
+  <ul class="refs">
+    <li>Bates, Angelopoulos, Lei, Malik &amp; Jordan (2021). <em>Distribution-free, risk-controlling prediction sets</em> (RCPS). JACM. <a href="https://arxiv.org/abs/2101.02703">arXiv:2101.02703</a> &mdash; the foundation of risk control.</li>
+    <li>Online conformal risk control for distributed/remote inference (2024). <a href="https://arxiv.org/abs/2409.07902">arXiv:2409.07902</a> &mdash; worst-case FNR guarantees under communication limits.</li>
+    <li>Snell, Bates, &hellip; (2022). <em>Quantile risk control.</em> <a href="https://arxiv.org/abs/2212.13629">arXiv:2212.13629</a> &mdash; control quantiles of a loss, not just the mean.</li>
+  </ul>
+
+  <!-- ============================================================ -->
+  <h2>7 &middot; Scientific discovery and screening with error control</h2>
+  <p>In drug discovery, design, and high-throughput science the goal is a guaranteed-quality <em>set</em> of candidates to take forward, with the false-discovery rate held in check. Coverage and FDR control are the native objects, and conformal methods deliver them without distributional assumptions on the assay or simulator.</p>
+  <ul class="refs">
+    <li>Fannjiang, Bates, Angelopoulos, Listgarten &amp; Jordan (2022). <em>Conformal prediction for the design problem.</em> <a href="https://arxiv.org/abs/2202.03613">arXiv:2202.03613</a> &mdash; valid uncertainty when you optimize over designs (feedback covariate shift).</li>
+    <li>Jin &amp; Cand&egrave;s (2023). <em>Selection by prediction with conformal p-values.</em> <a href="https://arxiv.org/abs/2210.01408">arXiv:2210.01408</a> &mdash; pick candidates above a threshold with FDR control.</li>
+    <li>Conditional calibration for false-discovery-rate control under dependence (2020). <a href="https://arxiv.org/abs/2007.10438">arXiv:2007.10438</a> &mdash; finite-sample FDR with dependent statistics.</li>
+  </ul>
+
+  <div class="takeaway">
+    <p>Across all of these the marginal coverage guarantee is not a consolation prize &mdash; it is the whole point. The skill is recognizing which column your problem is in. When the answer you need is a <em>set</em> with a controlled error rate, reach for conformal prediction without hesitation; when you need a sharp <em>distribution</em>, that work belongs to the model, and conformal can certify it afterward.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="index.html">&larr; Back to the guide</a>
+    <span class="spacer"></span>
+    <a href="reading.html">Full reading list &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Conformal Prediction &mdash; a practical guide.</span>
+    <span><a href="reading.html">Reading</a> &middot; <a href="benchmark.html">Benchmark</a> &middot; <a href="paper/">Paper</a></span>
+  </div>
+</footer>
+</body>
+</html>

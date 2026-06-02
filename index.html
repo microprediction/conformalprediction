@@ -19,17 +19,17 @@
 <body>
 <header class="site">
   <div class="wrap">
-    <a class="brand" href="index.html">Conformal&nbsp;Prediction</a>
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
     <nav>
-      <a href="#how">How it works</a>
-      <a href="#applications">Applications</a>
-      <a href="#faq">FAQ</a>
-      <a href="reading.html">Reading</a>
-      <a href="benchmark.html">Benchmark</a>
-      <a href="paper/">Paper</a>
+      <a href="/index.html">Guide</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/reading.html">Reading</a>
+      <a href="/benchmark.html">Benchmark</a>
+      <a href="/paper/">Paper</a>
     </nav>
   </div>
 </header>
+
 
 <main>
 <div class="wrap">
@@ -85,6 +85,12 @@
   <!-- ============================================================ -->
   <h2 id="wont">3 &middot; The one thing it won&rsquo;t do: improve your forecast</h2>
   <p>The most common hope is that conformalizing a model makes its uncertainty <em>better</em>. It doesn&rsquo;t &mdash; and seeing exactly why is worth a few minutes. The coverage certificate is independent of forecast quality: the same 90% attaches to a brilliant model and a useless one, and you can hold coverage fixed while the predictive log-likelihood does anything at all. Sharpness comes from the model; conformal supplies the certificate on top.</p>
+
+  <p>This is the kind of pushback you might get &mdash; or want to make yourself &mdash; and it is worth being able to answer:</p>
+  <blockquote>
+    <p>If the model is miscalibrated, fix the model. If the probabilities are miscalibrated, calibrate the probabilities. If the quantiles are wrong, estimate the quantiles better. Why should I be impressed that someone looked at held-out residuals and widened intervals until empirical coverage matches a target?</p>
+  </blockquote>
+  <p>The fair answer: you shouldn&rsquo;t be impressed by the widening as a <em>forecast</em> &mdash; but it does buy one thing nothing else does, a finite-sample, distribution-free guarantee that the band covers, under almost no assumptions. That certificate is the product. The sharper forecast underneath is still the model&rsquo;s job.</p>
   <div class="cards">
     <a class="card" href="demos/03-trivial-validity.html">
       <div class="num">03</div>
@@ -131,7 +137,7 @@
     <li>Safety envelopes in control and robotics, certifying that the true state or trajectory lies inside a reachable set with a chosen probability. The guarantee is about containment, which is conformal prediction&rsquo;s native object.</li>
     <li>Compliance and audit, where the deliverable is the certificate itself: &ldquo;contained 95% of the time,&rdquo; under almost no assumptions, which little else can promise so cheaply.</li>
   </ul>
-  <p>In every one of these the marginal coverage guarantee is not a consolation prize &mdash; it is the whole point. The skill is recognizing which column your problem is in. <a href="demos/06-conformal-vs-recalibration.html">Demo&nbsp;06</a> draws the line between this world and forecasting.</p>
+  <p>In every one of these the marginal coverage guarantee is not a consolation prize &mdash; it is the whole point. The skill is recognizing which column your problem is in. <a href="demos/06-conformal-vs-recalibration.html">Demo&nbsp;06</a> draws the line between this world and forecasting, and the <a href="applications.html">applications page</a> goes through each domain in depth &mdash; selective prediction, anomaly detection, retrieval, language models, robotics and control, risk control, and scientific discovery &mdash; with the papers that do it well.</p>
 
   <!-- ============================================================ -->
   <h2 id="faq">7 &middot; Objections &amp; FAQ</h2>
