@@ -17,9 +17,11 @@ informative; the guiding principle is *inform, not oversell*.
 ```
 index.html              guide landing (sections: how it works -> limits -> what it won't do
                         -> time series -> benchmark -> applications -> FAQ)
-applications.html       deep dive: domains where coverage is genuinely the goal
+applications.html       deep dive: domains where coverage is genuinely the goal; this is
+                        the home for the curated APPLICATION papers (annotated, by domain)
 patterns.html           sound-patterns / anti-patterns taxonomy + the sampled misuse rate
-reading.html            curated, filtered reading list (good/careful uses only)
+theory.html             "Theory" in the nav: the curated METHODS & THEORY reading list
+                        (renamed from reading.html; application papers live in applications.html)
 benchmark.html          results page (figures + tables) from benchmark/
 demos/ js/ css/         12 interactive demos (vanilla JS, no build); 09-12 are the
                         positive "where it shines" demos (sets, anomaly, recall, safety)
@@ -41,9 +43,10 @@ data/cp_papers_labeled.tsv   wheat/chaff labels from the patterns study
    parallel agents the way the original study did (see `data/cp_papers_labeled.tsv` for the
    schema: `url, short_title, label, code, confidence, rationale, evidence`). Be fair and
    conservative — default to "sound" unless a claim is clearly overstated.
-3. Add only **wheat** (sound) papers to `reading.html` (right category) and, if they are
-   strong application exemplars, to `applications.html`. **Skip promotional / overselling
-   material** — that filter is the point.
+3. Add only **wheat** (sound) papers, and put each where it belongs: methods/theory papers
+   go in `theory.html` (right category); application exemplars go in `applications.html`
+   (right domain section, with a one-line annotation). Keep the two from duplicating each
+   other. **Skip promotional / overselling material** — that filter is the point.
 4. Append new labels to `data/cp_papers_labeled.tsv`; if you re-sample, update the
    percentages and counts in `patterns.html` (and keep the caveats honest).
 
