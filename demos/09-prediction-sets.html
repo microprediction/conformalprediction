@@ -35,14 +35,14 @@
 
   <p class="tag">Demo 09 · where it shines</p>
   <h1>Adaptive prediction sets</h1>
-  <p class="subtitle">When the <em>set</em> is the deliverable, conformal prediction is exactly the right tool — and its size is an honest confidence signal.</p>
+  <p class="subtitle">When the <em>set</em> is the deliverable, conformal prediction is exactly the right tool, and its size is an honest confidence signal.</p>
 
   <p>Now the positive case. In classification, conformal prediction returns a <em>set</em> of
   labels guaranteed to contain the true one at least \(1-\alpha\) of the time. The score is
   \(s_i = 1 - \hat p_{y_i}(x_i)\), one minus the model&rsquo;s probability on the true class;
   the set is \(C(x) = \{\,k : \hat p_k(x) \ge 1-q\,\}\). What makes this useful is that the
   set <em>size adapts</em>: a single label where one class clearly dominates, two or three
-  where the input is genuinely ambiguous. That is precisely what you want for triage — return
+  where the input is genuinely ambiguous. That is precisely what you want for triage, return
   a confident answer when you can, a short ranked shortlist when you cannot, and let a human
   take the ambiguous ones. The coverage is the contract; the size is the &ldquo;how sure am
   I.&rdquo; Move <em>overlap</em> up and watch the sets grow where the classes collide.</p>
@@ -61,8 +61,8 @@
   <div class="takeaway">
     <p>Takeaway. Here the marginal guarantee is not a consolation prize, it is
     the product: a set you can act on, with a coverage contract attached. The adaptivity that
-    was a <em>limitation</em> in <a href="02-marginal-vs-conditional.html">Demo&nbsp;02</a> —
-    coverage moving around with \(x\) — reappears here as a <em>feature</em>: the set size
+    was a <em>limitation</em> in <a href="02-marginal-vs-conditional.html">Demo&nbsp;02</a>
+    (coverage moving around with \(x\)) reappears here as a <em>feature</em>: the set size
     moves with difficulty, exactly as a triage signal should. Same theorem, opposite verdict,
     because the question changed.</p>
   </div>

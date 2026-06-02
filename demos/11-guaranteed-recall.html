@@ -35,14 +35,14 @@
 
   <p class="tag">Demo 11 · where it shines</p>
   <h1>Guaranteed recall for screening &amp; retrieval</h1>
-  <p class="subtitle">When the deliverable is a shortlist, coverage <em>is</em> recall — and conformal prediction certifies it.</p>
+  <p class="subtitle">When the deliverable is a shortlist, coverage <em>is</em> recall, and conformal prediction certifies it.</p>
 
   <p>Drug-candidate triage, document retrieval, fraud review: the product is a shortlist, and
   the thing that must not happen is dropping the real hit. That is a recall guarantee, and it
   is coverage in disguise. Take a calibration set of genuine hits, look at the scores your
   model gives them, and set the keep-threshold \(t\) at the conformal lower quantile of those
   scores. Keep everything scoring \(\ge t\). By exchangeability a new genuine hit survives the
-  cut at least \(1-\alpha\) of the time — a distribution-free recall guarantee that does not
+  cut at least \(1-\alpha\) of the time, a distribution-free recall guarantee that does not
   care how the scores are distributed. Drag <em>model separability</em>: the guarantee never
   moves, but a sharper model lets you hit the same recall with a far shorter list.</p>
 
@@ -54,12 +54,12 @@
   <p class="note">The needles (relevant items) and the haystack (irrelevant), by model score.
   The conformal threshold is placed so a new needle clears it with probability \(1-\alpha\);
   everything to its right is the returned shortlist. Recall is guaranteed; how much haystack
-  comes along — the precision and list length — is what the model controls.</p>
+  comes along, the precision and list length, is what the model controls.</p>
 
   <div class="takeaway">
     <p>Takeaway. The guarantee you want is on <em>recall</em>, and conformal
     prediction delivers it with one calibrated threshold and no distributional assumptions. A
-    better ranking model does not improve the guarantee — it is already exact — but it shrinks
+    better ranking model does not improve the guarantee, it is already exact, but it shrinks
     the shortlist, which is the real prize. Once again: conformal supplies the certificate,
     the model supplies the sharpness.</p>
   </div>

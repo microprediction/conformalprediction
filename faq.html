@@ -42,16 +42,16 @@
   <p class="subtitle">Straight answers to the questions the guide tends to raise.</p>
 
   <h3>So is conformal prediction useless?</h3>
-  <p>Quite the opposite &mdash; it is the right tool for every coverage-objective problem in the <a href="/index.html#applications">guide</a> (prediction sets, anomaly detection, retrieval, robotics, language models, risk control), and the only thing that hands you a distribution-free, finite-sample coverage certificate. The single thing it does not do is make a forecast sharper or a density better.</p>
+  <p>Quite the opposite, it is the right tool for every coverage-objective problem in the <a href="/index.html#applications">guide</a> (prediction sets, anomaly detection, retrieval, robotics, language models, risk control), and the only thing that hands you a distribution-free, finite-sample coverage certificate. The single thing it does not do is make a forecast sharper or a density better.</p>
 
   <h3>Doesn&rsquo;t conformalizing my model improve its uncertainty?</h3>
   <p>It gives the prediction <em>set</em> a coverage guarantee. It does not change your predictive <em>distribution</em>&rsquo;s sharpness, and a proper score (log-likelihood, CRPS) is unmoved by the conformal step. If the model is overconfident, conformal widens the set to hit coverage, but the density it implies is just your model&rsquo;s residual shape, re-levelled.</p>
 
   <h3>But conformal predictive systems and CQR output whole distributions!</h3>
-  <p>They do, and they can be excellent. The point is <em>attribution</em>: their sharpness comes from the conditional model they wrap &mdash; the quantile regressor, the difficulty estimator, the per-region bins &mdash; not from the conformal step, which supplies the coverage certificate. A <a href="/benchmark.html">worked example</a> shows raw quantile regression matching its conformalized version.</p>
+  <p>They do, and they can be excellent. The point is <em>attribution</em>: their sharpness comes from the conditional model they wrap, the quantile regressor, the difficulty estimator, the per-region bins, not from the conformal step, which supplies the coverage certificate. A <a href="/benchmark.html">worked example</a> shows raw quantile regression matching its conformalized version.</p>
 
   <h3>Can I get conditional (per-\(x\)) coverage?</h3>
-  <p>Not exactly, and not for free: distribution-free, finite-sample conditional coverage forces infinite-length intervals (<a href="/demos/07-price-of-conditional-coverage.html">Demo&nbsp;07</a>). You can <em>approach</em> it under assumptions &mdash; conformalized quantile regression, normalized/Mondrian conformal, recent pivotal-score and optimal-transport methods &mdash; all of which condition on \(x\).</p>
+  <p>Not exactly, and not for free: distribution-free, finite-sample conditional coverage forces infinite-length intervals (<a href="/demos/07-price-of-conditional-coverage.html">Demo&nbsp;07</a>). You can <em>approach</em> it under assumptions, conformalized quantile regression, normalized/Mondrian conformal, recent pivotal-score and optimal-transport methods, all of which condition on \(x\).</p>
 
   <h3>Does it work for time series?</h3>
   <p>The basic guarantee needs exchangeability, which time series violate. Adaptive methods (ACI, conformal PID, EnbPI) restore a long-run average coverage and are well worth using; just don&rsquo;t read them as a per-step guarantee (see <a href="/index.html#ts">time series</a>).</p>
@@ -60,7 +60,7 @@
   <p>Model the conditional distribution (heteroscedastic models, quantile regression, mixture or flow densities) and recalibrate against a proper score. <em>Then</em> conformalize, if you also need a distribution-free coverage certificate. The order matters: estimate first, certify second.</p>
 
   <div class="takeaway">
-    <p>Conformal prediction certifies the coverage of a set; it does not estimate a distribution. Use it, happily, whenever you need a coverage guarantee. Just don&rsquo;t expect the certificate to make the forecast underneath it any sharper; that work belongs to the model. Genuinely useful, then, but &mdash; in the exact sense of that average over inputs &mdash; only <em>marginally</em> so.</p>
+    <p>Conformal prediction certifies the coverage of a set; it does not estimate a distribution. Use it, happily, whenever you need a coverage guarantee. Just don&rsquo;t expect the certificate to make the forecast underneath it any sharper; that work belongs to the model. Genuinely useful, then, but, in the exact sense of that average over inputs, only <em>marginally</em> so.</p>
   </div>
 
   <div class="prevnext">
@@ -74,7 +74,7 @@
 
 <footer class="site">
   <div class="wrap">
-    <span>Conformal Prediction &mdash; a practical guide.</span>
+    <span>Conformal Prediction: a practical guide.</span>
     <span><a href="/index.html">Guide</a> &middot; <a href="/paper/">Paper</a></span>
   </div>
 </footer>

@@ -49,7 +49,7 @@
   <h1>Using conformal wrappers: a worked example</h1>
   <p class="subtitle">Do MAPIE, crepes, and the time-series conformal methods actually help? One controlled experiment on synthetic data.</p>
 
-  <p>The experiment runs the real libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods (ACI, AgACI, conformal&nbsp;PID, NexCP/weighted, EnbPI) in their intended modes, against plain probabilistic baselines and &mdash; since the data are synthetic with a known law &mdash; a true oracle. Everyone is scored on conditional coverage, interval efficiency, and proper scores (interval/Winkler, CRPS), not marginal coverage alone.</p>
+  <p>The experiment runs the real libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods (ACI, AgACI, conformal&nbsp;PID, NexCP/weighted, EnbPI) in their intended modes, against plain probabilistic baselines and, since the data are synthetic with a known law, a true oracle. Everyone is scored on conditional coverage, interval efficiency, and proper scores (interval/Winkler, CRPS), not marginal coverage alone.</p>
 
   <p class="note">Code and full numbers: <a href="benchmark/README.md"><code>benchmark/</code></a>. Means over 5 seeds, target coverage 0.90; compare within each table, not across.</p>
 
@@ -82,7 +82,7 @@
   <h2>Heteroscedastic regression</h2>
   <figure>
     <img src="benchmark/figures/tabular_condcov.png" alt="conditional coverage vs x" />
-    <figcaption>Vanilla split conformal (blue) over-covers the easy region (100%) and under-covers the hard one (61%). The adaptive methods (crepes normalized) and a heteroscedastic Gaussian hug the target — because they condition on \(x\).</figcaption>
+    <figcaption>Vanilla split conformal (blue) over-covers the easy region (100%) and under-covers the hard one (61%). The adaptive methods (crepes normalized) and a heteroscedastic Gaussian hug the target, because they condition on \(x\).</figcaption>
   </figure>
 
   <table class="bench">
@@ -105,11 +105,11 @@
     <li>But the adaptivity comes from the conditional model, not the conformal step. The cleanest tell: raw quantile-GBR with <em>no conformal at all</em> (6.52) ties conformalized quantile regression (6.51). Vanilla split conformal is identical to a static Gaussian. The conformal layer supplies the finite-sample marginal certificate; the sharpness comes from the model it wraps.</li>
     <li>A plain probabilistic model keeps pace on the proper score and returns a full distribution. An EWMA-vol Gaussian matches the conformal repairs on interval score (6.92 vs ~7.0); crepes CPS gets competitive CRPS because it is doing conditional distribution estimation.</li>
     <li>The author&rsquo;s own forecaster behaves no differently. <code>thinking_fast_and_slow</code>, a <a href="https://github.com/microprediction/timemachines">timemachines</a> skater that blends two EMAs into an adaptive predictive mean and standard deviation, lands at near-oracle CRPS (0.86) and the best non-oracle interval score (6.57). Conformalizing it changes nothing for the better: a fair adaptive (normalized) wrap re-levels coverage to 90% at an identical score (6.58), while a naive split-conformal wrap on the drifting series collapses to 60%. The value was already in the density it estimates, not in the conformal step.</li>
-    <li>None achieves per-step conditional coverage &mdash; even the oracle&rsquo;s worst window is ~0.82. The repairs deliver long-run/marginal coverage, never coverage <em>now</em>, consistent with the <a href="index.html#finePrint">no-go results</a>.</li>
+    <li>None achieves per-step conditional coverage, even the oracle&rsquo;s worst window is ~0.82. The repairs deliver long-run/marginal coverage, never coverage <em>now</em>, consistent with the <a href="index.html#finePrint">no-go results</a>.</li>
   </ol>
 
   <div class="takeaway">
-    <p>The lesson, not a leaderboard. Conformal prediction&rsquo;s marginal certificate is real and useful, but it is not distributional quality. Where a conformal wrapper is sharp, it is sharp because of the conditional model underneath; the conformal step adds the coverage guarantee on top. That is the mechanism this toy is built to expose &mdash; the empirical face of the paper&rsquo;s <a href="paper/">residual-information gap</a>.</p>
+    <p>The lesson, not a leaderboard. Conformal prediction&rsquo;s marginal certificate is real and useful, but it is not distributional quality. Where a conformal wrapper is sharp, it is sharp because of the conditional model underneath; the conformal step adds the coverage guarantee on top. That is the mechanism this toy is built to expose, the empirical face of the paper&rsquo;s <a href="paper/">residual-information gap</a>.</p>
   </div>
 
   <div class="prevnext">

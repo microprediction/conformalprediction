@@ -34,7 +34,7 @@
 <div class="wrap">
 
   <p class="tag">Patterns &amp; anti-patterns</p>
-  <h1>How conformal prediction gets used &mdash; and misused</h1>
+  <h1>How conformal prediction gets used, and misused</h1>
   <p class="subtitle">A taxonomy of sound patterns and anti-patterns, and a sampled estimate of how often the literature actually misapplies the method.</p>
 
   <p>Conformal prediction is easy to apply and, it turns out, mostly applied well. To check
@@ -55,7 +55,7 @@
   the papers that actually use it, that is roughly four in five sound, one in five
   loose, and about one in forty a clear misuse. The headline is reassuring: <em>in the
   research papers themselves, misuse is rare.</em> Loose framing tends to appear in the
-  popular layer &mdash; tutorials, courses, and vendor copy &mdash; which the
+  popular layer, tutorials, courses, and vendor copy, which the
   <a href="theory.html">curated lists</a> leave out, more than in the methods literature.</p>
 
   <p class="note">Caveats, so this is read for what it is: a single-rater, abstract-based
@@ -67,28 +67,28 @@
   <p>Where coverage or containment is genuinely the objective, or the contribution is
   honest methodology. Counts are occurrences in the sample.</p>
   <ul class="refs">
-    <li>Methodology and theory (39) &mdash; new methods, validity / efficiency / conditional-coverage results, scores; correct by construction and honest about what the guarantee is.</li>
-    <li>The set is the deliverable (10) &mdash; selective prediction, classification sets, retrieval and recall, screening shortlists; coverage is exactly what is wanted.</li>
-    <li>Safety and containment (7) &mdash; robotics safe planning, reachable sets, runtime verification; the question is whether the truth lies inside a region.</li>
-    <li>A UQ layer with explicit caveats (4) &mdash; conformal used as a calibration step, stating the marginal-coverage and exchangeability assumptions plainly.</li>
-    <li>Risk control and deferral (3) &mdash; controlling a miss rate or false-negative rate, or deciding when to ask for help.</li>
-    <li>Anomaly detection as a test (3) &mdash; conformal \(p\)-values as a distribution-free hypothesis test, where coverage is Type-I error control.</li>
+    <li>Methodology and theory (39), new methods, validity / efficiency / conditional-coverage results, scores; correct by construction and honest about what the guarantee is.</li>
+    <li>The set is the deliverable (10), selective prediction, classification sets, retrieval and recall, screening shortlists; coverage is exactly what is wanted.</li>
+    <li>Safety and containment (7), robotics safe planning, reachable sets, runtime verification; the question is whether the truth lies inside a region.</li>
+    <li>A UQ layer with explicit caveats (4), conformal used as a calibration step, stating the marginal-coverage and exchangeability assumptions plainly.</li>
+    <li>Risk control and deferral (3), controlling a miss rate or false-negative rate, or deciding when to ask for help.</li>
+    <li>Anomaly detection as a test (3), conformal \(p\)-values as a distribution-free hypothesis test, where coverage is Type-I error control.</li>
   </ul>
 
   <h2>Anti-patterns</h2>
   <p>The ways the guarantee gets overstated. Most of these showed up as <em>loose framing</em>
   rather than outright error; the two clear misuses were both the first kind.</p>
   <ul class="refs">
-    <li>The accuracy-improver (4) &mdash; presenting conformalization as making the forecast itself better, or evaluating a conformal layer by accuracy / AUROC, when coverage is what it controls.</li>
-    <li>Coverage as quality (3) &mdash; selling marginal coverage as &ldquo;reliable&rdquo; or &ldquo;well-calibrated&rdquo; uncertainty, with the marginal-versus-conditional distinction left out.</li>
-    <li>The conditional overclaim (2) &mdash; implying per-instance or conditional validity that is not available distribution-free.</li>
-    <li>Exchangeability ignored (1) &mdash; asserting the vanilla split-conformal guarantee on time-series or shifted data without adaptation or caveat.</li>
-    <li>The silver bullet (1) &mdash; framing conformal prediction as the answer to uncertainty quantification in general.</li>
+    <li>The accuracy-improver (4), presenting conformalization as making the forecast itself better, or evaluating a conformal layer by accuracy / AUROC, when coverage is what it controls.</li>
+    <li>Coverage as quality (3), selling marginal coverage as &ldquo;reliable&rdquo; or &ldquo;well-calibrated&rdquo; uncertainty, with the marginal-versus-conditional distinction left out.</li>
+    <li>The conditional overclaim (2), implying per-instance or conditional validity that is not available distribution-free.</li>
+    <li>Exchangeability ignored (1), asserting the vanilla split-conformal guarantee on time-series or shifted data without adaptation or caveat.</li>
+    <li>The silver bullet (1), framing conformal prediction as the answer to uncertainty quantification in general.</li>
   </ul>
 
   <p>None of this is a knock on the field; if anything it is a credit to it. The point of
   the guide is to keep that good track record by being clear about which column a problem
-  is in &mdash; and the <a href="applications.html">applications</a> are where the method
+  is in, and the <a href="applications.html">applications</a> are where the method
   earns its keep.</p>
 
   <div class="prevnext">
@@ -102,7 +102,7 @@
 
 <footer class="site">
   <div class="wrap">
-    <span>Conformal Prediction &mdash; a practical guide.</span>
+    <span>Conformal Prediction: a practical guide.</span>
     <span>Sample labelled from <a href="https://github.com/valeman/awesome-conformal-prediction">awesome-conformal-prediction</a>.</span>
   </div>
 </footer>

@@ -7,6 +7,10 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{microtype}
 \usepackage{graphicx}
+\usepackage{titlesec}
+% run-in paragraph headers in italic, not bold
+\titleformat{\paragraph}[runin]{\normalfont\itshape}{}{0pt}{}
+\titlespacing*{\paragraph}{0pt}{0.6\baselineskip}{0.6em}
 
 \newtheorem{proposition}{Proposition}
 \newtheorem{corollary}{Corollary}
@@ -22,7 +26,7 @@
 \newcommand{\given}{\,\vert\,}
 \DeclareMathOperator*{\argmax}{arg\,max}
 
-\title{\textbf{Marginally Useful}\\[2pt]
+\title{Marginally Useful\\[2pt]
 \large Formalizing the Information Gap in Conformal Prediction}
 
 \author{Peter Cotton\thanks{Microprediction. \texttt{peter.cotton@microprediction.com}.
@@ -43,13 +47,9 @@ single-shape residual predictive system, the log-score regret relative to the or
 exactly the mutual information $I(R;X)$ between the residual and the input. Conformalization
 re-levels coverage but cannot touch this quantity, because it is a property of the
 predictor's shape class and not of calibration; no recalibration that ignores $X$ reduces
-it. The familiar cautions about conformal prediction then follow as context rather than
-discoveries: marginal coverage is not conditional (and distribution-free conditional
-coverage is impossible without structure), validity is insensitive to sharpness, and the
-guarantee requires exchangeability. On a coverage--score plane, conformalizing a fixed
-model is a purely horizontal move, toward correct coverage and never toward a better score.
-The same decomposition marks the converse: when coverage itself is the objective, the gap is
-irrelevant and conformal prediction is exactly right. All figures are reproducible.
+it. The familiar cautions about conformal prediction follow as context: marginal coverage is
+not conditional, validity is insensitive to sharpness, and the guarantee needs
+exchangeability.
 \end{abstract}
 
 \section{Introduction}
@@ -91,24 +91,19 @@ input, not about the one in front of you. It is \emph{marginal} coverage, and as
 foundational analyses warned from the start, ``a good estimator must satisfy something
 more than marginal coverage'' \citep{lei2014distribution}.
 
-\paragraph{What is new, and what is not.}
-This paper has one new result. For a single-shape residual predictive system, the
-log-score regret to the oracle equals the mutual information $I(R;X)$ between the residual
-and the input, a quantity that no recalibration ignoring $X$ can reduce; we call it the
-residual-information gap (Section~\ref{sec:gap}, Proposition~\ref{prop:gap}). It says
-exactly what conformalization leaves on the table, and why.
+\paragraph{Contributions and structure.}
+The one new result is in Section~\ref{sec:gap}: for a single-shape residual predictive
+system, the log-score regret to the oracle equals the mutual information $I(R;X)$ between
+the residual and the input, and no recalibration that ignores $X$ can reduce it
+(Proposition~\ref{prop:gap}). We call this the residual-information gap.
 
-Everything else is scaffolding for that statement, and is labelled accordingly.
-The impossibility of distribution-free conditional coverage (Section~\ref{sec:marginal}) is
-the theorem of \citet{lei2014distribution} and \citet{barber2021limits}; we restate it and
-claim none of it. That coverage cannot constrain the log-score
-(Section~\ref{sec:orthogonality}) is folklore, recorded here as a precise warm-up. The
-coverage--score plane (Section~\ref{sec:plane}) is a presentation device, not a result. The
-remaining sections place the gap in context: exchangeability and time series
-(Section~\ref{sec:exch}), the converse when coverage really is the objective
-(Section~\ref{sec:steel}), and the scope against the modern literature
-(Section~\ref{sec:scope}), each advance of which buys its gains by the very conditional
-modeling the gap identifies.
+The other sections are background and consequences. The impossibility of distribution-free
+conditional coverage (Section~\ref{sec:marginal}) is due to \citet{lei2014distribution} and
+\citet{barber2021limits}. The orthogonality of coverage and log-score
+(Section~\ref{sec:orthogonality}) is folklore. The coverage--score plane
+(Section~\ref{sec:plane}) is a way of presenting the result. Section~\ref{sec:exch} covers
+exchangeability and time series, Section~\ref{sec:steel} the case where coverage is the
+objective, and Section~\ref{sec:scope} the relation to the modern conformal literature.
 
 \section{Setup: split conformal and the marginal guarantee}\label{sec:setup}
 
@@ -147,26 +142,14 @@ at almost every point of a continuous distribution.
 $\E\,\mathrm{leb}(C_n(x))=\infty$ at almost all non-atomic $x$ (their Prop.~2.2), and
 even the relaxed demand of coverage on every subgroup of probability $\ge\delta$ ``is
 impossible to attain beyond the trivial solution'' of inflating the marginal level to
-$1-\alpha\delta$ (their Thm.~3.1). We collect both as the operative no-go result.
-
-\begin{lemma}[No-go for distribution-free conditional coverage]\label{lem:nogo}
-Let $P$ have non-atomic $X$. \emph{(a)} \citep{lei2014distribution,barber2021limits}
-Any $C_n$ with non-trivial finite-sample conditional validity has
-$\E\,\mathrm{leb}\big(C_n(x)\big)=\infty$ at almost every $x$. \emph{(b)}
-\citep{barber2021limits} Requiring $\Pr\big(Y\in C_n(X)\given X\in G\big)\ge 1-\alpha$
-for every measurable $G$ with $P(X\in G)\ge\delta$ is attainable only by a $C_n$ whose
-marginal level is inflated to $1-\alpha\delta$, a uniformly wider, non-adaptive band.
-\end{lemma}
-
-\noindent These are not loose bounds to be tightened; they are the reason the gap cannot
-be closed for free, and both surface as concrete finite-sample facts.
-Part~(a) is illustrated in Figure~\ref{fig:nogo}: localizing split conformal to recover
+$1-\alpha\delta$ (their Thm.~3.1). These are not loose bounds to be tightened; they are the
+reason the gap cannot be closed for free, and both surface as concrete finite-sample facts.
+The first is illustrated in Figure~\ref{fig:nogo}: localizing split conformal to recover
 per-$x$ coverage shrinks each cell's calibration count $n_b$ until
 $\lceil (n_b+1)(1-\alpha)\rceil > n_b$, at which point \eqref{eq:q} gives $\hat q=+\infty$
-and the only valid cell interval is $(-\infty,\infty)$, the infinite expected length
-of the lemma, arriving as arithmetic, so that uniform coverage is recovered only as the
-fraction of infinite-length intervals grows. Part~(b) is Figure~\ref{fig:subgroup}: the
-distribution-free protection of all $\delta$-subgroups is exactly the flat band at level
+and the only valid cell interval is $(-\infty,\infty)$; uniform coverage is recovered only
+as the fraction of infinite-length intervals grows. The second is Figure~\ref{fig:subgroup}:
+the distribution-free protection of all $\delta$-subgroups is exactly the flat band at level
 $1-\alpha\delta$, whose width diverges as $\delta\to 0$ while never adapting to $x$, at a
 multiplicative width cost over an assumption-driven adaptive oracle.
 
@@ -174,7 +157,7 @@ multiplicative width cost over an assumption-driven adaptive oracle.
 \centering
 \begin{minipage}{0.49\textwidth}\centering
 \includegraphics[width=\linewidth]{figures/fig_nogo.pdf}
-\caption{The price of conditional coverage (Lemma~\ref{lem:nogo}a). As the conditioning
+\caption{The price of conditional coverage \citep{lei2014distribution}. As the conditioning
 resolution $B$ grows, per-cell calibration sets shrink and the only valid cell interval
 becomes $(-\infty,\infty)$; uniform (worst-bin) coverage is bought only as the fraction
 of infinite-length intervals rises.}
@@ -182,7 +165,7 @@ of infinite-length intervals rises.}
 \end{minipage}\hfill
 \begin{minipage}{0.49\textwidth}\centering
 \includegraphics[width=\linewidth]{figures/fig_subgroup.pdf}
-\caption{Subgroup coverage buys only a wider band (Lemma~\ref{lem:nogo}b). The
+\caption{Subgroup coverage buys only a wider band \citep{barber2021limits}. The
 distribution-free protection of all $\delta$-subgroups is a flat, non-adaptive band at
 level $1-\alpha\delta$ whose width diverges as $\delta\to0$; the adaptive oracle that uses
 $\sigma(x)$ is far tighter but requires the distributional assumption.}
@@ -208,14 +191,9 @@ it over-covers the easy inputs and under-covers the hard ones.}
 \label{fig:margcond}
 \end{figure}
 
-To be clear, the conformal literature is not unaware of this distinction. The standard
-vocabulary already separates \emph{validity} from \emph{efficiency} and adaptivity, and
-modern methods such as conformalized quantile regression \citep{romano2019conformalized}
-deliberately use better conditional modeling to obtain more adaptive sets. The narrower
-claim here is that the distribution-free marginal coverage \emph{certificate} should not
-be mistaken for distributional forecast quality, and that, as the next sections make
-precise, whatever adaptivity such methods gain is bought by conditional modeling, not by
-the conformal step itself.
+The conformal literature already separates \emph{validity} from \emph{efficiency}; the
+point here is only that the marginal-coverage certificate does not measure distributional
+quality.
 
 \paragraph{(ii) Validity is trivially satisfiable.}
 A predictor that returns the whole outcome space with probability $1-\alpha$ and the
@@ -294,8 +272,7 @@ freely while coverage stays pinned at $90\%$.}
 
 \section{The residual-information gap}\label{sec:gap}
 
-This section is the paper's contribution; the rest of the paper is setup for it and
-consequences of it. Forecast quality decomposes into \emph{calibration} and
+Forecast quality decomposes into \emph{calibration} and
 \emph{sharpness}, and the discipline's stated goal is to maximize sharpness subject to
 calibration, assessed by a proper scoring rule
 \citep{gneiting2007probabilistic,gneiting2007strictly}. Within the class of objects

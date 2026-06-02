@@ -55,7 +55,7 @@
   <!-- ============================================================ -->
   <a id="demos"></a>
   <h2 id="how">1 &middot; How it works</h2>
-  <p>Hold out a calibration set, score how &ldquo;surprising&rdquo; each point is, and take the empirical quantile of those scores to size a band around new predictions. That is the whole method &mdash; model-agnostic, a few lines of code &mdash; and it delivers exactly what it promises.</p>
+  <p>Hold out a calibration set, score how &ldquo;surprising&rdquo; each point is, and take the empirical quantile of those scores to size a band around new predictions. That is the whole method, model-agnostic, a few lines of code, and it delivers exactly what it promises.</p>
   <div class="cards">
     <a class="card" href="demos/01-how-conformal-works.html">
       <div class="num">01</div>
@@ -66,12 +66,12 @@
 
   <!-- ============================================================ -->
   <h2 id="finePrint">2 &middot; Reading the guarantee: the fine print</h2>
-  <p>The guarantee is <em>marginal</em>: an average over inputs, and an average can flatter. Conformal&rsquo;s 90% is a genuine figure that can still sit near 100% where the data are easy and well below it where they are hard. The gap to per-instance (<em>conditional</em>) coverage is not a tuning problem; it is a theorem &mdash; and knowing it is what separates using the tool well from being surprised by it.</p>
+  <p>The guarantee is <em>marginal</em>: an average over inputs, and an average can flatter. Conformal&rsquo;s 90% is a genuine figure that can still sit near 100% where the data are easy and well below it where they are hard. The gap to per-instance (<em>conditional</em>) coverage is not a tuning problem; it is a theorem, and knowing it is what separates using the tool well from being surprised by it.</p>
   <div class="cards">
     <a class="card" href="demos/02-marginal-vs-conditional.html">
       <div class="num">02</div>
       <h3>Marginal vs. conditional coverage</h3>
-      <p>90% on average &mdash; while over-covering the easy inputs and under-covering the hard ones. Drag a window and read the local coverage.</p>
+      <p>90% on average, while over-covering the easy inputs and under-covering the hard ones. Drag a window and read the local coverage.</p>
     </a>
     <a class="card" href="demos/07-price-of-conditional-coverage.html">
       <div class="num">07 &middot; no-go</div>
@@ -81,19 +81,19 @@
     <a class="card" href="demos/08-subgroup-coverage.html">
       <div class="num">08 &middot; no-go</div>
       <h3>Subgroup coverage buys only a wider band</h3>
-      <p>Protect every subgroup distribution-free and all you get is a flat, inflated band &mdash; never adaptivity. Barber et&nbsp;al. (2021).</p>
+      <p>Protect every subgroup distribution-free and all you get is a flat, inflated band, never adaptivity. Barber et&nbsp;al. (2021).</p>
     </a>
   </div>
 
   <!-- ============================================================ -->
   <h2 id="wont">3 &middot; The one thing it won&rsquo;t do: improve your forecast</h2>
-  <p>The most common hope is that conformalizing a model makes its uncertainty <em>better</em>. It doesn&rsquo;t &mdash; and seeing exactly why is worth a few minutes. The coverage certificate is independent of forecast quality: the same 90% attaches to a brilliant model and a useless one, and you can hold coverage fixed while the predictive log-likelihood does anything at all. Sharpness comes from the model; conformal supplies the certificate on top.</p>
+  <p>The most common hope is that conformalizing a model makes its uncertainty <em>better</em>. It doesn&rsquo;t, and seeing exactly why is worth a few minutes. The coverage certificate is independent of forecast quality: the same 90% attaches to a brilliant model and a useless one, and you can hold coverage fixed while the predictive log-likelihood does anything at all. Sharpness comes from the model; conformal supplies the certificate on top.</p>
 
-  <p>This is the kind of pushback you might get &mdash; or want to make yourself &mdash; and it is worth being able to answer:</p>
+  <p>This is the kind of pushback you might get, or want to make yourself, and it is worth being able to answer:</p>
   <blockquote>
     <p>If the model is miscalibrated, fix the model. If the probabilities are miscalibrated, calibrate the probabilities. If the quantiles are wrong, estimate the quantiles better. Why should I be impressed that someone looked at held-out residuals and widened intervals until empirical coverage matches a target?</p>
   </blockquote>
-  <p>The fair answer: you shouldn&rsquo;t be impressed by the widening as a <em>forecast</em> &mdash; but it does buy one thing nothing else does, a finite-sample, distribution-free guarantee that the band covers, under almost no assumptions. That certificate is the product. The sharper forecast underneath is still the model&rsquo;s job.</p>
+  <p>The fair answer: you shouldn&rsquo;t be impressed by the widening as a <em>forecast</em>, but it does buy one thing nothing else does, a finite-sample, distribution-free guarantee that the band covers, under almost no assumptions. That certificate is the product. The sharper forecast underneath is still the model&rsquo;s job.</p>
   <div class="cards">
     <a class="card" href="demos/03-trivial-validity.html">
       <div class="num">03</div>
@@ -108,13 +108,13 @@
     <a class="card" href="demos/06-conformal-vs-recalibration.html">
       <div class="num">06</div>
       <h3>Conformal vs. recalibration</h3>
-      <p>Want a calibrated <em>forecast</em>? Recalibration improves the score and returns a density. Conformal re-levels coverage and returns a set. Both are useful &mdash; for different jobs.</p>
+      <p>Want a calibrated <em>forecast</em>? Recalibration improves the score and returns a density. Conformal re-levels coverage and returns a set. Both are useful, for different jobs.</p>
     </a>
   </div>
 
   <!-- ============================================================ -->
   <h2 id="ts">4 &middot; Time series &amp; distribution shift</h2>
-  <p>The base guarantee needs <em>exchangeability</em>, which time series break. Conformal coverage can hold beautifully &mdash; right up until the distribution shifts out from under it. The adaptive variants (ACI, conformal PID, EnbPI) genuinely help, but they recover a long-run <em>average</em> coverage, not coverage for the step in front of you &mdash; useful to know before you deploy.</p>
+  <p>The base guarantee needs <em>exchangeability</em>, which time series break. Conformal coverage can hold beautifully, right up until the distribution shifts out from under it. The adaptive variants (ACI, conformal PID, EnbPI) genuinely help, but they recover a long-run <em>average</em> coverage, not coverage for the step in front of you, useful to know before you deploy.</p>
   <div class="cards">
     <a class="card" href="demos/05-exchangeability-timeseries.html">
       <div class="num">05</div>
@@ -125,28 +125,28 @@
 
   <!-- ============================================================ -->
   <h2 id="practice">5 &middot; Does it help in practice?</h2>
-  <p>One small, reproducible <a href="benchmark.html">worked example</a> &mdash; not a benchmark, just a controlled experiment on synthetic data with a known answer &mdash; runs the actual libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods against probabilistic baselines and an oracle, scored by conditional coverage and proper scores (CRPS, interval/Winkler). It isolates one clean point: the adaptive conformal methods <em>do</em> help, but the help comes from the conditional model they wrap &mdash; raw quantile regression with no conformal step ties conformalized quantile regression &mdash; with the conformal layer adding the marginal certificate on top. <a href="benchmark.html">See the example &rarr;</a></p>
+  <p>One small, reproducible <a href="benchmark.html">worked example</a>, not a benchmark, just a controlled experiment on synthetic data with a known answer, runs the actual libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods against probabilistic baselines and an oracle, scored by conditional coverage and proper scores (CRPS, interval/Winkler). It isolates one clean point: the adaptive conformal methods <em>do</em> help, but the help comes from the conditional model they wrap, raw quantile regression with no conformal step ties conformalized quantile regression, with the conformal layer adding the marginal certificate on top. <a href="benchmark.html">See the example &rarr;</a></p>
 
   <!-- ============================================================ -->
   <h2 id="applications">6 &middot; When coverage is the goal: the litmus test</h2>
   <p>Everything so far was about reading the guarantee carefully. The reward for that care is knowing precisely when conformal prediction is not merely valid but <em>exactly</em> the right tool. It comes down to a single question:</p>
   <blockquote><p>Is your loss a function of <em>whether</em> the truth lands in a set, or of <em>where</em> it lands? When the answer is &ldquo;whether,&rdquo; coverage <em>is</em> the objective, the set is the deliverable, and conformal prediction&rsquo;s distribution-free guarantee is hard to beat.</p></blockquote>
-  <p>That &ldquo;whether&rdquo; column is large, and high-stakes, and it is where conformal prediction earns its keep. The next sections walk through it &mdash; four families you can play with right here, and several more covered in depth on the <a href="applications.html">applications page</a>. In all of them the marginal guarantee is not a consolation prize; it is the whole product.</p>
+  <p>That &ldquo;whether&rdquo; column is large, and high-stakes, and it is where conformal prediction earns its keep. The next sections walk through it, four families you can play with right here, and several more covered in depth on the <a href="applications.html">applications page</a>. In all of them the marginal guarantee is not a consolation prize; it is the whole product.</p>
 
   <!-- ============================================================ -->
   <h2 id="sets">7 &middot; Prediction sets &amp; selective triage</h2>
-  <p>In classification, conformal prediction returns a <em>set</em> of labels guaranteed to contain the true one at your chosen rate &mdash; and the set&rsquo;s <em>size</em> adapts to difficulty: a single confident label where one class dominates, a short ranked shortlist where the input is genuinely ambiguous. That is exactly the signal you want for human-in-the-loop triage: answer automatically when you can, defer the ambiguous cases to an expert, and bound how often the wrong shortlist is handed over. The adaptivity that was a <em>caveat</em> for coverage in Section&nbsp;2 becomes the <em>feature</em> here, because now the set is what you ship.</p>
+  <p>In classification, conformal prediction returns a <em>set</em> of labels guaranteed to contain the true one at your chosen rate, and the set&rsquo;s <em>size</em> adapts to difficulty: a single confident label where one class dominates, a short ranked shortlist where the input is genuinely ambiguous. That is exactly the signal you want for human-in-the-loop triage: answer automatically when you can, defer the ambiguous cases to an expert, and bound how often the wrong shortlist is handed over. The adaptivity that was a <em>caveat</em> for coverage in Section&nbsp;2 becomes the <em>feature</em> here, because now the set is what you ship.</p>
   <div class="cards">
     <a class="card" href="demos/09-prediction-sets.html">
       <div class="num">09 &middot; shines</div>
       <h3>Adaptive prediction sets</h3>
-      <p>Singletons where the model is sure, two or three labels where it isn&rsquo;t &mdash; an honest confidence signal with a coverage contract attached.</p>
+      <p>Singletons where the model is sure, two or three labels where it isn&rsquo;t, an honest confidence signal with a coverage contract attached.</p>
     </a>
   </div>
 
   <!-- ============================================================ -->
   <h2 id="anomaly">8 &middot; Anomaly &amp; out-of-distribution detection</h2>
-  <p>This is conformal prediction at its cleanest, working as a <em>test</em> rather than a forecaster. A conformal \(p\)-value of a genuine inlier is (super-)uniform, so flagging whenever \(p\le\alpha\) controls the false-alarm rate at <em>exactly</em> \(\alpha\) &mdash; distribution-free, finite-sample, with no threshold to tune. Type-I error control is coverage, and coverage is what conformal certifies. Detection power is the score&rsquo;s job; the false-alarm budget is guaranteed.</p>
+  <p>This is conformal prediction at its cleanest, working as a <em>test</em> rather than a forecaster. A conformal \(p\)-value of a genuine inlier is (super-)uniform, so flagging whenever \(p\le\alpha\) controls the false-alarm rate at <em>exactly</em> \(\alpha\), distribution-free, finite-sample, with no threshold to tune. Type-I error control is coverage, and coverage is what conformal certifies. Detection power is the score&rsquo;s job; the false-alarm budget is guaranteed.</p>
   <div class="cards">
     <a class="card" href="demos/10-anomaly-pvalues.html">
       <div class="num">10 &middot; shines</div>
@@ -157,7 +157,7 @@
 
   <!-- ============================================================ -->
   <h2 id="recall">9 &middot; Retrieval &amp; screening: guaranteed recall</h2>
-  <p>Drug-candidate triage, document retrieval, fraud review: the deliverable is a shortlist, and the thing that must not happen is dropping the real hit. That is a recall guarantee, which is coverage in disguise. One conformal threshold on the model&rsquo;s score, calibrated on known hits, guarantees a new hit survives the cut at least \(1-\alpha\) of the time &mdash; with no assumptions about how scores are distributed. A sharper model does not change the guarantee; it shrinks the list you have to read.</p>
+  <p>Drug-candidate triage, document retrieval, fraud review: the deliverable is a shortlist, and the thing that must not happen is dropping the real hit. That is a recall guarantee, which is coverage in disguise. One conformal threshold on the model&rsquo;s score, calibrated on known hits, guarantees a new hit survives the cut at least \(1-\alpha\) of the time, with no assumptions about how scores are distributed. A sharper model does not change the guarantee; it shrinks the list you have to read.</p>
   <div class="cards">
     <a class="card" href="demos/11-guaranteed-recall.html">
       <div class="num">11 &middot; shines</div>
@@ -168,7 +168,7 @@
 
   <!-- ============================================================ -->
   <h2 id="safety">10 &middot; Safety in robotics &amp; control</h2>
-  <p>Robotics and control are a natural home for conformal prediction, because the question is almost always <em>containment</em>: will the true state lie inside a region I can plan around? Calibrate a state predictor&rsquo;s error and you get a distribution-free <em>safety tube</em> around the nominal trajectory; if the tube clears the obstacle, you hold a certificate that the system stays out of the keep-out zone at the chosen confidence. A controller rarely needs a sharp forecast of the next state &mdash; it needs a region it can prove it stays within.</p>
+  <p>Robotics and control are a natural home for conformal prediction, because the question is almost always <em>containment</em>: will the true state lie inside a region I can plan around? Calibrate a state predictor&rsquo;s error and you get a distribution-free <em>safety tube</em> around the nominal trajectory; if the tube clears the obstacle, you hold a certificate that the system stays out of the keep-out zone at the chosen confidence. A controller rarely needs a sharp forecast of the next state, it needs a region it can prove it stays within.</p>
   <div class="cards">
     <a class="card" href="demos/12-safety-envelope.html">
       <div class="num">12 &middot; shines</div>
@@ -179,21 +179,21 @@
 
   <!-- ============================================================ -->
   <h2 id="llms">11 &middot; Language models &amp; structured outputs</h2>
-  <p>The same idea tames generative models. Emit a <em>set</em> of candidate answers guaranteed to contain the correct one with high probability, or abstain when that set grows too large to be useful &mdash; a distribution-free handle on hallucination and a principled deferral rule. Conformal factuality, calibrated selective generation, and coverage-guaranteed retrieval-augmented pipelines all rest on the same certificate. The <a href="applications.html">applications page</a> walks through the methods and the papers that apply them carefully.</p>
+  <p>The same idea tames generative models. Emit a <em>set</em> of candidate answers guaranteed to contain the correct one with high probability, or abstain when that set grows too large to be useful, a distribution-free handle on hallucination and a principled deferral rule. Conformal factuality, calibrated selective generation, and coverage-guaranteed retrieval-augmented pipelines all rest on the same certificate. The <a href="applications.html">applications page</a> walks through the methods and the papers that apply them carefully.</p>
 
   <!-- ============================================================ -->
   <h2 id="risk">12 &middot; Risk control, deferral &amp; audit</h2>
-  <p>Sometimes the deliverable is the certificate itself. Conformal risk control and Learn-then-Test extend the machinery from coverage to any monotone risk &mdash; a bounded miss rate, false-negative rate, or expected loss &mdash; chosen in advance and honoured on fresh data. For compliance and audit, &ldquo;contained 95% of the time, under almost no assumptions&rdquo; is exactly the kind of guarantee little else can promise so cheaply. Full depth, with citations &mdash; including scientific discovery, causal inference, and survival analysis, where coverage is just as central &mdash; is on the <a href="applications.html">applications page</a>.</p>
+  <p>Sometimes the deliverable is the certificate itself. Conformal risk control and Learn-then-Test extend the machinery from coverage to any monotone risk, a bounded miss rate, false-negative rate, or expected loss, chosen in advance and honoured on fresh data. For compliance and audit, &ldquo;contained 95% of the time, under almost no assumptions&rdquo; is exactly the kind of guarantee little else can promise so cheaply. Full depth, with citations, including scientific discovery, causal inference, and survival analysis, where coverage is just as central, is on the <a href="applications.html">applications page</a>.</p>
   <p>In every one of these the skill is the same: recognising which column your problem is in. When it is &ldquo;whether,&rdquo; reach for conformal prediction with confidence.</p>
 
   <!-- ============================================================ -->
   <h2 id="faq">13 &middot; Objections &amp; FAQ</h2>
-  <p>Is it useless? Does conformalizing improve my model? Can I get conditional coverage? Does it work for time series? The common objections &mdash; and straight answers &mdash; live on the <a href="faq.html">FAQ page</a>.</p>
+  <p>Is it useless? Does conformalizing improve my model? Can I get conditional coverage? Does it work for time series? The common objections, and straight answers, live on the <a href="faq.html">FAQ page</a>.</p>
 
   <!-- ============================================================ -->
   <h2>The one-sentence version</h2>
   <div class="takeaway">
-    <p>Conformal prediction certifies the coverage of a set; it does not estimate a distribution. Use it, happily, whenever you need a coverage guarantee. Just don&rsquo;t expect the certificate to make the forecast underneath it any sharper; that work belongs to the model. Genuinely useful, then, but &mdash; in the exact sense of that average over inputs &mdash; only <em>marginally</em> so.</p>
+    <p>Conformal prediction certifies the coverage of a set; it does not estimate a distribution. Use it, happily, whenever you need a coverage guarantee. Just don&rsquo;t expect the certificate to make the forecast underneath it any sharper; that work belongs to the model. Genuinely useful, then, but, in the exact sense of that average over inputs, only <em>marginally</em> so.</p>
   </div>
 
   <h2 id="references">Key references</h2>
@@ -213,7 +213,7 @@
 
 <footer class="site">
   <div class="wrap">
-    <span>Conformal Prediction &mdash; a practical guide. <span style="font-style:italic">Marginally Useful.</span></span>
+    <span>Conformal Prediction: a practical guide. <span style="font-style:italic">Marginally Useful.</span></span>
     <span><a href="paper/">Paper</a> &middot; <a href="benchmark.html">Example</a></span>
   </div>
 </footer>
