@@ -25,6 +25,7 @@
       <a href="/applications.html">Applications</a>
       <a href="/reading.html">Reading</a>
       <a href="/benchmark.html">Benchmark</a>
+      <a href="/faq.html">FAQ</a>
       <a href="/paper/">Paper</a>
     </nav>
   </div>
@@ -125,40 +126,67 @@
   <p>A reproducible <a href="benchmark.html">benchmark</a> puts the actual libraries &mdash; <a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a> &mdash; and the strong time-series methods on trial against probabilistic baselines and an oracle, scored by conditional coverage and proper scores (CRPS, interval/Winkler). The takeaway is constructive: the adaptive conformal methods <em>do</em> help, but the help comes from the conditional model they wrap &mdash; raw quantile regression with no conformal step ties conformalized quantile regression &mdash; with the conformal layer adding the marginal certificate on top. <a href="benchmark.html">See the results &rarr;</a></p>
 
   <!-- ============================================================ -->
-  <h2 id="applications">6 &middot; Where conformal prediction genuinely shines</h2>
-  <p>Now the payoff. Everything above sharpens a single, practical test for when conformal prediction is not just valid but <em>exactly</em> the right tool:</p>
+  <h2 id="applications">6 &middot; When coverage is the goal: the litmus test</h2>
+  <p>Everything so far was about reading the guarantee carefully. The reward for that care is knowing precisely when conformal prediction is not merely valid but <em>exactly</em> the right tool. It comes down to a single question:</p>
   <blockquote><p><strong>Is your loss a function of <em>whether</em> the truth lands in a set, or of <em>where</em> it lands?</strong> When the answer is &ldquo;whether,&rdquo; coverage <em>is</em> the objective, the set is the deliverable, and conformal prediction&rsquo;s distribution-free guarantee is hard to beat.</p></blockquote>
-  <p>That covers a great deal of real, high-stakes work:</p>
-  <ul>
-    <li>Selective prediction and human-in-the-loop triage, where you return a small candidate set guaranteed to contain the answer 95% of the time and send the rest to an expert. In medical decision support or content moderation, the guarantee bounds how often the human is handed the wrong shortlist.</li>
-    <li>Anomaly and out-of-distribution detection, where conformal \(p\)-values act as a distribution-free test of whether a new point is exchangeable with what came before, with exact Type-I error control. This is conformal prediction at its cleanest, working as a test rather than a forecaster.</li>
-    <li>Screening and retrieval, where the product is itself a candidate set and coverage is recall. Drug-candidate triage, search and recommendation all want the guaranteed-recall shortlist that conformal prediction provides.</li>
-    <li>Safety for language models and structured outputs, where you emit a set of candidates guaranteed to contain the correct answer with high probability, or abstain when that set grows too large. It is a distribution-free handle on hallucination and deferral.</li>
-    <li>Safety envelopes in control and robotics, certifying that the true state or trajectory lies inside a reachable set with a chosen probability. The guarantee is about containment, which is conformal prediction&rsquo;s native object.</li>
-    <li>Compliance and audit, where the deliverable is the certificate itself: &ldquo;contained 95% of the time,&rdquo; under almost no assumptions, which little else can promise so cheaply.</li>
-  </ul>
-  <p>In every one of these the marginal coverage guarantee is not a consolation prize &mdash; it is the whole point. The skill is recognizing which column your problem is in. <a href="demos/06-conformal-vs-recalibration.html">Demo&nbsp;06</a> draws the line between this world and forecasting, and the <a href="applications.html">applications page</a> goes through each domain in depth &mdash; selective prediction, anomaly detection, retrieval, language models, robotics and control, risk control, and scientific discovery &mdash; with the papers that do it well.</p>
+  <p>That &ldquo;whether&rdquo; column is large, and high-stakes, and it is where conformal prediction earns its keep. The next sections walk through it &mdash; four families you can play with right here, two more covered in depth on the <a href="applications.html">applications page</a>. In all of them the marginal guarantee is not a consolation prize; it is the whole product.</p>
 
   <!-- ============================================================ -->
-  <h2 id="faq">7 &middot; Objections &amp; FAQ</h2>
+  <h2 id="sets">7 &middot; Prediction sets &amp; selective triage</h2>
+  <p>In classification, conformal prediction returns a <em>set</em> of labels guaranteed to contain the true one at your chosen rate &mdash; and the set&rsquo;s <em>size</em> adapts to difficulty: a single confident label where one class dominates, a short ranked shortlist where the input is genuinely ambiguous. That is exactly the signal you want for human-in-the-loop triage: answer automatically when you can, defer the ambiguous cases to an expert, and bound how often the wrong shortlist is handed over. The adaptivity that was a <em>caveat</em> for coverage in Section&nbsp;2 becomes the <em>feature</em> here, because now the set is what you ship.</p>
+  <div class="cards">
+    <a class="card" href="demos/09-prediction-sets.html">
+      <div class="num">09 &middot; shines</div>
+      <h3>Adaptive prediction sets</h3>
+      <p>Singletons where the model is sure, two or three labels where it isn&rsquo;t &mdash; an honest confidence signal with a coverage contract attached.</p>
+    </a>
+  </div>
 
-  <h3>So is conformal prediction useless?</h3>
-  <p>Quite the opposite &mdash; it is the right tool for every coverage-objective problem in Section&nbsp;6, and the only thing that hands you a distribution-free, finite-sample coverage certificate. The single thing it does not do is make a forecast sharper or a density better.</p>
+  <!-- ============================================================ -->
+  <h2 id="anomaly">8 &middot; Anomaly &amp; out-of-distribution detection</h2>
+  <p>This is conformal prediction at its cleanest, working as a <em>test</em> rather than a forecaster. A conformal \(p\)-value of a genuine inlier is (super-)uniform, so flagging whenever \(p\le\alpha\) controls the false-alarm rate at <em>exactly</em> \(\alpha\) &mdash; distribution-free, finite-sample, with no threshold to tune. Type-I error control is coverage, and coverage is what conformal certifies. Detection power is the score&rsquo;s job; the false-alarm budget is guaranteed.</p>
+  <div class="cards">
+    <a class="card" href="demos/10-anomaly-pvalues.html">
+      <div class="num">10 &middot; shines</div>
+      <h3>Calibrated anomaly detection</h3>
+      <p>Set a false-alarm budget and it is honoured regardless of the unknown normal distribution. The inlier \(p\)-values fill out a uniform histogram by construction.</p>
+    </a>
+  </div>
 
-  <h3>Doesn&rsquo;t conformalizing my model improve its uncertainty?</h3>
-  <p>It gives the prediction <em>set</em> a coverage guarantee. It does not change your predictive <em>distribution</em>&rsquo;s sharpness, and a proper score (log-likelihood, CRPS) is unmoved by the conformal step. If the model is overconfident, conformal widens the set to hit coverage, but the density it implies is just your model&rsquo;s residual shape, re-levelled.</p>
+  <!-- ============================================================ -->
+  <h2 id="recall">9 &middot; Retrieval &amp; screening: guaranteed recall</h2>
+  <p>Drug-candidate triage, document retrieval, fraud review: the deliverable is a shortlist, and the thing that must not happen is dropping the real hit. That is a recall guarantee, which is coverage in disguise. One conformal threshold on the model&rsquo;s score, calibrated on known hits, guarantees a new hit survives the cut at least \(1-\alpha\) of the time &mdash; with no assumptions about how scores are distributed. A sharper model does not change the guarantee; it shrinks the list you have to read.</p>
+  <div class="cards">
+    <a class="card" href="demos/11-guaranteed-recall.html">
+      <div class="num">11 &middot; shines</div>
+      <h3>Guaranteed recall</h3>
+      <p>Coverage <em>is</em> recall when the product is a shortlist. Watch the recall guarantee hold flat while a better model buys a shorter list at the same recall.</p>
+    </a>
+  </div>
 
-  <h3>But conformal predictive systems and CQR output whole distributions!</h3>
-  <p>They do, and they can be excellent. The point is <em>attribution</em>: their sharpness comes from the conditional model they wrap &mdash; the quantile regressor, the difficulty estimator, the per-region bins &mdash; not from the conformal step, which supplies the coverage certificate. The benchmark shows raw quantile regression matching its conformalized version.</p>
+  <!-- ============================================================ -->
+  <h2 id="safety">10 &middot; Safety in robotics &amp; control</h2>
+  <p>Robotics and control are a natural home for conformal prediction, because the question is almost always <em>containment</em>: will the true state lie inside a region I can plan around? Calibrate a state predictor&rsquo;s error and you get a distribution-free <em>safety tube</em> around the nominal trajectory; if the tube clears the obstacle, you hold a certificate that the system stays out of the keep-out zone at the chosen confidence. A controller rarely needs a sharp forecast of the next state &mdash; it needs a region it can prove it stays within.</p>
+  <div class="cards">
+    <a class="card" href="demos/12-safety-envelope.html">
+      <div class="num">12 &middot; shines</div>
+      <h3>A certified safety envelope</h3>
+      <p>A conformal tube around a trajectory, with a clearance certificate that flips to &ldquo;safe&rdquo; exactly when the guaranteed region clears the obstacle.</p>
+    </a>
+  </div>
 
-  <h3>Can I get conditional (per-\(x\)) coverage?</h3>
-  <p>Not exactly, and not for free: distribution-free, finite-sample conditional coverage forces infinite-length intervals (<a href="demos/07-price-of-conditional-coverage.html">Demo&nbsp;07</a>). You can <em>approach</em> it under assumptions &mdash; conformalized quantile regression, normalized/Mondrian conformal, recent pivotal-score and optimal-transport methods &mdash; all of which condition on \(x\).</p>
+  <!-- ============================================================ -->
+  <h2 id="llms">11 &middot; Language models &amp; structured outputs</h2>
+  <p>The same idea tames generative models. Emit a <em>set</em> of candidate answers guaranteed to contain the correct one with high probability, or abstain when that set grows too large to be useful &mdash; a distribution-free handle on hallucination and a principled deferral rule. Conformal factuality, calibrated selective generation, and coverage-guaranteed retrieval-augmented pipelines all rest on the same certificate. The <a href="applications.html">applications page</a> walks through the methods and the papers that apply them carefully.</p>
 
-  <h3>Does it work for time series?</h3>
-  <p>The basic guarantee needs exchangeability, which time series violate. Adaptive methods (ACI, conformal PID, EnbPI) restore a long-run average coverage and are well worth using; just don&rsquo;t read them as a per-step guarantee (Section&nbsp;4).</p>
+  <!-- ============================================================ -->
+  <h2 id="risk">12 &middot; Risk control, deferral &amp; audit</h2>
+  <p>Sometimes the deliverable is the certificate itself. Conformal risk control and Learn-then-Test extend the machinery from coverage to any monotone risk &mdash; a bounded miss rate, false-negative rate, or expected loss &mdash; chosen in advance and honoured on fresh data. For compliance and audit, &ldquo;contained 95% of the time, under almost no assumptions&rdquo; is exactly the kind of guarantee little else can promise so cheaply. Full depth, with citations, is on the <a href="applications.html">applications page</a>.</p>
+  <p>In every one of these the skill is the same: recognising which column your problem is in. When it is &ldquo;whether,&rdquo; reach for conformal prediction with confidence.</p>
 
-  <h3>Then what should I use to make forecasts better?</h3>
-  <p>Model the conditional distribution (heteroscedastic models, quantile regression, mixture or flow densities) and recalibrate against a proper score. <em>Then</em> conformalize, if you also need a distribution-free coverage certificate. The order matters: estimate first, certify second.</p>
+  <!-- ============================================================ -->
+  <h2 id="faq">13 &middot; Objections &amp; FAQ</h2>
+  <p>Is it useless? Does conformalizing improve my model? Can I get conditional coverage? Does it work for time series? The common objections &mdash; and straight answers &mdash; live on the <a href="faq.html">FAQ page</a>.</p>
 
   <!-- ============================================================ -->
   <h2>The one-sentence version</h2>

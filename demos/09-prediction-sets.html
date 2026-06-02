@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>09 · Adaptive prediction sets — Conformal Prediction</title>
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Guide</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/reading.html">Reading</a>
+      <a href="/benchmark.html">Benchmark</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/paper/">Paper</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demo 09 · where it shines</p>
+  <h1>Adaptive prediction sets</h1>
+  <p class="subtitle">When the <em>set</em> is the deliverable, conformal prediction is exactly the right tool — and its size is an honest confidence signal.</p>
+
+  <p>Now the positive case. In classification, conformal prediction returns a <em>set</em> of
+  labels guaranteed to contain the true one at least \(1-\alpha\) of the time. The score is
+  \(s_i = 1 - \hat p_{y_i}(x_i)\), one minus the model&rsquo;s probability on the true class;
+  the set is \(C(x) = \{\,k : \hat p_k(x) \ge 1-q\,\}\). What makes this useful is that the
+  set <em>size adapts</em>: a single label where one class clearly dominates, two or three
+  where the input is genuinely ambiguous. That is precisely what you want for triage — return
+  a confident answer when you can, a short ranked shortlist when you cannot, and let a human
+  take the ambiguous ones. The coverage is the contract; the size is the &ldquo;how sure am
+  I.&rdquo; Move <em>overlap</em> up and watch the sets grow where the classes collide.</p>
+
+  <div class="demo">
+    <div class="canvas-box tall"><canvas id="main"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <div class="canvas-box med demo"><canvas id="sizes"></canvas></div>
+  <p class="note">The distribution of prediction-set sizes over the test inputs. Singletons
+  (green) are the confident calls; size-2 and size-3 sets (amber, red) are where the model
+  honestly reports ambiguity rather than guessing. Coverage holds across all of them.</p>
+
+  <div class="takeaway">
+    <p><strong>Takeaway.</strong> Here the marginal guarantee is not a consolation prize, it is
+    the product: a set you can act on, with a coverage contract attached. The adaptivity that
+    was a <em>limitation</em> in <a href="02-marginal-vs-conditional.html">Demo&nbsp;02</a> —
+    coverage moving around with \(x\) — reappears here as a <em>feature</em>: the set size
+    moves with difficulty, exactly as a triage signal should. Same theorem, opposite verdict,
+    because the question changed.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="08-subgroup-coverage.html">&larr; Demo 08: Subgroup coverage</a>
+    <span class="spacer"></span>
+    <a href="10-anomaly-pvalues.html">Demo 10: Calibrated anomaly detection &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demo 09 of 12</span></div></footer>
+
+<script type="module" src="../js/demo09.js"></script>
+</body>
+</html>

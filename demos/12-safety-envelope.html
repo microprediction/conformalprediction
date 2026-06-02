@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>12 · A certified safety envelope — Conformal Prediction</title>
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Guide</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/reading.html">Reading</a>
+      <a href="/benchmark.html">Benchmark</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/paper/">Paper</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demo 12 · where it shines</p>
+  <h1>A certified safety envelope</h1>
+  <p class="subtitle">A controller does not need a sharp forecast of the next state — it needs a region the true state is guaranteed to stay in.</p>
+
+  <p>Robotics and control are a natural home for conformal prediction, because the question is
+  almost always one of <em>containment</em>: will the true state lie inside a region I can plan
+  around? Calibrate the prediction error of a state predictor and you get a radius \(q\) such
+  that the realised state stays within \(\hat\mu(t)\pm q\) at least \(1-\alpha\) of the time —
+  a distribution-free <em>safety tube</em> around the nominal trajectory. If that tube clears
+  the obstacle, you have a certificate: the system stays out of the keep-out zone at the
+  chosen confidence. Lower the <em>risk budget</em> \(\alpha\) and the tube widens; raise the
+  obstacle and the margin returns. The certificate flips between &ldquo;clear&rdquo; and
+  &ldquo;not&rdquo; exactly when the guaranteed tube touches the obstacle.</p>
+
+  <div class="demo">
+    <div class="canvas-box tall"><canvas id="main"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+  <p class="note">Green: the nominal trajectory and its conformal safety tube. Red zone: the
+  obstacle. The realised states stay inside the tube at the target rate; the certificate is
+  &ldquo;clear&rdquo; whenever the whole tube sits below the obstacle over the horizon.</p>
+
+  <div class="takeaway">
+    <p><strong>Takeaway.</strong> Safety is a coverage property, and coverage is what conformal
+    prediction guarantees with almost no assumptions. The tube is the deliverable; a better
+    state predictor makes it tighter and buys back clearance, but the guarantee that the true
+    state is contained at level \(1-\alpha\) holds regardless. This is the marginal guarantee
+    doing exactly the job it is built for.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="11-guaranteed-recall.html">&larr; Demo 11: Guaranteed recall</a>
+    <span class="spacer"></span>
+    <a href="../index.html">&uarr; Back to overview</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demo 12 of 12</span></div></footer>
+
+<script type="module" src="../js/demo12.js"></script>
+</body>
+</html>
