@@ -211,18 +211,22 @@ that restore something do so by weakening what is guaranteed (Section~\ref{sec:e
 \section{Coverage and score are orthogonal}\label{sec:orthogonality}
 
 We first make ``coverage is not a measure of forecast quality'' a precise, constructive
-fact. Model a forecaster as a pair $(\,f(\cdot\given x),\,s\,)$ of a predictive density
-and a nonconformity score. The point is conditional on the score: it is sharp
-when the density is \emph{not} used to build $s$ (as for the canonical residual score),
-and it does not apply to density- or quantile-based scores.
+fact. Separate the two things a forecaster reports: a point predictor $\hat\mu(x)$ and a
+full predictive density $f(\cdot\given x)$. The log-score grades $f$, that is, its spread
+and shape, its sharpness. The canonical residual score $s(x,y)=|y-\hat\mu(x)|$ uses only
+$\hat\mu$, the \emph{location} of the forecast; it never sees the spread or shape of $f$.
+So the conformal set, and its coverage, are invariant to exactly the part of $f$ that the
+log-score rewards. (This is specific to such scores; it does not apply to density- or
+quantile-based scores, which read $f$ directly.)
 
 \begin{proposition}[Coverage does not constrain the log-score]\label{prop:orth}
 The split-conformal set \eqref{eq:set} is a measurable function of the nonconformity
 scores $\{s_i\}$ and of $s(x,\cdot)$; it is not a functional of the predictive density
-$f$ unless $f$ is explicitly used in the score. Consequently, if two forecasters share
-the same score function $s$ and the same calibration scores, their conformal sets, and
-hence their marginal coverage at every level $\alpha$, are \emph{identical}, while
-their expected log-scores $\E[\log f(Y\given X)]$ may differ by an arbitrary amount.
+$f$ unless $f$ is explicitly used in the score. Consequently two forecasters with the
+\emph{same} location $\hat\mu$ (hence, for the residual score, the same score function and
+calibration scores) but different predictive densities $f$ have \emph{identical} conformal
+sets, and identical marginal coverage at every level $\alpha$, while their expected
+log-scores $\E[\log f(Y\given X)]$ may differ by an arbitrary amount.
 \end{proposition}
 
 \begin{proof}
@@ -231,11 +235,12 @@ statistic of $\{s_i\}$ and $C_\alpha(x)=\{y:s(x,y)\le\hat q\}$, so two forecaste
 agreeing on $s$ and on $\{s_i\}$ produce the same set for every $x,\alpha$, and
 \eqref{eq:marginal} concerns only that set.
 
-For the gap, take $X$ degenerate and $Y\sim N(0,1)$; let $\hat\mu\equiv 0$ with the
-absolute-residual score $s(x,y)=|y|$, which does not depend on the predictive density at
-all. For any claimed predictive density $f_\sigma=N(0,\sigma^2)$ the scores are
-$|Y_i|$, independent of $\sigma$, so the conformal set is the fixed interval
-$[-\hat q,\hat q]$ with $\hat q$ the empirical $(1-\alpha)$-quantile of $|Y|$. Yet
+For the gap, take $X$ degenerate and $Y\sim N(0,1)$. Both forecasters share the location
+$\hat\mu\equiv 0$, so both use the absolute-residual score $s(x,y)=|y|$, which depends on
+$\hat\mu$ but not on the spread of the predictive density. They differ only in that claimed
+density, $f_\sigma=N(0,\sigma^2)$: for any $\sigma$ the scores are $|Y_i|$, independent of
+$\sigma$, so the conformal set is the fixed interval $[-\hat q,\hat q]$ with $\hat q$ the
+empirical $(1-\alpha)$-quantile of $|Y|$. Yet
 \[
   \E[\log f_\sigma(Y)] \;=\; -\tfrac12\log(2\pi\sigma^2)-\frac{\E[Y^2]}{2\sigma^2}
   \;=\; -\tfrac12\log(2\pi\sigma^2)-\frac{1}{2\sigma^2}\;\xrightarrow[\sigma\to 0^+]{}-\infty,

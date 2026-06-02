@@ -146,7 +146,7 @@ def fig_nogo():
     ax2 = ax.twinx(); ax2.grid(False)
     ax2.plot(Bs, finf, "s-", color=ORANGE, ms=3, label="frac. intervals $=\\infty$")
     ax2.set_ylabel("fraction of intervals $=(-\\infty,\\infty)$", color=ORANGE); ax2.set_ylim(0, 1.05)
-    ax.set_title("The price of conditional coverage (Lemma 1a)")
+    ax.set_title("The price of conditional coverage")
     lines = ax.get_lines() + ax2.get_lines()
     ax.legend(lines, [l.get_label() for l in lines], loc="center right", fontsize=8)
     fig.savefig(os.path.join(FIG, "fig_nogo.pdf"))
