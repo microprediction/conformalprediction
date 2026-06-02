@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://conformalprediction.net/</loc></url>
+  <url><loc>https://conformalprediction.net/theory.html</loc></url>
+  <url><loc>https://conformalprediction.net/applications.html</loc></url>
+  <url><loc>https://conformalprediction.net/benchmark.html</loc></url>
+  <url><loc>https://conformalprediction.net/faq.html</loc></url>
+  <url><loc>https://conformalprediction.net/patterns.html</loc></url>
+  <url><loc>https://conformalprediction.net/paper/</loc></url>
+  <url><loc>https://conformalprediction.net/demos/01-how-conformal-works.html</loc></url>
+  <url><loc>https://conformalprediction.net/demos/02-marginal-vs-conditional.html</loc></url>
+  <url><loc>https://conformalprediction.net/demos/03-trivial-validity.html</loc></url>
+  <url><loc>https://conformalprediction.net/demos/04-coverage-vs-logscore.html</loc></url>
+  <url><loc>https://conformalprediction.net/demos/05-exchangeability-timeseries.html</loc></url>
+  <url><loc>https://conformalprediction.net/demos/06-conformal-vs-recalibration.html</loc></url>
+  <url><loc>https://conformalprediction.net/demos/07-price-of-conditional-coverage.html</loc></url>
+  <url><loc>https://conformalprediction.net/demos/08-subgroup-coverage.html</loc></url>
+  <url><loc>https://conformalprediction.net/demos/09-prediction-sets.html</loc></url>
+  <url><loc>https://conformalprediction.net/demos/10-anomaly-pvalues.html</loc></url>
+  <url><loc>https://conformalprediction.net/demos/11-guaranteed-recall.html</loc></url>
+  <url><loc>https://conformalprediction.net/demos/12-safety-envelope.html</loc></url>
+</urlset>
