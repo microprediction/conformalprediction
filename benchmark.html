@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<title>A cautionary example — do the conformal skins help? · Conformal Prediction</title>
+<title>Using conformal skin packages: a worked example · Conformal Prediction</title>
 <meta name="description" content="One controlled experiment on synthetic data, included as a cautionary example: where a conformal wrapper looks sharp, the sharpness comes from the conditional model underneath, not the conformal step. Not a benchmark." />
 <link rel="stylesheet" href="css/style.css" />
 <script>
@@ -42,8 +42,8 @@
 
 <main>
 <div class="wrap">
-  <p class="tag">A worked example</p>
-  <h1>A cautionary example, not a benchmark</h1>
+  <p class="tag">A cautionary example</p>
+  <h1>Using conformal skin packages: a worked example</h1>
   <p class="subtitle">One synthetic experiment, built to isolate a single mechanism: where a conformal wrapper looks sharp, the sharpness comes from the model underneath &mdash; not the conformal step.</p>
 
   <p>The question is narrow, because that is what a controlled toy can answer well: when a conformal wrapper gives sharp, well-behaved intervals, is it the conformal step or the model underneath? To show it rather than assert it, the experiment runs the real libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods (ACI, AgACI, conformal&nbsp;PID, NexCP/weighted, EnbPI) in their intended modes &mdash; no straw men &mdash; against plain probabilistic baselines and, since the data are synthetic with a known law, a true oracle. Everyone is scored on conditional coverage, interval efficiency, and proper scores (interval/Winkler, CRPS), not marginal coverage alone. One process, a handful of methods, two metrics: read it as an illustration of the mechanism, not a ranking of libraries, and not a guide to how any of them behaves on your data.</p>
