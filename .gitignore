@@ -29,3 +29,8 @@ _test_*.mjs
 benchmark/.venv/
 __pycache__/
 *.pyc
+
+# Python build artifacts
+dist/
+build/
+*.egg-info/

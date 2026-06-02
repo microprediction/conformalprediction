@@ -1,99 +1,101 @@
-# Marginally Useful
+# Conformal Prediction
 
-**An educational, interactive account of what conformal prediction actually guarantees — and what it does not.**
+A practical, interactive guide to conformal prediction: how it works, what its guarantee
+really means, where it is exactly the right tool, and the one thing it does not do. Live at
+[conformalprediction.net](https://conformalprediction.net).
 
-Conformal prediction is correct mathematics with a real guarantee. The trouble is the
-guarantee — *marginal coverage* — is usually not the thing people reach for it to
-provide. This project explains the method honestly, builds it up from scratch with
-runnable demonstrations, and then shows, interactively, why marginal coverage is rarely
-the object you actually wanted. The companion paper states the same facts precisely,
-with citations and three small contributions.
+The premise is simple: to wield conformal prediction well, you have to understand what it
+isn't. So the guide takes its time — it builds the method, reads the guarantee carefully,
+shows where coverage is genuinely the goal, and is precise about what the guarantee does
+not give you. The intent is to inform, not to oversell.
 
-> **The one-sentence thesis.** Conformal prediction certifies the coverage of a *set*;
-> it does not estimate a *distribution*. Confusing the two is a category error.
+> Conformal prediction certifies the coverage of a set; it does not estimate a
+> distribution. Use it whenever you need a coverage guarantee — just don't expect the
+> certificate to make the forecast underneath it any sharper.
 
-## What's here
+## The package
 
-A static site (vanilla HTML/CSS/ES-modules, **no build step, no runtime dependencies**
-except MathJax from a CDN) plus a LaTeX paper.
+`pip install conformalprediction` gives you a tiny, dependency-free split-conformal core.
+The package is deliberately minimal; the guide is the main event.
+
+```python
+from conformalprediction import predict_interval, conformal_quantile, coverage
+
+# calibration residuals  y - mu_hat(x)
+resid = [-1.0, 0.4, -0.3, 0.9, -0.7, 0.2, 1.1, -0.5]
+lo, hi = predict_interval(point=2.0, residuals_cal=resid, alpha=0.2)
+```
+
+(With too few calibration points for the level you ask for, the honest answer is an
+infinite interval — the finite-sample correction needs at least ⌈(n+1)(1−α)⌉ ≤ n.)
+
+## What's in the repository
+
+A static site (vanilla HTML/CSS/ES-modules, no build step, no runtime dependencies except
+MathJax from a CDN), a reproducible benchmark, and a LaTeX paper.
 
 ```
-marginally-useful/
-├── index.html                 # landing page + thesis + demo index
-├── css/style.css
-├── js/
-│   ├── lib/
-│   │   ├── stats.js           # RNG, normal dist, polyfit, conformal quantile, log-score …
-│   │   ├── plot.js            # tiny dependency-free canvas plotting
-│   │   └── ui.js              # sliders / readouts / buttons
-│   └── demo01.js … demo08.js  # one module per demonstration
-├── demos/                     # one HTML page per demonstration
-└── paper/
-    ├── marginally-useful.tex  # the companion paper
-    ├── references.bib
-    └── index.html             # paper landing page
+conformalprediction/        # the pip package (minimal split-conformal core)
+index.html                  # the guide
+css/ js/                    # styling and the demo modules (one per demonstration)
+demos/                      # eight interactive demonstrations
+benchmark/                  # reproducible MAPIE / crepes / skaters comparison
+paper/                      # the companion paper (LaTeX + figures + references)
 ```
 
 ## The demonstrations
 
 | # | Demo | The point |
 |---|------|-----------|
-| 01 | How split conformal works | The method is sound; coverage tracks 1−α. Hold that thought. |
+| 01 | How split conformal works | The method is sound; coverage tracks 1−α. |
 | 02 | Marginal vs. conditional coverage | 90% on average, ~100% where easy, well under target where hard. |
-| 03 | The fence is the horizon | A deliberately useless predictor still hits 90%. Validity ≠ quality. |
-| 04 | Coverage ⊥ log-score | Pin coverage at 90%; move the log-score arbitrarily. They're orthogonal. |
-| 05 | Exchangeability & time series | Drift breaks the guarantee; the adaptive patch restores only a long-run *average*. |
-| 06 | Conformal vs. recalibration | If you wanted a calibrated forecast, recalibration improves the score and returns a density. |
-| 07 | The price of conditional coverage | **No-go:** chasing per-x coverage forces interval length to infinity (Lei & Wasserman 2014). |
-| 08 | Subgroup coverage buys only a wider band | **No-go:** distribution-free subgroup coverage = inflated flat band, never adaptivity (Barber et al. 2021). |
+| 03 | The fence is the horizon | A deliberately useless predictor still hits 90%. Validity is not quality. |
+| 04 | Coverage ⊥ log-score | Pin coverage at 90%; move the log-score arbitrarily. They are independent. |
+| 05 | Exchangeability & time series | Drift breaks the guarantee; the adaptive patches restore only a long-run average. |
+| 06 | Conformal vs. recalibration | For a calibrated forecast, recalibration improves the score and returns a density. |
+| 07 | The price of conditional coverage | No-go: chasing per-x coverage forces interval length to infinity (Lei & Wasserman 2014). |
+| 08 | Subgroup coverage buys only a wider band | No-go: distribution-free subgroup coverage is an inflated flat band (Barber et al. 2021). |
 
-Every quantitative claim is something you can move a slider and verify.
+## Running the site locally
 
-## Running locally
-
-ES modules must be served over HTTP (not `file://`), so use any static server:
+ES modules must be served over HTTP, so use any static server:
 
 ```bash
-cd marginally-useful
-python3 -m http.server 8731
-# open http://localhost:8731/index.html
+python3 -m http.server 8731     # then open http://localhost:8731/index.html
 ```
 
 ## Building the paper
 
-With [Tectonic](https://tectonic-typesetting.github.io/) (recommended — fetches packages
-and runs BibTeX for you):
-
 ```bash
-cd paper
-tectonic marginally-useful.tex
+cd paper && tectonic marginally-useful.tex
 ```
 
-Or with any TeX distribution: `pdflatex → bibtex → pdflatex → pdflatex`.
+Any standard TeX distribution works too (`pdflatex → bibtex → pdflatex → pdflatex`).
 
-## Contributions in the paper
+## The paper, in three results
 
-1. **Orthogonality** (Prop. 1): the conformal set is a function of the nonconformity
-   scores alone, so coverage is statistically independent of sharpness — constructively,
-   coverage can be pinned while the log-score diverges.
-2. **The sharpness gap** (Props. 2–3): the conformal predictive system's log-score regret
-   to the oracle equals the expected KL of the conditional residual law from its marginal —
-   invariant to any marginal recalibration. Within its own class the conformal system is
-   log-score optimal; the cost is the class, not the calibration step.
-3. **The coverage–sharpness plane** (§6): a diagnostic in which conformalization is a
-   horizontal projection — left, never up.
+The paper is mostly expository, with three small results for a fixed location predictor
+and a residual score:
 
-A formal no-go lemma collects the impossibility results, each coordinate of which is
-realized as a finite-sample fact in Demos 7 and 8.
+1. *Orthogonality* (Prop. 1): the conformal set is a function of the nonconformity scores
+   alone, so marginal coverage places no constraint on an accompanying density's log-score
+   — coverage can be pinned while the log-score diverges.
+2. *The residual-information gap* (Props. 2–3): a single-shape conformal predictive
+   system's log-score regret to the oracle is the mutual information I(R;X) between residual
+   and input, which no recalibration that ignores X can reduce. Within its class the system
+   is log-score optimal; the cost is the class, not the calibration step.
+3. *The coverage–score plane* (§6): a diagnostic in which conformalizing a fixed model is a
+   horizontal move — toward zero coverage error, never toward a better score.
 
-## Honesty flags
+A no-go lemma collects the impossibility results of Lei & Wasserman (2014) and Foygel
+Barber et al. (2021), each coordinate of which appears as a finite-sample fact in the demos.
 
-This project is skeptical, not dismissive. The mathematics of conformal prediction is
-correct, and there is a clean litmus for when it is exactly the right tool (selective
-prediction, retrieval shortlists, anomaly detection as a distribution-free test,
-compliance certificates): *is your loss a function of **whether** the truth lands in a
-region, or of **where** it lands?* If the former, coverage is the native object. See
-Demo 06 and §7 of the paper for the steelman.
+## When conformal prediction is exactly right
+
+There is a clean litmus test: is your loss a function of *whether* the truth lands in a
+region, or of *where* it lands? When the answer is "whether," coverage is the objective and
+conformal prediction is hard to beat — selective prediction, anomaly detection as a
+distribution-free test, retrieval with a recall guarantee, and compliance certificates.
 
 ## License
 
