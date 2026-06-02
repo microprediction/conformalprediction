@@ -7,7 +7,7 @@ Read this first, then keep the house style.
 ## What this project is
 
 A balanced, interactive *guide* to conformal prediction at conformalprediction.net, plus a
-reproducible benchmark, a LaTeX paper ("Marginally Useful?"), and a tiny `conformalguide`
+reproducible benchmark, a LaTeX paper ("Marginally Useful"), and a tiny `conformalguide`
 PyPI package. It explains what the coverage guarantee does and does not tell you, where the
 method is the right tool, and how to apply it well. The tone is clear, measured, and
 informative; the guiding principle is *inform, not oversell*.
@@ -73,7 +73,7 @@ This was cleaned once; do not reintroduce the tells.
 - **Banned words:** "honest/honestly," "delve," "leverage," "realm," "tapestry," "seamless,"
   "in conclusion," "it's worth noting," and similar. Don't use rule-of-three filler.
 - Preserve the existing voice and phrasing; keep new text in the same plain, measured register.
-- Keep the paper title **"Marginally Useful?"** (the question mark matters) and the kicker
+- Keep the paper title **"Marginally Useful"** and the kicker
   restraint on the landing page (no badge).
 
 ## Verifying before you ship
