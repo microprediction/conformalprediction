@@ -21,7 +21,9 @@ applications.html       deep dive: domains where coverage is genuinely the goal
 patterns.html           sound-patterns / anti-patterns taxonomy + the sampled misuse rate
 reading.html            curated, filtered reading list (good/careful uses only)
 benchmark.html          results page (figures + tables) from benchmark/
-demos/ js/ css/         8 interactive demos (vanilla JS, no build)
+demos/ js/ css/         12 interactive demos (vanilla JS, no build); 09-12 are the
+                        positive "where it shines" demos (sets, anomaly, recall, safety)
+faq.html                objections & FAQ (its own page; linked from the global nav)
 benchmark/              reproducible study (run_timeseries.py, run_tabular.py, common.py,
                         ts_methods.py, skater_shootout.py); .venv is gitignored
 paper/                  marginally-useful.tex, references.bib, figures.py, figures/*.pdf

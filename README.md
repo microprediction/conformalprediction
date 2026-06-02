@@ -38,7 +38,7 @@ MathJax from a CDN), a reproducible benchmark, and a LaTeX paper.
 conformalguide/             # the pip package (minimal split-conformal core)
 index.html                  # the guide
 css/ js/                    # styling and the demo modules (one per demonstration)
-demos/                      # eight interactive demonstrations
+demos/                      # twelve interactive demonstrations
 benchmark/                  # reproducible MAPIE / crepes / skaters comparison
 paper/                      # the companion paper (LaTeX + figures + references)
 ```
@@ -55,6 +55,10 @@ paper/                      # the companion paper (LaTeX + figures + references)
 | 06 | Conformal vs. recalibration | For a calibrated forecast, recalibration improves the score and returns a density. |
 | 07 | The price of conditional coverage | No-go: chasing per-x coverage forces interval length to infinity (Lei & Wasserman 2014). |
 | 08 | Subgroup coverage buys only a wider band | No-go: distribution-free subgroup coverage is an inflated flat band (Barber et al. 2021). |
+| 09 | Adaptive prediction sets | Where it shines: set size adapts to difficulty while coverage stays guaranteed. |
+| 10 | Calibrated anomaly detection | Where it shines: conformal p-values give exact distribution-free Type-I error control. |
+| 11 | Guaranteed recall | Where it shines: one conformal threshold certifies recall for screening and retrieval. |
+| 12 | A certified safety envelope | Where it shines: a conformal safety tube for containment in robotics and control. |
 
 ## Running the site locally
 
