@@ -62,7 +62,7 @@
 
   <!-- ============================================================ -->
   <h2 id="finePrint">2 &middot; Reading the guarantee: the fine print</h2>
-  <p>The guarantee is <em>marginal</em> &mdash; an average over inputs. That is genuinely useful, but it is weaker than it first sounds, and the gap to per-instance (<em>conditional</em>) coverage is not a tuning problem; it is a theorem. Understanding this is what separates using the tool well from being surprised by it.</p>
+  <p>The guarantee is <em>marginal</em>: an average over inputs &mdash; and the choice of average is doing some of the work. (One could, in fairness, <em>define</em> Bernie Madoff&rsquo;s returns over a generous enough window and call them excellent, too.) Conformal&rsquo;s 90% is a genuine average that can sit near 100% where the data are easy and well below it where they are hard. The gap to per-instance (<em>conditional</em>) coverage is not a tuning problem; it is a theorem &mdash; and knowing it is what separates using the tool well from being surprised by it.</p>
   <div class="cards">
     <a class="card" href="demos/02-marginal-vs-conditional.html">
       <div class="num">02</div>
@@ -104,7 +104,7 @@
 
   <!-- ============================================================ -->
   <h2 id="ts">4 &middot; Time series &amp; distribution shift</h2>
-  <p>The base guarantee needs <em>exchangeability</em>, which time series break. Conformal coverage can hold beautifully &mdash; right up until the distribution shifts out from under it. (Bernie Madoff&rsquo;s returns were also excellent until conditions changed; the difference is that conformal prediction&rsquo;s guarantee is entirely real, and it names its one assumption in advance.) The adaptive variants (ACI, conformal PID, EnbPI) genuinely help, but they recover a long-run <em>average</em> coverage, not coverage for the step in front of you.</p>
+  <p>The base guarantee needs <em>exchangeability</em>, which time series break. Conformal coverage can hold beautifully &mdash; right up until the distribution shifts out from under it. The adaptive variants (ACI, conformal PID, EnbPI) genuinely help, but they recover a long-run <em>average</em> coverage, not coverage for the step in front of you &mdash; useful to know before you deploy.</p>
   <div class="cards">
     <a class="card" href="demos/05-exchangeability-timeseries.html">
       <div class="num">05</div>
