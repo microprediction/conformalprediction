@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<title>03 · The fence is the horizon — Conformal Prediction</title>
+<title>The fence is the horizon — Conformal Prediction</title>
 <meta property="og:image" content="https://conformalprediction.net/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content="https://conformalprediction.net/og.png" />
@@ -33,11 +33,11 @@
 <main>
 <div class="wrap">
 
-  <p class="tag">Demo 03</p>
+  <p class="tag">Demonstration</p>
   <h1>The fence is the horizon</h1>
   <p class="subtitle">Marginal validity is cheap. It certifies the fence, not the cattle.</p>
 
-  <p>Demo&nbsp;01 showed that split conformal delivers \(1-\alpha\) coverage and asks almost nothing of the predictor \(\hat\mu\). Here we take that generosity to its logical end. Three &ldquo;predictors&rdquo; run side by side, all at the <em>same</em> \(\alpha\) on the <em>same</em> data:</p>
+  <p>Split conformal delivers \(1-\alpha\) coverage and asks almost nothing of the predictor \(\hat\mu\). Here we take that generosity to its logical end. Three &ldquo;predictors&rdquo; run side by side, all at the <em>same</em> \(\alpha\) on the <em>same</em> data:</p>
 
   <ul>
     <li>A, good model + conformal. A degree-3 fit, score \(s_i=|y_i-\hat\mu(x_i)|\), band \(\hat\mu(x)\pm q\). Tight, ~\(1-\alpha\) coverage.</li>
@@ -60,19 +60,19 @@
   </blockquote>
 
   <div class="takeaway">
-    <p>Takeaway. Validity is cheap. The same \(1-\alpha\) guarantee attaches to a careful fit, to a wrong constant, and to a coin flip over the whole real line. Coverage cannot tell a good predictor from a horizon-sized one, so a coverage number, alone, is not evidence that a method is any good. What <em>would</em> distinguish them is a score that punishes vagueness. <a href="04-coverage-vs-logscore.html">Demo&nbsp;04</a> shows coverage and log-score pulling in different directions.</p>
+    <p>Takeaway. Validity is cheap. The same \(1-\alpha\) guarantee attaches to a careful fit, to a wrong constant, and to a coin flip over the whole real line. Coverage cannot tell a good predictor from a horizon-sized one, so a coverage number, alone, is not evidence that a method is any good. What <em>would</em> distinguish them is a score that punishes vagueness. <a href="04-coverage-vs-logscore.html">Coverage &perp; log-score</a> shows the two pulling in different directions.</p>
   </div>
 
   <div class="prevnext">
-    <a href="02-marginal-vs-conditional.html">&larr; Demo 02</a>
+    <a href="02-marginal-vs-conditional.html">&larr; Marginal vs. conditional coverage</a>
     <span class="spacer"></span>
-    <a href="04-coverage-vs-logscore.html">Demo 04: Coverage &perp; log-score &rarr;</a>
+    <a href="04-coverage-vs-logscore.html">Coverage &perp; log-score &rarr;</a>
   </div>
 
 </div>
 </main>
 
-<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demo 03 of 13</span></div></footer>
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demonstration</span></div></footer>
 
 <script type="module" src="../js/demo03.js"></script>
 </body>

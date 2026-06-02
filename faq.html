@@ -51,7 +51,7 @@
   <p>They do, and they can be excellent. The point is <em>attribution</em>: their sharpness comes from the conditional model they wrap, the quantile regressor, the difficulty estimator, the per-region bins, not from the conformal step, which supplies the coverage certificate. A <a href="/benchmark.html">worked example</a> shows raw quantile regression matching its conformalized version.</p>
 
   <h3>Can I get conditional (per-\(x\)) coverage?</h3>
-  <p>Not exactly, and not for free: distribution-free, finite-sample conditional coverage forces infinite-length intervals (<a href="/demos/07-price-of-conditional-coverage.html">Demo&nbsp;07</a>). You can <em>approach</em> it under assumptions, conformalized quantile regression, normalized/Mondrian conformal, recent pivotal-score and optimal-transport methods, all of which condition on \(x\).</p>
+  <p>Not exactly, and not for free: distribution-free, finite-sample conditional coverage forces infinite-length intervals (<a href="/demos/07-price-of-conditional-coverage.html">the price of conditional coverage</a>). You can <em>approach</em> it under assumptions, conformalized quantile regression, normalized/Mondrian conformal, recent pivotal-score and optimal-transport methods, all of which condition on \(x\).</p>
 
   <h3>Does it work for time series?</h3>
   <p>The basic guarantee needs exchangeability, which time series violate. Adaptive methods (ACI, conformal PID, EnbPI) restore a long-run average coverage and are well worth using; just don&rsquo;t read them as a per-step guarantee (see <a href="/index.html#ts">time series</a>).</p>

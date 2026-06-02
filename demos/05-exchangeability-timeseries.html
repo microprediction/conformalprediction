@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<title>05 · Exchangeability &amp; time series — Conformal Prediction</title>
+<title>Exchangeability &amp; time series — Conformal Prediction</title>
 <meta property="og:image" content="https://conformalprediction.net/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content="https://conformalprediction.net/og.png" />
@@ -33,7 +33,7 @@
 <main>
 <div class="wrap">
 
-  <p class="tag">Demo 05</p>
+  <p class="tag">Demonstration</p>
   <h1>Exchangeability &amp; time series</h1>
   <p class="subtitle">Fixed split conformal is a straw man here. The adaptive methods are not, so judge everyone on a proper score.</p>
 
@@ -65,19 +65,19 @@
   <p class="note">Fixed split sits near target while the data are roughly stationary, then collapses once the trend and the volatility block bite. The adaptive conformal methods and the EWMA-vol model oscillate around target because they re-estimate the width from recent realized residuals. Note what stays true for <em>all</em> of them: the trailing window dips hard right after the jump. The long-run average recovers; the window you are standing in does not.</p>
 
   <div class="takeaway">
-    <p>Takeaway. Two readings, both from <a href="../benchmark.html">the worked example</a>. First, fixed split conformal really does collapse under drift (≈0.56 marginal, ≈0.17 worst-window), a straw man. But ACI, conformal PID and NexCP genuinely recover long-run and marginal coverage; they are competitive, not strawmen. Second, the repair is <em>conditional modeling</em>, not the conformal step itself: a plain EWMA-volatility Gaussian matches the adaptive conformal methods on the interval score (≈6.9 vs ≈7.0, against an oracle ≈5.5) <em>and</em> returns a full predictive distribution. Where conformal helps under drift, it helps by adapting the width to recent residuals, local conditional modeling, with conformal supplying the coverage leveling on top. And none of these delivers per-step <em>conditional</em> coverage: even the oracle&rsquo;s worst-window coverage is ~0.82. The repairs buy long-run/marginal coverage, never coverage <em>now</em>. <a href="../paper/">The paper</a> works through why. <a href="06-conformal-vs-recalibration.html">Demo&nbsp;06</a> asks whether plain probabilistic recalibration would have served you better all along.</p>
+    <p>Takeaway. Two readings, both from <a href="../benchmark.html">the worked example</a>. First, fixed split conformal really does collapse under drift (≈0.56 marginal, ≈0.17 worst-window), a straw man. But ACI, conformal PID and NexCP genuinely recover long-run and marginal coverage; they are competitive, not strawmen. Second, the repair is <em>conditional modeling</em>, not the conformal step itself: a plain EWMA-volatility Gaussian matches the adaptive conformal methods on the interval score (≈6.9 vs ≈7.0, against an oracle ≈5.5) <em>and</em> returns a full predictive distribution. Where conformal helps under drift, it helps by adapting the width to recent residuals, local conditional modeling, with conformal supplying the coverage leveling on top. And none of these delivers per-step <em>conditional</em> coverage: even the oracle&rsquo;s worst-window coverage is ~0.82. The repairs buy long-run/marginal coverage, never coverage <em>now</em>. <a href="../paper/">The paper</a> works through why. <a href="06-conformal-vs-recalibration.html">Conformal vs. recalibration</a> asks whether plain probabilistic recalibration would have served you better all along.</p>
   </div>
 
   <div class="prevnext">
-    <a href="04-coverage-vs-logscore.html">&larr; Demo 04</a>
+    <a href="04-coverage-vs-logscore.html">&larr; Coverage &perp; log-score</a>
     <span class="spacer"></span>
-    <a href="06-conformal-vs-recalibration.html">Demo 06: Conformal vs. recalibration &rarr;</a>
+    <a href="06-conformal-vs-recalibration.html">Conformal vs. recalibration &rarr;</a>
   </div>
 
 </div>
 </main>
 
-<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demo 05 of 13</span></div></footer>
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demonstration</span></div></footer>
 
 <script type="module" src="../js/demo05.js"></script>
 </body>

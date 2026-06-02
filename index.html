@@ -58,7 +58,6 @@
   <p>Hold out a calibration set, score how &ldquo;surprising&rdquo; each point is, and take the empirical quantile of those scores to size a band around new predictions. That is the whole method, model-agnostic, a few lines of code, and it delivers exactly what it promises.</p>
   <div class="cards">
     <a class="card" href="demos/01-how-conformal-works.html">
-      <div class="num">01</div>
       <h3>How split conformal works</h3>
       <p>Build a prediction band from nonconformity scores and watch it hit your target coverage. Sound, simple, and elegant.</p>
     </a>
@@ -69,17 +68,16 @@
   <p>The guarantee is <em>marginal</em>: an average over inputs, and an average can flatter. Conformal&rsquo;s 90% is a genuine figure that can still sit near 100% where the data are easy and well below it where they are hard. The gap to per-instance (<em>conditional</em>) coverage is not a tuning problem; it is a theorem, and knowing it is what separates using the tool well from being surprised by it.</p>
   <div class="cards">
     <a class="card" href="demos/02-marginal-vs-conditional.html">
-      <div class="num">02</div>
       <h3>Marginal vs. conditional coverage</h3>
       <p>90% on average, while over-covering the easy inputs and under-covering the hard ones. Drag a window and read the local coverage.</p>
     </a>
     <a class="card" href="demos/07-price-of-conditional-coverage.html">
-      <div class="num">07 &middot; no-go</div>
+      <div class="num">no-go</div>
       <h3>The price of conditional coverage</h3>
       <p>Chase per-\(x\) coverage by localizing, and the intervals diverge to the whole real line. Lei &amp; Wasserman (2014).</p>
     </a>
     <a class="card" href="demos/08-subgroup-coverage.html">
-      <div class="num">08 &middot; no-go</div>
+      <div class="num">no-go</div>
       <h3>Subgroup coverage buys only a wider band</h3>
       <p>Protect every subgroup distribution-free and all you get is a flat, inflated band, never adaptivity. Barber et&nbsp;al. (2021).</p>
     </a>
@@ -96,22 +94,18 @@
   <p>The fair answer: you shouldn&rsquo;t be impressed by the widening as a <em>forecast</em>, but it does buy one thing nothing else does, a finite-sample, distribution-free guarantee that the band covers, under almost no assumptions. That certificate is the product. The sharper forecast underneath is still the model&rsquo;s job.</p>
   <div class="cards">
     <a class="card" href="demos/03-trivial-validity.html">
-      <div class="num">03</div>
       <h3>The fence is the horizon</h3>
       <p>A deliberately useless predictor still reaches exactly 90% coverage. Validity is not evidence of a good model.</p>
     </a>
     <a class="card" href="demos/04-coverage-vs-logscore.html">
-      <div class="num">04</div>
       <h3>Coverage &perp; log-score</h3>
       <p>Pin marginal coverage at 90% and move the predictive log-likelihood up and down at will. The two are independent axes.</p>
     </a>
     <a class="card" href="demos/06-conformal-vs-recalibration.html">
-      <div class="num">06</div>
       <h3>Conformal vs. recalibration</h3>
       <p>Want a calibrated <em>forecast</em>? Recalibration improves the score and returns a density. Conformal re-levels coverage and returns a set. Both are useful, for different jobs.</p>
     </a>
     <a class="card" href="demos/13-coverage-score-plane.html">
-      <div class="num">13</div>
       <h3>The coverage&ndash;score plane</h3>
       <p>The synthesis: conformalizing slides a model sideways to honest coverage; only a better conditional model lifts it toward the oracle. The leftover height is the information gap.</p>
     </a>
@@ -122,7 +116,6 @@
   <p>The base guarantee needs <em>exchangeability</em>, which time series break. Conformal coverage can hold beautifully, right up until the distribution shifts out from under it. The adaptive variants (ACI, conformal PID, EnbPI) genuinely help, but they recover a long-run <em>average</em> coverage, not coverage for the step in front of you, useful to know before you deploy.</p>
   <div class="cards">
     <a class="card" href="demos/05-exchangeability-timeseries.html">
-      <div class="num">05</div>
       <h3>Exchangeability &amp; time series</h3>
       <p>Turn on drift: fixed split conformal collapses, the adaptive methods recover the average, and a simple volatility model keeps pace on the proper score.</p>
     </a>
@@ -143,7 +136,7 @@
   <p>In classification, conformal prediction returns a <em>set</em> of labels guaranteed to contain the true one at your chosen rate, and the set&rsquo;s <em>size</em> adapts to difficulty: a single confident label where one class dominates, a short ranked shortlist where the input is genuinely ambiguous. That is exactly the signal you want for human-in-the-loop triage: answer automatically when you can, defer the ambiguous cases to an expert, and bound how often the wrong shortlist is handed over. The adaptivity that was a <em>caveat</em> for coverage in Section&nbsp;2 becomes the <em>feature</em> here, because now the set is what you ship.</p>
   <div class="cards">
     <a class="card" href="demos/09-prediction-sets.html">
-      <div class="num">09 &middot; shines</div>
+      <div class="num">shines</div>
       <h3>Adaptive prediction sets</h3>
       <p>Singletons where the model is sure, two or three labels where it isn&rsquo;t, an honest confidence signal with a coverage contract attached.</p>
     </a>
@@ -154,7 +147,7 @@
   <p>This is conformal prediction at its cleanest, working as a <em>test</em> rather than a forecaster. A conformal \(p\)-value of a genuine inlier is (super-)uniform, so flagging whenever \(p\le\alpha\) controls the false-alarm rate at <em>exactly</em> \(\alpha\), distribution-free, finite-sample, with no threshold to tune. Type-I error control is coverage, and coverage is what conformal certifies. Detection power is the score&rsquo;s job; the false-alarm budget is guaranteed.</p>
   <div class="cards">
     <a class="card" href="demos/10-anomaly-pvalues.html">
-      <div class="num">10 &middot; shines</div>
+      <div class="num">shines</div>
       <h3>Calibrated anomaly detection</h3>
       <p>Set a false-alarm budget and it is honoured regardless of the unknown normal distribution. The inlier \(p\)-values fill out a uniform histogram by construction.</p>
     </a>
@@ -165,7 +158,7 @@
   <p>Drug-candidate triage, document retrieval, fraud review: the deliverable is a shortlist, and the thing that must not happen is dropping the real hit. That is a recall guarantee, which is coverage in disguise. One conformal threshold on the model&rsquo;s score, calibrated on known hits, guarantees a new hit survives the cut at least \(1-\alpha\) of the time, with no assumptions about how scores are distributed. A sharper model does not change the guarantee; it shrinks the list you have to read.</p>
   <div class="cards">
     <a class="card" href="demos/11-guaranteed-recall.html">
-      <div class="num">11 &middot; shines</div>
+      <div class="num">shines</div>
       <h3>Guaranteed recall</h3>
       <p>Coverage <em>is</em> recall when the product is a shortlist. Watch the recall guarantee hold flat while a better model buys a shorter list at the same recall.</p>
     </a>
@@ -176,7 +169,7 @@
   <p>Robotics and control are a natural home for conformal prediction, because the question is almost always <em>containment</em>: will the true state lie inside a region I can plan around? Calibrate a state predictor&rsquo;s error and you get a distribution-free <em>safety tube</em> around the nominal trajectory; if the tube clears the obstacle, you hold a certificate that the system stays out of the keep-out zone at the chosen confidence. A controller rarely needs a sharp forecast of the next state, it needs a region it can prove it stays within.</p>
   <div class="cards">
     <a class="card" href="demos/12-safety-envelope.html">
-      <div class="num">12 &middot; shines</div>
+      <div class="num">shines</div>
       <h3>A certified safety envelope</h3>
       <p>A conformal tube around a trajectory, with a clearance certificate that flips to &ldquo;safe&rdquo; exactly when the guaranteed region clears the obstacle.</p>
     </a>
