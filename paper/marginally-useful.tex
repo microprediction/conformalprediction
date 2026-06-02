@@ -39,7 +39,7 @@ online, but the paper does not depend on them.}}
 Conformal prediction supplies a genuine guarantee: under exchangeability it gives
 finite-sample, distribution-free \emph{marginal} coverage for a set. We argue that this
 is often misread as evidence of distributional forecast quality, and we make the
-separation precise. After reviewing why the marginal guarantee is weaker than it looks
+separation precise. After reviewing why the marginal guarantee is narrower than it first appears
 (it is not conditional, conditional coverage is unavailable distribution-free without
 structure, and it requires exchangeability), we give three results for a fixed location
 predictor with a residual score. (i) The conformal set is determined by residual order
@@ -142,7 +142,7 @@ guarantee is real, and one readily verifies that empirical coverage tracks $1-\a
 the sample size, noise level, and $\alpha$ are varied. None of this is in dispute; the
 question is what it is taken to mean.
 
-\section{Three ways the marginal guarantee is weaker than it looks}\label{sec:marginal}
+\section{Three limits of the marginal guarantee}\label{sec:marginal}
 
 \paragraph{(i) Marginal is not conditional, and conditional is impossible for free.}
 One would prefer \emph{conditional} coverage,
@@ -299,7 +299,7 @@ freely while coverage stays pinned at $90\%$.}
 \label{fig:orth}
 \end{figure}
 
-\section{The category error, made precise: the sharpness gap}\label{sec:gap}
+\section{Re-leveling, and the residual-information gap}\label{sec:gap}
 
 Forecast quality decomposes into \emph{calibration} and \emph{sharpness}, and the
 discipline's stated goal is to maximize sharpness subject to calibration, assessed by a
@@ -423,7 +423,7 @@ mutual information $I(R;X)$, which no $X$-ignoring recalibration can reduce.}
 \label{fig:gap}
 \end{figure}
 
-\section{The coverage--sharpness plane}\label{sec:plane}
+\section{The coverage--score plane}\label{sec:plane}
 
 The preceding results suggest a single diagnostic, provided we are careful about what is
 being plotted. Define a \emph{reporting system} as a set-valued report $C_\alpha(x)$ and,
