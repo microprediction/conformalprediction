@@ -24,7 +24,7 @@ theory.html             "Theory" in the nav: the curated METHODS & THEORY readin
                         (renamed from reading.html; application papers live in applications.html)
 benchmark.html          "Example" in nav: a cautionary worked example (figures + tables)
                         from benchmark/ — framed as one synthetic experiment, NOT a benchmark
-demos/ js/ css/         12 interactive demos (vanilla JS, no build); 09-12 are the
+demos/ js/ css/         13 interactive demos (vanilla JS, no build); 09-12 are the
                         positive "where it shines" demos (sets, anomaly, recall, safety)
 faq.html                objections & FAQ (its own page; linked from the global nav)
 benchmark/              reproducible study (run_timeseries.py, run_tabular.py, common.py,

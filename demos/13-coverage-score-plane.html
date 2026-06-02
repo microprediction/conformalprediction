@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>13 · The coverage-score plane — Conformal Prediction</title>
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Guide</a>
+      <a href="/theory.html">Theory</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/paper/">Paper</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demo 13</p>
+  <h1>The coverage-score plane</h1>
+  <p class="subtitle">Two independent moves: conformalizing slides you sideways to honest coverage; only a better conditional model lifts you toward the oracle.</p>
+
+  <p>This is the synthesis. Put a forecaster on two axes: how far its coverage is from target
+  (horizontal, zero is calibrated) and how good its predictive density is, measured by
+  log-score against an oracle that knows the true conditional spread \(\sigma(x)\) (vertical,
+  zero is the oracle). The data are heteroscedastic: \(y\sim N(0,\sigma(x))\) with
+  \(\sigma(x)\) varying, so a model that ignores \(x\) and uses one constant spread is
+  honest on average but blunt where the noise is small or large.</p>
+
+  <p>Now move the knobs. <em>Conformalizing the set</em> resizes the interval to hit
+  \(1-\alpha\) coverage; it is a purely horizontal move to the calibrated line, and it
+  leaves the reported density, hence the log-score, exactly where it was. Sliding
+  <em>conditioning</em> from a constant spread toward the oracle&rsquo;s \(\sigma(x)\) is the
+  vertical move, the only thing that climbs. The red bar is what conformal cannot touch: the
+  residual-information gap \(I(R;X)\).</p>
+
+  <div class="demo">
+    <div class="canvas-box tall"><canvas id="main"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+  <p class="note">Drag <em>predictive spread</em> and the point moves left or right (its
+  coverage drifts off target); tick <em>conformalize</em> and it snaps back to the calibrated
+  line at the same height. The only way up is <em>conditioning</em>. Conformal prediction is a
+  horizontal operation in this plane; it never closes the vertical gap.</p>
+
+  <div class="takeaway">
+    <p>Coverage and sharpness are different coordinates. Conformal prediction certifies the
+    first and moves you along it; the second is the model&rsquo;s job. The leftover height
+    after conformalizing is the information about the residual that lives in \(x\) and that a
+    single constant shape cannot capture, which is the paper&rsquo;s
+    <a href="../paper/">residual-information gap</a>. <a href="04-coverage-vs-logscore.html">Demo&nbsp;04</a>
+    is the one-dimensional slice of this picture.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="12-safety-envelope.html">&larr; Demo 12: A certified safety envelope</a>
+    <span class="spacer"></span>
+    <a href="../index.html">&uarr; Back to overview</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demo 13 of 13</span></div></footer>
+
+<script type="module" src="../js/demo13.js"></script>
+</body>
+</html>

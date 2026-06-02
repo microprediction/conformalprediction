@@ -38,7 +38,7 @@ MathJax from a CDN), a reproducible benchmark, and a LaTeX paper.
 conformalguide/             # the pip package (minimal split-conformal core)
 index.html                  # the guide
 css/ js/                    # styling and the demo modules (one per demonstration)
-demos/                      # twelve interactive demonstrations
+demos/                      # thirteen interactive demonstrations
 benchmark/                  # reproducible MAPIE / crepes / skaters comparison
 paper/                      # the companion paper (LaTeX + figures + references)
 ```
@@ -59,6 +59,7 @@ paper/                      # the companion paper (LaTeX + figures + references)
 | 10 | Calibrated anomaly detection | Where it shines: conformal p-values give exact distribution-free Type-I error control. |
 | 11 | Guaranteed recall | Where it shines: one conformal threshold certifies recall for screening and retrieval. |
 | 12 | A certified safety envelope | Where it shines: a conformal safety tube for containment in robotics and control. |
+| 13 | The coverage–score plane | Synthesis: conformalizing moves a model horizontally to honest coverage; only conditioning lifts it toward the oracle. The gap is I(R;X). |
 
 ## Running the site locally
 
