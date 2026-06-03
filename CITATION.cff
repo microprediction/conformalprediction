@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "Marginally Useful: Formalizing the Information Gap in Conformal Prediction"
+abstract: >-
+  Conformal prediction gives finite-sample, distribution-free marginal coverage for a set,
+  a guarantee often misread as evidence of forecast quality. For a fixed location predictor
+  and a single-shape residual predictive system, the log-score regret relative to the oracle
+  is exactly the mutual information I(R;X) between the residual and the input (the
+  residual-information gap), which no recalibration that ignores X can reduce. The paper
+  separates the coverage certificate from distributional forecast quality and gives an
+  interactive companion at conformalprediction.net.
+authors:
+  - family-names: Cotton
+    given-names: Peter
+    email: peter.cotton@microprediction.com
+type: article
+url: "https://conformalprediction.net"
+repository-code: "https://github.com/microprediction/conformalprediction"
+keywords:
+  - conformal prediction
+  - uncertainty quantification
+  - calibration
+  - proper scoring rules
+  - mutual information
+license: MIT
