@@ -37,3 +37,7 @@ build/
 arxiv-upload/
 arxiv-upload.tar.gz
 arxiv-upload*
+paper/tmlr/*.aux
+paper/tmlr/*.log
+paper/tmlr/*.out
+paper/tmlr/*.blg
