@@ -116,6 +116,11 @@ const cRO = readouts(document.getElementById("check-readouts"),
 const cCtrls = document.getElementById("check-controls");
 const cState = { eta: 0.5, skew: 0.0 };
 
+const ranks = new Plot(document.getElementById("ranks"), {
+  xlim: [0, 1], ylim: [0, 3], xlabel: "conformal rank  U = G(R)", ylabel: "density",
+  margin: { l: 52, r: 16, t: 14, b: 44 },
+});
+
 function drawCheck() {
   const K = 120, a = cState.skew, d = a / Math.sqrt(1 + a * a), shift = -d * Math.sqrt(2 / Math.PI);
   const rows = [];
@@ -137,9 +142,32 @@ function drawCheck() {
   cRO("abs-interval regret", regretB.toFixed(4));
   cRO("I(R;X) + KL skew", (I_ent + KLskew).toFixed(4), okB ? "good" : "warn");
   cRO("identity", okA && okB ? "holds ✓" : "—", okA && okB ? "good" : "bad");
+
+  // conformal ranks U = G(R): marginally uniform, conditionally not
+  const Gcum = []; { let c = 0; for (let i = 0; i < rbar.length; i++) { c += rbar[i] * DR; Gcum.push(c > 1 ? 1 : c); } }
+  const B = 24;
+  const uHist = (p) => { const h = new Array(B).fill(0);
+    for (let i = 0; i < p.length; i++) { let b = Math.floor(Gcum[i] * B); if (b < 0) b = 0; if (b >= B) b = B - 1; h[b] += p[i] * DR; }
+    return h.map(v => v * B); };  // density, so Uniform = 1
+  const ctr = Array.from({ length: B }, (_, j) => (j + 0.5) / B);
+  const easy = uHist(rows[0]), hard = uHist(rows[rows.length - 1]), marg = uHist(rbar);
+  const ymax = Math.max(2, ...easy, ...hard) * 1.12;
+  ranks.setLimits([0, 1], [0, ymax]);
+  ranks.clear("#fff"); ranks.axes({ grid: true });
+  ranks.hline(1, { color: "rgba(0,0,0,0.45)", dash: [4, 4], width: 1.5 });
+  ranks.line(ctr, marg, { color: "rgba(120,120,120,0.85)", width: 2 });
+  ranks.line(ctr, easy, { color: "#15803d", width: 2 });
+  ranks.line(ctr, hard, { color: "#b91c1c", width: 2 });
+  ranks.legend([
+    { label: "marginal (uniform)", color: "rgba(120,120,120,0.85)" },
+    { label: "easy input (small σ)", color: "#15803d" },
+    { label: "hard input (large σ)", color: "#b91c1c" },
+    { label: "Uniform[0,1]", color: "rgba(0,0,0,0.45)", dash: [4, 4] },
+  ], { x: ranks.X(0) + 8, y: ranks.Y(ymax) + 8 });
 }
 slider(cCtrls, { label: "residual heteroscedasticity", min: 0, max: 1.2, step: 0.02, value: cState.eta, fmt: v => v.toFixed(2) },
   v => { cState.eta = v; drawCheck(); });
 slider(cCtrls, { label: "residual skew", min: 0, max: 6, step: 0.1, value: cState.skew, fmt: v => v.toFixed(1) },
   v => { cState.skew = v; drawCheck(); });
+autoResize(ranks, drawCheck);
 drawCheck();
