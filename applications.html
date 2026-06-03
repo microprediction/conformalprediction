@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <title>Applications — where conformal prediction earns its keep</title>
-<meta name="description" content="Domains where coverage is genuinely the objective and conformal prediction shines: selective prediction, anomaly detection, retrieval and screening, LLM safety, robotics and control, risk control, scientific discovery, causal inference, and survival analysis — with the papers that do it well." />
+<meta name="description" content="Domains where coverage is genuinely the objective and conformal prediction shines: selective prediction, anomaly detection, retrieval and screening, LLM safety, robotics and control, risk control, scientific discovery, causal inference, survival analysis, and medical imaging — with the papers that do it well." />
 <meta property="og:title" content="Conformal Prediction — applications done right" />
-<meta property="og:description" content="The high-stakes territory where coverage is the objective: selective prediction, anomaly detection, retrieval, LLM safety, robotics, risk control, scientific discovery, causal inference, and survival analysis — with the papers that do it well." />
+<meta property="og:description" content="The high-stakes territory where coverage is the objective: selective prediction, anomaly detection, retrieval, LLM safety, robotics, risk control, scientific discovery, causal inference, survival analysis, and medical imaging — with the papers that do it well." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://conformalprediction.net/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -128,6 +128,16 @@
   <ul class="refs">
     <li>Cand&egrave;s, Lei &amp; Ren (2023). <em>Conformalized survival analysis.</em> JRSS-B. <a href="https://arxiv.org/abs/2103.09763">arXiv:2103.09763</a>: calibrated lower predictive bounds on survival time under censoring.</li>
     <li>Gui, Barber &amp; Ma (2024). <em>Conformalized survival analysis with adaptive cut-offs.</em> Biometrika. <a href="https://arxiv.org/abs/2211.01227">arXiv:2211.01227</a>: tighter bounds via covariate-adaptive calibration.</li>
+  </ul>
+
+  <!-- ============================================================ -->
+  <h2>10 &middot; Medical imaging and diagnostics</h2>
+  <p>Clinical decision support is a textbook fit: the deliverable is a set or a flag, and what matters is a controlled error rate, not a sharper score. Return the grades or diagnoses consistent with the image at a stated confidence, route the high-uncertainty cases to a clinician, and the coverage guarantee bounds how often the truth is missed, even on scans from a new scanner or site. It also gives fairness a precise handle: equalised coverage across patient subgroups is a coverage statement, not a vague aspiration.</p>
+  <ul class="refs">
+    <li>Olsson, Kartasalo, Mulliqi et&nbsp;al. (2022). <em>Estimating diagnostic uncertainty in AI-assisted pathology using conformal prediction.</em> Nature Communications. <a href="https://www.nature.com/articles/s41467-022-34945-8">nature.com</a>: flags unreliable prostate-biopsy gradings, cutting errors sharply on out-of-distribution slides.</li>
+    <li>Lu, Angelopoulos &amp; Pomerantz (2022). <em>Improving trustworthiness of AI disease-severity rating with ordinal conformal prediction sets.</em> MICCAI. <a href="https://arxiv.org/abs/2207.02238">arXiv:2207.02238</a>: guaranteed-coverage ordinal sets for spinal-stenosis grading on MRI, flagging the uncertain cases.</li>
+    <li>Lu, Lemay, Chang, H&ouml;bel &amp; Kalpathy-Cramer (2022). <em>Fair conformal predictors for applications in medical imaging.</em> AAAI. <a href="https://arxiv.org/abs/2109.04392">arXiv:2109.04392</a>: equalised coverage across patient skin tones for skin-lesion classification.</li>
+    <li>Sreenivasan, Vaivade, Noui et&nbsp;al. (2025). <em>Conformal prediction enables disease-course prediction and individualized diagnostic uncertainty in multiple sclerosis.</em> npj Digital Medicine. <a href="https://www.nature.com/articles/s41746-025-01616-z">nature.com</a>: per-patient prediction sets at a stated confidence from electronic health records.</li>
   </ul>
 
   <div class="takeaway">
