@@ -351,18 +351,21 @@ itself requires conditioning on $X$.
 \end{proposition}
 
 \begin{proof}
-With $R=Y-\hat\mu(X)$, $\log q^\star(Y\given X)=\log r(R\given X)$. (A) With
-$\pi_X(Y)=g(R)=\bar r(R)$,
-$\E[\log r(R\given X)-\log\bar r(R)]
-=\E_X\E_{R\given X}\log\frac{r(R\given X)}{\bar r(R)}=\E_X\KL(r(\cdot\given X)\,\|\,\bar r)=I(R;X)$,
-the definition of mutual information since $\bar r$ is the marginal of $R$. (B) Add and
-subtract $\log\bar r(R)$:
-$\E[\log r(R\given X)-\log h_{\mathrm{sym}}(R)]
-=I(R;X)+\E_{R\sim\bar r}\log\frac{\bar r(R)}{h_{\mathrm{sym}}(R)}
-=I(R;X)+\KL(\bar r\,\|\,h_{\mathrm{sym}})$.
-For the optimum, $\E[\log\bar r(R)]-\E[\log h(R)]=\KL(\bar r\,\|\,h)\ge0$ (Gibbs), so
-$h=\bar r$ is best among shared shapes; a single shape cannot represent $X$-dependence in
-$r$, so it cannot change $I(R;X)$.
+Write $H$ for the residual law with density $h$, and let $R(h)$ be the expected log-score
+regret of the single-shape forecaster $y\mapsto h(y-\hat\mu(x))$ relative to the oracle. The
+oracle scores $Y$ by $\log q^\star(Y\given X)=\log r(R\given X)$ and this forecaster by
+$\log h(R)$; the joint $P_{X,R}$ has density $p(x)\,r(\rho\given x)$ and the product reference
+$P_X\otimes H$ has density $p(x)\,h(\rho)$, so
+\begin{equation}\label{eq:master}
+  R(h)=\E\!\left[\log\frac{r(R\given X)}{h(R)}\right]
+      =\KL\!\big(P_{X,R}\,\big\|\,P_X\otimes H\big)
+      = I(R;X)+\KL(\bar r\,\|\,h),
+\end{equation}
+the last step the chain rule for relative entropy along a product reference (the $R$-marginal
+of $P_{X,R}$ is $\bar r$, and $I(R;X)=\KL(P_{X,R}\,\|\,P_X P_R)$). Taking $h=\bar r$ kills the
+second term and gives \eqref{eq:gapA}; taking $h=h_{\mathrm{sym}}$ gives \eqref{eq:gapB}. The
+second term is $\ge 0$ and is minimized at $h=\bar r$ (Gibbs), so no $X$-blind shape improves
+on $I(R;X)$, and $I(R;X)=\KL(P_{X,R}\,\|\,P_X P_R)$ is reduced only by conditioning on $X$.
 \end{proof}
 
 \begin{remark}[What this says, and does not say]
@@ -371,7 +374,9 @@ distribution that remains in $X$ after the location predictor is fixed. Calling 
 residual-information gap makes the content of ``blind to sharpness'' precise. Three caveats. (1) \emph{Conformal is not dominated within its class.} The signed CPS is
 log-score optimal among single-shape location forecasters; the cost is the restriction,
 not the calibration step. The absolute-residual interval system is the one that pays the
-extra $\KL(\bar r\,\|\,h_{\mathrm{sym}})$, for discarding sign information. (2)
+extra $\KL(\bar r\,\|\,h_{\mathrm{sym}})$, for discarding sign information; since
+$h_{\mathrm{sym}}\ge\tfrac12\bar r$ this penalty is at most $\log 2$, one bit, so the
+structural loss is $I(R;X)$. (2)
 \emph{What recalibration can and cannot do.} A recalibration that ignores $X$ (e.g.\
 marginal PIT recalibration) can move the shape toward $\bar r$ and thereby erase the
 skewness term, i.e.\ turn case~(B) into case~(A); it cannot touch $I(R;X)$. Reducing
@@ -382,6 +387,29 @@ the single-shape class. (3) \emph{The distribution-free guarantee is real.} Reca
 offers calibration only in expectation or asymptotically and carries no coverage
 certificate; conformal's marginal guarantee is finite-sample and assumption-light. When
 the certificate itself is the deliverable, that is decisive (Section~\ref{sec:steel}).
+\end{remark}
+
+\begin{remark}[Four readings of the gap]
+The identity $R(\bar r)=I(R;X)=\KL(P_{X,R}\,\|\,P_X P_R)$ admits several readings, each a
+different angle on the same number.
+\emph{(i) A false-pooling cost.} A single-shape system asserts that, after $\hat\mu$, one
+residual law fits everyone, i.e.\ $R\perp X$; the gap is the relative entropy from the true
+residual experiment to the nearest such independence model, the log-score price of that
+assumption.
+\emph{(ii) An average log Bayes factor.} Since
+$I(R;X)=\E\,\log\frac{r(R\given X)}{\bar r(R)}$, each observation contributes the
+log-likelihood ratio of its $x$-specific residual law against the pooled one, and the gap is
+the oracle's expected per-sample advantage.
+\emph{(iii) Conditional non-uniformity of conformal ranks.} Let $U=G(R)$ be the rank of the
+residual under the pooled law, the PIT used by signed CPS. Marginally $U$ is uniform, which
+is the conformal achievement; but $U$ is an invertible transform of $R$, so
+$I(R;X)=\E_X\,\KL\!\big(P_{U\given X}\,\|\,\mathrm{Unif}[0,1]\big)$ is the \emph{conditional}
+non-uniformity of those ranks. Easy inputs concentrate $U$ near $\tfrac12$, hard inputs push
+it into the tails, and the single pooled shape cannot tell them apart (Figure~\ref{fig:gap}).
+\emph{(iv) A projection.} Equation~\eqref{eq:master} is the information projection of the
+oracle residual experiment onto the manifold of single-shape forecasters, attained by signed
+CPS; $I(R;X)$ is the residual distance from that projection to the independence manifold
+$R\perp X$, which no $X$-blind step can cross.
 \end{remark}
 
 \paragraph{Related work.} The pieces this assembles are individually known. A conformal
