@@ -384,15 +384,20 @@ certificate; conformal's marginal guarantee is finite-sample and assumption-ligh
 the certificate itself is the deliverable, that is decisive (Section~\ref{sec:steel}).
 \end{remark}
 
-\paragraph{Relation to prior observations.} Both ingredients are individually known. That a
-conformal predictive system re-levels the marginal residual law is due to
-\citet{vovk2019nonparametric}; that expected log-score regret decomposes into
-Kullback--Leibler terms is standard, and an information-theoretic reading of conformal
-prediction has been developed by \citet{correia2024information}. The step taken here is the
-combination: identifying the regret of the single-shape system as exactly the conditional
-residual information $I(R;X)$, and reading off that no recalibration ignoring $X$ can reduce
-it. The contribution is naming the quantity conformalization cannot touch, not the
-components it is assembled from.
+\paragraph{Related work.} The pieces this assembles are individually known. A conformal
+predictive system re-levels the marginal residual law \citep{vovk2019nonparametric}; the
+decomposition of a proper score into calibration and sharpness is standard
+\citep{gneiting2007probabilistic}; and an information-theoretic reading of conformal
+prediction has been pursued by \citet{correia2024information}, though for coverage and
+efficiency rather than the log-score regret studied here. The core conformal literature
+already separates \emph{validity} from \emph{efficiency} and adaptivity, and a recent
+critique strand makes related points operationally: that valid sets can be uninformative,
+and that interval length can be gamed while marginal coverage is held fixed
+\citep{min2026coveragelength}. Our addition is a single exact identity along the score axis.
+For the single-shape system the log-score regret to the oracle equals the conditional
+residual information $I(R;X)$, with an additional symmetrisation term for absolute-residual
+intervals, so the quantity conformalization cannot touch has a name and a closed form. We
+have not seen the regret stated this way.
 
 Figure~\ref{fig:gap} draws the gap: under heteroscedasticity the true conditional residual
 law $r(\cdot\given x)$ varies with $x$, while the single-shape system uses the marginal
