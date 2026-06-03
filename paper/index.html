@@ -49,6 +49,23 @@
   </ul>
   <p>The impossibility of distribution-free conditional coverage is the result of Lei &amp; Wasserman (2014) and Foygel Barber et&nbsp;al. (2021); its two coordinates appear, as finite-sample facts, in the <a href="../demos/07-price-of-conditional-coverage.html">price of conditional coverage</a> and <a href="../demos/08-subgroup-coverage.html">subgroup coverage</a> demonstrations. The paper closes with a litmus test for when coverage <em>is</em> the objective.</p>
 
+  <h2>Several ways to read the gap</h2>
+  <p>The same quantity, the residual-information gap \(I(R;X)\), looks different from each angle:</p>
+  <ul>
+    <li><em>A false-pooling cost.</em> A single-shape conformal system assumes one residual law fits every input (\(R\perp X\)); the gap is the price of that assumption.</li>
+    <li><em>An average log Bayes factor.</em> \(I(R;X)=\mathbb{E}\,\log\frac{r(R\mid X)}{\bar r(R)}\): the oracle&rsquo;s expected per-observation log-likelihood advantage over the pooled shape.</li>
+    <li><em>Conditional non-uniformity of conformal ranks.</em> The PIT rank \(U=G(R)\) is marginally uniform (the conformal win), but \(I(R;X)=\mathbb{E}_X\,\mathrm{KL}(P_{U\mid X}\,\|\,\mathrm{Unif})\) conditionally: easy inputs cluster \(U\) near \(\tfrac12\), hard ones push it to the tails. Watch it in <a href="../demos/13-coverage-score-plane.html">the coverage&ndash;score plane</a>.</li>
+    <li><em>A projection.</em> The result is the information projection of the oracle onto the single-shape manifold; the gap is the leftover distance to independence \(R\perp X\).</li>
+  </ul>
+
+  <h2>Prediction versus verification</h2>
+  <p>Conformal prediction verifies coverage; it does not model. Three vantage points make the difference concrete:</p>
+  <ul>
+    <li><em>Markets that do both.</em> The high-velocity prediction market in <a href="https://book.microprediction.com">Microprediction</a> (MIT&nbsp;Press) aggregates a live CDF \(\hat F\) (sharpness from the crowd), then runs a <em>secondary</em> market on \(Z=\Phi^{-1}(\hat F(Y))\) that pays for departures from \(N(0,1)\) &mdash; a standing calibration test. An input-dependent departure is exactly \(I(R;X)\): the market hunts the conditional structure conformal leaves untouched.</li>
+    <li><em>A forecasting algebra.</em> In <a href="https://github.com/microprediction/timemachines">timemachines</a> / <a href="https://github.com/microprediction/skaters">skaters</a>, online forecasters are one fixed type closed under composition (residual chaining, smoothing, bagging, ensembling). Conformalization is just one more operator, and it moves only the coverage coordinate; the gap is closed by the conditioning operators, not by it. Practically: conformalize last, and to sharpen, condition rather than tighten the conformal step.</li>
+    <li><em>Calibration is often not the bottleneck.</em> On open play-money markets like <a href="https://manifold.markets">Manifold</a> the best bots are already well calibrated; sharpness is what separates them. A device that only fixes calibration addresses the part competition solves first.</li>
+  </ul>
+
   <h2>Building from source</h2>
   <p>The paper builds with <a href="https://tectonic-typesetting.github.io/">Tectonic</a> (which fetches packages and runs BibTeX automatically):</p>
   <p><code>cd paper &amp;&amp; tectonic marginally-useful.tex</code></p>
