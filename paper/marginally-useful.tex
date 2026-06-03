@@ -213,7 +213,7 @@ So the conformal set, and its coverage, are invariant to exactly the part of $f$
 log-score rewards. (This is specific to such scores; it does not apply to density- or
 quantile-based scores, which read $f$ directly.)
 
-\begin{proposition}[Coverage does not constrain the log-score]\label{prop:orth}
+\begin{proposition}[Residual-score coverage does not constrain the log-score]\label{prop:orth}
 The split-conformal set \eqref{eq:set} is a measurable function of the nonconformity
 scores $\{s_i\}$ and of $s(x,\cdot)$; it is not a functional of the predictive density
 $f$ unless $f$ is explicitly used in the score. Consequently two forecasters with the
@@ -480,8 +480,12 @@ A system reported by its coverage alone is reported by one coordinate of a
 two-coordinate quality. The plane is a presentation device (adjacent to reliability
 and sharpness diagrams \citep{gneiting2007probabilistic}), but the ``conformal = move
 left, never up'' reading makes the category distinction hard to miss. Figure~\ref{fig:plane}
-populates the plane with the time-series methods of Section~\ref{sec:exch}, plotting
-worst-window coverage against the interval (Winkler) score.
+populates the plane with the time-series methods of Section~\ref{sec:exch}, using two
+concrete axes: worst-window coverage (a conditional-coverage proxy) and the interval
+(Winkler) score, which, like any proper score, is minimized at the oracle. The vertical axis
+is therefore oriented opposite to the schematic $S$ above (down is better, not up), but the
+geometry is unchanged: conformalizing moves a point horizontally, never toward a better
+score.
 
 \begin{figure}[t]
 \centering
