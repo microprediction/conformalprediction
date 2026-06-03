@@ -389,7 +389,7 @@ certificate; conformal's marginal guarantee is finite-sample and assumption-ligh
 the certificate itself is the deliverable, that is decisive (Section~\ref{sec:steel}).
 \end{remark}
 
-\begin{remark}[Four readings of the gap]
+\begin{remark}[Four readings of the gap]\label{rem:readings}
 The identity $R(\bar r)=I(R;X)=\KL(P_{X,R}\,\|\,P_X P_R)$ admits several readings, each a
 different angle on the same number.
 \emph{(i) A false-pooling cost.} A single-shape system asserts that, after $\hat\mu$, one
@@ -656,6 +656,53 @@ We used the log-score for the clean information-theoretic identities, but the
 coverage--score plane and the argument carry over to any strictly proper score; the
 accompanying benchmark in fact ranks methods by the interval (Winkler) score and CRPS
 \citep{gneiting2007strictly}, on which the same orderings hold.
+
+\section{Prediction versus verification}\label{sec:verification}
+The thread of this paper is that conformal prediction \emph{verifies} a coverage property;
+it does not \emph{model}, and a fixed rule cannot substitute for modeling. Three vantage
+points sharpen the distinction and give it some practical edge.
+
+\paragraph{Markets that supply both sharpness and calibration.} Consider a mechanism that
+handles both by open competition rather than by a correction. In the high-velocity
+prediction market of \citet{cotton2022microprediction}, a parimutuel aggregates participants
+into a live predictive CDF $\hat F$, so sharpness is produced by the crowd's modeling; the
+transform $U=\hat F(Y)$ and $Z=\Phi^{-1}(U)$ then feed a \emph{secondary} market that rewards
+algorithms for finding departures of $Z$ from $N(0,1)$. The secondary market is a standing
+calibration test, and not a merely marginal one: an input-dependent departure is exactly the
+conditional rank non-uniformity $I(R;X)$ of Remark~\ref{rem:readings}(iii). Where conformal
+prediction fixes the \emph{marginal} uniformity of ranks by rule, the market invites
+participants to model the \emph{conditional} structure that remains. The primary market
+predicts, the secondary verifies, and both improve only by modeling.
+
+\paragraph{Conformalization as one operator in a forecasting algebra.} The
+\texttt{timemachines}/\texttt{skaters} design \citep{cotton_timemachines} treats online
+forecasters as stateful functions of a single fixed type, $(x,w,s)=f(y,s,k,\dots)$, closed
+under composition: one skater can run on another's residuals, and skaters are smoothed,
+bootstrapped, and ensembled, so a pipeline is an expression in an algebra of forecasters.
+Conformalization is itself a transform of this type, consuming a forecaster and returning one
+whose intervals are re-leveled to target coverage. In the algebra it is therefore one
+operator among many, and a revealing one: it moves only the coverage coordinate. Sharpness is
+set by the upstream composition, and the residual-information gap is reduced only by the
+\emph{conditioning} operators (residual or variance chaining, the conditional-shape models of
+Section~\ref{sec:scope}), never by the conformal operator. The streaming, state-passing type
+also makes online (adaptive) conformal just one more operator, for the non-exchangeable case.
+
+\paragraph{Calibration is often not the binding constraint.} In open forecasting competitions
+the strongest entrants tend to be well calibrated already; what separates them is
+sharpness.\footnote{This is visible on public play-money markets such as Manifold, where the
+best-performing bots are strikingly well calibrated, so the marginal return to further
+calibration is small while the return to sharper conditional models is large.} A device that
+only adjusts calibration therefore addresses the part of the problem that competition tends to
+solve first, which is one more reason it cannot itself be the source of an edge.
+
+\paragraph{Practical remarks.} Three follow. (i) Conformalize \emph{last}: model and compose
+first, then add the certificate, since the conformal step cannot improve any proper score
+(estimate first, certify second). (ii) Use a proper score (log-likelihood, CRPS) as the
+sharpness diagnostic at each stage of a composition; because conformalization leaves it
+unchanged, a score that does not move after conformalizing confirms that the gain, if any, was
+modeling. (iii) To close $I(R;X)$, add conditioning to the model (heteroscedastic spread,
+quantile or residual-shape chaining), not tightness to the conformal step; that is the
+algebra's way of leaving the single-shape class.
 
 \section{Conclusion}
 
