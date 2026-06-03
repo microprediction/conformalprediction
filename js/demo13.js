@@ -98,3 +98,48 @@ button(ctrls, "↻ new sample", () => { seed = (seed * 1103515245 + 12345) & 0x7
 
 autoResize(main, draw);
 draw();
+
+// ---- in-browser numerical check of the gap identities (the live check_gap.py) ----
+// Both sides are computed independently on a grid: the signed-CPS regret from log-scores,
+// and I(R;X) from entropies; the absolute-interval regret adds KL(r-bar || h_sym).
+const GRID = (() => { const a = []; for (let i = 0; i < 1201; i++) a.push(-10 + 20 * i / 1200); return a; })();
+const DR = GRID[1] - GRID[0];
+const phi = (z) => Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI);
+function erf(x) { const s = x < 0 ? -1 : 1; x = Math.abs(x); const t = 1 / (1 + 0.3275911 * x);
+  const y = 1 - ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x); return s * y; }
+function gnorm(p) { let s = 0; for (const v of p) s += v; s *= DR; return p.map(v => v / s); }
+function cross(p, q) { let s = 0; for (let i = 0; i < p.length; i++) if (p[i] > 1e-300) s += p[i] * Math.log(Math.max(q[i], 1e-300)); return s * DR; }
+function klr(p, q) { let s = 0; for (let i = 0; i < p.length; i++) if (p[i] > 1e-300) s += p[i] * Math.log(p[i] / Math.max(q[i], 1e-300)); return s * DR; }
+
+const cRO = readouts(document.getElementById("check-readouts"),
+  ["I(R;X)", "signed-CPS regret", "abs-interval regret", "I(R;X) + KL skew", "identity"]);
+const cCtrls = document.getElementById("check-controls");
+const cState = { eta: 0.5, skew: 0.0 };
+
+function drawCheck() {
+  const K = 120, a = cState.skew, d = a / Math.sqrt(1 + a * a), shift = -d * Math.sqrt(2 / Math.PI);
+  const rows = [];
+  for (let k = 0; k < K; k++) {
+    const u = -1 + 2 * k / (K - 1), w = Math.exp(cState.eta * u), xi = w * shift;
+    rows.push(gnorm(GRID.map(rho => { const t = (rho - xi) / w; return (2 / w) * phi(t) * 0.5 * (1 + erf(a * t / Math.SQRT2)); })));
+  }
+  const rbar = gnorm(GRID.map((_, i) => rows.reduce((s, r) => s + r[i], 0) / K));
+  const hsym = gnorm(GRID.map((_, i) => 0.5 * (rbar[i] + rbar[GRID.length - 1 - i])));
+  let oracleLS = 0; for (const r of rows) oracleLS += cross(r, r); oracleLS /= K;
+  const regretA = oracleLS - cross(rbar, rbar);      // signed-CPS regret (log-score route)
+  const regretB = oracleLS - cross(rbar, hsym);      // absolute-interval regret
+  let meanHcond = 0; for (const r of rows) meanHcond += -cross(r, r); meanHcond /= K;
+  const I_ent = (-cross(rbar, rbar)) - meanHcond;     // I(R;X) (entropy route, independent)
+  const KLskew = klr(rbar, hsym);
+  const okA = Math.abs(regretA - I_ent) < 1e-4, okB = Math.abs(regretB - (I_ent + KLskew)) < 1e-4;
+  cRO("I(R;X)", I_ent.toFixed(4));
+  cRO("signed-CPS regret", regretA.toFixed(4), okA ? "good" : "warn");
+  cRO("abs-interval regret", regretB.toFixed(4));
+  cRO("I(R;X) + KL skew", (I_ent + KLskew).toFixed(4), okB ? "good" : "warn");
+  cRO("identity", okA && okB ? "holds ✓" : "—", okA && okB ? "good" : "bad");
+}
+slider(cCtrls, { label: "residual heteroscedasticity", min: 0, max: 1.2, step: 0.02, value: cState.eta, fmt: v => v.toFixed(2) },
+  v => { cState.eta = v; drawCheck(); });
+slider(cCtrls, { label: "residual skew", min: 0, max: 6, step: 0.1, value: cState.skew, fmt: v => v.toFixed(1) },
+  v => { cState.skew = v; drawCheck(); });
+drawCheck();

@@ -61,6 +61,20 @@
   line at the same height. The only way up is <em>conditioning</em>. Conformal prediction is a
   horizontal operation in this plane; it never closes the vertical gap.</p>
 
+  <h2 style="margin-top:1.6em;">A numerical check</h2>
+  <p>The vertical gap claims to be exactly \(I(R;X)\). Here both sides are computed
+  independently, on a grid, in your browser (the live version of <code>check_gap.py</code>):
+  the single-shape (signed-CPS) regret from log-scores, and \(I(R;X)\) from entropies. They
+  coincide. The absolute-interval forecaster pays an extra \(\mathrm{KL}(\bar r\,\|\,h_{\mathrm{sym}})\)
+  whenever the residual law is skewed.</p>
+  <div class="demo">
+    <div class="readouts" id="check-readouts"></div>
+    <div class="controls" id="check-controls"></div>
+  </div>
+  <p class="note">Raise <em>heteroscedasticity</em> to make the residual spread depend more on
+  \(x\) (that is \(I(R;X)\)); raise <em>skew</em> to make the residual law asymmetric (that is
+  the \(\mathrm{KL}\) term). The two identities hold to four decimals throughout.</p>
+
   <div class="takeaway">
     <p>Coverage and sharpness are different coordinates. Conformal prediction certifies the
     first and moves you along it; the second is the model&rsquo;s job. The leftover height
