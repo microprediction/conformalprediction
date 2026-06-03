@@ -147,7 +147,7 @@ def fig_nogo():
     ax2.plot(Bs, finf, "s-", color=ORANGE, ms=3, label="frac. intervals $=\\infty$")
     ax2.set_ylabel("fraction of intervals $=(-\\infty,\\infty)$", color=ORANGE); ax2.set_ylim(0, 1.05)
     ax.set_title("The price of conditional coverage")
-    lines = ax.get_lines() + ax2.get_lines()
+    lines = [l for l in ax.get_lines() + ax2.get_lines() if not l.get_label().startswith("_")]
     ax.legend(lines, [l.get_label() for l in lines], loc="center right", fontsize=8)
     fig.savefig(os.path.join(FIG, "fig_nogo.pdf"))
     plt.close(fig)
@@ -200,8 +200,6 @@ def fig_sharpness_gap():
         ax.set_title(lab); ax.set_xlabel("residual $r = y-\\hat\\mu(x)$"); ax.set_xlim(-8, 8)
         ax.legend(loc="upper right", fontsize=8)
     axes[0].set_ylabel("density")
-    fig.suptitle("The CPS uses one residual shape everywhere; the oracle adapts.  "
-                 "Regret $= I(R;X)$.", fontsize=10)
     fig.savefig(os.path.join(FIG, "fig_sharpness_gap.pdf"))
     plt.close(fig)
     return "sharpness_gap: drawn"
