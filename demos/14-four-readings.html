@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>One number, five pictures — Conformal Prediction</title>
+<meta name="description" content="The residual-information gap I(R;X) has five equivalent readings: a false-pooling cost, an average log Bayes factor, the conditional non-uniformity of conformal ranks, a projection onto independence, and a Kelly betting rent. One slider, five synchronized panels, one number." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/theory.html">Theory</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/paper/">Paper</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration</p>
+  <h1>One number, five pictures</h1>
+  <p class="subtitle">The residual-information gap \(I(R;X)\) is a single quantity. The paper reads it five ways; here all five move together as you turn one knob.</p>
+
+  <p>The <a href="13-coverage-score-plane.html">coverage&ndash;score plane</a> showed that a
+  single-shape conformal predictor leaves a fixed vertical gap to the oracle, and that the gap
+  equals the mutual information \(I(R;X)\) between the residual and the input. That one number
+  has five faces. They are not five results &mdash; they are five ways of looking at the same
+  number, and seeing all of them at once is the quickest route to what the gap actually
+  <em>is</em>.</p>
+
+  <p>Turn <em>heteroscedasticity</em> up and the residual spread starts to depend on \(x\): the
+  gap opens, and all four panels respond in lockstep. Turn <em>skew</em> up and the
+  absolute-interval forecaster picks up its extra \(\mathrm{KL}(\bar r\,\|\,h_{\mathrm{sym}})\)
+  penalty, while \(I(R;X)\) itself is unmoved.</p>
+
+  <div class="demo">
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <h2 style="margin-top:1.4em;">(i) A false-pooling cost</h2>
+  <p>A single-shape system insists that, once the location \(\hat\mu\) is fixed, one residual
+  law fits everybody &mdash; that \(R\perp X\). But the true conditional laws \(r(\cdot\mid x)\)
+  (coloured, narrow for easy inputs, wide for hard ones) genuinely differ. The gap is the
+  log-score you forfeit by pooling them into the one grey curve \(\bar r\).</p>
+  <div class="canvas-box med demo"><canvas id="pool"></canvas></div>
+
+  <h2 style="margin-top:1.4em;">(ii) An average log Bayes factor</h2>
+  <p>Since \(I(R;X)=\mathbb{E}\,\log\frac{r(R\mid X)}{\bar r(R)}\), every observation contributes
+  the log-likelihood ratio of its own \(x\)-specific residual law against the pooled one. The
+  histogram is those per-sample log Bayes factors; the oracle&rsquo;s expected per-sample edge
+  is their mean, and that mean is \(I(R;X)\).</p>
+  <div class="canvas-box med demo"><canvas id="bayes"></canvas></div>
+
+  <h2 style="margin-top:1.4em;">(iii) Conditional non-uniformity of conformal ranks</h2>
+  <p>Let \(U=G(R)\) be the conformal rank under the pooled law &mdash; the PIT that signed CPS
+  makes uniform. Marginally (grey) it <em>is</em> uniform: that is the conformal achievement.
+  Conditionally it is not. Easy inputs (green) bunch \(U\) near \(\tfrac12\); hard inputs (red)
+  push it to the tails. The average of that conditional non-uniformity is again \(I(R;X)\).</p>
+  <div class="canvas-box med demo"><canvas id="ranks"></canvas></div>
+
+  <h2 style="margin-top:1.4em;">(iv) A projection onto independence</h2>
+  <p>\(I(R;X)=\mathrm{KL}\!\left(P_{X,R}\,\|\,P_X\!\otimes\!P_R\right)\): the joint
+  experiment projected onto the nearest model in which residual and input are independent. The
+  left field is the joint \(P_{X,R}\) &mdash; watch each column&rsquo;s width breathe with
+  \(x\). The right field is the independence model \(P_X\!\otimes\!\bar r\), every column
+  identical. The structure the projection throws away is the gap.</p>
+  <div class="canvas-box med demo"><canvas id="proj"></canvas></div>
+
+  <h2 style="margin-top:1.4em;">(v) A Kelly betting rent</h2>
+  <p>This is the one with teeth. By the log-optimal (Kelly) growth theorem, a gambler who knows
+  a distribution \(P\) and bets against a fair book priced by \(Q\) compounds wealth at rate
+  \(\mathrm{KL}(P\,\|\,Q)\) per round. Let the single-shape conformal forecaster <em>be</em> the
+  book &mdash; it prices every input with the pooled residual law \(\bar r\) &mdash; and let the
+  oracle hold the conditional law \(r(\cdot\mid x)\). The oracle&rsquo;s relative log-wealth
+  (blue) drifts upward at expected slope \(\mathbb{E}_x\,\mathrm{KL}(r(\cdot\mid x)\,\|\,\bar
+  r)=I(R;X)\): the same number, now in money. The per-round increments are exactly the log Bayes
+  factors of panel (ii). Conformalizing re-levels the book; it cannot change the rent.</p>
+  <div class="canvas-box med demo"><canvas id="wealth"></canvas></div>
+
+  <div class="takeaway">
+    <p>False pooling, an average log Bayes factor, non-uniform conformal ranks, a projection
+    onto independence, a Kelly betting rent: five descriptions, one number. Each says the same
+    thing &mdash; the information about the residual that lives in \(x\) after the location is
+    fixed &mdash; and none of it is reduced by any step that ignores \(x\). That is the
+    <a href="../paper/">residual-information gap</a>; the
+    <a href="13-coverage-score-plane.html">coverage&ndash;score plane</a> is where it shows up
+    as a height you cannot conformalize away.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="13-coverage-score-plane.html">&larr; The coverage&ndash;score plane</a>
+    <span class="spacer"></span>
+    <a href="../index.html">&uarr; Back to overview</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demonstration</span></div></footer>
+
+<script type="module" src="../js/demo14.js"></script>
+</body>
+</html>

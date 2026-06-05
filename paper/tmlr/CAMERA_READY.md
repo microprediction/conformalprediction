@@ -93,6 +93,44 @@ skater composes a fast moving average for the level with a slow moving average o
 residuals for the spread), which sharpens the point:
 ```
 
+### 5b. Restore the named forecaster in Table 1 (the time-series benchmark)
+
+The same anonymization renamed `skaters` to "Streaming forecaster" in three places in the
+Table 1 (`tab:ts`) block. Restore them too, to match item 5. In the caption,
+
+```
+the method emits a density. Forecasters that model the conditional spread
+(the streaming forecaster, EWMA-vol) lead on the proper score; conformalizing the best one re-levels
+```
+
+to
+
+```
+the method emits a density. Forecasters that model the conditional spread
+(\texttt{skaters}, EWMA-vol) lead on the proper score; conformalizing the best one re-levels
+```
+
+and the two table rows,
+
+```
+Streaming forecaster (Gaussian)          & prob.  & 0.891 & 0.700 & \phantom{0}6.57  & 0.86 \\
+```
+```
+Streaming forecaster + split conformal   & CP     & 0.602 & 0.204 & 11.95            & ---  \\
+```
+
+to
+
+```
+\texttt{skaters} (Gaussian)              & prob.  & 0.891 & 0.700 & \phantom{0}6.57  & 0.86 \\
+```
+```
+\texttt{skaters} + split conformal       & CP     & 0.602 & 0.204 & 11.95            & ---  \\
+```
+
+(The "\quad + normalized conformal" row needs no change; it never named the forecaster.)
+Sanity check after: `pdftotext marginally-useful.pdf - | grep -c skaters` should be 3.
+
 ## 6. (Optional) Acknowledgments / Author Contributions
 
 The TMLR template allows unnumbered `\subsubsection*{Acknowledgments}` and

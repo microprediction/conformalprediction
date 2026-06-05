@@ -66,9 +66,9 @@ failure. The real one is a \emph{category error}: conformal
 prediction is a method for \emph{certifying the coverage of a set}, and it is being
 asked to \emph{estimate a distribution}. These are different kinds of object, graded
 by different instruments, and no amount of tuning turns one into the other. None of
-this is a criticism of the method; it is a guide to where the method belongs.
+this is a criticism of the method. It is a guide to where the method belongs.
 
-None of this impugns the mathematics. Given exchangeable data, a fitted predictor,
+The mathematics is not in question. Given exchangeable data, a fitted predictor,
 and a nonconformity score, split conformal prediction returns a set $C_\alpha(x)$ with
 \begin{equation}\label{eq:marginal}
   \Pr\!\big(Y_{n+1}\in C_\alpha(X_{n+1})\big)\;\ge\;1-\alpha,
@@ -113,7 +113,7 @@ for the absolute-residual score. Exchangeability of the augmented scores makes t
 of $s_{n+1}$ uniform, which yields \eqref{eq:marginal}
 \citep{vovk2005algorithmic,lei2018distribution}. The construction is simple and the
 guarantee is real, and one readily verifies that empirical coverage tracks $1-\alpha$ as
-the sample size, noise level, and $\alpha$ are varied. None of this is in dispute; the
+the sample size, noise level, and $\alpha$ are varied. None of this is in dispute. The
 question is what it is taken to mean.
 
 \section{Three known limits of the marginal guarantee}\label{sec:marginal}
@@ -181,7 +181,7 @@ it over-covers the easy inputs and under-covers the hard ones.}
 \label{fig:margcond}
 \end{figure}
 
-The conformal literature already separates \emph{validity} from \emph{efficiency}; the
+The conformal literature already separates \emph{validity} from \emph{efficiency}. The
 point here is only that the marginal-coverage certificate does not measure distributional
 quality.
 
@@ -204,7 +204,7 @@ We first make ``coverage is not a measure of forecast quality'' a precise, const
 fact. Separate the two things a forecaster reports: a point predictor $\hat\mu(x)$ and a
 full predictive density $f(\cdot\given x)$. The log-score grades $f$, that is, its spread
 and shape, its sharpness. The canonical residual score $s(x,y)=|y-\hat\mu(x)|$ uses only
-$\hat\mu$, the \emph{location} of the forecast; it never sees the spread or shape of $f$.
+$\hat\mu$, the \emph{location} of the forecast. It never sees the spread or shape of $f$.
 So the conformal set, and its coverage, are invariant to exactly the part of $f$ that the
 log-score rewards. (This is specific to such scores; it does not apply to density- or
 quantile-based scores, which read $f$ directly.)
@@ -249,6 +249,16 @@ sharpness of any predictive density that was not used to construct the score; in
 particular, no inference about forecast quality (as graded by a strictly proper score)
 can be drawn from coverage alone.
 \end{corollary}
+
+\begin{remark}[The degenerate $X$ is only for cleanliness]\label{rem:nondeg}
+The point-mass $X$ in the proof makes the unbounded gap transparent, but it is not needed.
+For any non-degenerate $X$, take two forecasters sharing the same location $\hat\mu$ (hence,
+for the residual score, the same score function and calibration scores, so identical sets
+and coverage at every $\alpha$) but predictive spreads $\sigma_1(x),\sigma_2(x)$; their
+expected log-scores differ by $\E_X[\log(\sigma_2/\sigma_1)] + \tfrac12\E_X[(\sigma_2^{-2}
+-\sigma_1^{-2})\,\mathrm{Var}(Y\given X)]$, which is unbounded over choices of the
+$\sigma_i$. Coverage is blind to all of it.
+\end{remark}
 
 This is the formal version of a point several authors have made informally: that
 conformal validity ``almost invites you to use garbage prediction functions''
@@ -369,14 +379,14 @@ on $I(R;X)$, and $I(R;X)=\KL(P_{X,R}\,\|\,P_X P_R)$ is reduced only by condition
 The right-hand side of \eqref{eq:gapA} is exactly the information about the residual
 distribution that remains in $X$ after the location predictor is fixed. Calling this the
 residual-information gap makes the content of ``blind to conditional residual shape'' precise. Three caveats. (1) \emph{Conformal is not dominated within its class.} The signed CPS is
-log-score optimal among single-shape location forecasters; the cost is the restriction,
-not the calibration step. The absolute-residual interval system is the one that pays the
+log-score optimal among single-shape location forecasters. What it pays for is the class
+restriction, not the calibration step. The absolute-residual interval system is the one that pays the
 extra $\KL(\bar r\,\|\,h_{\mathrm{sym}})$, for discarding sign information; since
 $h_{\mathrm{sym}}\ge\tfrac12\bar r$ this penalty is at most $\log 2$, one bit, so the
 structural loss is $I(R;X)$. (2)
 \emph{What recalibration can and cannot do.} A recalibration that ignores $X$ (e.g.\
 marginal PIT recalibration) can move the shape toward $\bar r$ and thereby erase the
-skewness term, i.e.\ turn case~(B) into case~(A); it cannot touch $I(R;X)$. Reducing
+skewness term, i.e.\ turn case~(B) into case~(A). It cannot touch $I(R;X)$. Reducing
 $I(R;X)$ requires modeling conditional residual shape: heteroscedastic models,
 conditional recalibration \citep{kuleshov2018accurate}, or conformalized quantile
 regression \citep{romano2019conformalized}, which is the conformal world's way of leaving
@@ -386,7 +396,7 @@ certificate; conformal's marginal guarantee is finite-sample and assumption-ligh
 the certificate itself is the deliverable, that is decisive (Section~\ref{sec:steel}).
 \end{remark}
 
-\begin{remark}[Four readings of the gap]\label{rem:readings}
+\begin{remark}[Five readings of the gap]\label{rem:readings}
 The identity $\mathcal{R}(\bar r)=I(R;X)=\KL(P_{X,R}\,\|\,P_X P_R)$ admits several readings, each a
 different angle on the same number.
 \emph{(i) A false-pooling cost.} A single-shape system asserts that, after $\hat\mu$, one
@@ -409,6 +419,25 @@ $P_{X,R}$ onto the single-shape product family $\{P_X\otimes H\}$. The optimizer
 that is $P_X\otimes P_R$, and the projection loss is $\KL(P_{X,R}\,\|\,P_X P_R)=I(R;X)$. No
 $X$-blind step can cross that loss, because the missing information is dependence, not
 marginal shape.
+\emph{(v) A betting rent.} By the log-optimal (Kelly) growth theorem, a gambler who knows a
+distribution $P$ and bets against a fair book priced by $Q$ compounds wealth at expected
+log-rate $\KL(P\,\|\,Q)$ per round \citep{kelly1956new,cover2006elements}. Reading $\bar r$ as
+the book of a single-shape conformal forecaster and $r(\cdot\given X)$ as the oracle's
+knowledge, the oracle's expected per-round rent is $\E_X\,\KL\big(r(\cdot\given X)\,\|\,\bar
+r\big)=I(R;X)$, the same quantity as in (ii) measured in log-wealth. The conformal step fixes
+the level of the book (its normalization, hence coverage), not the rent: a re-leveling that
+ignores $X$ leaves the divergence, and so the growth rate, unchanged.
+\end{remark}
+
+\begin{remark}[The gap is not an artifact of a poor location fit]\label{rem:mudep}
+The quantity $I(R;X)$ is defined for a \emph{fixed} $\hat\mu$, so a natural worry is that it
+merely measures how badly $\hat\mu$ fits. It does not. Even the Bayes-optimal location
+$\hat\mu(x)=\E[Y\given X=x]$, which zeroes the conditional mean of $R$, leaves a residual
+whose \emph{conditional law} still varies with $x$ under heteroscedasticity or changing
+shape, so $I(R;X)>0$ in general; the gap measures conditional residual \emph{scale and
+shape} information, which is orthogonal to getting the location right. Improving $\hat\mu$
+can raise or lower $I(R;X)$, but the lever the gap identifies is conditioning the residual
+\emph{shape} on $X$, not refining the point forecast.
 \end{remark}
 
 \paragraph{Related work.} The pieces this assembles are individually known. A conformal
@@ -516,14 +545,17 @@ guaranteed.
   bounds the coverage gap by a total-variation distance that is exactly what
   nonstationarity inflates.
 \end{itemize}
-It is worth separating three distinct guarantees that the word ``conformal'' now spans:
+Three distinct guarantees now travel under the word ``conformal'':
 (i) \emph{split conformal under exchangeability} gives finite-sample marginal coverage;
 (ii) \emph{adaptive conformal inference} gives long-run, time-average coverage control
 under distribution shift; (iii) \emph{online conformal under arbitrary shifts} gives
 regret-style or local-interval performance rather than the original exchangeable
 guarantee. These are progressively weaker and more diffuse objects; none is the sharp
-predictive distribution \emph{now}, for \emph{this} step, that a proper score grades. The
-exchangeability required by guarantee~(i) is typically unavailable in deployed
+predictive distribution \emph{now}, for \emph{this} step, that a proper score grades. This
+takes nothing from their utility: long-run, time-average frequency control under drift is a
+genuine and hard-won engineering guarantee, often the most one can ask for without a model
+of the shift. It is simply a weaker, differently posed object than conditional coverage
+\emph{now}. The exchangeability required by guarantee~(i) is typically unavailable in deployed
 time-series settings, though blocking or learned-transform constructions can sometimes
 recover an exchangeability-like assumption.
 
@@ -536,8 +568,8 @@ a simple probabilistic volatility model (an EWMA-variance Gaussian) matches or b
 on the proper score \emph{and} returns a full distribution, and where the conformal methods
 help they do so by adapting the interval to recently realized residuals, that
 is, by local conditional modeling, with the conformal step supplying the coverage leveling
-on top. (Full tables, including MAPIE's EnbPI/ACI and \texttt{crepes}, are in the
-benchmark accompanying the paper.)
+on top. Table~\ref{tab:ts} reports the main methods; full tables, including MAPIE's
+EnbPI/ACI and \texttt{crepes}, are in the benchmark accompanying the paper.
 
 \begin{figure}[t]
 \centering
@@ -548,6 +580,35 @@ split conformal collapses once the volatility regime arrives, while adaptive con
 recovering methods oscillate around the target rather than holding it pointwise.}
 \label{fig:ts}
 \end{figure}
+
+\begin{table}[t]
+\centering
+\caption{Nonstationary time-series benchmark (means over five seeds; target
+$1-\alpha=0.9$). Worst rolling-window coverage is a conditional-coverage proxy; the
+interval (Winkler) score and CRPS are proper (lower is better); CRPS is reported only where
+the method emits a density. Forecasters that model the conditional spread
+(the streaming forecaster, EWMA-vol) lead on the proper score; conformalizing the best one re-levels
+coverage at an essentially identical interval score ($6.58$ vs.\ $6.57$), while a naive
+split-conformal wrap collapses once the regime shifts. The full table (MAPIE EnbPI/ACI,
+\texttt{crepes}, GARCH, AgACI) is in the accompanying benchmark.}
+\label{tab:ts}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Method & Family & Marg.\ cov. & Worst-win.\ cov. & Interval score & CRPS \\
+\midrule
+Oracle (true $\mu,\sigma$)               & oracle & 0.900 & 0.818 & \phantom{0}5.52  & 0.76 \\
+Streaming forecaster (Gaussian)          & prob.  & 0.891 & 0.700 & \phantom{0}6.57  & 0.86 \\
+\quad + normalized conformal             & CP     & 0.891 & 0.694 & \phantom{0}6.58  & ---  \\
+EWMA-vol Gaussian                        & prob.  & 0.886 & 0.810 & \phantom{0}6.92  & 0.92 \\
+Conformal PID                            & CP     & 0.900 & 0.824 & \phantom{0}6.99  & ---  \\
+ACI                                      & CP     & 0.897 & 0.830 & \phantom{0}7.00  & ---  \\
+NexCP (weighted)                         & CP     & 0.884 & 0.696 & \phantom{0}7.08  & ---  \\
+Streaming forecaster + split conformal   & CP     & 0.602 & 0.204 & 11.95            & ---  \\
+Fixed split conformal                    & CP     & 0.562 & 0.174 & 13.82            & ---  \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 The same holds for an off-the-shelf probabilistic forecaster. A streaming online
 forecaster that emits a predictive mean and standard deviation \citep{cotton_timemachines}
@@ -560,7 +621,7 @@ estimates conditional spread beats every conformal method here, and conformalizi
 cannot help. A normalized conformal
 wrap re-levels its coverage to $1-\alpha$ at an essentially identical interval score
 ($6.58$ against $6.57$), and a naive split-conformal wrap on the nonstationary series
-collapses (to $60\%$ coverage, score $11.9$). The conformal step re-levels; it does not
+collapses (to $60\%$ coverage, score $11.9$). The conformal step re-levels. It does not
 add sharpness, which is the experience the introduction describes.
 
 \section{When coverage \emph{is} the objective}\label{sec:steel}
@@ -600,10 +661,13 @@ returns us to the impossibility of Section~\ref{sec:marginal}.
 
 Our strong claims target the object that is actually over-sold: \emph{post-hoc, marginal,
 split conformal prediction with a residual score}. A large and active literature builds
-conformal methods that do more, and how they relate matters, because
-in every case they confirm the paper's mechanism rather than contradict it: they buy
-sharpness or conditional coverage by \emph{conditioning on $X$ or optimizing a proper
-objective}, which is exactly what Propositions~\ref{prop:gap} say is required.
+conformal methods that do more; the conditional constructions below (CQR, Mondrian / binned
+CPS) are by now standard practice, not niche alternatives, and we do not question their
+effectiveness. How they relate still matters, because in every case they confirm the paper's
+mechanism rather than contradict it: they buy sharpness or conditional coverage by
+\emph{conditioning on $X$ or optimizing a proper objective}, which is exactly what
+Proposition~\ref{prop:gap} says is required --- that is, by modeling, rather than by anything
+the conformal step itself supplies.
 
 \paragraph{Conformal predictive systems that condition on $X$.}
 Mondrian / binned conformal predictive systems \citep{bostrom2021mondrian} fit a separate
@@ -666,7 +730,7 @@ accompanying benchmark in fact ranks methods by the interval (Winkler) score and
 \citep{gneiting2007strictly}, on which the same orderings hold.
 
 \section{Prediction versus verification}\label{sec:verification}
-Conformal prediction \emph{verifies} a coverage property; it does not \emph{model}, and a
+Conformal prediction \emph{verifies} a coverage property. It does not \emph{model}, and a
 fixed rule cannot substitute for modeling. Conformalization is best viewed as a terminal
 certification operator: it repairs the marginal coverage coordinate of a set-valued report,
 but any improvement in a proper score must come from upstream modeling of the conditional
@@ -682,22 +746,39 @@ that any gain came from modeling. (iii) To close $I(R;X)$, add conditioning to t
 (heteroscedastic spread, quantile or residual-shape estimation), not tightness to the
 conformal step.
 
+\paragraph{Limitations.} The exact result is deliberately narrow, and we state where it
+stops. (i) \emph{Scope.} The strong claims concern post-hoc, marginal, split conformal with
+a residual score and the single-shape residual class; the conditional constructions of
+Section~\ref{sec:scope} (CQR, Mondrian/binned CPS, conformal training) leave that class by
+design and are out of scope as targets of the critique. (ii) \emph{Fixed location.} The gap
+$I(R;X)$ is defined for a fixed $\hat\mu$ and measures conditional residual shape, not the
+quality of the point forecast (Remark~\ref{rem:mudep}). (iii) \emph{Score-specific
+identity.} The exact mutual-information form is special to the log-score; for CRPS or the
+interval score the analogous gap is the regret of the best $X$-blind residual law under that
+score, not an information quantity. (iv) \emph{Asymptotic density statement.} The
+density/log-score equalities of Propositions~\ref{prop:relevel}--\ref{prop:gap} are a
+large-calibration (or smoothed-density) statement; the object conformal delivers
+finite-sample is coverage, not a density. (v) \emph{Synthetic illustrations.} The figures
+and benchmark use synthetic generators with known ground truth, which is what makes the
+oracle and $I(R;X)$ computable; the identity itself is verified numerically by
+\texttt{check\_gap.py}.
+
 \section{Conclusion}
 
 Conformal prediction certifies the coverage of a set, finite-sample and
 distribution-free, under exchangeability. That guarantee is genuine and, for the right
 objective, exact. The error is reading it as distributional forecast quality. For a fixed
-location predictor the guarantee you can have (marginal) is rarely the one you want
-(conditional); the conditional one is unavailable distribution-free without further
-structure; the output is a set, not a measure; read as a single-shape distribution its
-log-score loss relative to the oracle is exactly the residual conditional-information term
-$I(R;X)$ of \eqref{eq:gapA}; and the exchangeability the basic guarantee needs is typically
-unavailable in deployed time-series settings. Within the single-shape residual class it is
+location predictor, the guarantee you can have (marginal) is rarely the one you want
+(conditional), and the conditional one is not available distribution-free without more
+structure. The output is a set, not a measure. Read as a single-shape distribution, its
+log-score loss against the oracle is exactly the residual-information term
+$I(R;X)$ of \eqref{eq:gapA}. And the exchangeability even the basic guarantee needs is
+usually missing in deployed time-series. Within the single-shape residual class it is
 optimal, and where a guarantee is the product it is the right tool. But coverage answers a question,
 \emph{is the truth in this region?}, that, in forecasting, is often not the one you
-were asking. Conformal prediction is not weak uncertainty quantification; it is exact
-uncertainty quantification for a set-valued coverage objective, and mistaking a
-set-coverage certificate for evidence of distributional quality is the category error.
+were asking. Conformal prediction is not weak uncertainty quantification. It is exact
+uncertainty quantification for a set --- a coverage guarantee, no more and no less. The
+category error is reading that certificate as a verdict on the forecast underneath it.
 
 \paragraph{Reproducibility.} Every figure is generated by the accompanying script
 \texttt{figures.py} (Figures~\ref{fig:nogo}--\ref{fig:ts}), and the time-series experiment
