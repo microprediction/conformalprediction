@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>It&rsquo;s an order statistic, not a model — Conformal Prediction</title>
+<meta name="description" content="The conformal quantile is an order statistic of the calibration residuals: a fixed, input-blind rule. A hardwired rule can sharpen nothing a proper score grades. The methods that do better are doing modeling, and ending with a conformal certificate." />
+<meta property="og:title" content="It&rsquo;s an order statistic, not a model" />
+<meta property="og:description" content="A hardwired rule on the order statistics of residuals is not a silver bullet, a better way, or a substitute for modeling. It is a coverage certificate. The difference is exactly I(R;X)." />
+<meta property="og:type" content="article" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/theory.html">Theory</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/paper/">Paper</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Notes</p>
+  <h1>It&rsquo;s an order statistic, not a model</h1>
+  <p class="subtitle">The companion <a href="paper/">paper</a> makes this precise and stays
+  scrupulously fair to every method it names. This is the same point with the gloves off.</p>
+
+  <p>Strip the marketing away and ask what split conformal prediction actually computes.
+  You have a point predictor &mu;&#770;, a pile of calibration residuals
+  <code>r = y &minus; &mu;&#770;(x)</code>, and a miscoverage level &alpha;. The recipe takes
+  the <em>order statistics</em> of the absolute residuals and reads off the
+  &#8968;(n+1)(1&minus;&alpha;)&#8969;-th one. That number is the half-width of every
+  interval you emit. Add it, subtract it, done.</p>
+
+  <p>That is the whole machine. It is a sorted list and an index into it. It does not look at
+  the input <code>x</code> when it picks the width &mdash; it cannot, by construction; the
+  width is one scalar reused for every test point. It is, in the most literal sense, a
+  hardwired rule on the empirical distribution of residuals.</p>
+
+  <p>So here is the common-sense objection, stated plainly: <strong>a fixed rule on the order
+  statistics of residuals cannot substitute for modeling.</strong> It was never going to. You
+  did not feed it anything about where the uncertainty is large and where it is small, so it
+  cannot tell you. You handed it one number to cover everywhere, and it dutifully returns one
+  number that covers everywhere &mdash; on average. Expecting that step to sharpen your
+  forecast is expecting a thermometer to lower the fever.</p>
+
+  <h2>What &ldquo;cannot substitute&rdquo; means, exactly</h2>
+
+  <p>The paper puts a number on it. Fix the location predictor and grade the resulting
+  predictive distribution with a proper score (use the log-score for the clean version). The
+  regret of the single-shape conformal system against the conditional oracle is
+  <em>exactly</em> the mutual information <code>I(R;X)</code> between the residual and the
+  input. That is the information about the spread that lives in <code>x</code> and that an
+  <code>x</code>-blind rule throws away on purpose.</p>
+
+  <p>And here is the part that closes the door: conformalizing <em>cannot reduce that
+  quantity</em>. No re-leveling that ignores <code>x</code> can, because the gap is a property
+  of the shape class you chose, not of your calibration. Conformal prediction re-levels
+  coverage beautifully and exactly. It moves the coverage coordinate and only the coverage
+  coordinate. The sharpness coordinate &mdash; the one a proper score actually grades &mdash;
+  it does not touch. (Slide the <a href="demos/04-coverage-vs-logscore.html">coverage-vs-log-score
+  demo</a> and watch the score sit still while coverage snaps to target.)</p>
+
+  <p>So &ldquo;not a substitute for modeling&rdquo; is not a vibe. It is a conservation law.
+  If you want the spread to follow <code>x</code>, you have to put it there yourself,
+  upstream, before the certificate goes on.</p>
+
+  <h2>The gap has five faces</h2>
+
+  <p><code>I(R;X)</code> is one number, but it pays to turn it over in your hand &mdash; each
+  face hides what the others show. (I built a
+  <a href="demos/14-four-readings.html">live version</a> where one slider moves all of them at
+  once.)</p>
+
+  <p><strong>1 &mdash; The cost of pretending everyone is the same.</strong> A single-shape
+  forecaster makes a quiet claim: once I have made my point prediction, the leftover error
+  looks the same for every input &mdash; same spread for the easy cases and the hard ones. That
+  is almost never true. Some inputs are noisy, some are calm. The gap is the bill for ironing
+  them all flat into one average shape <code>r&#772;</code>. In symbols,
+  <code>I(R;X) = E<sub>x</sub> KL( r(&middot;|x) &#8214; r&#772; )</code>: averaged over inputs,
+  how far each input&rsquo;s true error law sits from the pooled one.</p>
+
+  <p><strong>2 &mdash; An average log Bayes factor.</strong> Take a single observation and ask:
+  how much more likely was this residual under its true, <code>x</code>-specific law than under
+  the pooled one? Log that ratio and you have a little vote for &ldquo;the input mattered.&rdquo;
+  Most single votes are small; average them and you get the gap. It is the oracle&rsquo;s
+  expected edge per data point, stated as evidence.</p>
+
+  <p><strong>3 &mdash; The conformal ranks are not as uniform as they look.</strong>
+  Conformal&rsquo;s party trick is the PIT: it makes the rank <code>U = G(R)</code> come out
+  uniform, so the histogram is a tidy flat bar. True &mdash; <em>marginally</em>. Split that
+  same picture by input and the flatness evaporates. Easy inputs bunch their ranks near
+  &frac12; (over-cautious there); hard inputs shove them to the tails (under-cautious). The flat
+  bar was an average of lumpy conditional ones, and the size of that hidden lumpiness is, again,
+  the gap.</p>
+
+  <p><strong>4 &mdash; How far your world is from independence.</strong> <code>I(R;X)</code> is,
+  by definition, the KL distance from the real joint law of (input, residual) to the nearest
+  world in which the two are independent. A single-shape model <em>lives</em> in that
+  independent world &mdash; <code>R &perp; X</code> is its founding assumption. So the gap is just
+  the distance from where you are standing to where the truth actually is, and no amount of
+  <code>x</code>-blind fiddling walks you across it. Re-leveling shuffles you around inside the
+  independent world; it never leaves it.</p>
+
+  <p><strong>5 &mdash; It is the rent.</strong> Here is the face I like best, and it may be the
+  most honest. In a fair parimutuel &mdash; equivalently, betting Kelly &mdash; a player who
+  knows the true distribution <code>P</code>, wagering into a crowd that prices with some other
+  <code>Q</code>, compounds wealth at a rate of exactly <code>KL(P &#8214; Q)</code> per round.
+  The informed player&rsquo;s edge is not vague hand-waving; it is a divergence, in nats. (This
+  is the heart of what I once called
+  <a href="https://www.youtube.com/watch?v=13IgveD2IN4">the lottery paradox</a>: the rent an
+  informed bettor extracts from the misinformed is KL, full stop.)</p>
+
+  <p>Now point that lens at conformal prediction. The single-shape forecaster <em>is</em> the
+  crowd &mdash; it prices every input with the same pooled residual law <code>r&#772;</code>. The
+  oracle knows the conditional law <code>r(&middot;|x)</code>. The rent the oracle collects from
+  the conformal forecaster, per observation, is <code>KL( r(&middot;|x) &#8214; r&#772; )</code>
+  &mdash; and averaged over inputs, that is <code>I(R;X)</code>, on the nose.</p>
+
+  <p>So the gap is not an abstraction you can wave away. It is money. Each nat is a Kelly growth
+  rate; divide by <code>ln 2</code> and it is how many times the informed forecaster doubles its
+  bankroll relative to yours, per observation. And here is the kicker &mdash; the thing this
+  whole piece is about &mdash; conformalizing changes the <em>overround</em>, the coverage level,
+  the house&rsquo;s cut. It cannot change the rent, because the rent is a KL defined by
+  conditioning on <code>x</code>, and re-leveling refuses to look at <code>x</code>. You can make
+  the book balance to 90%. You cannot stop the informed party collecting. That is
+  &ldquo;conformal can&rsquo;t substitute for modeling,&rdquo; with a price tag attached.</p>
+
+  <h2>&ldquo;But the modern methods are sharp!&rdquo;</h2>
+
+  <p>They are. Conformalized quantile regression, Mondrian and CRPS-binned predictive systems,
+  conformal training &mdash; these produce genuinely sharp, shape-adaptive distributions, and
+  they are standard practice now, not exotica. None of this contradicts the point above; it
+  <em>is</em> the point above.</p>
+
+  <p>Look at where the sharpness comes from in each one. CQR fits a quantile model &mdash; that
+  is the modeling. Mondrian fits a separate residual law per region &mdash; modeling. The
+  CRPS-binned version <em>chooses the bins by minimizing a proper score</em> &mdash; that is
+  conditional density estimation wearing a conformal hat. Conformal training differentiates
+  through the conformalizer to minimize set size &mdash; an objective, optimized. In every
+  case the work that buys the sharpness is the conditioning on <code>x</code>. The conformal
+  step at the end supplies the coverage guarantee, which is real and worth having, and nothing
+  else.</p>
+
+  <p>Which is why I think the framing of these as &ldquo;improvements to conformal
+  prediction&rdquo; is half a category error. They are improvements to the <em>model</em> that
+  happen to end with a conformal certificate. The certificate is the same order-statistic
+  trick it always was. Calling the modeling &ldquo;conformal&rdquo; because it ships with a
+  conformal wrapper is like calling the engine &ldquo;the warranty.&rdquo;</p>
+
+  <h2>On moving the goalposts</h2>
+
+  <p>The time-series story is the same shape. Drop exchangeability and the finite-sample
+  guarantee is gone, so the literature re-defines what is guaranteed: marginal coverage becomes
+  a <em>long-run, time-average</em> miscoverage frequency (ACI), or a regret bound over local
+  intervals (online conformal under arbitrary shift). These are ingenious, and &mdash; this
+  matters &mdash; long-run frequency control under drift is a genuine, hard-won engineering
+  guarantee. Often it is the most you can ask for without a model of the shift.</p>
+
+  <p>But notice it is a <em>weaker, differently posed</em> object than the thing you usually
+  want, which is a sharp predictive distribution <em>now</em>, for <em>this</em> step. Trading
+  &ldquo;covered here&rdquo; for &ldquo;covered 95% of the time on average over the run&rdquo;
+  is a fine trade when the application genuinely demands a coverage certificate. It is not a
+  fine trade when you talked yourself into it because the original guarantee evaporated and the
+  word &ldquo;conformal&rdquo; was too good to give up. Redefine the goalposts when the
+  application moves them &mdash; not to keep the brand.</p>
+
+  <h2>When it is exactly the right tool</h2>
+
+  <p>None of this is anti-conformal. There is a clean set of jobs where coverage or containment
+  <em>is</em> the product, and there the distribution-free, finite-sample guarantee is exactly
+  the value added:</p>
+
+  <ul>
+    <li><strong>Anomaly and novelty detection</strong> via conformal <em>p</em>-values &mdash;
+    conformal prediction&rsquo;s most natural home, where it is a distribution-free hypothesis
+    test and coverage <em>is</em> Type-I error control.</li>
+    <li><strong>Compliance and SLAs</strong>, where &ldquo;contained 95% of the time&rdquo; is
+    literally the deliverable.</li>
+    <li><strong>Retrieval and shortlisting</strong>, where the product is a candidate set and
+    coverage is recall.</li>
+    <li><strong>Selective prediction / risk control</strong>, where you abstain to hold an
+    error rate.</li>
+  </ul>
+
+  <p>In all of these you wanted a set with a guarantee, not a sharp density. Use the tool that
+  delivers exactly that, and stop apologizing for it.</p>
+
+  <h2>The one-line version</h2>
+
+  <p>Conformal prediction is an order statistic of your residuals: a coverage certificate, not
+  a forecast. It is not a silver bullet, not a &ldquo;better way&rdquo; to do uncertainty, and
+  not a substitute for the modeling you skipped. So: <strong>model first, conformalize
+  last.</strong> If a proper score does not move after you conformalize, that is not a
+  disappointment &mdash; it is the theorem confirming your gains came from the model, exactly
+  where they should.</p>
+
+  <div class="prevnext">
+    <a href="paper/">&larr; The paper, stated precisely</a>
+    <span class="spacer"></span>
+    <a href="faq.html">FAQ &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Conformal Prediction: a practical guide.</span>
+    <span>Notes &mdash; the argument of the <a href="paper/">paper</a>, with the gloves off.</span>
+  </div>
+</footer>
+</body>
+</html>
