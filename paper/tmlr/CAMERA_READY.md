@@ -1,5 +1,8 @@
 # TMLR camera-ready de-anonymization
 
+> **Submitted to TMLR on 2026-06-05.** Forum: https://openreview.net/forum?id=qvKkzxZe02
+> (regular submission, anonymized PDF + `supplementary_material.zip`).
+
 Apply these on acceptance, then recompile (`pdflatex; bibtex; pdflatex; pdflatex`).
 Everything below is in `paper/tmlr/`. The submission (anonymous) version is the current state;
 these edits flip it to the accepted, de-anonymized version.
@@ -18,7 +21,7 @@ to
 \usepackage[accepted]{tmlr}
 \def\month{MM}      % month of acceptance
 \def\year{2026}     % year of acceptance
-\def\openreview{\url{https://openreview.net/forum?id=XXXX}}  % the assigned forum id
+\def\openreview{\url{https://openreview.net/forum?id=qvKkzxZe02}}  % assigned forum id (submission #9532)
 ```
 
 (For an arXiv/preprint posting instead, use `\usepackage[preprint]{tmlr}`.)
