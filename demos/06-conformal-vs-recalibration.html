@@ -25,7 +25,7 @@
       <a href="/recipes.html">Code</a>
       <a href="/benchmark.html">Example</a>
       <a href="/faq.html">FAQ</a>
-      <a href="/paper/">Paper</a>
+      <a href="/papers/">Papers</a>
     </nav>
   </div>
 </header>
@@ -68,7 +68,7 @@
   <p class="note">Read the log-scores: <code>raw</code> is worst, <code>conformal-implied</code> sits in the middle (it inherits the base shape), and <code>recalibrated</code> is best, it is the only treatment that optimized the score you actually report. Coverage tells the mirror story: raw under-covers, while both conformal and recalibration hit the target, but conformal&rsquo;s coverage is a <em>finite-sample, distribution-free</em> guarantee, whereas recalibration&rsquo;s rests on the Gaussian model being right.</p>
 
   <div class="takeaway">
-    <p>Takeaway. If what you want is a calibrated <em>forecast</em>, a density to integrate, score, and decide with, you wanted <em>recalibration</em>. It improves the very number you report and hands back the whole object. Conformal calibrates coverage and emits a set; its implied &ldquo;density&rdquo; is the base model&rsquo;s residual shape, re-leveled, and never optimized for the score. Conformal&rsquo;s genuine edge is real and worth naming: a distribution-free, finite-sample coverage guarantee. That is the right tool exactly when the guarantee <em>is</em> the product, and the wrong one when a forecast is. See the <a href="../paper/">paper</a> for the full argument, or head <a href="../index.html">back to the overview</a>.</p>
+    <p>Takeaway. If what you want is a calibrated <em>forecast</em>, a density to integrate, score, and decide with, you wanted <em>recalibration</em>. It improves the very number you report and hands back the whole object. Conformal calibrates coverage and emits a set; its implied &ldquo;density&rdquo; is the base model&rsquo;s residual shape, re-leveled, and never optimized for the score. Conformal&rsquo;s genuine edge is real and worth naming: a distribution-free, finite-sample coverage guarantee. That is the right tool exactly when the guarantee <em>is</em> the product, and the wrong one when a forecast is. See the <a href="/papers/marginally-useful/">paper</a> for the full argument, or head <a href="../index.html">back to the overview</a>.</p>
   </div>
 
   <div class="prevnext">

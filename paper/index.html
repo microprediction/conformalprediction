@@ -2,78 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<title>Marginally Useful — the paper</title>
-<link rel="stylesheet" href="../css/style.css" />
-<script>
-  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
-</script>
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<title>Moved &mdash; Marginally Useful</title>
+<link rel="canonical" href="/papers/marginally-useful/" />
+<meta http-equiv="refresh" content="0; url=/papers/marginally-useful/" />
+<script>location.replace("/papers/marginally-useful/" + location.hash);</script>
 </head>
 <body>
-<header class="site">
-  <div class="wrap">
-    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
-    <nav>
-      <a href="/index.html">Demonstrations</a>
-      <a href="/theory.html">Theory</a>
-      <a href="/applications.html">Applications</a>
-      <a href="/recipes.html">Code</a>
-      <a href="/benchmark.html">Example</a>
-      <a href="/faq.html">FAQ</a>
-      <a href="/paper/">Paper</a>
-    </nav>
-  </div>
-</header>
-
-
-<main>
-<div class="wrap">
-  <p class="tag">Companion paper</p>
-  <h1>Marginally Useful</h1>
-  <p class="subtitle">Formalizing the information gap in conformal prediction. The companion paper to this guide, built around one decomposition.</p>
-
-  <p>
-    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="marginally-useful.pdf">Read the PDF</a>
-    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="marginally-useful.tex">LaTeX source</a>
-    <a class="card" style="display:inline-block;padding:10px 16px;" href="references.bib">references.bib</a>
-  </p>
-
-  <h2>Abstract</h2>
-  <p>Conformal prediction gives a distribution-free, finite-sample guarantee of <em>marginal</em> coverage for a set. It is easy to read this as more than it is, as evidence that the underlying forecast is sharper or better calibrated as a distribution. The paper separates the two. The new result is one decomposition; the familiar cautions (marginal coverage is not conditional, validity is trivially satisfiable, exchangeability is required) are assembled with citations as context, not as discoveries.</p>
-  <ul>
-    <li>The residual-information gap (Propositions&nbsp;2&ndash;3): the result. A single-shape conformal predictive system re-levels the base model&rsquo;s residual shape; its log-score regret to the oracle is the mutual information \(I(R;X)\) between residual and input, which no recalibration that ignores \(X\) can reduce. Within the class of objects it produces, the system is log-score optimal: the cost is the class, not the calibration step.</li>
-    <li>Orthogonality (Proposition&nbsp;1): folklore, made precise. For a residual score the conformal set depends on the nonconformity scores alone, so marginal coverage places no constraint on the log-score of an accompanying density: pin coverage at \(1-\alpha\) while the log-score goes to \(-\infty\).</li>
-    <li>The coverage&ndash;score plane (Section&nbsp;6): a diagnostic. Conformalizing a fixed model is a horizontal move: toward zero coverage error, never toward a better score.</li>
-  </ul>
-  <p>The impossibility of distribution-free conditional coverage is the result of Lei &amp; Wasserman (2014) and Foygel Barber et&nbsp;al. (2021); its two coordinates appear, as finite-sample facts, in the <a href="../demos/07-price-of-conditional-coverage.html">price of conditional coverage</a> and <a href="../demos/08-subgroup-coverage.html">subgroup coverage</a> demonstrations. The paper closes with a litmus test for when coverage <em>is</em> the objective.</p>
-
-  <h2>Several ways to read the gap</h2>
-  <p>The same quantity, the residual-information gap \(I(R;X)\), looks different from each angle:</p>
-  <ul>
-    <li><em>A false-pooling cost.</em> A single-shape conformal system assumes one residual law fits every input (\(R\perp X\)); the gap is the price of that assumption.</li>
-    <li><em>An average log Bayes factor.</em> \(I(R;X)=\mathbb{E}\,\log\frac{r(R\mid X)}{\bar r(R)}\): the oracle&rsquo;s expected per-observation log-likelihood advantage over the pooled shape.</li>
-    <li><em>Conditional non-uniformity of conformal ranks.</em> The PIT rank \(U=G(R)\) is marginally uniform (the conformal win), but \(I(R;X)=\mathbb{E}_X\,\mathrm{KL}(P_{U\mid X}\,\|\,\mathrm{Unif})\) conditionally: easy inputs cluster \(U\) near \(\tfrac12\), hard ones push it to the tails. Watch it in <a href="../demos/13-coverage-score-plane.html">the coverage&ndash;score plane</a>.</li>
-    <li><em>A projection.</em> The result is the information projection of the oracle onto the single-shape manifold; the gap is the leftover distance to independence \(R\perp X\).</li>
-  </ul>
-
-  <h2>Prediction versus verification</h2>
-  <p>Conformal prediction verifies a coverage property; it does not model. It is best read as a terminal certification step: it repairs coverage, but any gain in a proper score comes from modeling the conditional spread, quantiles, or residual shape. Practically: conformalize last, and to sharpen, condition on \(x\) rather than tighten the conformal step.</p>
-
-  <h2>Building from source</h2>
-  <p>The paper builds with <a href="https://tectonic-typesetting.github.io/">Tectonic</a> (which fetches packages and runs BibTeX automatically):</p>
-  <p><code>cd paper &amp;&amp; tectonic marginally-useful.tex</code></p>
-  <p class="note">Any standard TeX distribution works too: <code>pdflatex → bibtex → pdflatex → pdflatex</code>.</p>
-
-  <div class="prevnext">
-    <a href="../index.html">&larr; Back to overview</a>
-    <span class="spacer"></span>
-    <a href="marginally-useful.pdf">Open the PDF &rarr;</a>
-  </div>
-</div>
-</main>
-
-<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Companion paper</span></div></footer>
+<p>This page has moved to
+<a href="/papers/marginally-useful/">/papers/marginally-useful/</a>.</p>
 </body>
 </html>

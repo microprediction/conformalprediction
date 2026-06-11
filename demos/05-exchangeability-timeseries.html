@@ -25,7 +25,7 @@
       <a href="/recipes.html">Code</a>
       <a href="/benchmark.html">Example</a>
       <a href="/faq.html">FAQ</a>
-      <a href="/paper/">Paper</a>
+      <a href="/papers/">Papers</a>
     </nav>
   </div>
 </header>
@@ -66,7 +66,7 @@
   <p class="note">Fixed split sits near target while the data are roughly stationary, then collapses once the trend and the volatility block bite. The adaptive conformal methods and the EWMA-vol model oscillate around target because they re-estimate the width from recent realized residuals. Note what stays true for <em>all</em> of them: the trailing window dips hard right after the jump. The long-run average recovers; the window you are standing in does not.</p>
 
   <div class="takeaway">
-    <p>Takeaway. Two readings, both from <a href="../benchmark.html">the worked example</a>. First, fixed split conformal really does collapse under drift (≈0.56 marginal, ≈0.17 worst-window), a straw man. But ACI, conformal PID and NexCP genuinely recover long-run and marginal coverage; they are competitive, not strawmen. Second, the repair is <em>conditional modeling</em>, not the conformal step itself: a plain EWMA-volatility Gaussian matches the adaptive conformal methods on the interval score (≈6.9 vs ≈7.0, against an oracle ≈5.5) <em>and</em> returns a full predictive distribution. Where conformal helps under drift, it helps by adapting the width to recent residuals, local conditional modeling, with conformal supplying the coverage leveling on top. And none of these delivers per-step <em>conditional</em> coverage: even the oracle&rsquo;s worst-window coverage is ~0.82. The repairs buy long-run/marginal coverage, never coverage <em>now</em>. <a href="../paper/">The paper</a> works through why. <a href="06-conformal-vs-recalibration.html">Conformal vs. recalibration</a> asks whether plain probabilistic recalibration would have served you better all along.</p>
+    <p>Takeaway. Two readings, both from <a href="../benchmark.html">the worked example</a>. First, fixed split conformal really does collapse under drift (≈0.56 marginal, ≈0.17 worst-window), a straw man. But ACI, conformal PID and NexCP genuinely recover long-run and marginal coverage; they are competitive, not strawmen. Second, the repair is <em>conditional modeling</em>, not the conformal step itself: a plain EWMA-volatility Gaussian matches the adaptive conformal methods on the interval score (≈6.9 vs ≈7.0, against an oracle ≈5.5) <em>and</em> returns a full predictive distribution. Where conformal helps under drift, it helps by adapting the width to recent residuals, local conditional modeling, with conformal supplying the coverage leveling on top. And none of these delivers per-step <em>conditional</em> coverage: even the oracle&rsquo;s worst-window coverage is ~0.82. The repairs buy long-run/marginal coverage, never coverage <em>now</em>. <a href="/papers/marginally-useful/">The paper</a> works through why. <a href="06-conformal-vs-recalibration.html">Conformal vs. recalibration</a> asks whether plain probabilistic recalibration would have served you better all along.</p>
   </div>
 
   <div class="prevnext">

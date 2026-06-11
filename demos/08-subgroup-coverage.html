@@ -25,7 +25,7 @@
       <a href="/recipes.html">Code</a>
       <a href="/benchmark.html">Example</a>
       <a href="/faq.html">FAQ</a>
-      <a href="/paper/">Paper</a>
+      <a href="/papers/">Papers</a>
     </nav>
   </div>
 </header>
@@ -38,7 +38,7 @@
   <h1>Subgroup coverage buys only a wider band</h1>
   <p class="subtitle">You can protect every subgroup distribution-free, but the only way to do it is a uniformly wider slab, not an adaptive one.</p>
 
-  <p>Demo&nbsp;02 showed that a marginally valid band under-covers the hard regions and over-covers the easy ones. The obvious fix is to ask for more: coverage \(\ge 1-\alpha\) on <em>every</em> subgroup, not just on average. Foygel Barber, Cand&egrave;s, Ramdas &amp; Tibshirani (<a href="../paper/">2021</a>, Thm&nbsp;3.1) settle what that costs. If you demand distribution-free coverage on every subgroup of probability mass at least \(\delta\), the demand &ldquo;is impossible to attain beyond the trivial solution&rdquo;, and the trivial solution is simply to inflate the marginal level to \(1-\alpha\delta\):
+  <p>Demo&nbsp;02 showed that a marginally valid band under-covers the hard regions and over-covers the easy ones. The obvious fix is to ask for more: coverage \(\ge 1-\alpha\) on <em>every</em> subgroup, not just on average. Foygel Barber, Cand&egrave;s, Ramdas &amp; Tibshirani (<a href="/papers/marginally-useful/">2021</a>, Thm&nbsp;3.1) settle what that costs. If you demand distribution-free coverage on every subgroup of probability mass at least \(\delta\), the demand &ldquo;is impossible to attain beyond the trivial solution&rdquo;, and the trivial solution is simply to inflate the marginal level to \(1-\alpha\delta\):
   $$C(x) = [\,\hat\mu(x) - q_{1-\alpha\delta},\ \hat\mu(x) + q_{1-\alpha\delta}\,].$$
   That is a single flat band, wider than the ordinary one, identical for every \(x\). It gains no adaptivity. As \(\delta\to 0\), protecting ever-smaller subgroups, the level \(1-\alpha\delta\to 1\) and the band&rsquo;s width diverges.</p>
 
