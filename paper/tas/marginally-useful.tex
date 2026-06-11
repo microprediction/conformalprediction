@@ -9,7 +9,12 @@
 \usepackage{titlesec}
 \usepackage{hyperref}
 \usepackage{xurl}
-\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue}
+% Anonymous build: compile with  \def\anonymous{}  prepended (see build note); default is
+% the version with author details.
+\newif\ifanon\anonfalse
+\ifdefined\anonymous\anontrue\fi
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue,
+  pdftitle={Marginally Useful},pdfauthor={\ifanon\else Peter Cotton\fi}}
 
 % run-in paragraph headers in italic, not bold
 \titleformat{\paragraph}[runin]{\normalfont\itshape}{}{0pt}{}
@@ -31,10 +36,14 @@
 
 \title{Marginally Useful:\\ Formalizing the Information Gap in Conformal Prediction}
 
-\author{Peter Cotton\thanks{Global Strategic Minerals Corporation.
-  Email: \texttt{peter.cotton@gsmc.ai}. Code, figures, and an interactive
-  companion are at \url{https://conformalprediction.net} and
-  \url{https://github.com/microprediction/conformalprediction}.}}
+\ifanon
+  \author{}
+\else
+  \author{Peter Cotton\thanks{Global Strategic Minerals Corporation.
+    Email: \texttt{peter.cotton@gsmc.ai}. Code, figures, and an interactive
+    companion are at \url{https://conformalprediction.net} and
+    \url{https://github.com/microprediction/conformalprediction}.}}
+\fi
 \date{}
 
 \begin{document}
@@ -643,9 +652,9 @@ consistent with the gap of Section~\ref{sec:gap}: where adaptivity helps it does
 \emph{local conditional modeling} of the error scale, with the conformal step supplying the
 coverage leveling on top, never the sharpness. A simple probabilistic model that estimates
 the conditional spread directly---for instance a streaming exponentially-weighted volatility
-forecaster \citep{cotton_timemachines}---tracks the target and returns a full predictive
-distribution, and conformalizing it leaves any proper score essentially unchanged, which is
-the experience the introduction describes.
+forecaster\ifanon\else\ \citep{cotton_timemachines}\fi---tracks the target and returns a full
+predictive distribution, and conformalizing it leaves any proper score essentially unchanged,
+which is the experience the introduction describes.
 
 \begin{figure}[t]
 \centering
@@ -820,9 +829,27 @@ from the synthetic generators described in the text; Figure~\ref{fig:plane} is a
 drawn by \texttt{fig\_plane\_schematic.py}. The
 identities of Proposition~\ref{prop:gap} are confirmed numerically by \texttt{check\_gap.py},
 which computes both sides independently (by grid integration) and matches them to machine
-precision on a heteroscedastic Gaussian and a skewed residual law. Code, figures, and an
-interactive companion are available at \url{https://conformalprediction.net} and
+precision on a heteroscedastic Gaussian and a skewed residual law.
+\ifanon
+Code, figures, and an interactive companion are provided as supplementary material; public
+URLs are omitted for anonymous review.
+\else
+Code, figures, and an interactive companion are available at
+\url{https://conformalprediction.net} and
 \url{https://github.com/microprediction/conformalprediction}.
+\fi
+
+\paragraph{Data Availability Statement.} This study uses no external or third-party data.
+All figures and numerical results are produced from the synthetic data-generating processes
+described in the text; the code that implements them and reproduces every figure, together
+with \texttt{check\_gap.py} (the machine-precision numerical verification of
+Proposition~\ref{prop:gap}), is openly available
+\ifanon
+as supplementary material accompanying this submission (the public repository URL is omitted
+for anonymous review).
+\else
+at \url{https://github.com/microprediction/conformalprediction}.
+\fi
 
 \bibliographystyle{plainnat}
 \bibliography{references}

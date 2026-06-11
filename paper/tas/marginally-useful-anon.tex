@@ -1,0 +1,7 @@
+% Anonymous (double-blind) build wrapper for The American Statistician submission.
+% Compile this file directly to get the blinded PDF:
+%   pdflatex marginally-useful-anon && bibtex marginally-useful-anon && pdflatex marginally-useful-anon (x2)
+% It sets the anonymous flag and then reads the single source of truth (marginally-useful.tex),
+% which strips author, affiliation, companion URLs, and the self-citation under \ifanon.
+\def\anonymous{}
+\input{marginally-useful.tex}
