@@ -1,0 +1,230 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\usepackage{microtype}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{remark}{Remark}
+
+\title{Conformal Prediction and the Finite (Signed) de Finetti Representation}
+\author{Peter Cotton}
+\date{Draft --- companion note}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Conformal prediction needs only exchangeability, and exchangeability has a representation
+theorem: de Finetti's. This note connects the two through the \emph{finite} form, in which
+the mixing measure is allowed to be \emph{signed} \citep{kerns2006}. The link is modest but,
+as far as a literature search reveals, unstated: the sign of the de Finetti mixing measure is
+the sign of the term that controls whether split conformal's coverage is conditionally
+adaptive or conditionally perverse, while the marginal guarantee is untouched throughout.
+Proper (positive, extendable) mixtures make conformal conditionally self-correcting; the
+signed, non-extendable corner---exactly the regime of constrained scores (de-meaned, ranked,
+compositional)---makes it anti-adaptive. None of this changes the marginal coverage number;
+it changes how much that number hides. I claim no new theorem of consequence: the
+marginal-invariance is classical, the independence case of the lemma below is the known Beta
+law for calibration-conditional coverage, and the dependence calculus is standard association
+theory. What is offered is the bridge---reading conformal's conditional behaviour through the
+sign of the finite de Finetti representation.
+\end{abstract}
+
+\section{Setup}
+
+Split conformal. Scores $S_1,\dots,S_n$ (calibration) and $S_{n+1}$ (test) are jointly
+exchangeable with a continuous joint law (no ties). The conformal width is the order
+statistic $\hat q = S_{(k)}$ of the calibration scores, $k=\lceil(n+1)(1-\alpha)\rceil$, and a
+test point is covered when $S_{n+1}\le\hat q$.
+
+Two kinds of dependence live in any such problem, and they should not be confused.
+\emph{Within a row}: inside a single $(x,y)$, does the residual's shape depend on $x$? This is
+the subject of the companion paper \citep{cotton_marginally}, where the log-score regret of a
+single-shape conformal system equals the mutual information $I(R;X)$; it is a property of one
+observation's law and is present even when the rows are i.i.d. \emph{Across rows}: how do
+distinct observations relate to one another---independent, sharing a latent cause, or mutually
+constrained? This is the subject of de Finetti's theorem, and of this note. The two axes are
+orthogonal; this note is entirely about the second.
+
+\section{Finite de Finetti and the sign of the mixture}
+
+de Finetti's theorem (infinite form) says an infinitely exchangeable sequence is a
+\emph{positive} mixture of i.i.d.\ sequences: nature draws a parameter from a prior, then
+generates i.i.d.\ data. A one-line variance identity shows the cost of that ``positive'': a
+positive mixture has $\operatorname{Cov}(S_i,S_j)=\operatorname{Var}\big(\mathbb
+E[S_i\mid\Theta]\big)\ge 0$, so proper de Finetti mixtures force non-negative correlation.
+Finite exchangeable sequences are not so constrained: exchangeability only forces
+$\rho\ge -1/(n-1)$ \citep{aldous1985}, and the negative band is real---sampling without
+replacement sits at its floor.
+
+The finite theory closes this gap in two ways. \citet{diaconis1980} show a finite exchangeable
+sequence is \emph{approximately} a positive i.i.d.\ mixture, within total variation $O(k/n)$.
+\citet{kerns2006} make it \emph{exact} at the price of signing: every finite exchangeable
+sequence is a mixture of i.i.d.\ product measures with a \emph{signed} mixing measure (see
+also \citealp{leonetti2018} for the partially-exchangeable extension). Geometrically---this
+phrasing is the author's synthesis, not a quoted result---the i.i.d.\ product laws trace a
+curve; positive mixtures fill its convex hull (the extendable, $\rho\ge 0$ laws); signed
+mixtures fill its affine span (everything). A signed representation is thus the signature of
+\emph{non-extendability}: a finite exchangeable sequence that cannot be continued to an
+infinite one, and it is exactly the negative-correlation regime.
+
+So the sign of the de Finetti mixing measure is a clean label: \textbf{positive} = extendable,
+non-negatively correlated, a genuine prior; \textbf{signed} = finite, negatively correlated,
+no genuine prior.
+
+\section{Marginal coverage ignores the sign}
+
+For continuous exchangeable scores the rank of $S_{n+1}$ among all $n+1$ is uniform, and
+$S_{n+1}\le S_{(k)}$ iff that rank is at most $k$, so
+\begin{equation}
+\mathbb P\big(S_{n+1}\le\hat q\big)=\frac{k}{n+1}\ge 1-\alpha .
+\end{equation}
+This uses nothing but exchangeability \citep{vovk2005}. Positive or signed, the marginal
+number is the same. The sign enters only when we ask what the certificate hides.
+
+\section{The conditional-coverage decomposition}
+
+Condition on the realised width. Write $H(s,q)=\mathbb P(S_{n+1}\le s\mid\hat q=q)$, so coverage
+conditional on the width is the diagonal $c(q)=H(q,q)$.
+
+\begin{lemma}[Conditional-coverage slope]\label{lem:slope}
+If $(S_{n+1},\hat q)$ has a joint density, then
+\begin{equation}
+c'(q)=\underbrace{f_{S_{n+1}\mid\hat q}(q\mid q)}_{\textup{(i) threshold}}
+\;+\;\underbrace{\partial_q\,\mathbb P(S_{n+1}\le q\mid\hat q=q)}_{\textup{(ii) dependence}} .
+\end{equation}
+Term \textup{(i)} is non-negative. Term \textup{(ii)} is $\le 0$ when $S_{n+1}$ is
+stochastically increasing in $\hat q$, $=0$ under independence, and $\ge 0$ when stochastically
+decreasing.
+\end{lemma}
+
+\begin{proof}
+Total derivative of $H(q,q)$ along the diagonal: $c'(q)=\partial_s H(s,q)\big|_{s=q}+\partial_q
+H(s,q)\big|_{s=q}$. The first equals $f_{S_{n+1}\mid\hat q}(q\mid q)\ge 0$. For the second,
+$\partial_q H(s,q)\le 0$ for all $s$ exactly when $\mathbb P(S_{n+1}\le s\mid\hat q=q)$ is
+non-increasing in $q$, the definition of $S_{n+1}$ being stochastically increasing in
+$\hat q$; the reverse inequality is stochastic decrease.
+\end{proof}
+
+\begin{remark}[The independence case is classical]
+Under independence term (ii) vanishes and $c(q)=F(q)$, the test-score CDF, which already rises
+with the width purely from estimation. This is the known law of calibration-conditional
+coverage: $F(\hat q)=F(S_{(k)})\sim\operatorname{Beta}(k,n-k+1)$
+\citep{vovk2012,marques2024,angelopoulos2023gentle}. Lemma~\ref{lem:slope} is its extension to
+dependent scores, with term (ii) the new piece.
+\end{remark}
+
+\begin{remark}[Reading the sign]
+The width $\hat q=S_{(k)}$ is a coordinatewise non-decreasing function of the calibration
+scores, and the test score is disjoint from them. A positive (proper) de Finetti mixture makes
+the score vector \emph{associated} \citep{esary1967}; association is preserved by monotone
+maps, so $(\hat q,S_{n+1})$ are positively dependent, term (ii) is $\le 0$, and it cancels
+against the threshold term---conformal is \emph{conditionally adaptive}, flatter than
+independence, because pooling the calibration residuals silently conditions on the realised
+world. A signed, negatively-correlated law makes the vector \emph{negatively associated}
+\citep{joagdev1983}---the property of without-replacement samples, multinomials, permutation
+and rank laws, and Dirichlet/compositional vectors, preserved under monotone maps of disjoint
+subsets---so term (ii) is $\ge 0$ and adds to the threshold term: conformal is
+\emph{conditionally anti-adaptive}. The calibration set anti-predicts the test, so coverage
+over-covers when the calibration scores were large and under-covers when small, even as the
+marginal stays pinned. The discrete (order-statistic) version replaces the derivative by a
+difference and behaves identically; the density assumption is for readability.
+\end{remark}
+
+\section{Why the signed corner is not exotic: constrained scores}
+
+The negative corner arises whenever the nonconformity score is defined \emph{relative to the
+batch}, because a linear constraint forces it. De-meaning ($\sum_i s_i=0$), differencing,
+ranks or percentiles-within-batch, and compositional or budgeted targets all impose such a
+constraint, and the constraint \emph{is} the negative association \citep{joagdev1983}. For
+these scores conformal remains marginally valid---if the relativisation is symmetric across
+calibration and test, exchangeability is preserved---but its conditional coverage is the
+fanning, anti-adaptive kind of Lemma~\ref{lem:slope}.
+
+A caution: if the relativisation treats the test point asymmetrically (de-meaning by a
+training-only mean, say), exchangeability itself fails and even the marginal guarantee is no
+longer assured. This is the familiar reason split conformal uses out-of-fold rather than
+in-sample residuals \citep{lei2018}; in-sample regression residuals are both constrained
+($\sum_i e_i=0$) and heteroscedastic (variance $1-h_{ii}$), and so are not exchangeable to
+begin with.
+
+\section{Scope, and what is and is not new}
+
+The contribution is a viewpoint, not a theorem. To be explicit:
+\begin{itemize}
+\item \emph{Classical, cited here:} marginal coverage under exchangeability
+\citep{vovk2005}; the Beta law of calibration-conditional coverage
+\citep{vovk2012,marques2024}; training-conditional coverage as a studied object
+\citep{bian2023}; coverage degradation under non-exchangeability bounded by
+total-variation/mixing magnitude \citep{barber2023beyond,oliveira2024}; positive and negative
+association \citep{esary1967,joagdev1983}; finite and signed de Finetti
+\citep{diaconis1980,kerns2006,leonetti2018}.
+\item \emph{Closest prior work:} \citet{barberpananjady2026} show conformal can both under- and
+over-cover under temporal dependence. That analysis is marginal and indexes departures by
+dependence \emph{magnitude} (a switch coefficient / $\beta$-mixing), not by \emph{sign}, and
+does not treat calibration-conditional behaviour. The present note is complementary: the sign,
+read through the de Finetti representation, and the conditional rather than marginal object.
+\item \emph{Offered here:} the identification of the conditional-coverage dependence term's
+sign with the sign of the finite de Finetti mixing measure, and the consequent reading of
+constrained/relative scores (the signed corner) as the regime where conformal's marginal
+certificate is least informative about conditional reliability.
+\end{itemize}
+
+The link runs only one way and only so far. de Finetti is a representation of a law; conformal
+is a procedure run without knowing the law. A signed representation does not yield a usable
+predictor---to use any de Finetti measure one must estimate it, which is modelling, with no
+distribution-free finite-sample guarantee. So the note does not claim de Finetti
+``supersedes'' or ``contains'' conformal; recent work even argues conformal is not a de
+Finetti/Bayesian conditional at all \citep{datta2025}. The representation diagnoses conformal's
+conditional behaviour; it does not replace it.
+
+\begin{thebibliography}{99}
+\bibitem[Aldous(1985)]{aldous1985} Aldous, D.~J. (1985). Exchangeability and related topics.
+\emph{\'Ecole d'\'Et\'e de Probabilit\'es de Saint-Flour XIII}, Lecture Notes in Mathematics
+1117, Springer.
+\bibitem[Angelopoulos and Bates(2023)]{angelopoulos2023gentle} Angelopoulos, A.~N. and Bates,
+S. (2023). A gentle introduction to conformal prediction and distribution-free uncertainty
+quantification. \emph{Foundations and Trends in Machine Learning}. arXiv:2107.07511.
+\bibitem[Barber et~al.(2023)]{barber2023beyond} Barber, R.~F., Cand\`es, E.~J., Ramdas, A. and
+Tibshirani, R.~J. (2023). Conformal prediction beyond exchangeability. \emph{The Annals of
+Statistics} 51(2):816--845.
+\bibitem[Barber and Pananjady(2026)]{barberpananjady2026} Barber, R.~F. and Pananjady, A.
+(2026). Predictive inference for time series: why is split conformal effective despite temporal
+dependence? Preprint, arXiv:2510.02471.
+\bibitem[Bian and Barber(2023)]{bian2023} Bian, M. and Barber, R.~F. (2023).
+Training-conditional coverage for distribution-free predictive inference. \emph{Electronic
+Journal of Statistics} 17(2):2044--2066.
+\bibitem[Cotton()]{cotton_marginally} Cotton, P. Marginally Useful: Formalizing the Information
+Gap in Conformal Prediction. Companion paper.
+\bibitem[Datta et~al.(2025)]{datta2025} Datta, J., Polson, N.~G., Sokolov, V. and Zantedeschi,
+D. (2025). Conformal Prediction = Bayes? Preprint, arXiv:2512.23308.
+\bibitem[Diaconis and Freedman(1980)]{diaconis1980} Diaconis, P. and Freedman, D. (1980).
+Finite exchangeable sequences. \emph{The Annals of Probability} 8(4):745--764.
+\bibitem[Esary et~al.(1967)]{esary1967} Esary, J.~D., Proschan, F. and Walkup, D.~W. (1967).
+Association of random variables, with applications. \emph{The Annals of Mathematical
+Statistics} 38(5):1466--1474.
+\bibitem[Joag-Dev and Proschan(1983)]{joagdev1983} Joag-Dev, K. and Proschan, F. (1983).
+Negative association of random variables, with applications. \emph{The Annals of Statistics}
+11(1):286--295.
+\bibitem[Kerns and Sz\'ekely(2006)]{kerns2006} Kerns, G.~J. and Sz\'ekely, G.~J. (2006). De
+Finetti's theorem for abstract finite exchangeable sequences. \emph{Journal of Theoretical
+Probability} 19(3):589--608.
+\bibitem[Leonetti(2018)]{leonetti2018} Leonetti, P. (2018). Finite partially exchangeable laws
+are signed mixtures of product laws. \emph{Sankhy\=a A} 80(2):195--214.
+\bibitem[Lei et~al.(2018)]{lei2018} Lei, J., G'Sell, M., Rinaldo, A., Tibshirani, R.~J. and
+Wasserman, L. (2018). Distribution-free predictive inference for regression. \emph{Journal of
+the American Statistical Association} 113(523):1094--1111.
+\bibitem[Marques F.(2024)]{marques2024} Marques F., P.~C. (2024). Universal distribution of the
+empirical coverage in split conformal prediction. Preprint, arXiv:2303.02770.
+\bibitem[Oliveira et~al.(2024)]{oliveira2024} Oliveira, R.~I., Orenstein, P., Ramos, T. and
+Romano, J.~V. (2024). Split conformal prediction and non-exchangeable data. \emph{Journal of
+Machine Learning Research} 25.
+\bibitem[Vovk(2012)]{vovk2012} Vovk, V. (2012). Conditional validity of inductive conformal
+predictors. \emph{Asian Conference on Machine Learning}, PMLR 25:475--490.
+\bibitem[Vovk et~al.(2005)]{vovk2005} Vovk, V., Gammerman, A. and Shafer, G. (2005).
+\emph{Algorithmic Learning in a Random World}. Springer.
+\end{thebibliography}
+
+\end{document}
