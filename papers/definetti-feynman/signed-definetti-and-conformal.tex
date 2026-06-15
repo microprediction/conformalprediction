@@ -194,6 +194,59 @@ So the same contest data that lands conformal in its anti-adaptive corner is als
 Finetti latent, once estimated, pays.
 \end{remark}
 
+\section{A runnable detector}
+
+The gap is defined through the log-score, so it is not something you read off data. Its
+energy-statistics counterpart is, and it gives a test you can run on any fitted conformal
+predictor.
+
+\begin{lemma}[A distance-covariance detector]\label{lem:dcov}
+Let $U=\widehat G(R)$ be the conformal rank of the residual among the calibration residuals.
+Then $U$ is marginally uniform, and $\operatorname{dCov}(U,X)=0$ iff $U\perp X$ iff $R\perp X$ iff
+$I(R;X)=0$. The permutation test that reshuffles the $U$ labels against $X$ is a valid test of
+$R\perp X$, and rejecting it certifies $I(R;X)>0$: the conformal rank is conditionally
+non-uniform, so the marginal coverage is uneven across $x$.
+\end{lemma}
+
+Two reasons this is the right object. $U$ is standardized to uniform whatever the model, so the
+test probes only the conditional structure conformal cannot see. And distance covariance
+\citep{szekely2007} catches dependence in any moment: under symmetric heteroscedastic noise the
+conditional mean of $U$ stays at $\tfrac12$ while its spread moves with $x$, so a correlation
+test sees nothing and the distance covariance sees it.
+
+A small experiment makes the point (one run, reproduced by \texttt{check\_dcov.py}). The
+residual is $R=\sigma(X)\,\varepsilon$ with the location correct, so any dependence is pure
+conditional shape.
+
+\begin{center}
+\begin{tabular}{lcccc}
+\hline
+regime & marginal coverage & $\operatorname{dCov}(U,X)$ & permutation $p$ & Pearson \\
+\hline
+homoscedastic & $0.90$ & $0.001$ & $0.33$ & $+0.02$ \\
+heteroscedastic, mild & $0.89$ & $0.011$ & $0.002$ & $+0.05$ \\
+heteroscedastic, strong & $0.90$ & $0.023$ & $0.002$ & $-0.03$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Marginal coverage is on target throughout, so it cannot separate the regimes. The test fires
+only where the gap is positive, and the Pearson column shows that a correlation test would miss
+it.
+
+The idea of a dependence measure as a conditional-coverage diagnostic is due to
+\citet{feldman2021}, who use HSIC between the miscoverage indicator and the interval length, and
+\citet{braun2025}, who classify the indicator on $x$. Testing the rank against the features is
+the rank-based, level-free variant, and it is the energy counterpart of the gap: $I(R;X)$ is the
+dependence of $R$ and $X$ in KL \citep{cover2006}, and the distance covariance, equivalently
+HSIC \citep{sejdinovic2013}, is the same dependence in energy. The paper's gap is the one you
+prove; this is the one you run.
+
+It detects, it does not certify. A large $p$ means nothing was found at this power, not
+conditional validity, by the no-go results discussed in the companion paper
+\citep{cotton_marginally}. The ranks share the calibration ECDF, so leave-one-out or
+full-conformal ranks make the null exact. The test ships as \texttt{conformalguide.guardrails}.
+
 \section{Related work}
 
 The marginal-coverage fact is standard \citep{vovk2005}. The Beta law for coverage given the
@@ -274,6 +327,19 @@ predictors. \emph{Asian Conference on Machine Learning}, PMLR 25:475--490.
 \emph{Algorithmic Learning in a Random World}. Springer.
 \bibitem[Wigner(1932)]{wigner1932} Wigner, E.~P. (1932). On the quantum correction for
 thermodynamic equilibrium. \emph{Physical Review} 40:749--759.
+\bibitem[Braun et~al.(2025)]{braun2025} Braun, Holzm\"uller, Jordan and Bach (2025). Conditional
+coverage diagnostics for conformal prediction. Preprint, arXiv:2512.11779.
+\bibitem[Cover and Thomas(2006)]{cover2006} Cover, T.~M. and Thomas, J.~A. (2006). \emph{Elements
+of Information Theory}, 2nd ed. Wiley.
+\bibitem[Feldman et~al.(2021)]{feldman2021} Feldman, S., Bates, S. and Romano, Y. (2021).
+Improving conditional coverage via orthogonal quantile regression. \emph{Advances in Neural
+Information Processing Systems} 34. arXiv:2106.00394.
+\bibitem[Sejdinovic et~al.(2013)]{sejdinovic2013} Sejdinovic, D., Sriperumbudur, B., Gretton, A.
+and Fukumizu, K. (2013). Equivalence of distance-based and RKHS-based statistics in hypothesis
+testing. \emph{The Annals of Statistics} 41(5):2263--2291.
+\bibitem[Sz\'ekely et~al.(2007)]{szekely2007} Sz\'ekely, G.~J., Rizzo, M.~L. and Bakirov, N.~K.
+(2007). Measuring and testing dependence by correlation of distances. \emph{The Annals of
+Statistics} 35(6):2769--2794.
 \end{thebibliography}
 
 \end{document}
