@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>de Finetti, and where it goes negative — Conformal Prediction</title>
+<meta name="description" content="An interactive de Finetti theorem: exchangeable two-coin laws live in a triangle, the i.i.d. laws trace a parabola, positive mixtures fill the correlation-nonnegative region, and negative correlation forces a signed (Kerns-Szekely) mixing measure." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/theory.html">Theory</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration</p>
+  <h1>de Finetti, and where it goes negative</h1>
+  <p class="subtitle">de Finetti writes an exchangeable sequence as a mixture of i.i.d. ones. For finite sequences the mixture is still exact, but its weights can turn negative.</p>
+
+  <p>Take the simplest non-trivial case: two exchangeable coins. The law is fixed by three
+  numbers, the chances of zero, one, or two heads, so it is a point in a triangle. The i.i.d.
+  coins \(\mathrm{Bernoulli}(\theta)^{\otimes 2}\) trace the orange parabola as \(\theta\) runs
+  from 0 to 1.</p>
+
+  <p>de Finetti's theorem says an exchangeable law that extends to an infinite sequence is a
+  \emph{positive} mixture of those i.i.d. points. Positive mixtures fill the shaded region, which
+  is exactly the laws with correlation \(\rho \ge 0\). Push the two coins to be negatively
+  correlated and the point leaves that region. The law is still exchangeable, and by
+  Kerns&ndash;Székely it is still an exact mixture of i.i.d. coins, but now some mixing weights
+  are \emph{negative}. That signed measure is not a prior you can sample. It is the finite,
+  non-extendable corner.</p>
+
+  <div class="demo">
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <div class="canvas-box med demo"><canvas id="simplex"></canvas></div>
+  <p class="note">The triangle is every exchangeable two-coin law. Orange is the i.i.d. curve.
+  The shaded lens is de Finetti's positive mixtures (\(\rho\ge 0\)). The dot is your law: blue
+  inside, red once \(\rho\) goes negative and the mixture must be signed.</p>
+
+  <div class="canvas-box med demo"><canvas id="weights"></canvas></div>
+  <p class="note">The mixing measure over three i.i.d. nodes \(\theta=0,\tfrac12,1\) that
+  reproduces your law. With \(\rho\ge 0\) the weights are a genuine probability (all
+  non-negative). With \(\rho<0\) the outer weights drop below zero: a negative probability, in
+  the sense Feynman and Wigner used, exact but un-samplable.</p>
+
+  <div class="takeaway">
+    <p>Exchangeability buys you a mixture-of-i.i.d. representation either way. The sign of the
+    correlation decides whether that mixture is an honest prior or a signed one. The honest case
+    is de Finetti; the signed case is where finite, negatively-dependent data live, and it is the
+    regime that a <a href="../papers/">companion note</a> ties to the reliability of conformal
+    prediction.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="14-four-readings.html">&larr; One number, five pictures</a>
+    <span class="spacer"></span>
+    <a href="../index.html">&uarr; Back to overview</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demonstration</span></div></footer>
+
+<script type="module" src="../js/demo15.js"></script>
+</body>
+</html>
