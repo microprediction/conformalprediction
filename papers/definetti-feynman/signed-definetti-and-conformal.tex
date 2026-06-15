@@ -105,8 +105,10 @@ number is the same. The sign enters only when we ask what the certificate hides.
 
 \section{The conditional-coverage decomposition}
 
-Condition on the realised width. Write $H(s,q)=\mathbb P(S_{n+1}\le s\mid\hat q=q)$, so coverage
-conditional on the width is the diagonal $c(q)=H(q,q)$.
+Condition on the realised width. For a value $q$ of the width $\hat q$ and a threshold $s$, write
+$H(s,q)=\mathbb P(S_{n+1}\le s\mid\hat q=q)$. Coverage holds when $S_{n+1}\le\hat q$, so coverage
+conditional on the realised width is the diagonal $c(q)=H(q,q)$, where the threshold equals the
+width.
 
 \begin{lemma}[Conditional-coverage slope]\label{lem:slope}
 If $(S_{n+1},\hat q)$ has a joint density, then
