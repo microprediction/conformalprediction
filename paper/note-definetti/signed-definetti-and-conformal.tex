@@ -8,7 +8,8 @@
 \newtheorem{lemma}{Lemma}
 \newtheorem{remark}{Remark}
 
-\title{Conformal Prediction and the Finite (Signed) de Finetti Representation}
+\title{A Feynman--Wigner-Style Diagnostic for the Efficacy\\
+of Conformal Prediction via Signed de Finetti Representations}
 \author{Peter Cotton}
 \date{Draft --- companion note}
 
@@ -16,25 +17,25 @@
 \maketitle
 
 \begin{abstract}
-Conformal prediction needs only exchangeability, and exchangeability has a representation
-theorem: de Finetti's. This note connects the two through the \emph{finite} form, in which
-the mixing measure is allowed to be \emph{signed} \citep{kerns2006}. The link is modest but,
-as far as a literature search reveals, unstated: the sign of the de Finetti mixing measure is
-the sign of the term that controls whether split conformal's coverage is conditionally
-adaptive or conditionally perverse, while the marginal guarantee is untouched throughout.
-Proper (positive, extendable) mixtures make conformal conditionally self-correcting; the
-signed, non-extendable corner---exactly the regime of constrained scores (de-meaned, ranked,
-compositional)---makes it anti-adaptive. None of this changes the marginal coverage number;
-it changes how much that number hides. I claim no new theorem of consequence: the
-marginal-invariance is classical, the independence case of the lemma below is the known Beta
-law for calibration-conditional coverage, and the dependence calculus is standard association
-theory. What is offered is the bridge---reading conformal's conditional behaviour through the
-sign of the finite de Finetti representation.
+Conformal prediction builds prediction sets that cover the truth at a rate you choose,
+finite-sample and distribution-free, assuming only exchangeable data. That
+guarantee is marginal. de Finetti's theorem describes the exchangeability it rests on, and in
+the finite form the mixing measure may be signed \citep{kerns2006}. We present a short lemma that decomposes the
+slope of conformal's calibration-conditional coverage into two terms. One is a non-negative
+threshold term, the classical Beta-law fan. The other carries the sign of the de Finetti
+measure. Positive (extendable) mixtures make conformal conditionally adaptive. The signed
+corner---de-meaned, ranked, or compositional scores---makes it anti-adaptive. The marginal
+guarantee is the same either way. Only what it hides changes.
 \end{abstract}
 
 \section{Setup}
 
-Split conformal. Scores $S_1,\dots,S_n$ (calibration) and $S_{n+1}$ (test) are jointly
+Split conformal returns a set $C(X)$ with $\mathbb P\big(Y\in C(X)\big)\ge 1-\alpha$ for any
+distribution and any sample size, provided the data are exchangeable. That marginal guarantee
+is the whole appeal, and it is not in dispute here. The question is what it says about the case
+in front of you.
+
+Scores $S_1,\dots,S_n$ (calibration) and $S_{n+1}$ (test) are jointly
 exchangeable with a continuous joint law (no ties). The conformal width is the order
 statistic $\hat q = S_{(k)}$ of the calibration scores, $k=\lceil(n+1)(1-\alpha)\rceil$, and a
 test point is covered when $S_{n+1}\le\hat q$.
@@ -42,11 +43,11 @@ test point is covered when $S_{n+1}\le\hat q$.
 Two kinds of dependence live in any such problem, and they should not be confused.
 \emph{Within a row}: inside a single $(x,y)$, does the residual's shape depend on $x$? This is
 the subject of the companion paper \citep{cotton_marginally}, where the log-score regret of a
-single-shape conformal system equals the mutual information $I(R;X)$; it is a property of one
+single-shape conformal system equals the mutual information $I(R;X)$. It is a property of one
 observation's law and is present even when the rows are i.i.d. \emph{Across rows}: how do
 distinct observations relate to one another---independent, sharing a latent cause, or mutually
 constrained? This is the subject of de Finetti's theorem, and of this note. The two axes are
-orthogonal; this note is entirely about the second.
+orthogonal. This note is entirely about the second.
 
 \section{Finite de Finetti and the sign of the mixture}
 
@@ -63,15 +64,20 @@ The finite theory closes this gap in two ways. \citet{diaconis1980} show a finit
 sequence is \emph{approximately} a positive i.i.d.\ mixture, within total variation $O(k/n)$.
 \citet{kerns2006} make it \emph{exact} at the price of signing: every finite exchangeable
 sequence is a mixture of i.i.d.\ product measures with a \emph{signed} mixing measure (see
-also \citealp{leonetti2018} for the partially-exchangeable extension). Geometrically---this
-phrasing is the author's synthesis, not a quoted result---the i.i.d.\ product laws trace a
-curve; positive mixtures fill its convex hull (the extendable, $\rho\ge 0$ laws); signed
-mixtures fill its affine span (everything). A signed representation is thus the signature of
-\emph{non-extendability}: a finite exchangeable sequence that cannot be continued to an
-infinite one, and it is exactly the negative-correlation regime.
+also \citealp{leonetti2018} for the partially-exchangeable extension). We picture this as the i.i.d.\ laws tracing a curve: positive mixtures are its convex hull, the
+extendable $\rho\ge 0$ laws, and signed mixtures its affine span, everything. A signed
+representation marks non-extendability---a finite exchangeable sequence that cannot be continued
+to an infinite one---which is the negative-correlation regime.
+
+We frame the signed measure as a \emph{negative probability}, the kind \citet{feynman1987} used
+partway through a calculation, or \citet{wigner1932}'s phase-space distribution, which dips
+below zero while every observable marginal stays a genuine probability (the idea reached
+statistics through \citealp{bartlett1945}). You cannot sample a parameter from it. That is why
+the signed corner gives a diagnosis, not a model: recovering a latent means fitting a real one,
+not reading the quasi-probability off.
 
 So the sign of the de Finetti mixing measure is a clean label: \textbf{positive} = extendable,
-non-negatively correlated, a genuine prior; \textbf{signed} = finite, negatively correlated,
+non-negatively correlated, a genuine prior. \textbf{Signed} = finite, negatively correlated,
 no genuine prior.
 
 \section{Marginal coverage ignores the sign}
@@ -105,7 +111,7 @@ Total derivative of $H(q,q)$ along the diagonal: $c'(q)=\partial_s H(s,q)\big|_{
 H(s,q)\big|_{s=q}$. The first equals $f_{S_{n+1}\mid\hat q}(q\mid q)\ge 0$. For the second,
 $\partial_q H(s,q)\le 0$ for all $s$ exactly when $\mathbb P(S_{n+1}\le s\mid\hat q=q)$ is
 non-increasing in $q$, the definition of $S_{n+1}$ being stochastically increasing in
-$\hat q$; the reverse inequality is stochastic decrease.
+$\hat q$. The reverse inequality is stochastic decrease.
 \end{proof}
 
 \begin{remark}[The independence case is classical]
@@ -130,8 +136,14 @@ subsets---so term (ii) is $\ge 0$ and adds to the threshold term: conformal is
 \emph{conditionally anti-adaptive}. The calibration set anti-predicts the test, so coverage
 over-covers when the calibration scores were large and under-covers when small, even as the
 marginal stays pinned. The discrete (order-statistic) version replaces the derivative by a
-difference and behaves identically; the density assumption is for readability.
+difference and behaves identically. The density assumption is for readability.
 \end{remark}
+
+The reading is a go/no-go on conformal's coverage. With independent or positively-dependent
+data the certificate is a fair guide point by point, and the interval even tightens toward the
+case at hand. With negatively-dependent data the same number holds on average while the true
+coverage swings high and low, so it is close to useless per case. What carries information there
+is the latent you would estimate, not the conformal wrapper. Check the sign first. Positive, trust the coverage. Negative, model instead.
 
 \section{Why the signed corner is not exotic: constrained scores}
 
@@ -150,35 +162,40 @@ in-sample residuals \citep{lei2018}; in-sample regression residuals are both con
 ($\sum_i e_i=0$) and heteroscedastic (variance $1-h_{ii}$), and so are not exchangeable to
 begin with.
 
-\section{Scope, and what is and is not new}
+\begin{remark}[Rank, choice, and market-implied scores]
+The signed corner is the native habitat of contest data. In a Thurstone or Luce choice model a
+field of competitors carries latent values and the observed outcome is a winner or a full
+ranking. The winner indicator is a single multinomial trial, and the rank vector a
+permutation law, both \emph{negatively associated} \citep{joagdev1983}. Any nonconformity score
+read off such a field---a rank, a within-field relative score, or a market-implied win
+probability---therefore sits in the negatively-associated regime above, where the marginal
+certificate is least informative about conditional reliability. The converse direction is the
+modelling the certificate cannot supply: recovering latent means from observed prices or
+winning probabilities \citep{cotton_horserace} is exactly the de Finetti latent-recovery of
+Section~2. In betting terms the market price is the crowd's $Q$, the recovered latent mean is an
+estimate of the true $P$, and the divergence between them is the rent of the companion paper.
+So the same contest data that lands conformal in its anti-adaptive corner is also where the de
+Finetti latent, once estimated, pays.
+\end{remark}
 
-The contribution is a viewpoint, not a theorem. To be explicit:
-\begin{itemize}
-\item \emph{Classical, cited here:} marginal coverage under exchangeability
-\citep{vovk2005}; the Beta law of calibration-conditional coverage
-\citep{vovk2012,marques2024}; training-conditional coverage as a studied object
-\citep{bian2023}; coverage degradation under non-exchangeability bounded by
-total-variation/mixing magnitude \citep{barber2023beyond,oliveira2024}; positive and negative
-association \citep{esary1967,joagdev1983}; finite and signed de Finetti
-\citep{diaconis1980,kerns2006,leonetti2018}.
-\item \emph{Closest prior work:} \citet{barberpananjady2026} show conformal can both under- and
-over-cover under temporal dependence. That analysis is marginal and indexes departures by
-dependence \emph{magnitude} (a switch coefficient / $\beta$-mixing), not by \emph{sign}, and
-does not treat calibration-conditional behaviour. The present note is complementary: the sign,
-read through the de Finetti representation, and the conditional rather than marginal object.
-\item \emph{Offered here:} the identification of the conditional-coverage dependence term's
-sign with the sign of the finite de Finetti mixing measure, and the consequent reading of
-constrained/relative scores (the signed corner) as the regime where conformal's marginal
-certificate is least informative about conditional reliability.
-\end{itemize}
+\section{Related work}
 
-The link runs only one way and only so far. de Finetti is a representation of a law; conformal
-is a procedure run without knowing the law. A signed representation does not yield a usable
-predictor---to use any de Finetti measure one must estimate it, which is modelling, with no
-distribution-free finite-sample guarantee. So the note does not claim de Finetti
-``supersedes'' or ``contains'' conformal; recent work even argues conformal is not a de
-Finetti/Bayesian conditional at all \citep{datta2025}. The representation diagnoses conformal's
-conditional behaviour; it does not replace it.
+The marginal-coverage fact is standard \citep{vovk2005}. The Beta law for coverage given the
+calibration set is \citet{vovk2012}, refined by \citet{marques2024}; training-conditional
+coverage is \citet{bian2023}. Magnitude-based bounds for dependent data are
+\citet{barber2023beyond} and \citet{oliveira2024}. Association and negative association are
+\citet{esary1967} and \citet{joagdev1983}; finite and signed de Finetti are
+\citet{diaconis1980} and \citet{kerns2006,leonetti2018}.
+
+\citet{barberpananjady2026} are closest: they show conformal can over- or under-cover under
+temporal dependence. That account is marginal, it grades a departure by the size of the
+dependence rather than its sign, and it does not condition on the calibration set. The sign,
+and its identification with the sign of the finite de Finetti measure, is what this note adds.
+
+de Finetti describes a law. Conformal runs without one. Using a de Finetti measure means
+estimating it, and a signed measure gives nothing to estimate from, so the representation tells
+you how conformal behaves rather than standing in for it. \citet{datta2025} argue conformal is
+not a de Finetti conditional at all.
 
 \begin{thebibliography}{99}
 \bibitem[Aldous(1985)]{aldous1985} Aldous, D.~J. (1985). Exchangeability and related topics.
@@ -193,11 +210,15 @@ Statistics} 51(2):816--845.
 \bibitem[Barber and Pananjady(2026)]{barberpananjady2026} Barber, R.~F. and Pananjady, A.
 (2026). Predictive inference for time series: why is split conformal effective despite temporal
 dependence? Preprint, arXiv:2510.02471.
+\bibitem[Bartlett(1945)]{bartlett1945} Bartlett, M.~S. (1945). Negative probability.
+\emph{Mathematical Proceedings of the Cambridge Philosophical Society} 41(1):71--73.
 \bibitem[Bian and Barber(2023)]{bian2023} Bian, M. and Barber, R.~F. (2023).
 Training-conditional coverage for distribution-free predictive inference. \emph{Electronic
 Journal of Statistics} 17(2):2044--2066.
 \bibitem[Cotton()]{cotton_marginally} Cotton, P. Marginally Useful: Formalizing the Information
 Gap in Conformal Prediction. Companion paper.
+\bibitem[Cotton(2021)]{cotton_horserace} Cotton, P. (2021). Inferring relative ability from
+winning probability in multi-entrant contests. doi:10.1137/19M1276261.
 \bibitem[Datta et~al.(2025)]{datta2025} Datta, J., Polson, N.~G., Sokolov, V. and Zantedeschi,
 D. (2025). Conformal Prediction = Bayes? Preprint, arXiv:2512.23308.
 \bibitem[Diaconis and Freedman(1980)]{diaconis1980} Diaconis, P. and Freedman, D. (1980).
@@ -205,6 +226,9 @@ Finite exchangeable sequences. \emph{The Annals of Probability} 8(4):745--764.
 \bibitem[Esary et~al.(1967)]{esary1967} Esary, J.~D., Proschan, F. and Walkup, D.~W. (1967).
 Association of random variables, with applications. \emph{The Annals of Mathematical
 Statistics} 38(5):1466--1474.
+\bibitem[Feynman(1987)]{feynman1987} Feynman, R.~P. (1987). Negative probability. In Hiley,
+B.~J. and Peat, F.~D. (eds.), \emph{Quantum Implications: Essays in Honour of David Bohm},
+235--248. Routledge \& Kegan Paul.
 \bibitem[Joag-Dev and Proschan(1983)]{joagdev1983} Joag-Dev, K. and Proschan, F. (1983).
 Negative association of random variables, with applications. \emph{The Annals of Statistics}
 11(1):286--295.
@@ -225,6 +249,8 @@ Machine Learning Research} 25.
 predictors. \emph{Asian Conference on Machine Learning}, PMLR 25:475--490.
 \bibitem[Vovk et~al.(2005)]{vovk2005} Vovk, V., Gammerman, A. and Shafer, G. (2005).
 \emph{Algorithmic Learning in a Random World}. Springer.
+\bibitem[Wigner(1932)]{wigner1932} Wigner, E.~P. (1932). On the quantum correction for
+thermodynamic equilibrium. \emph{Physical Review} 40:749--759.
 \end{thebibliography}
 
 \end{document}
