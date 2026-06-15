@@ -42,13 +42,16 @@ statistic $\hat q = S_{(k)}$ of the calibration scores, $k=\lceil(n+1)(1-\alpha)
 test point is covered when $S_{n+1}\le\hat q$.
 
 Two kinds of dependence live in any such problem, and they should not be confused.
-\emph{Within a row}: inside a single $(x,y)$, does the residual's shape depend on $x$? This is
+\begin{itemize}
+\item Within a row: inside a single $(x,y)$, does the residual's shape depend on $x$? That is
 the subject of the companion paper \citep{cotton_marginally}, where the log-score regret of a
 single-shape conformal system equals the mutual information $I(R;X)$. It is a property of one
-observation's law and is present even when the rows are i.i.d. \emph{Across rows}: how do
-distinct observations relate to one another---independent, sharing a latent cause, or mutually
-constrained? This is the subject of de Finetti's theorem, and of this note. The two axes are
-orthogonal. This note is entirely about the second.
+observation's law, present even when the rows are i.i.d.
+\item Across rows: how do distinct observations relate to one another, whether independent,
+sharing a latent cause, or mutually constrained? That is the subject of de Finetti's theorem,
+and of this note.
+\end{itemize}
+The two axes are orthogonal. This note is entirely about the second.
 
 \section{Finite de Finetti and the sign of the mixture}
 
@@ -68,12 +71,12 @@ constrained. Exchangeability alone forces only $\rho\ge -1/(n-1)$ \citep{aldous1
 negative band is real---sampling without replacement sits at its floor.
 
 The finite theory completes the picture. \citet{diaconis1980} show a finite exchangeable
-sequence is \emph{approximately} a positive i.i.d.\ mixture, within total variation $O(k/n)$.
+sequence is approximately a positive i.i.d.\ mixture, within total variation $O(k/n)$.
 \citet{kerns2006} make it exact, at the price of signing.
 
 \begin{theorem}[Kerns--Sz\'ekely; \citealp{kerns2006}]\label{thm:signed}
 Let $(X_1,\dots,X_n)$ be exchangeable on a measurable space. Then there is a finite
-\emph{signed} measure $\mu$ of total mass $1$ on the space of distributions with
+signed measure $\mu$ of total mass $1$ on the space of distributions with
 $\mathrm{law}(X_1,\dots,X_n)=\int P^{\otimes n}\,\mathrm{d}\mu(P)$. One may take $\mu\ge 0$ (a
 genuine prior, recovering Theorem~\ref{thm:definetti}) if and only if the sequence extends to an
 infinitely exchangeable one \citep{leonetti2018}.
@@ -82,15 +85,15 @@ extendable $\rho\ge 0$ laws, and signed mixtures its affine span, everything. A 
 representation marks non-extendability---a finite exchangeable sequence that cannot be continued
 to an infinite one---which is the negative-correlation regime.
 
-We frame the signed measure as a \emph{negative probability}, the kind \citet{feynman1987} used
+We frame the signed measure as a negative probability, the kind \citet{feynman1987} used
 partway through a calculation, or \citet{wigner1932}'s phase-space distribution, which dips
 below zero while every observable marginal stays a genuine probability (the idea reached
 statistics through \citealp{bartlett1945}). You cannot sample a parameter from it. That is why
 the signed corner gives a diagnosis, not a model: recovering a latent means fitting a real one,
 not reading the quasi-probability off.
 
-So the sign of the de Finetti mixing measure is a clean label: \textbf{positive} = extendable,
-non-negatively correlated, a genuine prior. \textbf{Signed} = finite, negatively correlated,
+So the sign of the de Finetti mixing measure is a clean label: positive = extendable,
+non-negatively correlated, a genuine prior. Signed = finite, negatively correlated,
 no genuine prior.
 
 \section{Marginal coverage ignores the sign}
@@ -105,8 +108,10 @@ number is the same. The sign enters only when we ask what the certificate hides.
 
 \section{The conditional-coverage decomposition}
 
-Condition on the realised width. Write $H(s,q)=\mathbb P(S_{n+1}\le s\mid\hat q=q)$, so coverage
-conditional on the width is the diagonal $c(q)=H(q,q)$.
+Condition on the realised width. For a value $q$ of the width $\hat q$ and a threshold $s$, write
+$H(s,q)=\mathbb P(S_{n+1}\le s\mid\hat q=q)$. Coverage holds when $S_{n+1}\le\hat q$, so coverage
+conditional on the realised width is the diagonal $c(q)=H(q,q)$, where the threshold equals the
+width.
 
 \begin{lemma}[Conditional-coverage slope]\label{lem:slope}
 If $(S_{n+1},\hat q)$ has a joint density, then
@@ -136,39 +141,32 @@ dependent scores, with term (ii) the new piece.
 \end{remark}
 
 \begin{remark}[Reading the sign]
-The width $\hat q=S_{(k)}$ is a coordinatewise non-decreasing function of the calibration
-scores, and the test score is disjoint from them. A positive (proper) de Finetti mixture makes
-the score vector \emph{associated} \citep{esary1967}; association is preserved by monotone
-maps, so $(\hat q,S_{n+1})$ are positively dependent, term (ii) is $\le 0$, and it cancels
-against the threshold term---conformal is \emph{conditionally adaptive}, flatter than
-independence, because pooling the calibration residuals silently conditions on the realised
-world. A signed, negatively-correlated law makes the vector \emph{negatively associated}
-\citep{joagdev1983}---the property of without-replacement samples, multinomials, permutation
-and rank laws, and Dirichlet/compositional vectors, preserved under monotone maps of disjoint
-subsets---so term (ii) is $\ge 0$ and adds to the threshold term: conformal is
-\emph{conditionally anti-adaptive}. The calibration set anti-predicts the test, so coverage
-over-covers when the calibration scores were large and under-covers when small, even as the
-marginal stays pinned. The discrete (order-statistic) version replaces the derivative by a
-difference and behaves identically. The density assumption is for readability.
+The sign of the cross-sample dependence sets the direction. Positive dependence makes conformal
+conditionally adaptive, negative dependence makes it anti-adaptive. The mechanism is short. The
+width $\hat q=S_{(k)}$ is non-decreasing in the calibration scores, and the test score is
+disjoint from them. A positive (proper) de Finetti mixture makes the score vector associated
+\citep{esary1967}, so $\hat q$ and $S_{n+1}$ move together: term (ii) is $\le 0$, it cancels the
+threshold term, and pooling the calibration scores conditions you into the realised world. A
+signed, negatively-correlated law makes the vector negatively associated \citep{joagdev1983}
+(without-replacement samples, multinomials, ranks, compositional vectors), so term (ii) is
+$\ge 0$ and adds to it: the calibration set anti-predicts the test, and the per-case coverage
+swings high and low while the marginal stays pinned. The order-statistic version uses a
+difference in place of the derivative and behaves the same.
 \end{remark}
 
-The three regimes are confirmed numerically by \texttt{check\_sign.py}, which runs split
-conformal in an independent, a positively-dependent, and a without-replacement world: the
-marginal coverage holds at $1-\alpha$ in all three, while coverage binned by the calibration
-sample stays flat under positive dependence and fans steeply under negative.
-
-The reading is a go/no-go on conformal's coverage. With independent or positively-dependent
-data the certificate is a fair guide point by point, and the interval even tightens toward the
-case at hand. With negatively-dependent data the same number holds on average while the true
-coverage swings high and low, so it is close to useless per case. What carries information there
-is the latent you would estimate, not the conformal wrapper. Check the sign first. Positive, trust the coverage. Negative, model instead.
+The reading is a go/no-go on conformal's coverage, and coverage only. The residual-information
+gap of the companion paper sits there whatever the sign, so even at its best this is an honest
+certificate, not a sharp forecast. With independent or positively-dependent data the certificate
+is at least conditionally honest. With negatively-dependent data it is not: the number holds on
+average while the per-case coverage swings high and low. The sharpness comes from modelling the
+latent, never from the wrapper.
 
 \section{Why the signed corner is not exotic: constrained scores}
 
-The negative corner arises whenever the nonconformity score is defined \emph{relative to the
-batch}, because a linear constraint forces it. De-meaning ($\sum_i s_i=0$), differencing,
+The negative corner arises whenever the nonconformity score is defined relative to the
+batch, because a linear constraint forces it. De-meaning ($\sum_i s_i=0$), differencing,
 ranks or percentiles-within-batch, and compositional or budgeted targets all impose such a
-constraint, and the constraint \emph{is} the negative association \citep{joagdev1983}. For
+constraint, and the constraint is the negative association \citep{joagdev1983}. For
 these scores conformal remains marginally valid---if the relativisation is symmetric across
 calibration and test, exchangeability is preserved---but its conditional coverage is the
 fanning, anti-adaptive kind of Lemma~\ref{lem:slope}.
@@ -184,7 +182,7 @@ begin with.
 The signed corner is the native habitat of contest data. In a Thurstone or Luce choice model a
 field of competitors carries latent values and the observed outcome is a winner or a full
 ranking. The winner indicator is a single multinomial trial, and the rank vector a
-permutation law, both \emph{negatively associated} \citep{joagdev1983}. Any nonconformity score
+permutation law, both negatively associated \citep{joagdev1983}. Any nonconformity score
 read off such a field---a rank, a within-field relative score, or a market-implied win
 probability---therefore sits in the negatively-associated regime above, where the marginal
 certificate is least informative about conditional reliability. The converse direction is the
