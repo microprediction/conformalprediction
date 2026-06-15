@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>A Feynman–Wigner diagnostic for conformal prediction — note</title>
+<link rel="stylesheet" href="../../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/theory.html">Theory</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+  <p class="tag">Technical note</p>
+  <h1>A Feynman&ndash;Wigner diagnostic for conformal prediction</h1>
+  <p class="subtitle">via signed de Finetti representations. A short companion note to <a href="/papers/marginally-useful/">Marginally Useful</a>.</p>
+
+  <p>
+    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="signed-definetti-and-conformal.pdf">Read the PDF</a>
+    <a class="card" style="display:inline-block;padding:10px 16px;" href="signed-definetti-and-conformal.tex">LaTeX source</a>
+  </p>
+
+  <h2>The idea</h2>
+  <p>Conformal prediction needs only exchangeability, and exchangeability is what de Finetti's
+  theorem describes. In the finite form the mixing measure may be <em>signed</em> (Kerns&ndash;Sz&eacute;kely):
+  a negative probability of the kind Feynman and Wigner used, exact but un-samplable. A short
+  lemma decomposes the slope of conformal's calibration-conditional coverage into a non-negative
+  threshold term (the classical Beta-law fan) and a dependence term that carries the sign of that
+  measure.</p>
+
+  <h2>What it advises</h2>
+  <p>The marginal coverage guarantee is the same whatever the sign. Only what it hides changes.
+  So the sign is a go/no-go for trusting conformal point by point: with ordinary data the
+  coverage is a fair per-case guide; with ranked, market-implied, or otherwise constrained
+  scores it is not, and the value is in the model, not the wrapper. A symmetric contest of
+  \(M\) competitors sits exactly on the floor \(\rho=-\tfrac{1}{M-1}\), where the per-case
+  coverage fans hardest.</p>
+
+  <h2>See it move</h2>
+  <p>Two demonstrations pair with the note:
+  <a href="../../demos/15-de-finetti.html">de Finetti, and where it goes negative</a> (drag the
+  correlation negative and the mixing weights turn signed) and
+  <a href="../../demos/16-thurstone.html">a Thurstone contest at the &minus;1/n floor</a>
+  (marginal coverage holds, per-case coverage fans). The sign result is checked numerically by
+  <code>check_sign.py</code>.</p>
+
+  <div class="prevnext">
+    <a href="/papers/">&larr; All papers</a>
+    <span class="spacer"></span>
+    <a href="signed-definetti-and-conformal.pdf">Open the PDF &rarr;</a>
+  </div>
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Conformal Prediction</span><span>Technical note</span></div></footer>
+</body>
+</html>
