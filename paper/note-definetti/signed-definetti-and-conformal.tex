@@ -5,6 +5,7 @@
 \usepackage{hyperref}
 \usepackage{microtype}
 
+\newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
 \newtheorem{remark}{Remark}
 
@@ -51,20 +52,32 @@ orthogonal. This note is entirely about the second.
 
 \section{Finite de Finetti and the sign of the mixture}
 
-de Finetti's theorem (infinite form) says an infinitely exchangeable sequence is a
-\emph{positive} mixture of i.i.d.\ sequences: nature draws a parameter from a prior, then
-generates i.i.d.\ data. A one-line variance identity shows the cost of that ``positive'': a
-positive mixture has $\operatorname{Cov}(S_i,S_j)=\operatorname{Var}\big(\mathbb
-E[S_i\mid\Theta]\big)\ge 0$, so proper de Finetti mixtures force non-negative correlation.
-Finite exchangeable sequences are not so constrained: exchangeability only forces
-$\rho\ge -1/(n-1)$ \citep{aldous1985}, and the negative band is real---sampling without
-replacement sits at its floor.
+de Finetti's theorem pins down what infinite exchangeability is.
 
-The finite theory closes this gap in two ways. \citet{diaconis1980} show a finite exchangeable
+\begin{theorem}[de Finetti; \citealp{definetti1937,hewitt1955}]\label{thm:definetti}
+Let $X_1,X_2,\dots$ be an infinitely exchangeable sequence in a Polish space. Then there is a
+probability measure $\pi$ on the space of distributions such that, for every $n$, the law of
+$(X_1,\dots,X_n)$ equals $\int P^{\otimes n}\,\mathrm{d}\pi(P)$. Equivalently, conditional on a
+random measure $\Theta\sim\pi$, the $X_i$ are i.i.d.\ with law $\Theta$.
+\end{theorem}
+
+The mixing measure $\pi$ is a genuine prior, and that forces a sign. A positive mixture has
+$\operatorname{Cov}(S_i,S_j)=\operatorname{Var}\big(\mathbb E[S_i\mid\Theta]\big)\ge 0$, so de
+Finetti mixtures are non-negatively correlated. Finite exchangeable sequences are not so
+constrained. Exchangeability alone forces only $\rho\ge -1/(n-1)$ \citep{aldous1985}, and the
+negative band is real---sampling without replacement sits at its floor.
+
+The finite theory completes the picture. \citet{diaconis1980} show a finite exchangeable
 sequence is \emph{approximately} a positive i.i.d.\ mixture, within total variation $O(k/n)$.
-\citet{kerns2006} make it \emph{exact} at the price of signing: every finite exchangeable
-sequence is a mixture of i.i.d.\ product measures with a \emph{signed} mixing measure (see
-also \citealp{leonetti2018} for the partially-exchangeable extension). We picture this as the i.i.d.\ laws tracing a curve: positive mixtures are its convex hull, the
+\citet{kerns2006} make it exact, at the price of signing.
+
+\begin{theorem}[Kerns--Sz\'ekely; \citealp{kerns2006}]\label{thm:signed}
+Let $(X_1,\dots,X_n)$ be exchangeable on a measurable space. Then there is a finite
+\emph{signed} measure $\mu$ of total mass $1$ on the space of distributions with
+$\mathrm{law}(X_1,\dots,X_n)=\int P^{\otimes n}\,\mathrm{d}\mu(P)$. One may take $\mu\ge 0$ (a
+genuine prior, recovering Theorem~\ref{thm:definetti}) if and only if the sequence extends to an
+infinitely exchangeable one \citep{leonetti2018}.
+\end{theorem} We picture this as the i.i.d.\ laws tracing a curve: positive mixtures are its convex hull, the
 extendable $\rho\ge 0$ laws, and signed mixtures its affine span, everything. A signed
 representation marks non-extendability---a finite exchangeable sequence that cannot be continued
 to an infinite one---which is the negative-correlation regime.
@@ -138,6 +151,11 @@ over-covers when the calibration scores were large and under-covers when small, 
 marginal stays pinned. The discrete (order-statistic) version replaces the derivative by a
 difference and behaves identically. The density assumption is for readability.
 \end{remark}
+
+The three regimes are confirmed numerically by \texttt{check\_sign.py}, which runs split
+conformal in an independent, a positively-dependent, and a without-replacement world: the
+marginal coverage holds at $1-\alpha$ in all three, while coverage binned by the calibration
+sample stays flat under positive dependence and fans steeply under negative.
 
 The reading is a go/no-go on conformal's coverage. With independent or positively-dependent
 data the certificate is a fair guide point by point, and the interval even tightens toward the
@@ -221,6 +239,8 @@ Gap in Conformal Prediction. Companion paper.
 winning probability in multi-entrant contests. doi:10.1137/19M1276261.
 \bibitem[Datta et~al.(2025)]{datta2025} Datta, J., Polson, N.~G., Sokolov, V. and Zantedeschi,
 D. (2025). Conformal Prediction = Bayes? Preprint, arXiv:2512.23308.
+\bibitem[de Finetti(1937)]{definetti1937} de Finetti, B. (1937). La pr\'evision: ses lois
+logiques, ses sources subjectives. \emph{Annales de l'Institut Henri Poincar\'e} 7(1):1--68.
 \bibitem[Diaconis and Freedman(1980)]{diaconis1980} Diaconis, P. and Freedman, D. (1980).
 Finite exchangeable sequences. \emph{The Annals of Probability} 8(4):745--764.
 \bibitem[Esary et~al.(1967)]{esary1967} Esary, J.~D., Proschan, F. and Walkup, D.~W. (1967).
@@ -229,6 +249,9 @@ Statistics} 38(5):1466--1474.
 \bibitem[Feynman(1987)]{feynman1987} Feynman, R.~P. (1987). Negative probability. In Hiley,
 B.~J. and Peat, F.~D. (eds.), \emph{Quantum Implications: Essays in Honour of David Bohm},
 235--248. Routledge \& Kegan Paul.
+\bibitem[Hewitt and Savage(1955)]{hewitt1955} Hewitt, E. and Savage, L.~J. (1955). Symmetric
+measures on Cartesian products. \emph{Transactions of the American Mathematical Society}
+80:470--501.
 \bibitem[Joag-Dev and Proschan(1983)]{joagdev1983} Joag-Dev, K. and Proschan, F. (1983).
 Negative association of random variables, with applications. \emph{The Annals of Statistics}
 11(1):286--295.
