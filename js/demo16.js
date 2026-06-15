@@ -21,7 +21,7 @@ const covPlot = new Plot(document.getElementById("coverage"),
 const setRO = readouts(document.getElementById("readouts"),
   ["field size M", "ρ = −1/(M−1)", "marginal coverage", "conditional spread"]);
 
-function buildField(M) {                 // frozen Thurstone-ish roster (favorites .. longshots)
+function buildField(M) {                 // frozen Thurstone-ish field of latent strengths
   const rng = mulberry32(2024 + M), f = [];
   for (let i = 0; i < M; i++) f.push(Math.abs(sampleNormal(rng, 0, 1)) * Math.exp(0.7 * sampleNormal(rng, 0, 1)));
   return f.sort((a, b) => a - b);
