@@ -10,6 +10,11 @@ minimal, dependency-free split-conformal utility; the guide is the main event.
 See https://conformalprediction.net and the companion paper for the conceptual content.
 """
 from .core import conformal_quantile, predict_interval, coverage
+from .guardrails import coverage_dependence_test, CoverageAudited, coverage_dependence_scorer
 
 __version__ = "0.0.1"
-__all__ = ["conformal_quantile", "predict_interval", "coverage", "__version__"]
+__all__ = [
+    "conformal_quantile", "predict_interval", "coverage",
+    "coverage_dependence_test", "CoverageAudited", "coverage_dependence_scorer",
+    "__version__",
+]
