@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Betting against a conformal predictor — note</title>
+<link rel="stylesheet" href="../../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/literature.html">Literature</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+  <p class="tag">Technical note</p>
+  <h1>Betting against a conformal predictor</h1>
+  <p class="subtitle">A parimutuel account of the information gap. A companion note to <a href="/papers/marginally-useful/">Marginally Useful</a> and <a href="/papers/definetti-feynman/">the Feynman&ndash;Wigner diagnostic</a>.</p>
+
+  <p>
+    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="conformal-parimutuel.pdf">Read the PDF</a>
+    <a class="card" style="display:inline-block;padding:10px 16px;" href="conformal-parimutuel.tex">LaTeX source</a>
+  </p>
+
+  <h2>The idea</h2>
+  <p>The companion paper shows the wasted log-score of a single-shape conformal predictor is the
+  mutual information \(I(R;X)\) between the residual and the input. This note rederives that number
+  from a betting mechanism instead of from the score. Treat the predictor as the crowd in a
+  parimutuel pool on the residual: bettors put money in, and the pot is split among the winners in
+  proportion to their stake on the realised outcome. In the continuous limit the bin width cancels
+  and the payoff is the ratio of the bettor's density to the crowd's, \(b(u)/q(u)\). The
+  log-optimal stake is the truth, and its growth rate against a crowd pricing \(q\) is
+  \(\mathrm{KL}(p\,\|\,q)\).</p>
+
+  <h2>The rent</h2>
+  <p>Conformalization prices the rank pool flat: \(q\equiv 1\). An entrant who knows only the
+  marginal breaks even &mdash; marginal coverage stated as wealth. An entrant who conditions on
+  \(X\) and stakes \(g(\cdot\mid X)\) grows his bankroll at rate exactly \(I(R;X)\). The gap is the
+  rent, and re-leveling cannot close it, because the leak is invisible at the margin where the
+  guarantee lives. A provably fair lottery that a side-informed player beats with certainty.</p>
+
+  <h2>The mechanism is real</h2>
+  <p>This is not a thought experiment. The
+  <a href="https://github.com/microprediction/microprediction">microprediction</a> platform splits
+  a pot toward the Monte Carlo samples nearest the realised value &mdash; nearest-the-pin &mdash;
+  which is the discrete form of \(b(z)/q(z)\). The continuous version, pricing a density directly
+  through the <a href="https://github.com/microprediction/density">density</a> package, was run as
+  the MidOne contest at Crunch Labs (CrunchDAO). A conformal predictor dropped into either is the
+  entrant who prices the residual pool flat in \(X\); anyone who conditions on \(X\) holds a
+  guaranteed growth rate \(I(R;X)\) against it.</p>
+
+  <h2>Measuring the rent</h2>
+  <p>Two ways to read the rent off a fitted predictor. A static lower bound,
+  \(I(R;X)\ge \mathrm{HSIC}(U,X)/2K\), turns the distance-covariance detector into a certificate of
+  a minimum wasted score. And a sequential e-process &mdash; the informed bettor's wealth
+  \(W_t=\prod_s b_s(U_s\mid X_s)\) &mdash; is an anytime-valid test for conditional miscoverage
+  whose growth rate converges to \(I(R;X)\). Both are checked numerically by
+  <code>check_parimutuel.py</code>.</p>
+
+  <div class="prevnext">
+    <a href="/papers/">&larr; All papers</a>
+    <span class="spacer"></span>
+    <a href="conformal-parimutuel.pdf">Open the PDF &rarr;</a>
+  </div>
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Conformal Prediction</span><span>Technical note</span></div></footer>
+</body>
+</html>
