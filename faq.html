@@ -54,6 +54,23 @@
   <h3>Can I get conditional (per-\(x\)) coverage?</h3>
   <p>Not exactly, and not for free: distribution-free, finite-sample conditional coverage forces infinite-length intervals (<a href="/demos/07-price-of-conditional-coverage.html">the price of conditional coverage</a>). You can <em>approach</em> it under assumptions, conformalized quantile regression, normalized/Mondrian conformal, recent pivotal-score and optimal-transport methods, all of which condition on \(x\).</p>
 
+  <h3>What about option pricing, or financial distributions generally?</h3>
+  <p>This is where the coverage objective is most clearly the wrong one. An option price is an
+  integral over the conditional tail, \(\mathbb E[(S_T-K)^+]\), a functional of the whole density
+  shape, and coverage integrates exactly that away: you can move mass around within the covered
+  region and within the tail without changing coverage at all, while the price moves a lot. Two
+  forecasts with identical 90% coverage can price the same out-of-the-money option an order of
+  magnitude apart. Worse, the value usually lives in the sparse, extrapolation states where the
+  marginal guarantee is averaging over precisely the cases you care about. So a conformal interval,
+  or a conformalized density read off one residual shape, is not what prices a contract. The target
+  there is a conditional density scored by a proper score (log-likelihood, CRPS), and the
+  alternatives are many: heteroscedastic and stochastic-volatility models, GARCH-family and
+  implied-volatility surfaces, quantile and expectile regression, mixture and normalizing-flow
+  densities, distributional neural forecasts. Conformal can still wrap any of these for a coverage
+  certificate, but the tail shape that sets the price is the model&rsquo;s work, not the
+  wrapper&rsquo;s. The gap between a flat conformal interval and a desk that models the conditional
+  tail is made precise in <a href="/papers/parimutuel/">the parimutuel note</a>.</p>
+
   <h3>Does it work for time series?</h3>
   <p>The basic guarantee needs exchangeability, which time series violate. Adaptive methods (ACI, conformal PID, EnbPI) restore a long-run average coverage and are well worth using; just don&rsquo;t read them as a per-step guarantee (see <a href="/index.html#ts">time series</a>).</p>
 
