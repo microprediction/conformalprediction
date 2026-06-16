@@ -185,29 +185,34 @@ The companion diagnostic \citep{cotton_signed} tests $U\perp X$ with distance co
 zero iff the gap is zero. The same statistic bounds the gap from below.
 
 \begin{lemma}[Certified lower bound]\label{lem:lower}
-Let a bounded characteristic kernel with $k\le K$ on the product space induce
-$\operatorname{dCov}(U,X)=\operatorname{HSIC}(U,X)$ \citep{sejdinovic2013}. Then
+Let $\operatorname{HSIC}(U,X)$ use a bounded product kernel, $k\le K$ on the product space. Then
 \begin{equation}
 I(R;X)\;\ge\;\frac{\operatorname{HSIC}(U,X)}{2K}.
 \end{equation}
 \end{lemma}
 
 \begin{proof}
-HSIC$^{1/2}$ is the maximum mean discrepancy $\operatorname{MMD}(P_{U,X},P_U\otimes P_X)$, an
-integral probability metric over the unit RKHS ball. Each such witness $f$ has
-$\|f\|_\infty\le\sqrt K\|f\|_{\mathcal H}\le\sqrt K$, so
-$\operatorname{MMD}\le 2\sqrt K\,\mathrm{TV}(P_{U,X},P_U\otimes P_X)$. Pinsker's inequality
-\citep{cover2006} gives $\mathrm{KL}\ge 2\,\mathrm{TV}^2$, and the KL of the joint against the
-product of marginals is $I(U;X)=I(R;X)$. Combining, $I(R;X)\ge 2(\operatorname{MMD}/2\sqrt K)^2=
-\operatorname{HSIC}/(2K)$.
+Write $\operatorname{MMD}=\operatorname{HSIC}^{1/2}=\sup_{\|f\|_{\mathcal H}\le 1}\big|\mathbb
+E_{P_{U,X}}f-\mathbb E_{P_U\otimes P_X}f\big|$, the integral probability metric over the unit ball
+of the tensor RKHS. A unit-ball witness satisfies $|f(z)|=|\langle f,k(z,\cdot)\rangle|\le
+\sqrt{k(z,z)}\le\sqrt K$. With total variation $\mathrm{TV}=\tfrac12\int|\mathrm dP_{U,X}-\mathrm
+dP_U\,\mathrm dP_X|$,
+\[
+\big|\mathbb E_{P}f-\mathbb E_{Q}f\big|\le\|f\|_\infty\!\int|\mathrm dP-\mathrm dQ|\le 2\sqrt K\,
+\mathrm{TV},\qquad\text{so}\quad \operatorname{MMD}\le 2\sqrt K\,\mathrm{TV}.
+\]
+Pinsker's inequality \citep{cover2006} gives $\mathrm{KL}(P_{U,X}\|P_U\otimes P_X)\ge 2\,
+\mathrm{TV}^2$, and that KL is $I(U;X)=I(R;X)$. Combining,
+$I(R;X)\ge 2\,(\operatorname{MMD}/2\sqrt K)^2=\operatorname{HSIC}/(2K)$.
 \end{proof}
 
-A measured distance covariance therefore certifies a minimum wasted log-score, and by Theorem
-\ref{thm:rent} a minimum extractable rent. The matching upper bound does not exist with a fixed
-kernel: MMD metrizes weak convergence \citep{simongabriel2023} whereas KL does not, so a sequence of
-laws can have HSIC$\to 0$ with $I(R;X)\to\infty$. Under a bounded conditional density ratio
-$g(u\mid x)\le M$ one has the crude $I(R;X)\le\log M$, refinable through $\chi^2$
-\citep{wangtay2022}, but the exact value needs a different object.
+Distance covariance is a fixed multiple of this HSIC \citep{sejdinovic2013}, so the companion
+detector inherits the same bound and a measured value certifies a minimum wasted log-score, hence
+by Theorem \ref{thm:rent} a minimum extractable rent. The matching upper bound does not exist with
+a fixed kernel, since MMD metrizes weak convergence \citep{simongabriel2023} while KL does not: a
+sequence of laws can have $\operatorname{HSIC}\to 0$ with $I(R;X)\to\infty$. Under a bounded
+conditional density ratio $g(u\mid x)\le M$ one has the crude $I(R;X)\le\log M$, refinable through
+$\chi^2$ \citep{wangtay2022}, but the exact value needs a different object.
 
 \subsection{A sequential estimate: the e-process}
 
