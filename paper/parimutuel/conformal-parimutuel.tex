@@ -1,0 +1,340 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+
+\title{Betting Against a Conformal Predictor:\\
+a Parimutuel Account of the Information Gap}
+\author{Peter Cotton}
+\date{Draft --- companion note}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The companion paper shows that the log-score regret of a single-shape conformal predictor to the
+conditional oracle is the mutual information $I(R;X)$ between the residual and the input. Here we
+rederive that quantity from a betting mechanism rather than from the score. Treat the predictor as
+the crowd in a parimutuel pool on the residual: bettors put money in, and the pot is split among
+the winners in proportion to their stake on the realised outcome. In the continuous limit the
+payoff is the ratio of the bettor's density to the crowd's. An entrant who knows only the marginal
+breaks even, which is marginal coverage stated as wealth. An entrant who conditions on $X$ grows
+his bankroll at rate exactly $I(R;X)$. The gap is the rent. This is not a metaphor: the
+nearest-the-pin pool of the microprediction platform, and the continuous density version run in the
+MidOne contest, are this mechanism, and a conformal predictor is the entrant that prices the pool
+flat in $X$. We then give two ways to measure the rent on a fitted predictor: a static lower bound
+from distance covariance, and a sequential e-process whose growth rate estimates $I(R;X)$ and which
+is an anytime-valid test for conditional miscoverage.
+\end{abstract}
+
+\section{Setup}
+
+A point predictor leaves a residual $R$, and conformalization re-levels its marginal law. Write
+$U=G(R)$ for the probability integral transform, $G$ the marginal CDF of $R$; $U$ is marginally
+uniform on $[0,1]$ whatever the model. Let $g(u\mid x)$ be the conditional density of $U$ given
+$X=x$. The companion paper \citep{cotton_marginally} identifies the wasted log-score of a
+single-shape conformal system as
+\begin{equation}\label{eq:gap}
+\Delta \;=\; \mathbb E_X\,\mathrm{KL}\!\big(P_{R\mid X}\,\big\|\,G\big)
+\;=\; I(R;X) \;=\; I(U;X) \;=\; \mathbb E_X\!\int_0^1 g(u\mid X)\log g(u\mid X)\,\mathrm du .
+\end{equation}
+The middle equalities are the invariance of mutual information under the deterministic, a.s.
+invertible map $R\mapsto G(R)$, and the fact that the marginal of $U$ is uniform, so the
+information is the negative conditional differential entropy of $U$. We take \eqref{eq:gap} as
+given and ask what it is, operationally. The answer is a betting rate.
+
+\section{The continuous parimutuel}
+
+A parimutuel sets no odds. Everyone's money goes into one pool; once the outcome is known the whole
+pool is paid to the holders of winning tickets, divided in proportion to their winning stake. With a
+continuous outcome the winning ``ticket'' is a density, and the payoff has a clean form.
+
+\begin{lemma}[Pool payoff]\label{lem:payoff}
+Normalise the pool to $1$ and let the crowd's aggregate stake have density $q$ on the outcome space,
+$\int q=1$. An infinitesimal, price-taking entrant who stakes unit wealth with density $b$,
+$\int b=1$, and takes no part in moving $q$, holds after outcome $u$ the wealth
+\begin{equation}
+W(u)\;=\;\frac{b(u)}{q(u)} .
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Bin the outcome axis at width $\delta$. The crowd stakes $q(u)\delta$ of the unit pool on the bin at
+$u$; the entrant stakes $b(u)\delta$. If the outcome lands in that bin, the entire pool is split
+among its stakeholders in proportion to stake, so the per-unit payoff there is $1/(q(u)\delta)$ (the
+entrant is infinitesimal, so the crowd's stake is the whole bin), and the entrant collects
+$b(u)\delta \cdot 1/(q(u)\delta)=b(u)/q(u)$. The bin width cancels, so the limit is well posed and
+equals the Radon--Nikodym derivative $\mathrm db/\mathrm dq$.
+\end{proof}
+
+The cancellation is the point. A continuous lottery on a point outcome looks ill defined --- every
+exact value has probability zero --- but pool-splitting divides two vanishing quantities, and the
+ratio survives. No reference measure and no assumed ``fair odds'' enter.
+
+\begin{lemma}[Log-optimal growth]\label{lem:growth}
+Let the outcome be drawn from the true law $p$. The expected log-growth of an entrant staking $b$
+against a crowd staking $q$ is
+\begin{equation}
+G(b)=\mathbb E_{U\sim p}\!\left[\log\frac{b(U)}{q(U)}\right]
+=\mathrm{KL}(p\|q)-\mathrm{KL}(p\|b)\;\le\;\mathrm{KL}(p\|q),
+\end{equation}
+with equality iff $b=p$ a.e. The log-optimal stake is the truth, and the optimal growth rate is
+$\mathrm{KL}(p\|q)$.
+\end{lemma}
+
+\begin{proof}
+Add and subtract $\log p$: $\int p\log(b/q)=\int p\log(p/q)-\int p\log(p/b)$. The first term is
+$\mathrm{KL}(p\|q)$, the second is $\mathrm{KL}(p\|b)\ge 0$ by Gibbs' inequality, zero iff $b=p$.
+\end{proof}
+
+Lemmas \ref{lem:payoff} and \ref{lem:growth} are the parimutuel statement of the Kelly--Breiman
+log-optimality principle \citep{kelly1956,cover2006}; the growth rate $\mathrm{KL}(p\|q)$ is the
+information the crowd's price $q$ is missing about the truth $p$.
+
+\section{The conformal lottery}
+
+Put the pool on the rank scale. Conformalization makes $U$ marginally uniform, so the conformal
+predictor is exactly the crowd that prices the rank pool flat and uses nothing about $X$:
+\begin{equation}
+q(u)\equiv 1 \quad\text{on } [0,1].
+\end{equation}
+Two entrants step up.
+
+\begin{theorem}[Parimutuel rent of conformal]\label{thm:rent}
+Against the conformal crowd $q\equiv 1$:
+\begin{enumerate}
+\item[(i)] an entrant who knows only the marginal stakes $b\equiv 1$ and grows at rate $0$;
+\item[(ii)] an entrant who observes $X$ and stakes the conditional $b=g(\cdot\mid X)$ grows, per
+round, at rate
+\begin{equation}
+G^\star=\mathbb E_X\,\mathrm{KL}\!\big(g(\cdot\mid X)\,\big\|\,1\big)=I(R;X).
+\end{equation}
+\end{enumerate}
+With a track take $\tau\in[0,1)$ (payoff $(1-\tau)/q$) the informed entrant grows at
+$I(R;X)+\log(1-\tau)$, positive iff $I(R;X)>-\log(1-\tau)\approx\tau$.
+\end{theorem}
+
+\begin{proof}
+Apply Lemma \ref{lem:payoff} with $q\equiv 1$, then Lemma \ref{lem:growth}. For (i) the entrant's
+true law is the marginal, uniform, so $b=q=1$ and $G=\mathrm{KL}(1\|1)=0$. For (ii) condition on
+$X=x$: the entrant's correct law is $g(\cdot\mid x)$, so his conditional growth is
+$\mathrm{KL}(g(\cdot\mid x)\|1)$; averaging over the $X$ he sees each round gives
+$\mathbb E_X\,\mathrm{KL}(g(\cdot\mid X)\|1)=I(U;X)=I(R;X)$ by \eqref{eq:gap}. The take multiplies
+every payoff by $(1-\tau)$, adding $\log(1-\tau)$ to the rate.
+\end{proof}
+
+So the certificate and the leak are two readings of the same pool. Marginal coverage says the
+lottery is fair to anyone who knows only the average; part (i) is that fairness, as a break-even.
+Part (ii) is what the certificate cannot see: a side-informed entrant compounds at $I(R;X)$,
+bankroll growing like $e^{tI(R;X)}$, and no amount of re-leveling closes the gap, because re-leveling
+acts on the marginal where the leak is invisible. Conformal re-leveling takes no rake ($\tau=0$), so
+any conditional information at all is pure profit. This is the lottery paradox in one line: a
+provably fair lottery that a player with side information beats with certainty.
+
+\section{The mechanism is real}
+
+The continuous parimutuel is not a thought experiment. It is the reward rule of a deployed
+prediction market.
+
+The microprediction platform \citep{cotton_micro2022} asks each entrant for $225$ Monte Carlo
+samples of the next value of a live scalar stream. When the value $z$ arrives, a stateless
+parimutuel splits the pot toward the entries nearest $z$ --- nearest-the-pin. Smoothed, an entry's
+reward is its sample density at $z$ relative to the field's aggregate sample density at $z$, which
+is the payoff $b(z)/q(z)$ of Lemma \ref{lem:payoff} with the densities estimated from samples. The
+incentive is log-optimal by Lemma \ref{lem:growth}: an entrant maximises expected log-reward by
+sampling from his true conditional, $b=p$, so the aggregate crowd price $q$ is driven toward the
+truth.
+
+The continuous version drops the samples and prices a density directly. In the MidOne contest run by
+Crunch Labs (CrunchDAO), entrants submit an explicit predictive density --- a mixture, in the
+conventions of the \texttt{density} package \citep{micro_density}, evaluated pointwise --- and the
+wealth change splits the pot in proportion to the density the entrant ascribes to the realised
+outcome against the density the field ascribes to it, again $b(z)/q(z)$. MidOne scores attacks on
+small departures from martingality, so the priced object is a residual density: the $R$ of this
+note.
+
+A conformal predictor, dropped into either contest, is the entrant who prices the residual pool flat
+in $X$ --- correct on the margin, indifferent to the case in front of it. Theorem \ref{thm:rent}
+then says any entrant who conditions on $X$ holds a guaranteed log-growth rate $I(R;X)$ against it.
+In these markets the information gap is not a figure of speech. It is the realised bankroll of the
+better-informed competitor.
+
+\section{Measuring the rent}
+
+The rent is defined through a log-score, so it is not read off data directly. Two routes estimate
+it on a fitted predictor: a cheap lower bound, and an exact sequential estimate.
+
+\subsection{A static lower bound from distance covariance}
+
+The companion diagnostic \citep{cotton_signed} tests $U\perp X$ with distance covariance, which is
+zero iff the gap is zero. The same statistic bounds the gap from below.
+
+\begin{lemma}[Certified lower bound]\label{lem:lower}
+Let a bounded characteristic kernel with $k\le K$ on the product space induce
+$\operatorname{dCov}(U,X)=\operatorname{HSIC}(U,X)$ \citep{sejdinovic2013}. Then
+\begin{equation}
+I(R;X)\;\ge\;\frac{\operatorname{HSIC}(U,X)}{2K}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+HSIC$^{1/2}$ is the maximum mean discrepancy $\operatorname{MMD}(P_{U,X},P_U\otimes P_X)$, an
+integral probability metric over the unit RKHS ball. Each such witness $f$ has
+$\|f\|_\infty\le\sqrt K\|f\|_{\mathcal H}\le\sqrt K$, so
+$\operatorname{MMD}\le 2\sqrt K\,\mathrm{TV}(P_{U,X},P_U\otimes P_X)$. Pinsker's inequality
+\citep{cover2006} gives $\mathrm{KL}\ge 2\,\mathrm{TV}^2$, and the KL of the joint against the
+product of marginals is $I(U;X)=I(R;X)$. Combining, $I(R;X)\ge 2(\operatorname{MMD}/2\sqrt K)^2=
+\operatorname{HSIC}/(2K)$.
+\end{proof}
+
+A measured distance covariance therefore certifies a minimum wasted log-score, and by Theorem
+\ref{thm:rent} a minimum extractable rent. The matching upper bound does not exist with a fixed
+kernel: MMD metrizes weak convergence \citep{simongabriel2023} whereas KL does not, so a sequence of
+laws can have HSIC$\to 0$ with $I(R;X)\to\infty$. Under a bounded conditional density ratio
+$g(u\mid x)\le M$ one has the crude $I(R;X)\le\log M$, refinable through $\chi^2$
+\citep{wangtay2022}, but the exact value needs a different object.
+
+\subsection{A sequential estimate: the e-process}
+
+Run the informed entrant and watch the bankroll. At round $t$, having seen
+$(U_1,X_1),\dots,(U_{t-1},X_{t-1})$, choose a betting density $b_t(\cdot\mid x)\ge 0$ with
+$\int_0^1 b_t(u\mid x)\,\mathrm du=1$ for every $x$, and set
+\begin{equation}
+W_t=\prod_{s\le t} b_s(U_s\mid X_s),\qquad W_0=1.
+\end{equation}
+
+\begin{proposition}[Anytime-valid test and consistent rent estimate]\label{prop:eprocess}
+\quad
+\begin{enumerate}
+\item[(i)] Under $H_0:U\perp X$ (the conformal price is correct, $I(R;X)=0$), $(W_t)$ is a
+non-negative martingale with $\mathbb E\,W_t=1$, so by Ville's inequality
+$\mathbb P(\sup_t W_t\ge 1/\alpha)\le\alpha$. Rejecting when $W_t\ge 1/\alpha$ is an anytime-valid,
+level-$\alpha$ test of conditional miscoverage.
+\item[(ii)] If the entrant learns the conditional, $b_t\to g(\cdot\mid x)$, then
+$\tfrac1t\log W_t\to I(R;X)$ almost surely.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) Under $H_0$, $U_t\mid X_t$ is uniform and independent of the past, so
+$\mathbb E[b_t(U_t\mid X_t)\mid\mathcal F_{t-1}]=\int_0^1 b_t(u\mid X_t)\,\mathrm du=1$; the product
+of conditionally mean-one factors is a martingale with mean $1$, and Ville's inequality applies.
+(ii) $\tfrac1t\log W_t=\tfrac1t\sum_s\log b_s(U_s\mid X_s)\to\mathbb E[\log g(U\mid X)]$ by the law
+of large numbers once $b_s\to g$, and $\mathbb E[\log g(U\mid X)]=\mathbb E_X\int g(u\mid X)\log
+g(u\mid X)\,\mathrm du=I(R;X)$ by \eqref{eq:gap}.
+\end{proof}
+
+This is the betting story made operational. The wealth process is at once the test --- it crosses
+$1/\alpha$ only if coverage is conditionally uneven --- and the estimator, its growth rate
+converging to the rent the static bound could only lower. It is the log-optimal e-variable of safe
+testing \citep{gruenwald2024,vovkwang2021} for the null $U\perp X$, and the sequential, anytime
+sibling of the batch distance-covariance test. Choosing $b_t$ is online conditional density
+estimation; any consistent learner gives the convergence, and a poor one still keeps the type-I
+guarantee in (i), since validity needs only $\int b_t=1$.
+
+A measurement caveat, shared with the companion diagnostic. The transform $U=G(R)$ uses the true
+marginal $G$; with the empirical rank the null is exact only in the leave-one-out or full-conformal
+sense, which is what we use to keep $U_t\mid X_t$ uniform under $H_0$.
+
+\section{Scope}
+
+This detects; it does not certify. By the distribution-free no-go results
+\citep{leiwasserman2014,foygelbarber2021,vovk2012} no procedure can prove conditional coverage from
+data alone, so a quiet e-process or a small distance covariance means ``no rent found at this
+power,'' never conditional validity. What the betting view adds is a positive reading of the other
+side: when the gap is there, it is money, and it is extractable by anyone who conditions on $X$.
+Closing it is a modelling job --- a sharper conditional spread, not a finer threshold --- and the
+rent is the exact bounty for doing it.
+
+\section{Related work}
+
+The identity $\Delta=I(R;X)$ is the companion paper \citep{cotton_marginally}; the
+distance-covariance diagnostic and the signed de Finetti reading are \citep{cotton_signed}. That a
+gambler's optimal log-growth with side information equals the mutual information is classical
+\citep{kelly1956,cover2006}, with the financial-value-of-information bound due to
+\citet{barroncover1988}; the log-loss as negative log-wealth is the prequential and game-theoretic
+tradition \citep{dawid1984,shafervovk2019}. The growth-rate-optimal e-variable and its identity with
+a KL are from safe testing \citep{gruenwald2024} and the e-value calculus \citep{vovkwang2021};
+conformal test martingales for exchangeability are \citet{vng2003}. Sequential calibration testing
+by betting is closest on two fronts: \citet{arnold2023} build e-processes for probabilistic (PIT,
+marginal) calibration, and \citet{shaer2023} test conditional independence by betting --- the
+mechanics of (i) above --- but neither identifies the growth rate with $I(R;X)$ nor frames it as the
+conformal rent. Dependence measures as conditional-coverage diagnostics are \citet{feldman2021} and
+\citet{braun2025}; the information-theoretic view of prediction sets is \citet{correia2024}, which
+bounds conditional entropy by set size rather than reading a gap from a calibration statistic. The
+parimutuel mechanism, its log-optimal incentive, and the latent recovery it supports are
+\citet{cotton_micro2022,cotton_horserace}; the continuous density conventions are
+\citet{micro_density}. The contribution here is the assembly: a self-contained parimutuel derivation
+of $I(R;X)$ in the conformal idiom, its identification with the rent in a deployed market, and the
+pairing of a certified lower bound with an anytime-valid growth-rate estimate.
+
+\begin{thebibliography}{99}
+\bibitem[Arnold et~al.(2023)]{arnold2023} Arnold, S., Henzi, A. and Ziegel, J.~F. (2023).
+Sequentially valid tests for forecast calibration. \emph{The Annals of Applied Statistics}
+17(3):1909--1935. arXiv:2109.11761.
+\bibitem[Barron and Cover(1988)]{barroncover1988} Barron, A.~R. and Cover, T.~M. (1988). A bound on
+the financial value of information. \emph{IEEE Transactions on Information Theory} 34(5):1097--1100.
+\bibitem[Braun et~al.(2025)]{braun2025} Braun, Holzm\"uller, Jordan and Bach (2025). Conditional
+coverage diagnostics for conformal prediction. Preprint, arXiv:2512.11779.
+\bibitem[Correia et~al.(2024)]{correia2024} Correia, A., Massoli, F.~V., Louizos, C. and Behboodi,
+A. (2024). An information theoretic perspective on conformal prediction. \emph{Advances in Neural
+Information Processing Systems} 37. arXiv:2405.02140.
+\bibitem[Cotton()]{cotton_marginally} Cotton, P. Marginally Useful: Formalizing the Information Gap
+in Conformal Prediction. Companion paper.
+\bibitem[Cotton()]{cotton_signed} Cotton, P. A Feynman--Wigner-Style Diagnostic for the Efficacy of
+Conformal Prediction via Signed de Finetti Representations. Companion note.
+\bibitem[Cotton(2021)]{cotton_horserace} Cotton, P. (2021). Inferring relative ability from winning
+probability in multi-entrant contests. doi:10.1137/19M1276261.
+\bibitem[Cotton(2022)]{cotton_micro2022} Cotton, P. (2022). \emph{Microprediction: Building an Open
+AI Network}. MIT Press.
+\bibitem[Cover and Thomas(2006)]{cover2006} Cover, T.~M. and Thomas, J.~A. (2006). \emph{Elements of
+Information Theory}, 2nd ed. Wiley. (Chapter 6, gambling and side information; Pinsker's
+inequality.)
+\bibitem[Dawid(1984)]{dawid1984} Dawid, A.~P. (1984). Statistical theory: the prequential approach.
+\emph{Journal of the Royal Statistical Society A} 147(2):278--292.
+\bibitem[Foygel Barber et~al.(2021)]{foygelbarber2021} Foygel Barber, R., Cand\`es, E.~J., Ramdas,
+A. and Tibshirani, R.~J. (2021). The limits of distribution-free conditional predictive inference.
+\emph{Information and Inference} 10(2):455--482. arXiv:1903.04684.
+\bibitem[Gr\"unwald et~al.(2024)]{gruenwald2024} Gr\"unwald, P., de Heide, R. and Koolen, W.~M.
+(2024). Safe testing. \emph{Journal of the Royal Statistical Society B} 86(5):1091--1128.
+arXiv:1906.07801.
+\bibitem[Kelly(1956)]{kelly1956} Kelly, J.~L. (1956). A new interpretation of information rate.
+\emph{Bell System Technical Journal} 35(4):917--926.
+\bibitem[Lei and Wasserman(2014)]{leiwasserman2014} Lei, J. and Wasserman, L. (2014).
+Distribution-free prediction bands for non-parametric regression. \emph{Journal of the Royal
+Statistical Society B} 76(1):71--96.
+\bibitem[microprediction/density()]{micro_density} Cotton, P. \texttt{density}: conventions for
+densities used in various games. \url{https://github.com/microprediction/density}.
+\bibitem[Sejdinovic et~al.(2013)]{sejdinovic2013} Sejdinovic, D., Sriperumbudur, B., Gretton, A. and
+Fukumizu, K. (2013). Equivalence of distance-based and RKHS-based statistics in hypothesis testing.
+\emph{The Annals of Statistics} 41(5):2263--2291.
+\bibitem[Shaer et~al.(2023)]{shaer2023} Shaer, S., Maman, G. and Aharoni, E. (2023). Model-X
+sequential testing for conditional independence via testing by betting. \emph{AISTATS}.
+arXiv:2210.00354.
+\bibitem[Shafer and Vovk(2019)]{shafervovk2019} Shafer, G. and Vovk, V. (2019). \emph{Game-Theoretic
+Foundations for Probability and Finance}. Wiley.
+\bibitem[Simon-Gabriel et~al.(2023)]{simongabriel2023} Simon-Gabriel, C.-J., Barp, A., Sch\"olkopf,
+B. and Mackey, L. (2023). Metrizing weak convergence with maximum mean discrepancies. \emph{Journal
+of Machine Learning Research} 24. arXiv:2006.09268.
+\bibitem[Sz\'ekely et~al.(2007)]{szekely2007} Sz\'ekely, G.~J., Rizzo, M.~L. and Bakirov, N.~K.
+(2007). Measuring and testing dependence by correlation of distances. \emph{The Annals of
+Statistics} 35(6):2769--2794.
+\bibitem[Vovk(2012)]{vovk2012} Vovk, V. (2012). Conditional validity of inductive conformal
+predictors. \emph{Asian Conference on Machine Learning}, PMLR 25:475--490.
+\bibitem[Vovk et~al.(2003)]{vng2003} Vovk, V., Nouretdinov, I. and Gammerman, A. (2003). Testing
+exchangeability on-line. \emph{International Conference on Machine Learning}.
+\bibitem[Vovk and Wang(2021)]{vovkwang2021} Vovk, V. and Wang, R. (2021). E-values: calibration,
+combination, and applications. \emph{The Annals of Statistics} 49(3):1736--1754.
+\bibitem[Wang and Tay(2022)]{wangtay2022} Wang, C.~X. and Tay, W.~P. (2022). Practical bounds of
+Kullback--Leibler divergence using maximum mean discrepancy. Preprint, arXiv:2204.02031.
+\end{thebibliography}
+
+\end{document}
