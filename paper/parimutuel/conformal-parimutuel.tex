@@ -97,7 +97,12 @@ $\mathrm{KL}(p\|q)$, the second is $\mathrm{KL}(p\|b)\ge 0$ by Gibbs' inequality
 
 Lemmas \ref{lem:payoff} and \ref{lem:growth} are the parimutuel statement of the Kelly--Breiman
 log-optimality principle \citep{kelly1956,cover2006}; the growth rate $\mathrm{KL}(p\|q)$ is the
-information the crowd's price $q$ is missing about the truth $p$.
+information the crowd's price $q$ is missing about the truth $p$. When the crowd prices the
+marginal, that is, offers fair odds, the averaged growth of an entrant with belief $b$ is
+$I(R;X)-\mathbb E_X\,\mathrm{KL}\big(g(\cdot\mid X)\,\|\,b(\cdot\mid X)\big)$. \citet{kemp2022}
+write exactly this decomposition, $\gamma=I(E;S)-\mathbb E_s\,\mathrm{KL}\big(P(E\mid s)\,\|\,
+X(E\mid s)\big)$, in a population-growth setting unconnected to conformal prediction; the next
+section is the observation that a conformal predictor is precisely such a fair-odds crowd.
 
 \section{The conformal lottery}
 
@@ -106,7 +111,9 @@ predictor is exactly the crowd that prices the rank pool flat and uses nothing a
 \begin{equation}
 q(u)\equiv 1 \quad\text{on } [0,1].
 \end{equation}
-Two entrants step up.
+Flat pricing on the rank scale is fair odds: the implied price equals the true marginal of $U$,
+which is what marginal calibration means. That is the hypothesis under which side information is
+worth its mutual information, so the rent is settled before we compute it. Two entrants step up.
 
 \begin{theorem}[Parimutuel rent of conformal]\label{thm:rent}
 Against the conformal crowd $q\equiv 1$:
@@ -260,7 +267,10 @@ The identity $\Delta=I(R;X)$ is the companion paper \citep{cotton_marginally}; t
 distance-covariance diagnostic and the signed de Finetti reading are \citep{cotton_signed}. That a
 gambler's optimal log-growth with side information equals the mutual information is classical
 \citep{kelly1956,cover2006}, with the financial-value-of-information bound due to
-\citet{barroncover1988}; the log-loss as negative log-wealth is the prequential and game-theoretic
+\citet{barroncover1988}. \citet{kemp2022} write the explicit fair-odds decomposition
+$\gamma=I-\mathbb E\,\mathrm{KL}$ that Lemma~\ref{lem:growth} specialises, deriving from it the
+dynamics of growth and wealth inequality in learning populations, a setting with no contact with
+conformal prediction. The log-loss as negative log-wealth is the prequential and game-theoretic
 tradition \citep{dawid1984,shafervovk2019}. The growth-rate-optimal e-variable and its identity with
 a KL are from safe testing \citep{gruenwald2024} and the e-value calculus \citep{vovkwang2021};
 conformal test martingales for exchangeability are \citet{vng2003}. Sequential calibration testing
@@ -273,8 +283,10 @@ bounds conditional entropy by set size rather than reading a gap from a calibrat
 parimutuel mechanism, its log-optimal incentive, and the latent recovery it supports are
 \citet{cotton_micro2022,cotton_horserace}; the continuous density conventions are
 \citet{micro_density}. The contribution here is the assembly: a self-contained parimutuel derivation
-of $I(R;X)$ in the conformal idiom, its identification with the rent in a deployed market, and the
-pairing of a certified lower bound with an anytime-valid growth-rate estimate.
+of $I(R;X)$ in the conformal idiom, the recognition that conformal calibration is exactly the
+fair-odds condition under which side information is worth its mutual information, the identification
+of the gap with the rent in a deployed market, and the pairing of a certified lower bound with an
+anytime-valid growth-rate estimate.
 
 \begin{thebibliography}{99}
 \bibitem[Arnold et~al.(2023)]{arnold2023} Arnold, S., Henzi, A. and Ziegel, J.~F. (2023).
@@ -308,6 +320,8 @@ A. and Tibshirani, R.~J. (2021). The limits of distribution-free conditional pre
 arXiv:1906.07801.
 \bibitem[Kelly(1956)]{kelly1956} Kelly, J.~L. (1956). A new interpretation of information rate.
 \emph{Bell System Technical Journal} 35(4):917--926.
+\bibitem[Kemp and Bettencourt(2022)]{kemp2022} Kemp, J.~T. and Bettencourt, L.~M.~A. (2022). The
+Bayesian origins of growth rates in stochastic environments. Preprint, arXiv:2209.09492.
 \bibitem[Lei and Wasserman(2014)]{leiwasserman2014} Lei, J. and Wasserman, L. (2014).
 Distribution-free prediction bands for non-parametric regression. \emph{Journal of the Royal
 Statistical Society B} 76(1):71--96.
