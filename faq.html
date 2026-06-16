@@ -63,13 +63,20 @@
   magnitude apart. Worse, the value usually lives in the sparse, extrapolation states where the
   marginal guarantee is averaging over precisely the cases you care about. So a conformal interval,
   or a conformalized density read off one residual shape, is not what prices a contract. The target
-  there is a conditional density scored by a proper score (log-likelihood, CRPS), and the
-  alternatives are many: heteroscedastic and stochastic-volatility models, GARCH-family and
-  implied-volatility surfaces, quantile and expectile regression, mixture and normalizing-flow
-  densities, distributional neural forecasts. Conformal can still wrap any of these for a coverage
-  certificate, but the tail shape that sets the price is the model&rsquo;s work, not the
-  wrapper&rsquo;s. The gap between a flat conformal interval and a desk that models the conditional
-  tail is made precise in <a href="/papers/parimutuel/">the parimutuel note</a>.</p>
+  is the conditional density itself, and finance has two well-developed ways to get it, neither a
+  coverage test. You can recover the risk-neutral density directly from the option surface: it is
+  the second derivative of the call price in the strike (<a href="https://www.jstor.org/stable/2352653">Breeden&ndash;Litzenberger, 1978</a>),
+  an ill-posed step that is stabilised by regularized fitting, nonparametric state-price density
+  estimation (<a href="https://doi.org/10.1111/0022-1082.215228">A&iuml;t-Sahalia&ndash;Lo, 1998</a>),
+  arbitrage-free smoothing-spline fits to the implied-volatility surface
+  (<a href="https://doi.org/10.1080/14697680802595585">Fengler, 2009</a>), or positive-convolution
+  and shape-constrained fits (Bondarenko, 2003; Figlewski, 2010). Or you forecast the conditional
+  density and score it with a proper score (log-likelihood, CRPS): heteroscedastic and
+  stochastic-volatility models, GARCH-family fits, quantile and expectile regression, mixture and
+  normalizing-flow densities. Conformal can wrap any of these for a coverage certificate, but the
+  tail shape that sets the price is the model&rsquo;s work, not the wrapper&rsquo;s. The gap between
+  a flat conformal interval and a desk that fits the conditional tail is made precise in
+  <a href="/papers/parimutuel/">the parimutuel note</a>.</p>
 
   <h3>Does it work for time series?</h3>
   <p>The basic guarantee needs exchangeability, which time series violate. Adaptive methods (ACI, conformal PID, EnbPI) restore a long-run average coverage and are well worth using; just don&rsquo;t read them as a per-step guarantee (see <a href="/index.html#ts">time series</a>).</p>
