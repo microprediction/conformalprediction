@@ -20,8 +20,8 @@ index.html              guide landing (sections: how it works -> limits -> what 
 applications.html       deep dive: domains where coverage is genuinely the goal; this is
                         the home for the curated APPLICATION papers (annotated, by domain)
 patterns.html           sound-patterns / anti-patterns taxonomy + the sampled misuse rate
-theory.html             "Theory" in the nav: the curated METHODS & THEORY reading list
-                        (renamed from reading.html; application papers live in applications.html)
+literature.html         "Literature" in the nav: the curated LITERATURE reading list
+                        (renamed from theory.html; application papers live in applications.html)
 benchmark.html          "Example" in nav: a cautionary worked example (figures + tables)
                         from benchmark/ — framed as one synthetic experiment, NOT a benchmark
 demos/ js/ css/         13 interactive demos (vanilla JS, no build); titles are unnumbered
@@ -38,16 +38,16 @@ data/cp_papers_labeled.tsv   wheat/chaff labels from the patterns study
 
 ## Adding new papers (the usual refresh)
 
-1. Pull the latest bibliography and look for entries newer than the last refresh:
-   `curl -s https://raw.githubusercontent.com/valeman/awesome-conformal-prediction/master/README.md`
-   (and/or an arXiv search for recent `conformal prediction` papers).
+1. Look for entries newer than the last refresh: an arXiv search for recent
+   `conformal prediction` papers, plus the proceedings of the year's COPA, NeurIPS,
+   ICML, and ICLR. Do your own reading; write your own one-line descriptions.
 2. Classify each candidate with the **rubric in `patterns.html`** (sound patterns P1–P6,
    anti-patterns A1–A7; label wheat / borderline / chaff / unclear). For a batch, dispatch
    parallel agents the way the original study did (see `data/cp_papers_labeled.tsv` for the
    schema: `url, short_title, label, code, confidence, rationale, evidence`). Be fair and
    conservative — default to "sound" unless a claim is clearly overstated.
 3. Add only **wheat** (sound) papers, and put each where it belongs: methods/theory papers
-   go in `theory.html` (right category); application exemplars go in `applications.html`
+   go in `literature.html` (right category); application exemplars go in `applications.html`
    (right domain section, with a one-line annotation). Keep the two from duplicating each
    other. **Skip promotional / overselling material** — that filter is the point.
 4. Append new labels to `data/cp_papers_labeled.tsv`; if you re-sample, update the
