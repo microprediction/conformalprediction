@@ -29,18 +29,36 @@ lo, hi = predict_interval(point=2.0, residuals_cal=resid, alpha=0.2)
 (With too few calibration points for the level you ask for, the correct answer is an
 infinite interval: the finite-sample correction needs at least ⌈(n+1)(1−α)⌉ ≤ n.)
 
+### Guard rails
+
+The package also ships a distribution-free check for when coverage is conditionally
+misleading, that is, when the marginal 90% is spread unevenly across the inputs.
+
+```python
+from conformalguide import coverage_dependence_test
+p, info = coverage_dependence_test(residuals_cal, X_cal)   # small p: coverage is uneven across x
+```
+
+It tests whether the conformal rank of the residual is independent of the features, using
+distance covariance with a permutation null. It detects, it does not certify. `CoverageAudited`
+wraps any conformal estimator and warns after `fit`; `coverage_dependence_scorer` drops into
+scikit-learn cross-validation. The reasoning is the companion note below.
+
 ## What's in the repository
 
 A static site (vanilla HTML/CSS/ES-modules, no build step, no runtime dependencies except
-MathJax from a CDN), a reproducible benchmark, and a LaTeX paper.
+MathJax from a CDN), a reproducible benchmark, and LaTeX write-ups (a paper and a companion
+note).
 
 ```
-conformalguide/             # the pip package (minimal split-conformal core)
+conformalguide/             # the pip package: split-conformal core + coverage guard rails
 index.html                  # the guide
 css/ js/                    # styling and the demo modules (one per demonstration)
-demos/                      # thirteen interactive demonstrations
-benchmark/                  # reproducible MAPIE / crepes / skaters comparison
-paper/                      # the companion paper (LaTeX + figures + references)
+demos/                      # sixteen interactive demonstrations
+benchmark/                  # reproducible MAPIE / crepes comparison
+paper/                      # LaTeX sources: the paper, and the de Finetti–Feynman note
+papers/                     # the papers as served on the site (landing pages + PDFs)
+.claude/skills/, SKILL.md   # a Claude skill that reviews conformal code and runs the check
 ```
 
 ## The demonstrations
@@ -60,6 +78,9 @@ paper/                      # the companion paper (LaTeX + figures + references)
 | 11 | Guaranteed recall | Where it shines: one conformal threshold certifies recall for screening and retrieval. |
 | 12 | A certified safety envelope | Where it shines: a conformal safety tube for containment in robotics and control. |
 | 13 | The coverage–score plane | Synthesis: conformalizing moves a model horizontally to honest coverage; only conditioning lifts it toward the oracle. The gap is I(R;X). |
+| 14 | One number, five pictures | The information gap read five ways: false pooling, an average log Bayes factor, non-uniform conformal ranks, a projection, a Kelly betting rent. |
+| 15 | de Finetti, and where it goes negative | Exchangeable laws as mixtures of i.i.d. ones; push the correlation negative and the mixing measure turns signed. |
+| 16 | A Thurstone contest at the −1/n floor | Marginal coverage holds while per-case coverage fans: the conformal error at the negative-association floor. |
 
 ## Running the site locally
 
@@ -75,7 +96,12 @@ python3 -m http.server 8731     # then open http://localhost:8731/index.html
 cd paper && tectonic marginally-useful.tex
 ```
 
-Any standard TeX distribution works too (`pdflatex → bibtex → pdflatex → pdflatex`).
+Any standard TeX distribution works too (`pdflatex → bibtex → pdflatex → pdflatex`). The
+companion note needs only `pdflatex` (it has no external bib):
+
+```bash
+cd paper/definetti-feynman && pdflatex signed-definetti-and-conformal.tex
+```
 
 ## The paper, in three results
 
@@ -94,6 +120,26 @@ and a residual score:
 
 A no-go lemma collects the impossibility results of Lei & Wasserman (2014) and Foygel
 Barber et al. (2021), each coordinate of which appears as a finite-sample fact in the demos.
+
+## The companion note
+
+A short follow-up, *A Feynman–Wigner Diagnostic for Conformal Prediction via Signed de Finetti
+Representations* (`paper/definetti-feynman/`), reads conformal coverage through the sign of the
+finite de Finetti mixing measure. Positive, extendable mixtures leave coverage conditionally
+adaptive; the signed corner, where constrained or ranked scores live, makes it anti-adaptive,
+while the marginal guarantee is unchanged. The note also states the runnable detector behind the
+guard rails: distance covariance between the conformal rank and the features is the
+energy-statistics sibling of the gap I(R;X), and it is the thing you can test on data
+(`check_dcov.py`, `check_sign.py`).
+
+## A check for your own code
+
+There is a Claude skill in `.claude/skills/`, also served at
+[conformalprediction.net/SKILL.md](https://conformalprediction.net/SKILL.md). Point your
+assistant at it and it will review conformal code for the usual misuses and run the coverage
+check. The bootstrap line is the same one at the foot of every page on the site:
+
+> Read https://conformalprediction.net/SKILL.md and create a project skill from it.
 
 ## When conformal prediction is exactly right
 
