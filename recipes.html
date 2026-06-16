@@ -4,10 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<title>Code — conformal prediction recipes</title>
-<meta name="description" content="Copy-paste Python recipes for conformal prediction: split-conformal regression, conformalized quantile regression, classification prediction sets, conformal p-values for anomaly detection, guaranteed-recall screening, and adaptive conformal inference for time series." />
-<meta property="og:title" content="Conformal Prediction — code recipes" />
-<meta property="og:description" content="Short, runnable Python recipes for the conformal-prediction use-cases: regression intervals, CQR, prediction sets, anomaly p-values, guaranteed recall, and time-series ACI." />
+<title>Code — conformal prediction recipes and fixes</title>
+<meta name="description" content="Conformal prediction in code: audit and fix an existing setup (MAPIE, crepes, sklearn, hand-rolled) with the conformalguide check and the Claude skill, plus runnable recipes for the uses where coverage is genuinely the objective — prediction sets, anomaly p-values, guaranteed recall, and risk control." />
+<meta property="og:title" content="Conformal Prediction — code, audits, and fixes" />
+<meta property="og:description" content="Audit and fix an existing conformal setup (MAPIE, crepes, sklearn), get the guard rails as a Claude skill, and copy the recipes for the uses where coverage is the point." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://conformalprediction.net/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -35,13 +35,144 @@
 <div class="wrap">
 
   <p class="tag">Code</p>
-  <h1>Conformal prediction recipes</h1>
-  <p class="subtitle">Short, runnable Python for each use-case. Every recipe is the same idea: score a held-out calibration fold, take an order statistic, act on it.</p>
+  <h1>Conformal prediction in code</h1>
+  <p class="subtitle">Two things you actually need: a way to audit and fix a setup you already have, and recipes for the uses where coverage is genuinely the objective.</p>
 
-  <p>Two assumptions throughout. The calibration data must be exchangeable with the test point (the one place to be careful: plain split conformal does not hold under drift, see the time-series recipe). And the calibration fold must be disjoint from whatever the model trained on. Here <code>alpha</code> is the miscoverage level, so <code>alpha = 0.1</code> asks for 90%. The dependency-free core of the first recipe is also on PyPI: <code>pip install conformalguide</code>.</p>
+  <p>The method is always the same idea: score a held-out calibration fold, take an order
+  statistic, act on it. Two assumptions hold throughout. The calibration data must be
+  exchangeable with the test point, plain split conformal does not survive drift (see the
+  <a href="demos/05-exchangeability-timeseries.html">time-series</a> case). And the
+  calibration fold must be disjoint from whatever the model trained on. Here <code>alpha</code>
+  is the miscoverage level, so <code>alpha = 0.1</code> asks for 90%.</p>
 
-  <h2>Regression intervals (split conformal)</h2>
-  <p>Wrap any point predictor in a band with finite-sample marginal coverage. This is <a href="demos/01-how-conformal-works.html">how split conformal works</a>.</p>
+  <h2>Audit and fix an existing setup</h2>
+  <p>If you already use MAPIE, crepes, puncc, TorchCP, or a hand-rolled wrapper, the code is
+  almost certainly producing valid marginal coverage. The failure mode is not a bug, it is the
+  reading: the marginal <code>1 - alpha</code> is an average over inputs, and it can sit near
+  100% on easy <code>x</code> and well below target on hard ones while the average looks fine.
+  There is a cheap check for that, and it is library-free.</p>
+
+  <pre><code>pip install conformalguide</code></pre>
+
+  <p>The check tests whether the conformal rank of the residual is independent of the features.
+  Under good conditional calibration it is; <a href="/papers/definetti-feynman/">distance
+  covariance</a> flags when it is not. Feed it your calibration residuals and the matching
+  features. Getting those out of each library:</p>
+
+  <p><strong>Hand-rolled or sklearn.</strong> You already have the pieces.</p>
+<pre><code>from conformalguide import coverage_dependence_test
+resid = y_cal - model.predict(X_cal)          # out-of-fold or held-out residuals
+p, info = coverage_dependence_test(resid, X_cal)
+</code></pre>
+
+  <p><strong>MAPIE.</strong> Wrap the regressor and it warns after <code>fit</code>, then
+  delegates everything else, so it disappears into a pipeline.</p>
+<pre><code>from conformalguide import CoverageAudited
+from mapie.regression import MapieRegressor
+model = CoverageAudited(MapieRegressor(estimator=base, cv="split"), alpha=0.05).fit(X, y)
+# UserWarning if the 95% level is uneven across x; model.predict(...) unchanged
+# manual route: resid = y_cal - model.estimator_.predict(X_cal)
+</code></pre>
+
+  <p><strong>crepes.</strong> The point model is kept on <code>.learner</code>.</p>
+<pre><code>from conformalguide import coverage_dependence_test
+rf.calibrate(X_cal, y_cal)                     # rf is a crepes WrapRegressor
+resid = y_cal - rf.learner.predict(X_cal)
+p, info = coverage_dependence_test(resid, X_cal)
+</code></pre>
+
+  <p><strong>In a cross-validation loop.</strong> It is also an sklearn scorer.</p>
+<pre><code>from conformalguide import coverage_dependence_scorer
+cross_validate(est, X, y, scoring={"cov_uniformity": coverage_dependence_scorer})
+</code></pre>
+
+  <p>Reading the result, and the fix:</p>
+  <ul>
+    <li><code>p &gt;= 0.05</code>: nothing found at this power. Report it as &ldquo;not
+    detected&rdquo;, not as conditional validity. No test can certify conditional coverage
+    (the <a href="literature.html">no-go results</a>); this one only detects.</li>
+    <li><code>p &lt; 0.05</code>: coverage is conditionally uneven in <code>X</code>. If
+    <code>info["per_feature_dcov"]</code> is present, its largest entries name the features
+    driving it. The fix is upstream: model the conditional spread, with conformalized quantile
+    regression or Mondrian / binned conformal. Do not touch <code>alpha</code> or the quantile,
+    the conformal step cannot reduce this gap.</li>
+  </ul>
+
+  <h3>Get the guard rails as a Claude skill</h3>
+  <p>The same checks, plus a review pass for the usual misuses (conformalizing to make a
+  forecast sharper, coverage reported as a quality metric, in-sample residuals, expecting
+  conditional coverage from a marginal guarantee), are packaged as a Claude skill. Drop it into
+  a project and Claude runs them whenever it sees conformal code. To install, tell Claude:</p>
+<pre><code>Read https://conformalprediction.net/SKILL.md and create a project skill from it.</code></pre>
+  <p>The <a href="/SKILL.md">SKILL.md</a> is the whole thing: what it flags, the check it runs,
+  and the caveat it states every time.</p>
+
+  <h2>Uses where coverage is the point</h2>
+  <p>These are the cases where a coverage or containment certificate is exactly what you want,
+  and the model&rsquo;s sharpness is a separate, honest concern. This is conformal prediction at
+  its most useful.</p>
+
+  <h3>Prediction sets and selective triage</h3>
+  <p>Return a set of labels guaranteed to contain the truth, small where the model is sure,
+  large where it is not. The basis of <a href="demos/09-prediction-sets.html">adaptive
+  prediction sets</a> and of routing the uncertain cases to a human.</p>
+<pre><code>import numpy as np
+# probs_cal: (n, K) softmax on a calibration fold; y_cal: integer labels
+s = 1 - probs_cal[np.arange(len(y_cal)), y_cal]          # 1 - p(true class)
+n = len(s); k = int(np.ceil((n + 1) * (1 - alpha)))
+qhat = np.sort(s)[k - 1]
+sets = [np.where(p &gt;= 1 - qhat)[0] for p in probs_test]   # labels confident enough to keep
+# P(true label in set) &gt;= 1 - alpha; route |set| != 1 to review
+</code></pre>
+
+  <h3>Calibrated anomaly detection (conformal p-values)</h3>
+  <p>Turn any anomaly score into a test with an exact false-alarm rate. This is
+  <a href="demos/10-anomaly-pvalues.html">calibrated anomaly detection</a>, and it is one of
+  the cleanest homes for the method.</p>
+<pre><code>import numpy as np
+cal = np.sort(inlier_scores)            # calibration scores; higher = more anomalous
+n = len(cal)
+def conformal_pvalue(s):
+    return (1 + np.count_nonzero(cal &gt;= s)) / (n + 1)
+flag = conformal_pvalue(new_score) &lt;= alpha
+# among true inliers, P(flag) &lt;= alpha, distribution-free
+</code></pre>
+
+  <h3>Guaranteed-recall shortlist (screening, retrieval)</h3>
+  <p>Keep a shortlist that contains a genuine hit at least <code>1 - alpha</code> of the time.
+  This is <a href="demos/11-guaranteed-recall.html">guaranteed recall</a> for retrieval and
+  screening.</p>
+<pre><code>import numpy as np
+pos = np.sort(relevant_scores)          # scores of known relevant items (ascending)
+n = len(pos)
+k = int(np.floor(alpha * (n + 1)))      # tolerate up to an alpha miss-rate
+t = -np.inf if k &lt; 1 else pos[k - 1]     # keep-threshold
+shortlist = np.where(test_scores &gt;= t)[0]
+# a new relevant item clears t with probability &gt;= 1 - alpha
+</code></pre>
+
+  <h3>Risk control (beyond coverage)</h3>
+  <p>When the cost is not miss-or-cover but a bounded loss, false-negative rate, edit distance,
+  fraction of a set you must read, conformal risk control picks a threshold whose expected loss
+  on a fresh point stays under target. Coverage is the 0&ndash;1 special case
+  (<a href="literature.html">Angelopoulos et al., 2024</a>).</p>
+<pre><code>import numpy as np
+# loss(lam) is monotone non-increasing in the threshold lam, valued in [0, B]
+B, target = 1.0, 0.1
+for lam in np.sort(lambdas):                              # strict -> permissive
+    Rhat = np.mean([loss(lam, i) for i in range(n)])      # mean loss on calibration
+    if (n * Rhat + B) / (n + 1) &lt;= target:                # finite-sample risk bound
+        break
+# using lam controls E[loss on a fresh point] &lt;= target
+</code></pre>
+
+  <h2>Interval recipes (conformal only re-levels)</h2>
+  <p>You can also wrap a point predictor in a band. Useful, but be clear about the division of
+  labour: the band&rsquo;s width comes from the model, conformal only fixes the coverage level.
+  The <a href="benchmark.html">worked example</a> shows a conformal step leaving a proper score
+  untouched.</p>
+
+  <h3>Regression intervals (split conformal)</h3>
 <pre><code>import numpy as np
 # model already fit on a training fold; calibrate on a disjoint fold
 scores = np.sort(np.abs(y_cal - model.predict(X_cal)))   # nonconformity scores
@@ -53,8 +184,10 @@ hi = model.predict(X_test) + q
 # P(y in [lo, hi]) &gt;= 1 - alpha, finite-sample, distribution-free
 </code></pre>
 
-  <h2>Adaptive intervals (conformalized quantile regression)</h2>
-  <p>Want the band to widen where the data are noisy? Fit conditional quantiles, then conformalize them. The adaptivity comes from the quantile model; conformal only re-levels coverage (<a href="benchmark.html">the worked example</a> shows this).</p>
+  <h3>Adaptive width (conformalized quantile regression)</h3>
+  <p>Want the band to widen where the data are noisy? Fit conditional quantiles, then
+  conformalize them. The adaptivity is the quantile model&rsquo;s; this is also the fix when the
+  audit above fires.</p>
 <pre><code>from sklearn.ensemble import GradientBoostingRegressor
 import numpy as np
 lo_m = GradientBoostingRegressor(loss="quantile", alpha=alpha / 2).fit(X_tr, y_tr)
@@ -67,41 +200,10 @@ lo = lo_m.predict(X_test) - q
 hi = hi_m.predict(X_test) + q                            # adaptive width, exact marginal coverage
 </code></pre>
 
-  <h2>Classification prediction sets (LAC)</h2>
-  <p>Return a set of labels guaranteed to contain the truth, small where the model is sure. The basis of <a href="demos/09-prediction-sets.html">adaptive prediction sets</a> and selective triage.</p>
-<pre><code>import numpy as np
-# probs_cal: (n, K) softmax on a calibration fold; y_cal: integer labels
-s = 1 - probs_cal[np.arange(len(y_cal)), y_cal]          # 1 - p(true class)
-n = len(s); k = int(np.ceil((n + 1) * (1 - alpha)))
-qhat = np.sort(s)[k - 1]
-sets = [np.where(p &gt;= 1 - qhat)[0] for p in probs_test]   # labels confident enough to keep
-# P(true label in set) &gt;= 1 - alpha
-</code></pre>
-
-  <h2>Anomaly detection (conformal p-values)</h2>
-  <p>Turn any anomaly score into a test with an exact false-alarm rate. This is <a href="demos/10-anomaly-pvalues.html">calibrated anomaly detection</a>.</p>
-<pre><code>import numpy as np
-cal = np.sort(inlier_scores)            # calibration scores; higher = more anomalous
-n = len(cal)
-def conformal_pvalue(s):
-    return (1 + np.count_nonzero(cal &gt;= s)) / (n + 1)
-flag = conformal_pvalue(new_score) &lt;= alpha
-# among true inliers, P(flag) &lt;= alpha, distribution-free
-</code></pre>
-
-  <h2>Guaranteed-recall shortlist (screening, retrieval)</h2>
-  <p>Keep a shortlist that contains a genuine hit at least 1 - alpha of the time. This is <a href="demos/11-guaranteed-recall.html">guaranteed recall</a>.</p>
-<pre><code>import numpy as np
-pos = np.sort(relevant_scores)          # scores of known relevant items (ascending)
-n = len(pos)
-k = int(np.floor(alpha * (n + 1)))      # tolerate up to an alpha miss-rate
-t = -np.inf if k &lt; 1 else pos[k - 1]     # keep-threshold
-shortlist = np.where(test_scores &gt;= t)[0]
-# a new relevant item clears t with probability &gt;= 1 - alpha
-</code></pre>
-
-  <h2>Time series (adaptive conformal inference)</h2>
-  <p>Exchangeability fails under drift, so the fixed quantile is replaced by an online one. ACI recovers long-run coverage, not per-step conditional coverage (<a href="demos/05-exchangeability-timeseries.html">exchangeability &amp; time series</a>).</p>
+  <h3>Time series (adaptive conformal inference)</h3>
+  <p>Exchangeability fails under drift, so the fixed quantile is replaced by an online one. ACI
+  recovers long-run coverage, not per-step conditional coverage
+  (<a href="demos/05-exchangeability-timeseries.html">exchangeability &amp; time series</a>).</p>
 <pre><code>import numpy as np
 from collections import deque
 alpha_t, gamma, W = alpha, 0.01, deque(maxlen=200)       # trailing |residual| window
@@ -114,13 +216,17 @@ for x_t, y_t, pred_t in stream:
 </code></pre>
 
   <div class="takeaway">
-    <p>Every recipe is one order statistic of a calibration score. That is the whole method, and it is why it composes with any model. What conformal gives you is the coverage certificate; the sharpness of the band, set, or shortlist is still the model&rsquo;s job (<a href="/papers/marginally-useful/">the paper</a> makes that split precise).</p>
+    <p>Every recipe is one order statistic of a calibration score. That is the whole method,
+    and it is why it composes with any model. Conformal hands you the coverage certificate; the
+    sharpness of the band, set, or shortlist is still the model&rsquo;s job, and the audit above
+    is how you check the certificate is not hiding uneven coverage
+    (<a href="/papers/marginally-useful/">the paper</a> makes that split precise).</p>
   </div>
 
   <div class="prevnext">
     <a href="applications.html">&larr; Applications</a>
     <span class="spacer"></span>
-    <a href="literature.html">Theory &rarr;</a>
+    <a href="literature.html">Literature &rarr;</a>
   </div>
 
 </div>
