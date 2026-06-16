@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Literature — Conformal Prediction</title>
+<meta name="description" content="A curated bibliography of conformal prediction: foundations, validity and its limits, conditional coverage, regression and classification, risk control, distribution shift and time series, predictive systems, connections, causal inference, language models, and software." />
+<meta property="og:title" content="Conformal Prediction — literature" />
+<meta property="og:description" content="A curated, opinionated bibliography of conformal prediction, kept to careful methodology and foundational results." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/literature.html">Literature</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Literature</p>
+  <h1>Literature</h1>
+  <p class="subtitle">A working bibliography of conformal prediction, by topic. For papers that put it to work where coverage is genuinely the objective, see the <a href="applications.html">applications page</a>.</p>
+
+  <p>Curated with one filter, in keeping with the rest of the guide: keep the careful
+  methodology and the foundational theory, and the work that is precise about what the
+  guarantee does and does not give; skip material that pitches conformal prediction as
+  improving a forecast or delivering &ldquo;reliable uncertainty&rdquo; with the
+  marginal-coverage caveat left out. Descriptions are our own one-line readings, not the
+  papers&rsquo; abstracts. Corrections welcome.</p>
+
+  <h2>Start here: surveys, books, foundations</h2>
+  <ul class="refs">
+    <li>Angelopoulos &amp; Bates (2023). <em>A gentle introduction to conformal prediction and distribution-free uncertainty quantification.</em> FnT in ML. <a href="https://arxiv.org/abs/2107.07511">arXiv:2107.07511</a> &mdash; the friendliest entry point, with code.</li>
+    <li>Shafer &amp; Vovk (2008). <em>A tutorial on conformal prediction.</em> JMLR. <a href="https://jmlr.org/papers/v9/shafer08a.html">jmlr.org</a> &mdash; self-contained, by a co-inventor.</li>
+    <li>Vovk, Gammerman &amp; Shafer (2005; 2nd ed. 2022). <em>Algorithmic Learning in a Random World.</em> Springer. <a href="https://link.springer.com/book/10.1007/978-3-031-06649-8">link</a> &mdash; the founding monograph.</li>
+    <li>Angelopoulos, Barber &amp; Bates (2024). <em>Theoretical foundations of conformal prediction.</em> <a href="https://arxiv.org/abs/2411.11824">arXiv:2411.11824</a> &mdash; the exchangeability/permutation machinery in full.</li>
+    <li>Fontana, Zeni &amp; Vantini (2023). <em>Conformal prediction: a unified review of theory and new challenges.</em> Bernoulli. <a href="https://arxiv.org/abs/2005.07972">arXiv:2005.07972</a></li>
+    <li>Campos, Farinhas, Zerva, Figueiredo &amp; Martins (2024). <em>Conformal prediction for natural language processing: a survey.</em> TACL. <a href="https://arxiv.org/abs/2405.01976">arXiv:2405.01976</a></li>
+    <li>Manokhin (2023). <em>Practical Guide to Applied Conformal Prediction in Python.</em> Packt (book).</li>
+  </ul>
+
+  <h2>Origins and the core method</h2>
+  <ul class="refs">
+    <li>Vovk, Gammerman &amp; Saunders (1999). <em>Machine-learning applications of algorithmic randomness.</em> ICML &mdash; the precursor: confidence from algorithmic randomness.</li>
+    <li>Saunders, Gammerman &amp; Vovk (1999). <em>Transduction with confidence and credibility.</em> IJCAI &mdash; transductive (full) conformal in embryo.</li>
+    <li>Papadopoulos, Proedrou, Vovk &amp; Gammerman (2002). <em>Inductive confidence machines for regression.</em> ECML &mdash; the split conformal predictor, the cheap variant now standard.</li>
+    <li>Vovk (2015). <em>Cross-conformal predictors.</em> Ann. Math. Artif. Intell. &mdash; a CV/inductive hybrid.</li>
+    <li>Lei, G&rsquo;Sell, Rinaldo, Tibshirani &amp; Wasserman (2018). <em>Distribution-free predictive inference for regression.</em> JASA. <a href="https://arxiv.org/abs/1604.04173">arXiv:1604.04173</a> &mdash; the canonical full/split/locally-weighted regression treatment.</li>
+  </ul>
+
+  <h2>Validity, exchangeability, and the limits</h2>
+  <ul class="refs">
+    <li>Lei &amp; Wasserman (2014). <em>Distribution-free prediction bands for non-parametric regression.</em> JRSS-B. <a href="https://doi.org/10.1111/rssb.12021">doi</a> &mdash; the first no-go: finite-length conditional coverage is impossible distribution-free.</li>
+    <li>Foygel Barber, Cand&egrave;s, Ramdas &amp; Tibshirani (2021). <em>The limits of distribution-free conditional predictive inference.</em> Information and Inference. <a href="https://arxiv.org/abs/1903.04684">arXiv:1903.04684</a> &mdash; even approximate subgroup coverage is essentially unattainable.</li>
+    <li>Vovk (2012). <em>Conditional validity of inductive conformal predictors.</em> ACML. <a href="https://arxiv.org/abs/1209.2673">arXiv:1209.2673</a> &mdash; object/label-conditional validity, and the calibration-conditional Beta law.</li>
+    <li>Bian &amp; Barber (2023). <em>Training-conditional coverage for distribution-free predictive inference.</em> EJS. <a href="https://arxiv.org/abs/2205.03647">arXiv:2205.03647</a> &mdash; split has it; full and jackknife+ do not, without assumptions.</li>
+    <li>Liang &amp; Barber (2025). <em>Algorithmic stability implies training-conditional coverage.</em> Annals of Statistics. <a href="https://arxiv.org/abs/2311.04295">arXiv:2311.04295</a></li>
+    <li>Kuchibhotla (2020). <em>Exchangeability, conformal prediction, and rank tests.</em> <a href="https://arxiv.org/abs/2005.06095">arXiv:2005.06095</a> &mdash; conformal as a classical rank test.</li>
+    <li>Marques F. (2025). <em>Universal distribution of the empirical coverage in split conformal prediction.</em> Stat. &amp; Prob. Letters. <a href="https://arxiv.org/abs/2303.02770">arXiv:2303.02770</a> &mdash; the exact Beta law of calibration-conditional coverage.</li>
+  </ul>
+
+  <h2>Game-theoretic foundations, e-values, exchangeability testing</h2>
+  <ul class="refs">
+    <li>Shafer &amp; Vovk (2019). <em>Game-Theoretic Foundations for Probability and Finance.</em> Wiley &mdash; the martingale-betting backdrop for conformal testing.</li>
+    <li>Vovk, Nouretdinov &amp; Gammerman (2003). <em>Testing exchangeability on-line.</em> ICML &mdash; conformal test martingales for monitoring the assumption.</li>
+    <li>Fedorova, Gammerman, Nouretdinov &amp; Vovk (2012). <em>Plug-in martingales for testing exchangeability on-line.</em> ICML. <a href="https://arxiv.org/abs/1204.3251">arXiv:1204.3251</a></li>
+    <li>Vovk &amp; Wang (2021). <em>E-values: calibration, combination, and applications.</em> Annals of Statistics. <a href="https://arxiv.org/abs/1912.06116">arXiv:1912.06116</a></li>
+    <li>Vovk (2025). <em>Randomness, exchangeability, and conformal prediction.</em> <a href="https://arxiv.org/abs/2501.11689">arXiv:2501.11689</a></li>
+  </ul>
+
+  <h2>Regression and interval methods</h2>
+  <ul class="refs">
+    <li>Romano, Patterson &amp; Cand&egrave;s (2019). <em>Conformalized quantile regression.</em> NeurIPS. <a href="https://arxiv.org/abs/1905.03222">arXiv:1905.03222</a> &mdash; conformalize a quantile model for heteroscedastic-adaptive intervals.</li>
+    <li>Foygel Barber, Cand&egrave;s, Ramdas &amp; Tibshirani (2021). <em>Predictive inference with the jackknife+.</em> Annals of Statistics. <a href="https://arxiv.org/abs/1905.02928">arXiv:1905.02928</a> &mdash; jackknife+ and CV+, leave-one-out with provable coverage.</li>
+    <li>Gupta, Kuchibhotla &amp; Ramdas (2022). <em>Nested conformal prediction and quantile out-of-bag ensembles.</em> Pattern Recognition. <a href="https://arxiv.org/abs/1910.10562">arXiv:1910.10562</a> &mdash; conformal as calibrating nested sets.</li>
+    <li>Papadopoulos, Gammerman &amp; Vovk (2008). <em>Normalized nonconformity measures for regression conformal prediction.</em> IASTED AIA &mdash; locally-weighted, variable-width intervals.</li>
+    <li>Sesia &amp; Cand&egrave;s (2020). <em>A comparison of some conformal quantile regression methods.</em> Stat. <a href="https://arxiv.org/abs/1909.05433">arXiv:1909.05433</a></li>
+    <li>Kivaranovic, Johnson &amp; Leeb (2020). <em>Adaptive, distribution-free prediction intervals for deep networks.</em> AISTATS. <a href="https://proceedings.mlr.press/v108/kivaranovic20a.html">PMLR</a></li>
+    <li>Sesia &amp; Romano (2021). <em>Conformal prediction using conditional histograms.</em> NeurIPS. <a href="https://arxiv.org/abs/2105.08747">arXiv:2105.08747</a> &mdash; shortest intervals from a conditional histogram.</li>
+  </ul>
+
+  <h2>Conditional coverage: methods and guarantees</h2>
+  <ul class="refs">
+    <li>Romano, Barber, Sabatti &amp; Cand&egrave;s (2020). <em>With malice toward none: assessing uncertainty via equalized coverage.</em> HDSR. <a href="https://arxiv.org/abs/1908.05428">arXiv:1908.05428</a> &mdash; equal coverage across protected groups.</li>
+    <li>Guan (2023). <em>Localized conformal prediction.</em> Biometrika. <a href="https://academic.oup.com/biomet/article/110/1/33/6647831">doi</a> &mdash; reweight calibration toward a local neighbourhood.</li>
+    <li>Hore &amp; Barber (2025). <em>Conformal prediction with local weights: randomization enables local guarantees.</em> JRSS-B. <a href="https://arxiv.org/abs/2310.07850">arXiv:2310.07850</a> &mdash; randomized local weights buy a genuine local guarantee.</li>
+    <li>Jung, Noarov, Ramalingam &amp; Roth (2023). <em>Batch multivalid conformal prediction.</em> ICLR. <a href="https://arxiv.org/abs/2209.15145">arXiv:2209.15145</a> &mdash; the multicalibration bridge.</li>
+    <li>Cauchois, Gupta &amp; Duchi (2021). <em>Knowing what you know: valid and validated confidence sets.</em> JMLR. <a href="https://arxiv.org/abs/2004.10181">arXiv:2004.10181</a> &mdash; the worst-slab coverage diagnostic.</li>
+    <li>Gibbs, Cherian &amp; Cand&egrave;s (2025). <em>Conformal prediction with conditional guarantees.</em> JRSS-B. <a href="https://arxiv.org/abs/2305.12616">arXiv:2305.12616</a> &mdash; exact coverage over a finite-dimensional class of shifts.</li>
+  </ul>
+
+  <h2>Conditional coverage: diagnostics and calibration tests</h2>
+  <ul class="refs">
+    <li>Diebold, Gunther &amp; Tay (1998). <em>Evaluating density forecasts.</em> Int. Economic Review &mdash; the PIT: a calibrated forecast gives i.i.d. uniform PIT values.</li>
+    <li>Gneiting, Balabdaoui &amp; Raftery (2007). <em>Probabilistic forecasts, calibration and sharpness.</em> JRSS-B &mdash; the maximize-sharpness-subject-to-calibration frame.</li>
+    <li>Widmann, Lindsten &amp; Zachariah (2019). <em>Calibration tests in multi-class classification.</em> NeurIPS. <a href="https://arxiv.org/abs/1910.11385">arXiv:1910.11385</a> &mdash; kernel calibration error with a hypothesis test.</li>
+    <li>Widmann, Lindsten &amp; Zachariah (2021). <em>Calibration tests beyond classification.</em> ICLR. <a href="https://arxiv.org/abs/2210.13355">arXiv:2210.13355</a></li>
+    <li>Feldman, Bates &amp; Romano (2021). <em>Improving conditional coverage via orthogonal quantile regression.</em> NeurIPS. <a href="https://arxiv.org/abs/2106.00394">arXiv:2106.00394</a> &mdash; HSIC between the miscoverage indicator and interval length.</li>
+    <li>Braun, Holzm&uuml;ller, Jordan &amp; Bach (2025). <em>Conditional coverage diagnostics for conformal prediction</em> (ERT). <a href="https://arxiv.org/abs/2512.11779">arXiv:2512.11779</a> &mdash; classify the coverage indicator on the features.</li>
+    <li>Cotton (2026). <em>A Feynman&ndash;Wigner diagnostic for conformal prediction.</em> <a href="/papers/definetti-feynman/">this site</a> &mdash; distance covariance between the conformal rank and the features, the runnable, level-free check.</li>
+  </ul>
+
+  <h2>Classification</h2>
+  <ul class="refs">
+    <li>Sadinle, Lei &amp; Wasserman (2019). <em>Least ambiguous set-valued classifiers with bounded error levels.</em> JASA. <a href="https://arxiv.org/abs/1609.00451">arXiv:1609.00451</a> &mdash; smallest sets at a fixed error level, marginal or per-class.</li>
+    <li>Romano, Sesia &amp; Cand&egrave;s (2020). <em>Classification with valid and adaptive coverage</em> (APS). NeurIPS. <a href="https://arxiv.org/abs/2006.02544">arXiv:2006.02544</a></li>
+    <li>Angelopoulos, Bates, Jordan &amp; Malik (2021). <em>Uncertainty sets for image classifiers using conformal prediction</em> (RAPS). ICLR. <a href="https://arxiv.org/abs/2009.14193">arXiv:2009.14193</a></li>
+    <li>Ding, Angelopoulos, Bates, Jordan &amp; Tibshirani (2023). <em>Class-conditional conformal prediction with many classes</em> (clustered). NeurIPS. <a href="https://arxiv.org/abs/2306.09335">arXiv:2306.09335</a></li>
+    <li>Vovk &amp; Petej (2014). <em>Venn&ndash;Abers predictors.</em> UAI. <a href="https://arxiv.org/abs/1211.0025">arXiv:1211.0025</a> &mdash; calibrated probability intervals via isotonic regression.</li>
+    <li>Vovk, Lindsay, Nouretdinov &amp; Gammerman (2003). <em>Mondrian confidence machine.</em> RHUL tech report &mdash; per-category (label-conditional) validity.</li>
+  </ul>
+
+  <h2>Risk control and beyond coverage</h2>
+  <ul class="refs">
+    <li>Bates, Angelopoulos, Lei, Malik &amp; Jordan (2021). <em>Distribution-free, risk-controlling prediction sets</em> (RCPS). JACM. <a href="https://arxiv.org/abs/2101.02703">arXiv:2101.02703</a> &mdash; control any bounded loss with high probability.</li>
+    <li>Angelopoulos, Bates, Fisch, Lei &amp; Schuster (2024). <em>Conformal risk control.</em> ICLR. <a href="https://arxiv.org/abs/2208.02814">arXiv:2208.02814</a> &mdash; control the expectation of any monotone loss; coverage is the 0&ndash;1 case.</li>
+    <li>Angelopoulos, Bates, Cand&egrave;s, Jordan &amp; Lei (2021). <em>Learn then test: calibrating predictive algorithms to achieve risk control.</em> <a href="https://arxiv.org/abs/2110.01052">arXiv:2110.01052</a> &mdash; risk control as multiple testing over configurations.</li>
+    <li>Laufer-Goldshtein, Fisch, Barzilay &amp; Jaakkola (2023). <em>Efficiently controlling multiple risks with Pareto testing.</em> ICLR. <a href="https://arxiv.org/abs/2210.07913">arXiv:2210.07913</a></li>
+  </ul>
+
+  <h2>Selection, outliers, and novelty</h2>
+  <ul class="refs">
+    <li>Bates, Cand&egrave;s, Lei, Romano &amp; Sesia (2023). <em>Testing for outliers with conformal p-values.</em> Annals of Statistics. <a href="https://arxiv.org/abs/2104.08279">arXiv:2104.08279</a> &mdash; conformal prediction&rsquo;s most natural home: a distribution-free test.</li>
+    <li>Marandon, Lei, Mary &amp; Roquain (2024). <em>Adaptive novelty detection with false discovery rate guarantee</em> (AdaDetect). Annals of Statistics. <a href="https://arxiv.org/abs/2208.06685">arXiv:2208.06685</a></li>
+    <li>Guan &amp; Tibshirani (2022). <em>Prediction and outlier detection in classification problems</em> (BCOPS). JRSS-B. <a href="https://arxiv.org/abs/1905.04396">arXiv:1905.04396</a></li>
+    <li>Jin &amp; Cand&egrave;s (2023). <em>Selection by prediction with conformal p-values.</em> JMLR. <a href="https://arxiv.org/abs/2210.01408">arXiv:2210.01408</a> &mdash; shortlist with FDR control.</li>
+    <li>Laxhammar &amp; Falkman (2015). <em>Inductive conformal anomaly detection for sequential trajectories.</em> Ann. Math. Artif. Intell. &mdash; calibrated alarm rates online.</li>
+  </ul>
+
+  <h2>Conformal training and efficiency</h2>
+  <ul class="refs">
+    <li>Stutz, Dvijotham, Cemgil &amp; Doucet (2022). <em>Learning optimal conformal classifiers</em> (ConfTr). ICLR. <a href="https://arxiv.org/abs/2110.09192">arXiv:2110.09192</a> &mdash; differentiate through conformalization to train for small sets.</li>
+    <li>Einbinder, Romano, Sesia &amp; Zhou (2022). <em>Training uncertainty-aware classifiers with conformalized deep learning.</em> NeurIPS. <a href="https://arxiv.org/abs/2205.05878">arXiv:2205.05878</a></li>
+    <li>Yang &amp; Kuchibhotla (2025). <em>Selection and aggregation of conformal prediction sets.</em> JASA. <a href="https://arxiv.org/abs/2104.13871">arXiv:2104.13871</a> &mdash; pick the score that gives the smallest valid set.</li>
+    <li>Kiyani, Pappas &amp; Hassani (2024). <em>Length optimization in conformal prediction.</em> NeurIPS. <a href="https://arxiv.org/abs/2406.18814">arXiv:2406.18814</a></li>
+    <li>Einbinder, Feldman, Bates, Angelopoulos, Gendler &amp; Romano (2022). <em>Label noise robustness of conformal prediction.</em> <a href="https://arxiv.org/abs/2209.14295">arXiv:2209.14295</a></li>
+    <li>Gendler, Weng, Daniel &amp; Romano (2022). <em>Adversarially robust conformal prediction</em> (RSCP). ICLR. <a href="https://openreview.net/forum?id=9L1BsI4wP1H">openreview</a></li>
+  </ul>
+
+  <h2>Distribution shift and weighted conformal</h2>
+  <ul class="refs">
+    <li>Tibshirani, Foygel Barber, Cand&egrave;s &amp; Ramdas (2019). <em>Conformal prediction under covariate shift.</em> NeurIPS. <a href="https://arxiv.org/abs/1904.06019">arXiv:1904.06019</a> &mdash; weighted exchangeability when the likelihood ratio is known.</li>
+    <li>Podkopaev &amp; Ramdas (2021). <em>Distribution-free uncertainty quantification for classification under label shift.</em> UAI. <a href="https://arxiv.org/abs/2103.03323">arXiv:2103.03323</a></li>
+    <li>Park, Dobriban, Lee &amp; Bastani (2022). <em>PAC prediction sets under covariate shift.</em> ICLR. <a href="https://arxiv.org/abs/2106.09848">arXiv:2106.09848</a></li>
+    <li>Prinster, Liu &amp; Saria (2022). <em>JAWS: auditing predictive uncertainty under covariate shift.</em> NeurIPS. <a href="https://arxiv.org/abs/2207.10716">arXiv:2207.10716</a> &mdash; weighted jackknife+.</li>
+  </ul>
+
+  <h2>Time series and non-exchangeability</h2>
+  <ul class="refs">
+    <li>Chernozhukov, W&uuml;thrich &amp; Zhu (2018). <em>Exact and robust conformal inference for dependent data.</em> COLT. <a href="https://arxiv.org/abs/1802.06300">arXiv:1802.06300</a> &mdash; block permutations.</li>
+    <li>Stankevi&#269;i&#363;t&#279;, Alaa &amp; van der Schaar (2021). <em>Conformal time-series forecasting.</em> NeurIPS. <a href="https://proceedings.neurips.cc/paper/2021/hash/312f1ba2a72318edaaa995a67835fad5-Abstract.html">proceedings</a></li>
+    <li>Xu &amp; Xie (2021). <em>Conformal prediction interval for dynamic time-series</em> (EnbPI). ICML. <a href="https://arxiv.org/abs/2010.09107">arXiv:2010.09107</a></li>
+    <li>Xu &amp; Xie (2023). <em>Sequential predictive conformal inference for time series</em> (SPCI). ICML. <a href="https://arxiv.org/abs/2212.03463">arXiv:2212.03463</a></li>
+    <li>Lin, Trivedi &amp; Sun (2022). <em>Conformal prediction with temporal quantile adjustments</em> (TQA). NeurIPS. <a href="https://arxiv.org/abs/2205.09940">arXiv:2205.09940</a></li>
+    <li>Sun &amp; Yu (2024). <em>Copula conformal prediction for multi-step time series</em> (CopulaCPTS). ICLR. <a href="https://arxiv.org/abs/2212.03281">arXiv:2212.03281</a></li>
+    <li>Auer, Gauch, Klotz &amp; Hochreiter (2023). <em>Conformal prediction for time series with modern Hopfield networks</em> (HopCPT). NeurIPS. <a href="https://arxiv.org/abs/2303.12783">arXiv:2303.12783</a></li>
+    <li>Barber, Cand&egrave;s, Ramdas &amp; Tibshirani (2023). <em>Conformal prediction beyond exchangeability.</em> Annals of Statistics. <a href="https://arxiv.org/abs/2202.13415">arXiv:2202.13415</a> &mdash; the coverage gap bounded by a total-variation term.</li>
+    <li>Oliveira, Orenstein, Ramos &amp; Romano (2024). <em>Split conformal prediction and non-exchangeable data.</em> JMLR. <a href="https://arxiv.org/abs/2203.15885">arXiv:2203.15885</a></li>
+    <li>Barber &amp; Pananjady (2026). <em>Predictive inference for time series: why is split conformal effective despite temporal dependence?</em> ALT. <a href="https://arxiv.org/abs/2510.02471">arXiv:2510.02471</a></li>
+  </ul>
+
+  <h2>Online and adaptive</h2>
+  <ul class="refs">
+    <li>Gibbs &amp; Cand&egrave;s (2021). <em>Adaptive conformal inference under distribution shift</em> (ACI). NeurIPS. <a href="https://arxiv.org/abs/2106.00170">arXiv:2106.00170</a> &mdash; long-run time-average coverage, no distributional assumptions.</li>
+    <li>Gibbs &amp; Cand&egrave;s (2024). <em>Conformal inference for online prediction with arbitrary distribution shifts.</em> JMLR. <a href="https://arxiv.org/abs/2208.08401">arXiv:2208.08401</a></li>
+    <li>Zaffran, F&eacute;ron, Goude, Josse &amp; Dieuleveut (2022). <em>Adaptive conformal predictions for time series</em> (AgACI). ICML. <a href="https://arxiv.org/abs/2202.07282">arXiv:2202.07282</a></li>
+    <li>Bhatnagar, Wang, Xiong &amp; Bai (2023). <em>Improved online conformal prediction via strongly adaptive online learning.</em> ICML. <a href="https://arxiv.org/abs/2302.07869">arXiv:2302.07869</a></li>
+    <li>Angelopoulos, Cand&egrave;s &amp; Tibshirani (2023). <em>Conformal PID control for time series prediction.</em> NeurIPS. <a href="https://arxiv.org/abs/2307.16895">arXiv:2307.16895</a></li>
+  </ul>
+
+  <h2>Conformal predictive distributions and systems</h2>
+  <ul class="refs">
+    <li>Vovk, Shen, Manokhin &amp; Xie (2019). <em>Nonparametric predictive distributions based on conformal prediction.</em> Machine Learning. <a href="https://link.springer.com/article/10.1007/s10994-018-5755-8">link</a> &mdash; a full predictive distribution with finite-sample validity.</li>
+    <li>Vovk, Nouretdinov, Manokhin &amp; Gammerman (2018). <em>Cross-conformal predictive distributions.</em> COPA. <a href="https://proceedings.mlr.press/v91/vovk18a.html">PMLR</a></li>
+    <li>Vovk, Petej, Nouretdinov, Manokhin &amp; Gammerman (2019). <em>Computationally efficient versions of conformal predictive distributions.</em> Neurocomputing. <a href="https://arxiv.org/abs/1911.00941">arXiv:1911.00941</a></li>
+    <li>Bostr&ouml;m, Johansson &amp; L&ouml;fstr&ouml;m (2021). <em>Mondrian conformal predictive distributions.</em> COPA. <a href="https://proceedings.mlr.press/v152/bostrom21a.html">PMLR</a> &mdash; shape and location vary per region.</li>
+    <li>Bostr&ouml;m (2022). <em>crepes: a Python package for conformal regressors and predictive systems.</em> COPA. <a href="https://proceedings.mlr.press/v179/bostrom22a.html">PMLR</a></li>
+  </ul>
+
+  <h2>Connections: information theory, proper scores, Bayes, fiducial</h2>
+  <ul class="refs">
+    <li>Correia, Massoli, Louizos &amp; Behboodi (2024). <em>An information theoretic perspective on conformal prediction.</em> NeurIPS. <a href="https://arxiv.org/abs/2405.02140">arXiv:2405.02140</a> &mdash; set size bounds the conditional entropy.</li>
+    <li>Hoff (2023). <em>Bayes-optimal prediction with frequentist coverage control.</em> Bernoulli. <a href="https://arxiv.org/abs/2105.14045">arXiv:2105.14045</a></li>
+    <li>Fong &amp; Holmes (2021). <em>Conformal Bayesian computation.</em> NeurIPS. <a href="https://arxiv.org/abs/2106.06137">arXiv:2106.06137</a></li>
+    <li>Fong, Holmes &amp; Walker (2023). <em>Martingale posteriors.</em> JRSS-B (with discussion) &mdash; Bayesian uncertainty as uncertainty over future data.</li>
+    <li>Cella &amp; Martin (2022). <em>Validity, consonant plausibility measures, and conformal prediction.</em> Int. J. Approx. Reasoning. <a href="https://arxiv.org/abs/2001.09225">arXiv:2001.09225</a> &mdash; the fiducial / imprecise-probability reading.</li>
+    <li>Gneiting &amp; Raftery (2007). <em>Strictly proper scoring rules, prediction, and estimation.</em> JASA &mdash; the log score and CRPS as the right graders.</li>
+    <li>Cotton. <em>Marginally Useful</em>, and the <em>Feynman&ndash;Wigner</em> note. <a href="/papers/">this site</a> &mdash; the coverage&ndash;sharpness gap as the mutual information I(R;X), and the sign of the de Finetti measure.</li>
+  </ul>
+
+  <h2>Causal inference, treatment effects, and survival</h2>
+  <ul class="refs">
+    <li>Lei &amp; Cand&egrave;s (2021). <em>Conformal inference of counterfactuals and individual treatment effects.</em> JRSS-B. <a href="https://arxiv.org/abs/2006.06138">arXiv:2006.06138</a></li>
+    <li>Cand&egrave;s, Lei &amp; Ren (2023). <em>Conformalized survival analysis.</em> JRSS-B. <a href="https://arxiv.org/abs/2103.09763">arXiv:2103.09763</a> &mdash; calibrated lower bounds on survival time under censoring.</li>
+    <li>Gui, Hore, Ren &amp; Barber (2024). <em>Conformalized survival analysis with adaptive cut-offs.</em> Biometrika. <a href="https://arxiv.org/abs/2211.01227">arXiv:2211.01227</a></li>
+    <li>Jin, Ren &amp; Cand&egrave;s (2023). <em>Sensitivity analysis of individual treatment effects: a robust conformal inference approach.</em> PNAS. <a href="https://arxiv.org/abs/2111.12161">arXiv:2111.12161</a></li>
+    <li>Yin, Shi, Wang &amp; Blei (2024). <em>Conformal sensitivity analysis for individual treatment effects.</em> JASA. <a href="https://arxiv.org/abs/2112.03493">arXiv:2112.03493</a></li>
+  </ul>
+
+  <h2>Language models and generation</h2>
+  <ul class="refs">
+    <li>Quach, Fisch, Schuster, Yala, Sohn, Jaakkola &amp; Barzilay (2024). <em>Conformal language modeling.</em> ICLR. <a href="https://arxiv.org/abs/2306.10193">arXiv:2306.10193</a> &mdash; a calibrated stopping rule so a generated set contains an acceptable answer.</li>
+    <li>Mohri &amp; Hashimoto (2024). <em>Language models with conformal factuality guarantees.</em> ICML. <a href="https://arxiv.org/abs/2402.10978">arXiv:2402.10978</a> &mdash; back off to less specific claims until factuality holds.</li>
+    <li>Kumar, Lu, Gupta, et al. (2023). <em>Conformal prediction with large language models for multi-choice question answering.</em> <a href="https://arxiv.org/abs/2305.18404">arXiv:2305.18404</a></li>
+    <li>Su, Luo, Wang &amp; Cheng (2024). <em>API is enough: conformal prediction for LLMs without logit-access.</em> EMNLP Findings. <a href="https://arxiv.org/abs/2403.01216">arXiv:2403.01216</a></li>
+    <li>Ren et al. (2023). <em>Robots that ask for help: uncertainty alignment for LLM planners</em> (KnowNo). CoRL. <a href="https://arxiv.org/abs/2307.01928">arXiv:2307.01928</a></li>
+  </ul>
+
+  <h2>Software</h2>
+  <ul class="refs">
+    <li>Python: <a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>, <a href="https://github.com/ml-stat-Sustech/TorchCP">TorchCP</a>, <a href="https://github.com/deel-ai/puncc">PUNCC</a>, <a href="https://github.com/awslabs/fortuna">Fortuna</a>, <a href="https://github.com/aangelopoulos/conformal-prediction">conformal-prediction</a> (examples), <a href="https://github.com/donlnz/nonconformist">nonconformist</a> (legacy).</li>
+    <li>R: <a href="https://github.com/ryantibs/conformal">conformalInference</a>, <a href="https://probably.tidymodels.org">probably</a> (tidymodels), <a href="https://github.com/herbps10/AdaptiveConformal">AdaptiveConformal</a>. Julia: <a href="https://github.com/JuliaTrustworthyAI/ConformalPrediction.jl">ConformalPrediction.jl</a>.</li>
+  </ul>
+
+  <h2>Talks</h2>
+  <ul class="refs">
+    <li>Cand&egrave;s. <em>Conformal prediction in 2022</em> (NeurIPS keynote). <a href="https://neurips.cc/virtual/2022/invited-talk/55872">neurips.cc</a></li>
+    <li>Jordan, Vovk &amp; Wasserman, moderated by Ramdas. <em>Panel</em> (ICML 2021). <a href="https://slideslive.com/38964850/">slideslive</a></li>
+  </ul>
+
+  <h2>Applications</h2>
+  <p>Papers that use conformal prediction where coverage or containment is genuinely the
+  objective, selective prediction, anomaly detection, retrieval, language models,
+  robotics and control, risk control, scientific discovery, causal inference, survival
+  analysis, and medical imaging, are listed and discussed, by domain, on the
+  <a href="applications.html">applications page</a>.</p>
+
+  <div class="prevnext">
+    <a href="index.html">&larr; Back to the guide</a>
+    <span class="spacer"></span>
+    <a href="applications.html">Applications, in depth &rarr;</a>
+  </div>
+
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Conformal Prediction: a practical guide.</span>
+    <span>A curated, opinionated bibliography. Corrections welcome.</span>
+  </div>
+</footer>
+</body>
+</html>
