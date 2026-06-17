@@ -32,7 +32,8 @@ narrows it, to exactly zero at the maximally negatively associated contest floor
 $\rho=-1/(n-1)$, where the realized coverage equals the nominal level identically. We prove the
 positive side exactly through de Finetti and the law of total variance, the negative side exactly at
 the floor and to leading order in general, and reduce the remaining finite-sample inequality to a
-dispersive ordering supported numerically across dependence structures. The governing sign is the
+convex-order contraction of the exceedance count, supported numerically across dependence
+structures. The governing sign is the
 one the companion note attaches to the finite de Finetti measure: a genuine prior widens the fan, the
 signed corner collapses it.
 \end{abstract}
@@ -150,20 +151,23 @@ order everywhere; the exact finite-sample inequality is a statement about the sp
 statistic under negative dependence.
 
 \begin{conjecture}[Finite-sample contraction]\label{conj:disp}
-If the calibration scores are negatively associated then $\operatorname{Var}(c)\le$ the independent
-value \eqref{eq:betavar}; equivalently $U_{(k)}$ under negative association is smaller in the
-dispersive order than the independent $U_{(k)}$.
+If the calibration scores are negatively associated then $\operatorname{Var}(c)$ is at most the
+independent value \eqref{eq:betavar}.
 \end{conjecture}
 
-The obstruction to a one-line proof is that $\operatorname{Var}(c)$ depends on the law of $U_{(k)}$,
-which negative association reshapes through $u\mapsto\mathbb P(N(u)\ge k)$; negative association makes
-$N(u)$ a mean-preserving contraction of the binomial \citep{shao2000}, thinning both tails, but the
-mean of $U_{(k)}$ itself shifts, so the comparison is one of spread (the dispersive order
-\citealp{shaked2007}), not of a mean-matched convex order. The dispersive ordering of order
-statistics under dependence is the right machinery; the natural sufficient condition is negative
-supermodular dependence \citep{christofides2004}, which all the structures below satisfy. We verify
-the conjecture across dependence structures (one run each, reproduced by \texttt{check\_fan.py};
-$n=20$, $\alpha=0.1$, independent fan variance $3.92\times10^{-3}$).
+One ingredient is already exact. The exceedance indicators are negatively associated with
+$\mathrm{Bernoulli}(u)$ marginals, so by \citet{shao2000} the count is convex-order dominated by the
+independent binomial, $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$, with the same mean $nu$: a
+mean-preserving contraction at every level. Carrying this to $\operatorname{Var}(c)$ needs the level
+comparison $\mathbb P(N(u)\ge k)$ to cross the binomial tail once in $u$, which the total positivity
+of the binomial tail in $(k,u)$ \citep{karlin1968} makes plausible, followed by a
+single-crossing-implies-less-spread step. We claim only the variance statement, and deliberately not
+the stronger dispersive ordering: an order statistic of a dependent sample need not be dispersively
+smaller than the independent one even at fixed marginals \citep{panja2022}, so the result is specific
+to the variance and is not a corollary of a dispersive theorem. The natural sufficient condition on
+the dependence is negative supermodular dependence \citep{christofides2004}, which all the structures
+below satisfy. We verify the conjecture across them (one run each, reproduced by
+\texttt{check\_fan.py}; $n=20$, $\alpha=0.1$, independent fan variance $3.92\times10^{-3}$).
 
 \begin{center}
 \begin{tabular}{lcccc}
@@ -221,10 +225,11 @@ The $\mathrm{Beta}(k,n-k+1)$ law of calibration-conditional coverage and its var
 as independent or exchangeable and reads off a single number, never varying the dependence to move
 it. Negative association and its consequences are \citet{joagdev1983}; that negatively associated
 sums are dominated in convex order by independent ones is \citet{shao2000}, and sampling without
-replacement concentrates at least as tightly as with replacement \citep{serfling1974}. The dispersive
-order and its variance consequence are standard \citep{shaked2007}; the connection between supermodular
-ordering and negative dependence is \citet{christofides2004}; the Bahadur representation is
-\citet{bahadur1966}. Determinantal and repulsive designs are \citet{hough2006,bardenet2016} and
+replacement concentrates at least as tightly as with replacement \citep{serfling1974}. The total
+positivity behind the single-crossing step is \citet{karlin1968}; that an order statistic of a
+dependent sample need not be dispersively smaller than the independent one, which is why we claim
+only the variance, is \citet{panja2022}; the connection between supermodular ordering and negative
+dependence is \citet{christofides2004}; the Bahadur representation is \citet{bahadur1966}. Determinantal and repulsive designs are \citet{hough2006,bardenet2016} and
 stratification is \citet{cochran1977}. The finite signed de Finetti representation is
 \citet{kerns2006}, and the within-dataset, across-$x$ reading of its sign is the companion note
 \citep{cotton_signed}; the information gap is \citep{cotton_marginally}. The contribution here is to
@@ -261,8 +266,11 @@ empirical coverage in split conformal prediction. \emph{Statistics \& Probabilit
 (2025). arXiv:2303.02770.
 \bibitem[Serfling(1974)]{serfling1974} Serfling, R.~J. (1974). Probability inequalities for the sum
 in sampling without replacement. \emph{The Annals of Statistics} 2(1):39--48.
-\bibitem[Shaked and Shanthikumar(2007)]{shaked2007} Shaked, M. and Shanthikumar, J.~G. (2007).
-\emph{Stochastic Orders}. Springer.
+\bibitem[Karlin(1968)]{karlin1968} Karlin, S. (1968). \emph{Total Positivity, Vol.~1}. Stanford
+University Press.
+\bibitem[Panja et~al.(2022)]{panja2022} Panja, A., Kundu, P. and Pradhan, B. (2022). Dispersive and
+star ordering of sample extremes from dependent random variables following the proportional odds
+model. Preprint, arXiv:2006.04454.
 \bibitem[Shao(2000)]{shao2000} Shao, Q.-M. (2000). A comparison theorem on moment inequalities
 between negatively associated and independent random variables. \emph{Journal of Theoretical
 Probability} 13(2):343--356.
