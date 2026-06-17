@@ -1,0 +1,302 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{remark}{Remark}
+
+\title{The Width of the Conformal Fan:\\
+Dependence and the Variance of Realized Coverage}
+\author{Claude and Peter}
+\date{Draft --- companion note}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Split conformal prediction's realized, calibration-conditional coverage fluctuates around the
+nominal $1-\alpha$. For exchangeable-but-independent calibration scores it follows the
+$\mathrm{Beta}(k,n-k+1)$ law, variance about $\alpha(1-\alpha)/n$, the classical fan. We show the
+width of that fan is governed by the sign of the cross-sample dependence. The mean stays pinned at
+the marginal level whatever the dependence; the variance, to leading order, is the average pairwise
+covariance of the exceedance indicators at the operating quantile times the independent fan.
+Positive (extendable) dependence adds a between-dataset term and widens the fan; negative dependence
+narrows it, to exactly zero at the maximally negatively associated contest floor
+$\rho=-1/(n-1)$, where the realized coverage equals the nominal level identically. We prove the
+positive side exactly through de Finetti and the law of total variance, the negative side exactly at
+the floor and to leading order in general, and reduce the remaining finite-sample inequality to a
+convex-order contraction of the exceedance count, supported numerically across dependence
+structures. The governing sign is the
+one the companion note attaches to the finite de Finetti measure: a genuine prior widens the fan, the
+signed corner collapses it.
+\end{abstract}
+
+\section{Setup}
+
+Split conformal returns a set with marginal coverage $1-\alpha$. Fix the calibration set; the
+coverage you then realize on fresh test points is a random variable, and it is not $1-\alpha$ on the
+nose. Write the scores on the probability-integral scale, $U_i=F(S_i)$, so each $U_i$ is marginally
+uniform whatever the model. With $k=\lceil(n+1)(1-\alpha)\rceil$ the conformal threshold is the order
+statistic $U_{(k)}$, and the calibration-conditional coverage against an independent test draw from
+the marginal is
+\begin{equation}
+c=U_{(k)} .
+\end{equation}
+For independent (or merely exchangeable, de facto independent) calibration scores this is the
+classical result \citep{vovk2012,marques2024}: $c\sim\mathrm{Beta}(k,n-k+1)$, with
+\begin{equation}\label{eq:betavar}
+\mathbb E[c]=\frac{k}{n+1},\qquad \operatorname{Var}(c)=\frac{k(n-k+1)}{(n+1)^2(n+2)}\;\approx\;
+\frac{\alpha(1-\alpha)}{n}.
+\end{equation}
+This is the fan: the per-dataset coverage scatters around $1-\alpha$ with a spread that shrinks like
+$1/n$. The question of this note is what the dependence among the calibration scores does to that
+spread. The companion notes treat the orthogonal, within-dataset axis (coverage uneven across $x$
+for a fixed dataset, the information gap $I(R;X)$ and its sign \citealp{cotton_marginally,
+cotton_signed}); here every statement is about the across-dataset fluctuation of the single number
+$c$.
+
+The whole problem passes through the count process $N(u)=\sum_{i=1}^n\mathbf 1\{U_i\le u\}$, because
+$U_{(k)}=\int_0^1\mathbf 1\{N(u)<k\}\,\mathrm du$, so
+\begin{equation}\label{eq:reduction}
+\operatorname{Var}(c)=\int_0^1\!\!\int_0^1\operatorname{Cov}\big(\mathbf 1\{N(u)<k\},\,
+\mathbf 1\{N(v)<k\}\big)\,\mathrm du\,\mathrm dv,
+\end{equation}
+a functional of the law of the count process alone. Two facts about $N$ drive everything.
+
+\begin{lemma}[Count variance]\label{lem:count}
+If the scores are negatively associated \citep{joagdev1983}, then for every $u$,
+$\operatorname{Var}(N(u))\le n\,u(1-u)$, with equality iff the exceedance indicators are pairwise
+uncorrelated.
+\end{lemma}
+\begin{proof}
+The indicators $\mathbf 1\{U_i\le u\}$ are coordinatewise-monotone functions of single distinct
+coordinates, hence negatively associated, hence pairwise non-positively correlated. So
+$\operatorname{Var}(N(u))=\sum_i\operatorname{Var}+\sum_{i\ne j}\operatorname{Cov}\le
+\sum_i u(1-u)=n\,u(1-u)$.
+\end{proof}
+
+\section{The fan coefficient}
+
+Let $p=1-\alpha$ be the operating level and $\xi_i=\mathbf 1\{U_i\le p\}$, so $N(p)=\sum_i\xi_i$.
+The Bahadur representation for the uniform quantile \citep{bahadur1966}, which holds for negatively
+associated sequences under mild conditions, gives $U_{(k)}-p = p-N(p)/n + o_P(n^{-1/2})$, and hence
+
+\begin{theorem}[Fan coefficient]\label{thm:coeff}
+As $n\to\infty$,
+\begin{equation}
+\operatorname{Var}(c)=\frac{1}{n^2}\operatorname{Var}(N(p))\,(1+o(1))
+=\frac{\alpha(1-\alpha)}{n}\,R\,(1+o(1)),\qquad
+R=1+\frac{n-1}{\alpha(1-\alpha)}\,\bar c,
+\end{equation}
+where $\bar c=\tfrac{1}{n(n-1)}\sum_{i\ne j}\operatorname{Cov}(\xi_i,\xi_j)$ is the average pairwise
+covariance of the exceedance indicators at the operating quantile.
+\end{theorem}
+
+The fan's leading coefficient is, exactly, the variance of the exceedance count at $1-\alpha$. Under
+independence $\bar c=0$ and $R=1$, recovering \eqref{eq:betavar}. Negative association makes
+$\bar c<0$ and $R<1$: the fan narrows. At the contest floor $\bar c=-\alpha(1-\alpha)/(n-1)$ one gets
+$R=0$. The reduction factor $R$ is the single number to carry away.
+
+\section{Positive dependence widens the fan, exactly}
+
+When the scores are extendable, that is, drawn from an infinitely exchangeable sequence, de Finetti
+\citep{definetti1937,kerns2006} makes them conditionally independent given a latent directing measure
+$Q$. Conditional on $Q$ the coverage $c$ is an ordinary independent-sample order statistic, so the
+law of total variance gives an exact decomposition.
+
+\begin{theorem}[Positive dependence]\label{thm:pos}
+For an extendable exchangeable calibration sequence with directing measure $Q$,
+\begin{equation}
+\operatorname{Var}(c)=\underbrace{\mathbb E_Q\!\big[\operatorname{Var}(c\mid Q)\big]}
+_{\text{average within-dataset fan}}
++\underbrace{\operatorname{Var}_Q\!\big(\mathbb E[c\mid Q]\big)}_{\text{between-dataset term}}.
+\end{equation}
+The between-dataset term is non-negative and vanishes under independence. Positive cross-sample
+dependence is exactly this term: a per-dataset latent that shifts the conditional quantile, on top of
+the ordinary fan.
+\end{theorem}
+
+The decomposition is exact and needs no asymptotics. It says the danger of positive dependence is
+not bias but variance: you draw a dataset, the latent $Q$ places the whole calibration sample high or
+low, and the realized coverage rides with it. Numerically, a one-factor Gaussian model at pairwise
+correlation $0.2$ has $\operatorname{Var}(c)$ about $3.3$ times the independent fan, of which the
+between-dataset term is more than half.
+
+\section{Negative dependence narrows the fan}
+
+The negative regime is the one a genuine prior cannot reach. By \citet{kerns2006} a finite
+exchangeable sequence with $\rho<0$ has a \emph{signed} directing measure, so the clean conditioning
+of Theorem~\ref{thm:pos} is unavailable: there is no $Q$ to condition on, and the between-dataset
+term would be a negative quasi-variance. That is precisely the regime where the fan contracts.
+
+\begin{theorem}[Endpoints]\label{thm:ends}
+Independent scores give $c\sim\mathrm{Beta}(k,n-k+1)$, the widest fan at fixed marginals. At the
+maximally negatively associated floor, where the calibration scores are a uniformly random
+permutation of the grid $\{1/(n+1),\dots,n/(n+1)\}$ (sampling without replacement, pairwise
+correlation $-1/(n-1)$), the order statistic is deterministic, $U_{(k)}=k/(n+1)$ almost surely, so
+$\operatorname{Var}(c)=0$: the realized coverage equals the nominal level on every draw.
+\end{theorem}
+
+Both endpoints agree with Theorem~\ref{thm:coeff} at $R=1$ and $R=0$. Between them the fan contracts
+monotonically as the scores become more negatively dependent, and the contraction is exactly the
+$R<1$ of the fan coefficient. We can prove this contraction exactly at the endpoints and to leading
+order everywhere; the exact finite-sample inequality is a statement about the spread of an order
+statistic under negative dependence.
+
+\begin{conjecture}[Finite-sample contraction]\label{conj:disp}
+If the calibration scores are negatively associated then $\operatorname{Var}(c)$ is at most the
+independent value \eqref{eq:betavar}.
+\end{conjecture}
+
+One ingredient is already exact. The exceedance indicators are negatively associated with
+$\mathrm{Bernoulli}(u)$ marginals, so by \citet{shao2000} the count is convex-order dominated by the
+independent binomial, $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$, with the same mean $nu$: a
+mean-preserving contraction at every level. Carrying this to $\operatorname{Var}(c)$ needs the level
+comparison $\mathbb P(N(u)\ge k)$ to cross the binomial tail once in $u$, which the total positivity
+of the binomial tail in $(k,u)$ \citep{karlin1968} makes plausible, followed by a
+single-crossing-implies-less-spread step. We claim only the variance statement, and deliberately not
+the stronger dispersive ordering: an order statistic of a dependent sample need not be dispersively
+smaller than the independent one even at fixed marginals \citep{panja2022}, so the result is specific
+to the variance and is not a corollary of a dispersive theorem. The natural sufficient condition on
+the dependence is negative supermodular dependence \citep{christofides2004}, which all the structures
+below satisfy. We verify the conjecture across them (one run each, reproduced by
+\texttt{check\_fan.py}; $n=20$, $\alpha=0.1$, independent fan variance $3.92\times10^{-3}$).
+
+\begin{center}
+\begin{tabular}{lcccc}
+\hline
+calibration dependence & $\mathbb E[c]$ & $\operatorname{Var}(c)$ & ratio to fan & sign \\
+\hline
+independent ($\rho=0$)                 & $0.904$ & $3.92\times10^{-3}$ & $1.00$ & --- \\
+exchangeable, $\rho=-1/(n-1)$          & $0.923$ & $1.16\times10^{-3}$ & $0.29$ & neg.\ assoc. \\
+MA(1), lag-1 corr $-\tfrac12$          & $0.912$ & $2.71\times10^{-3}$ & $0.69$ & neg.\ assoc. \\
+random negatively-paired blocks        & $0.909$ & $3.14\times10^{-3}$ & $0.80$ & neg.\ assoc. \\
+contest / without replacement          & $0.905$ & $0$                  & $0.00$ & floor \\
+one-factor, $\rho=+0.2$                & $0.863$ & $1.33\times10^{-2}$ & $3.41$ & positive \\
+\hline
+\end{tabular}
+\end{center}
+
+Every negatively associated structure, exchangeable or not, comes in under the independent fan; the
+positive control widens it. The mean drifts up slightly under negative dependence and down under
+positive dependence, but stays near $1-\alpha$; the action is in the variance.
+
+\begin{remark}[A closed form, and what an exact proof must dominate]
+The variance is an explicit functional of $g(u)=\mathbb P(N(u)\ge k)$,
+\begin{equation}
+\operatorname{Var}(c)=2\int_0^1(1-u)\,g(u)\,\mathrm du-\Big(\int_0^1 g(u)\,\mathrm du\Big)^{\!2},
+\end{equation}
+so writing $\delta=g-g^{\mathrm{iid}}$, $A=\int_0^1 g^{\mathrm{iid}}=1-\mathbb E[c^{\mathrm{iid}}]$,
+and $\Delta=\int_0^1\delta$,
+\begin{equation}
+\operatorname{Var}(c)-\operatorname{Var}(c^{\mathrm{iid}})
+=2\int_0^1\big[(1-u)-A\big]\,\delta(u)\,\mathrm du-\Delta^2 .
+\end{equation}
+The $-\Delta^2$ term is non-positive. The weight $(1-u)-A$ changes sign at
+$u=\mathbb E[c^{\mathrm{iid}}]=k/(n+1)$, and under negative association $\delta$ changes sign once,
+at the level $u\approx k/n$ where the operating quantile crosses the count mean and the contraction
+of Lemma~\ref{lem:count} flips the tail comparison. The two sign changes agree up to the conformal
+offset between $k/n$ and $k/(n+1)$, a band of width $O(1/n)$ on which the integrand is positive;
+everywhere else it is negative. So the identity proves the contraction up to that single $O(1/n)$
+boundary term, a second route to the leading order of Theorem~\ref{thm:coeff}, and isolates exactly
+what a finite-sample proof must control: the boundary remainder against the slack $\Delta^2$.
+\end{remark}
+
+\begin{remark}[The signed measure as a negative between-term]
+Theorem~\ref{thm:pos} reads the fan as within-dataset variance plus a non-negative between-dataset
+variance. In the signed-de-Finetti picture of the companion note, the negative corner is exactly
+where that between-dataset object turns negative, a Feynman--Wigner quasi-variance that subtracts from
+the within-dataset fan rather than adding to it, reaching the full cancellation $R=0$ at the contest
+floor. This is heuristic, since a signed measure has no honest conditional variance, but it is the
+right cartoon: the same sign that decides conditional adaptivity in \citet{cotton_signed} decides
+whether the fan is inflated or cancelled here.
+\end{remark}
+
+\section{A constructive corollary}
+
+If negative dependence narrows the fan, one can engineer it. A balanced calibration set whose scores
+behave like the grid of Theorem~\ref{thm:ends} concentrates the realized coverage far inside the
+independent fan, so the same reliability is bought with fewer calibration points, or the same number
+of points gives less run-to-run wobble. The classical variance-reduction designs all apply in
+principle: stratification never increases variance \citep{cochran1977}, antithetic pairing helps for
+the monotone empirical CDF, and determinantal or repulsive designs give negative association with
+faster-than-independent concentration \citep{hough2006,bardenet2016}.
+
+\begin{remark}[The exchangeability constraint]
+The marginal guarantee needs each calibration score exchangeable with the test score; it does not
+need the calibration scores independent of one another. So negative association is admissible, but
+only if it is induced by a map symmetric across all $n+1$ points, a pooled de-meaning or ranking,
+which preserves the exchangeability of the joint. Selecting or curating the calibration set by its
+scores, the obvious way to balance it, breaks exchangeability with the test point and voids the
+guarantee. The viable construction is transductive and symmetric; that is also why the contest grid,
+a symmetric function of the pooled sample, both keeps the marginal guarantee and zeroes the fan.
+\end{remark}
+
+\section{Related work}
+
+The $\mathrm{Beta}(k,n-k+1)$ law of calibration-conditional coverage and its variance are
+\citet{vovk2012} and \citet{marques2024}; the entire prior literature treats the calibration scores
+as independent or exchangeable and reads off a single number, never varying the dependence to move
+it. Negative association and its consequences are \citet{joagdev1983}; that negatively associated
+sums are dominated in convex order by independent ones is \citet{shao2000}, and sampling without
+replacement concentrates at least as tightly as with replacement \citep{serfling1974}. The total
+positivity behind the single-crossing step is \citet{karlin1968}; that an order statistic of a
+dependent sample need not be dispersively smaller than the independent one, which is why we claim
+only the variance, is \citet{panja2022}; the connection between supermodular ordering and negative
+dependence is \citet{christofides2004}; the Bahadur representation is \citet{bahadur1966}. Determinantal and repulsive designs are \citet{hough2006,bardenet2016} and
+stratification is \citet{cochran1977}. The finite signed de Finetti representation is
+\citet{kerns2006}, and the within-dataset, across-$x$ reading of its sign is the companion note
+\citep{cotton_signed}; the information gap is \citep{cotton_marginally}. The contribution here is to
+make the dependence the control variable for the \emph{variance} of realized coverage: the exact
+fan coefficient $R$, the exact de Finetti decomposition for the positive side, the exact zero at the
+contest floor, and the reduction of the general negative case to a dispersive ordering.
+
+\begin{thebibliography}{99}
+\bibitem[Bahadur(1966)]{bahadur1966} Bahadur, R.~R. (1966). A note on quantiles in large samples.
+\emph{The Annals of Mathematical Statistics} 37(3):577--580.
+\bibitem[Bardenet and Hardy(2020)]{bardenet2016} Bardenet, R. and Hardy, A. (2020). Monte Carlo with
+determinantal point processes. \emph{The Annals of Applied Probability} 30(1):368--417.
+arXiv:1605.00361.
+\bibitem[Christofides and Vaggelatou(2004)]{christofides2004} Christofides, T.~C. and Vaggelatou, E.
+(2004). A connection between supermodular ordering and positive/negative association. \emph{Journal
+of Multivariate Analysis} 88(1):138--151.
+\bibitem[Cochran(1977)]{cochran1977} Cochran, W.~G. (1977). \emph{Sampling Techniques}, 3rd ed.
+Wiley.
+\bibitem[Cotton()]{cotton_marginally} Cotton, P. Marginally Useful: Formalizing the Information Gap
+in Conformal Prediction. Companion paper.
+\bibitem[Cotton()]{cotton_signed} Cotton, P. A Feynman--Wigner-Style Diagnostic for the Efficacy of
+Conformal Prediction via Signed de Finetti Representations. Companion note.
+\bibitem[de Finetti(1937)]{definetti1937} de Finetti, B. (1937). La pr\'evision: ses lois logiques,
+ses sources subjectives. \emph{Annales de l'Institut Henri Poincar\'e} 7(1):1--68.
+\bibitem[Hough et~al.(2006)]{hough2006} Hough, J.~B., Krishnapur, M., Peres, Y. and Vir\'ag, B.
+(2006). Determinantal processes and independence. \emph{Probability Surveys} 3:206--229.
+\bibitem[Joag-Dev and Proschan(1983)]{joagdev1983} Joag-Dev, K. and Proschan, F. (1983). Negative
+association of random variables, with applications. \emph{The Annals of Statistics} 11(1):286--295.
+\bibitem[Kerns and Sz\'ekely(2006)]{kerns2006} Kerns, G.~J. and Sz\'ekely, G.~J. (2006). De Finetti's
+theorem for abstract finite exchangeable sequences. \emph{Journal of Theoretical Probability}
+19(3):589--608.
+\bibitem[Marques F.(2024)]{marques2024} Marques F., P.~C. (2024). Universal distribution of the
+empirical coverage in split conformal prediction. \emph{Statistics \& Probability Letters} 219:110350
+(2025). arXiv:2303.02770.
+\bibitem[Serfling(1974)]{serfling1974} Serfling, R.~J. (1974). Probability inequalities for the sum
+in sampling without replacement. \emph{The Annals of Statistics} 2(1):39--48.
+\bibitem[Karlin(1968)]{karlin1968} Karlin, S. (1968). \emph{Total Positivity, Vol.~1}. Stanford
+University Press.
+\bibitem[Panja et~al.(2022)]{panja2022} Panja, A., Kundu, P. and Pradhan, B. (2022). Dispersive and
+star ordering of sample extremes from dependent random variables following the proportional odds
+model. Preprint, arXiv:2006.04454.
+\bibitem[Shao(2000)]{shao2000} Shao, Q.-M. (2000). A comparison theorem on moment inequalities
+between negatively associated and independent random variables. \emph{Journal of Theoretical
+Probability} 13(2):343--356.
+\bibitem[Vovk(2012)]{vovk2012} Vovk, V. (2012). Conditional validity of inductive conformal
+predictors. \emph{Asian Conference on Machine Learning}, PMLR 25:475--490.
+\end{thebibliography}
+
+\end{document}

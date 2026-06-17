@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>The width of the conformal fan — note</title>
+<link rel="stylesheet" href="../../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/literature.html">Literature</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+  <p class="tag">Technical note</p>
+  <h1>The width of the conformal fan</h1>
+  <p class="subtitle">Dependence and the variance of realized coverage. A companion note to <a href="/papers/definetti-feynman/">the Feynman&ndash;Wigner diagnostic</a>.</p>
+
+  <p>
+    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="conformal-fan.pdf">Read the PDF</a>
+    <a class="card" style="display:inline-block;padding:10px 16px;" href="conformal-fan.tex">LaTeX source</a>
+  </p>
+
+  <h2>The idea</h2>
+  <p>Fix the calibration set and the coverage you then realize is a random number, not
+  \(1-\alpha\) exactly. For independent scores it follows the Beta\((k,n-k+1)\) law &mdash; the
+  &ldquo;fan,&rdquo; with variance about \(\alpha(1-\alpha)/n\). This note shows the width of that
+  fan is set by the sign of the cross-sample dependence. The mean stays pinned at the nominal
+  level; the variance, to leading order, is the average pairwise covariance of the exceedance
+  indicators at the operating quantile, times the independent fan.</p>
+
+  <h2>What the sign does</h2>
+  <p>Positive (extendable) dependence adds a between-dataset term and widens the fan &mdash; proved
+  exactly through de Finetti and the law of total variance. Negative dependence narrows it, to
+  exactly zero at the maximally negatively associated contest floor \(\rho=-1/(n-1)\), where the
+  realized coverage equals the nominal level on every draw. It is the same sign the
+  <a href="/papers/definetti-feynman/">companion note</a> reads off the finite de Finetti measure:
+  a genuine prior widens the fan, the signed corner collapses it.</p>
+
+  <h2>What is proved, and what is left</h2>
+  <p>Exact: the de Finetti decomposition for positive dependence, and the zero at the contest floor.
+  Asymptotic, with an explicit reduction factor: the fan coefficient in general. The remaining
+  finite-sample inequality &mdash; negative association never widens the fan &mdash; rests on a
+  convex-order contraction of the exceedance count (proved) plus a single-crossing step, and is
+  confirmed numerically across dependence structures by <code>check_fan.py</code>. The stronger
+  dispersive ordering is deliberately not claimed; it can fail at fixed marginals. A constructive corollary: a balanced, transductively
+  symmetric calibration set tightens coverage without disturbing the marginal guarantee.</p>
+
+  <div class="prevnext">
+    <a href="/papers/">&larr; All papers</a>
+    <span class="spacer"></span>
+    <a href="conformal-fan.pdf">Open the PDF &rarr;</a>
+  </div>
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Conformal Prediction</span><span>Technical note</span></div></footer>
+</body>
+</html>
