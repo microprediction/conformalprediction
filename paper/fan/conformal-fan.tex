@@ -14,7 +14,7 @@
 
 \title{The Width of the Conformal Fan:\\
 Dependence and the Variance of Realized Coverage}
-\author{Peter Cotton}
+\author{Claude and Peter}
 \date{Draft --- companion note}
 
 \begin{document}
@@ -187,6 +187,27 @@ one-factor, $\rho=+0.2$                & $0.863$ & $1.33\times10^{-2}$ & $3.41$ 
 Every negatively associated structure, exchangeable or not, comes in under the independent fan; the
 positive control widens it. The mean drifts up slightly under negative dependence and down under
 positive dependence, but stays near $1-\alpha$; the action is in the variance.
+
+\begin{remark}[A closed form, and what an exact proof must dominate]
+The variance is an explicit functional of $g(u)=\mathbb P(N(u)\ge k)$,
+\begin{equation}
+\operatorname{Var}(c)=2\int_0^1(1-u)\,g(u)\,\mathrm du-\Big(\int_0^1 g(u)\,\mathrm du\Big)^{\!2},
+\end{equation}
+so writing $\delta=g-g^{\mathrm{iid}}$, $A=\int_0^1 g^{\mathrm{iid}}=1-\mathbb E[c^{\mathrm{iid}}]$,
+and $\Delta=\int_0^1\delta$,
+\begin{equation}
+\operatorname{Var}(c)-\operatorname{Var}(c^{\mathrm{iid}})
+=2\int_0^1\big[(1-u)-A\big]\,\delta(u)\,\mathrm du-\Delta^2 .
+\end{equation}
+The $-\Delta^2$ term is non-positive. The weight $(1-u)-A$ changes sign at
+$u=\mathbb E[c^{\mathrm{iid}}]=k/(n+1)$, and under negative association $\delta$ changes sign once,
+at the level $u\approx k/n$ where the operating quantile crosses the count mean and the contraction
+of Lemma~\ref{lem:count} flips the tail comparison. The two sign changes agree up to the conformal
+offset between $k/n$ and $k/(n+1)$, a band of width $O(1/n)$ on which the integrand is positive;
+everywhere else it is negative. So the identity proves the contraction up to that single $O(1/n)$
+boundary term, a second route to the leading order of Theorem~\ref{thm:coeff}, and isolates exactly
+what a finite-sample proof must control: the boundary remainder against the slack $\Delta^2$.
+\end{remark}
 
 \begin{remark}[The signed measure as a negative between-term]
 Theorem~\ref{thm:pos} reads the fan as within-dataset variance plus a non-negative between-dataset
