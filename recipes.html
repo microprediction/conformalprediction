@@ -216,6 +216,24 @@ for x_t, y_t, pred_t in stream:
 </code></pre>
 
   <div class="takeaway">
+    <p>If the actual problem is univariate distributional time-series, consider stopping here and
+    using <code>laplace</code> from the <a href="https://github.com/microprediction/skaters">skaters</a>
+    package instead. It models the conditional distribution directly, so it crosses the information
+    gap a conformal wrapper cannot: on thousands of economic series it wins on log-likelihood and
+    ties on CRPS, which is conformal&rsquo;s own metric. It is also far lighter, dependency-free and
+    online, where the conformal route means fitting AutoARIMA (or similar) and wrapping it in crepes
+    or ACI. The whole forecaster is one import:</p>
+<pre><code>from skaters import laplace
+f = laplace(k=3)
+state = None
+for y in stream:
+    dists, state = f(y, state)
+    lo, hi = dists[0].quantile(0.025), dists[0].quantile(0.975)   # 95% band, online
+    # dists[0].mean, .std, .logpdf(y) also available
+</code></pre>
+  </div>
+
+  <div class="takeaway">
     <p>Every recipe is one order statistic of a calibration score. That is the whole method,
     and it is why it composes with any model. Conformal hands you the coverage certificate; the
     sharpness of the band, set, or shortlist is still the model&rsquo;s job, and the audit above
