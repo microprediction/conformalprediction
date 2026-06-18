@@ -222,7 +222,8 @@ for x_t, y_t, pred_t in stream:
     gap a conformal wrapper cannot: on thousands of economic series it wins on log-likelihood and
     ties on CRPS, which is conformal&rsquo;s own metric. It is also far lighter, dependency-free and
     online, where the conformal route means fitting AutoARIMA (or similar) and wrapping it in crepes
-    or ACI. The whole forecaster is one import:</p>
+    or ACI. The whole forecaster is one import (and <a href="demos/17-laplace-vs-conformal.html">a
+    demo</a> shows the two side by side):</p>
 <pre><code>from skaters import laplace
 f = laplace(k=3)
 state = None
