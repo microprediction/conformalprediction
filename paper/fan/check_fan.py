@@ -148,3 +148,15 @@ if __name__ == "__main__":
             mono = False
         prev = Q
     print(f"    monotone? {mono}")
+
+    # Lemma: D=(xi-xi_bar)_(k) is n/(n-1)-strongly-log-concave, (log g_D)'' <= -n/(n-1).
+    print("  Lemma: D is n/(n-1)-strongly-log-concave (KDE estimate of max (log g_D)''):")
+    from scipy.stats import gaussian_kde
+    for (n2, k2) in [(8, 7), (10, 8), (16, 13)]:
+        x = rng.standard_normal((4_000_000, n2)); x -= x.mean(1, keepdims=True)
+        Dd = np.sort(x, axis=1)[:, k2-1]
+        kde = gaussian_kde(Dd, bw_method=0.15)
+        lo, hi = np.quantile(Dd, [0.04, 0.96]); t = np.linspace(lo, hi, 160)
+        lg = np.log(kde(t)); d2 = (lg[2:]-2*lg[1:-1]+lg[:-2])/(t[1]-t[0])**2
+        print(f"    n={n2} k={k2}: need <= -{n2/(n2-1):.3f}; core max (log g_D)'' = {d2.max():.2f}  "
+              f"=> n/(n-1)-slc with margin? {d2.max() <= -n2/(n2-1)}")

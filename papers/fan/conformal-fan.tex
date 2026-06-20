@@ -33,8 +33,10 @@ $\rho=-1/(n-1)$, where the realized coverage equals the nominal level identicall
 positive side exactly through de Finetti and the law of total variance, the negative side exactly at
 the floor and to leading order in general, and, summed over all target levels, exactly: a
 convex-order contraction of the exceedance count against a concave functional shows negative
-association never widens the total fan. The single-level statement is left as a conjecture, supported
-numerically across dependence structures. The governing sign is the
+association never widens the total fan. For the canonical equicorrelated Gaussian family the single
+level is exact and monotone, and dispersively so, via a strong-log-concavity argument and Tweedie's
+formula. The general single-level statement is left as a conjecture, supported numerically across
+dependence structures. The governing sign is the
 one the companion note attaches to the finite de Finetti measure: a genuine prior widens the fan, the
 signed corner collapses it.
 \end{abstract}
@@ -244,9 +246,8 @@ $D$ is log-concave, being the order statistic of a vector with log-concave (Gaus
 \citep{prekopa1973}; and convolution with a log-concave density increases the dispersive order
 \citep{lewis1981}, so adding the Gaussian shift $\bar Z$ disperses, monotonically in $s$. The residual
 is that this outweighs the simultaneous $\sqrt{1-\rho}$ shrinkage of $D$ as $\rho$ grows, a one-parameter
-density-quantile monotonicity under the variance budget $\tfrac{n-1}n(1-\rho)+s=1$, which holds
-numerically but which no off-the-shelf convolution theorem delivers. (Dispersive order does survive
-the increasing map $\Phi$, so the residual is the whole of what remains.)
+density-quantile monotonicity under the variance budget $\tfrac{n-1}n(1-\rho)+s=1$, which no
+off-the-shelf convolution theorem delivers but which we now settle.
 
 Tweedie's formula sharpens that residual to a single posterior-variance bound. Reading
 $Y:=Z_{(k)}=aD+b\eta$ ($a=\sqrt{1-\rho}$, $b=\sqrt s$) as Gaussian signal extraction of the
@@ -257,11 +258,45 @@ $(n-1)a/n$, so, using $\tfrac{n-1}n a^2+b^2=1$, the entire transfer reduces to
 \begin{equation}
 \operatorname{Var}(D\mid Y=q)\;\le\;\frac{n-1}{n}\,b^2\qquad\text{for all }q,
 \end{equation}
-a posterior-variance bound for log-concave Gaussian denoising, the precise lemma that remains. The
+a posterior-variance bound for log-concave Gaussian denoising, which the next lemma settles. The
 score-driven reading of the same identity \citep{hansen2026} is the econometric form of modelling the
 conditional spread, which is exactly what closes the information gap a conformal wrapper leaves
 \citep{cotton_marginally}.
 \end{remark}
+
+\begin{lemma}[Strong log-concavity of $D$]\label{lem:slc}
+$D=(\xi-\bar\xi)_{(k)}$ is $\tfrac{n}{n-1}$-strongly log-concave, $(\log g_D)''\le -n/(n-1)$.
+\end{lemma}
+
+\begin{proof}
+The centred vector $w=\xi-\bar\xi$ has covariance $I-\tfrac1n J$, an orthogonal projection, so on the
+hyperplane $\{\sum_i w_i=0\}$ it is a \emph{standard} Gaussian: its $-\log$ density is $\tfrac12\|w\|^2$,
+with Hessian the identity. The law of the ordered vector is this density restricted to the convex cone
+$\{w_1\le\dots\le w_n\}$, which adds only a convex term to $-\log$ and so stays strongly log-concave
+with at least the same constant. Strong log-concavity is preserved under marginalization
+\citep{prekopa1973,brascamplieb1976,saumard2014}, with the marginal of a coordinate strongly
+log-concave to the reciprocal of that coordinate's reference variance; here the coordinate $w_{(k)}$
+has reference variance $\tfrac{n-1}n$ (the diagonal of $I-\tfrac1nJ$), giving constant $\tfrac n{n-1}$.
+\end{proof}
+
+\begin{proposition}[Gaussian-scale dispersive monotonicity]\label{prop:disp}
+For equicorrelated standard normals, $Z_{(k)}$ is increasing in the dispersive order as $\rho$ increases.
+\end{proposition}
+
+\begin{proof}
+The posterior of $D$ given $Y=aD+b\eta$ has $-\log$ density with Hessian
+$(-\log g_D)''+a^2/b^2\ge \tfrac n{n-1}+\tfrac{a^2}{b^2}$ by Lemma~\ref{lem:slc}, and the budget
+$\tfrac{n-1}n a^2+b^2=1$ makes $\tfrac n{n-1}+\tfrac{a^2}{b^2}=\tfrac{n}{(n-1)b^2}$. The Brascamp--Lieb
+variance inequality \citep{brascamplieb1976} then gives $\operatorname{Var}(D\mid Y=q)\le (n-1)b^2/n$,
+the bound above, so $\tfrac{d}{dq}\mathbb E[D\mid Y=q]\le (n-1)a/n$ and the quantile density of $Z_{(k)}$
+decreases in $\rho$, which is the dispersive monotonicity.
+\end{proof}
+
+This settles the Gaussian-scale per-level statement in the strong (dispersive, not merely variance)
+sense. The one step left for the uniform-marginal conjecture under the Gaussian copula is the passage
+through $\Phi$: being S-shaped, $\Phi$ is neither convex nor concave, so it need not transmit the
+dispersive order, and $\operatorname{Var}(U_{(k)})=\operatorname{Var}(\Phi(Z_{(k)}))$ monotone in
+$\rho$ is confirmed numerically (\texttt{check\_fan.py}) but not by a transfer theorem.
 
 The same convex-order contraction $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$ that drives the aggregate
 bound is available per level, but turning it into the single-$k$ statement needs the tail
@@ -419,6 +454,10 @@ empirical coverage in split conformal prediction. \emph{Statistics \& Probabilit
 (2025). arXiv:2303.02770.
 \bibitem[Serfling(1974)]{serfling1974} Serfling, R.~J. (1974). Probability inequalities for the sum
 in sampling without replacement. \emph{The Annals of Statistics} 2(1):39--48.
+\bibitem[Brascamp and Lieb(1976)]{brascamplieb1976} Brascamp, H.~J. and Lieb, E.~H. (1976). On
+extensions of the Brunn--Minkowski and Pr\'ekopa--Leindler theorems, including inequalities for log
+concave functions, and with an application to the diffusion equation. \emph{Journal of Functional
+Analysis} 22(4):366--389.
 \bibitem[Efron(2011)]{efron2011} Efron, B. (2011). Tweedie's formula and selection bias.
 \emph{Journal of the American Statistical Association} 106(496):1602--1614.
 \bibitem[Hansen and Tong(2026)]{hansen2026} Hansen, P.~R. and Tong, C. (2026). Tweedie's formula and
@@ -430,6 +469,8 @@ distributions, and the connection between dispersivity and strong unimodality. \
 Applied Probability} 18(1):76--90.
 \bibitem[Pr\'ekopa(1973)]{prekopa1973} Pr\'ekopa, A. (1973). On logarithmic concave measures and
 functions. \emph{Acta Scientiarum Mathematicarum} 34:335--343.
+\bibitem[Saumard and Wellner(2014)]{saumard2014} Saumard, A. and Wellner, J.~A. (2014).
+Log-concavity and strong log-concavity: a review. \emph{Statistics Surveys} 8:45--114.
 \bibitem[Panja et~al.(2022)]{panja2022} Panja, A., Kundu, P. and Pradhan, B. (2022). Dispersive and
 star ordering of sample extremes from dependent random variables following the proportional odds
 model. Preprint, arXiv:2006.04454.
