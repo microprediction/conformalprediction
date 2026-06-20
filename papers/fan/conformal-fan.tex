@@ -89,7 +89,9 @@ $\operatorname{Var}(N(u))=\sum_i\operatorname{Var}+\sum_{i\ne j}\operatorname{Co
 
 Let $p=1-\alpha$ be the operating level and $\xi_i=\mathbf 1\{U_i\le p\}$, so $N(p)=\sum_i\xi_i$.
 The Bahadur representation for the uniform quantile \citep{bahadur1966}, which holds for negatively
-associated sequences under mild conditions, gives $U_{(k)}-p = p-N(p)/n + o_P(n^{-1/2})$, and hence
+associated sequences under mild conditions, gives $U_{(k)}-p = p-N(p)/n + o_P(n^{-1/2})$. Because
+$U_{(k)}$ and $N(p)/n$ both lie in $[0,1]$, the remainder is bounded, so the convergence is also in
+$L^2$ and the variance passes to the limit; hence
 
 \begin{theorem}[Fan coefficient]\label{thm:coeff}
 As $n\to\infty$,
@@ -191,11 +193,17 @@ $\sum_{k>n-j}U_{(k)}=\int_0^1\min\!\big(j,n-N(u)\big)\,\mathrm du$, and $m\mapst
 concave. By \citet{shao2000} the exceedance count obeys $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$, so
 for a concave map the inequality reverses,
 $\mathbb E\min(j,n-N(u))\ge\mathbb E\min(j,n-\mathrm{Bin}(n,u))$; integrating,
-$\mathbb E\big[\sum_{k>n-j}U_{(k)}\big]$ is at least its independent value for every $j$. As the totals
-agree ($\sum_k\mathbb E\,U_{(k)}=n/2$), the profile $(\mathbb E\,U_{(1)},\dots,\mathbb E\,U_{(n)})$
-majorizes the independent profile $(\tfrac1{n+1},\dots,\tfrac n{n+1})$. Since $\sum_k x_k^2$ is
-Schur-convex, $\sum_k(\mathbb E\,U_{(k)})^2$ is at least its independent value, and the identity above
-finishes it.
+\begin{equation}\label{eq:topj}
+\sum_{k>n-j}\mathbb E\,U_{(k)}\;\ge\;\sum_{k>n-j}\tfrac{k}{n+1}\qquad\text{for every }j=1,\dots,n,
+\end{equation}
+the right side being the independent profile's top-$j$ sum. Both profiles are increasing and have the
+same total, $\sum_k\mathbb E\,U_{(k)}=\sum_i\mathbb E\,U_i=n/2=\sum_k\tfrac k{n+1}$ (the case $j=n$ of
+\eqref{eq:topj}, with equality). For two increasing vectors with equal sum, ``every top-$j$ partial
+sum of one dominates that of the other'' is exactly the definition of majorization; so
+$(\mathbb E\,U_{(1)},\dots,\mathbb E\,U_{(n)})$ majorizes $(\tfrac1{n+1},\dots,\tfrac n{n+1})$. The map
+$x\mapsto\sum_k x_k^2$ is Schur-convex, hence larger on the majorizing vector,
+$\sum_k(\mathbb E\,U_{(k)})^2\ge\sum_k(\tfrac k{n+1})^2$, and the displayed identity for
+$\sum_k\operatorname{Var}(U_{(k)})$ finishes it.
 \end{proof}
 
 The per-level refinement, for the single conformal $k$, remains open, and the obstruction is exactly
@@ -272,11 +280,15 @@ $D=(\xi-\bar\xi)_{(k)}$ is $\tfrac{n}{n-1}$-strongly log-concave, $(\log g_D)''\
 The centred vector $w=\xi-\bar\xi$ has covariance $I-\tfrac1n J$, an orthogonal projection, so on the
 hyperplane $\{\sum_i w_i=0\}$ it is a \emph{standard} Gaussian: its $-\log$ density is $\tfrac12\|w\|^2$,
 with Hessian the identity. The law of the ordered vector is this density restricted to the convex cone
-$\{w_1\le\dots\le w_n\}$, which adds only a convex term to $-\log$ and so stays strongly log-concave
-with at least the same constant. Strong log-concavity is preserved under marginalization
-\citep{prekopa1973,brascamplieb1976,saumard2014}, with the marginal of a coordinate strongly
-log-concave to the reciprocal of that coordinate's reference variance; here the coordinate $w_{(k)}$
-has reference variance $\tfrac{n-1}n$ (the diagonal of $I-\tfrac1nJ$), giving constant $\tfrac n{n-1}$.
+$\{w_1\le\dots\le w_n\}$. The cone enters only through the indicator of a convex set, a log-concave
+factor; writing the restricted density as $\exp(-\tfrac12 w^\top(I-\tfrac1nJ)^{+}w-\iota_C(w))$ with
+$\iota_C$ the convex indicator of the cone, the Hessian of the potential is
+$(I-\tfrac1nJ)^{+}+\nabla^2\iota_C\succeq(I-\tfrac1nJ)^{+}$. So the strong-log-concavity constant is
+set by the Gaussian quadratic alone; the cone can only raise it, never lower it, and in particular
+does not interfere through its boundary. Strong log-concavity passes to marginals
+\citep{prekopa1973,brascamplieb1976,saumard2014}, the marginal of a coordinate being strongly
+log-concave to the reciprocal of that coordinate's reference variance; for $w_{(k)}$ this is
+$\tfrac{n-1}n$ (the diagonal of $I-\tfrac1nJ$), giving constant at least $\tfrac n{n-1}$.
 \end{proof}
 
 \begin{proposition}[Gaussian-scale dispersive monotonicity]\label{prop:disp}
