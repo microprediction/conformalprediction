@@ -109,3 +109,15 @@ if __name__ == "__main__":
             u = rng.permutation(grid) if rng.random() < t else rng.random(n)
             cc[i] = np.sort(u)[k-1]
         print(f"  t={t:.2f}: Var(c)={cc.var():.4e}  (1-t)*Beta={(1-t)*beta_var:.4e}  ratio={cc.var()/beta_var:.3f}")
+
+    # Theorem (aggregate fan bound): sum_k Var(U_(k)) <= iid, via concavity of min(j,n-N) +
+    # convex order. Needs EXACT uniform marginals; use jittered ranks (NA) and an MA(1) copula.
+    print("\nTheorem (aggregate fan bound): sum_k Var(U_(k)) <= iid sum, every NA structure:")
+    def jitrank(m): V = rng.random(); return np.sort((rng.permutation(m) + V) / m)
+    def ma(m): e = rng.standard_normal(m + 1); return np.sort(norm.cdf((e[1:] - e[:-1]) / np.sqrt(2)))
+    for m in [8, 12]:
+        iid_sum = sum(kk * (m - kk + 1) / ((m + 1) ** 2 * (m + 2)) for kk in range(1, m + 1))
+        for nm, fn in [("jitrank", jitrank), ("ma", ma)]:
+            OS = np.array([fn(m) for _ in range(200000)])
+            print(f"  n={m} {nm:8s}: sum Var={OS.var(0).sum():.4e}  iid sum={iid_sum:.4e}  "
+                  f"<= ? {OS.var(0).sum() <= iid_sum + 2e-3}")
