@@ -74,3 +74,27 @@ if __name__ == "__main__":
     print(f"  E[Var(c|Q)] within  = {within:.4e}")
     print(f"  Var(E[c|Q]) between = {between:.4e}  (absent under independence)")
     print(f"  within + between    = {within+between:.4e}  (= total)")
+
+    # Conjecture 1: counterexample hunt across negatively-associated structures.
+    # Random non-exchangeable all-negative-correlation Gaussian copulas, every k.
+    print("\nConjecture 1 hunt: max Var(U_(k))/Beta over NA structures (>1.02 would be a violation):")
+    def random_neg_corr(m):
+        P = rng.uniform(0.2, 1.0, (m, m)); P = (P + P.T) / 2; np.fill_diagonal(P, 0.0)
+        c0 = 0.95 / np.linalg.eigvalsh(P)[-1]
+        S = np.eye(m) - c0 * P
+        d = np.sqrt(np.diag(S))
+        return S / np.outer(d, d)
+    for m in [4, 5, 6, 8]:
+        worst = 0.0
+        cands = [(1 - r) * np.eye(m) + r * np.ones((m, m)) for r in (-0.5/(m-1), -0.9/(m-1), -0.999/(m-1))]
+        cands += [random_neg_corr(m) for _ in range(8)]
+        for C in cands:
+            if (C - np.diag(np.diag(C))).max() > 1e-9 or np.linalg.eigvalsh(C)[0] < -1e-9:
+                continue
+            L = np.linalg.cholesky(C + 1e-12 * np.eye(m))
+            Us = np.sort(norm.cdf(L @ rng.standard_normal((m, 80000))), axis=0)
+            for kk in range(1, m + 1):
+                bv = kk * (m - kk + 1) / ((m + 1) ** 2 * (m + 2))
+                worst = max(worst, Us[kk - 1].var() / bv)
+        print(f"  n={m}: max ratio = {worst:.3f}")
+    print("  (all <= 1 => no counterexample; ratio is furthest below 1 at the contest floor.)")
