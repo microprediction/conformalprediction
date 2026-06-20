@@ -68,8 +68,10 @@
   expected-order-statistic profile majorizes the independent one, and Schur-convexity finishes it.
   What stays open is the single-level statement (for one fixed \(k\)), and the obstruction is exactly
   why: the step behind one \(\operatorname{Var}(U_{(k)})\) is neither concave nor convex, so the same
-  order cannot sign it; no counterexample appears in a wide numerical hunt, and the order-statistic
-  CDFs cross the independent ones exactly once. The stronger dispersive ordering is deliberately not
+  order cannot sign it; no counterexample appears in a wide numerical hunt, the order-statistic
+  CDFs cross the independent ones exactly once, and on the Gaussian scale the single-level statement
+  is exact and monotone in the correlation (\(\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)\) for
+  equicorrelated normals). The stronger dispersive ordering is deliberately not
   claimed; it can fail at fixed marginals. All checks are reproduced by <code>check_fan.py</code>; a
   constructive corollary is that a balanced, transductively symmetric calibration set tightens
   coverage without disturbing the marginal guarantee.</p>

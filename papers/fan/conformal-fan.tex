@@ -206,6 +206,41 @@ If the calibration scores are negatively associated then $\operatorname{Var}(c)$
 independent value \eqref{eq:betavar} for each $k$ individually.
 \end{conjecture}
 
+In the canonical continuous family the per-level statement is exact, and more, it is monotone in the
+correlation.
+
+\begin{proposition}[Exact per-level law for equicorrelated normals]\label{prop:gauss}
+Let $(Z_1,\dots,Z_n)$ be equicorrelated standard normal with correlation
+$\rho\in[-\tfrac1{n-1},1]$, and let $v_k=\operatorname{Var}(\xi_{(k)})$ be the variance of the $k$-th
+order statistic of $n$ i.i.d.\ standard normals. Then, for every $k$,
+\begin{equation}
+\operatorname{Var}(Z_{(k)})=v_k+\rho\,(1-v_k).
+\end{equation}
+As $v_k<1$ for $n\ge 2$, this is strictly increasing in $\rho$: negative correlation strictly shrinks
+the variance of every order statistic, positive correlation inflates it.
+\end{proposition}
+
+\begin{proof}
+Write $Z_i=\bar Z+(Z_i-\bar Z)$. For equicorrelated normals $\bar Z\sim N(0,s)$,
+$s=(1+(n-1)\rho)/n$, is independent of the centred vector, and
+$\operatorname{Cov}(Z_i-\bar Z,Z_j-\bar Z)=(1-\rho)(\delta_{ij}-1/n)$, exactly $1-\rho$ times the
+covariance of $(\xi_i-\bar\xi)$ for i.i.d.\ standard normals. Hence
+$Z_{(k)}\stackrel{d}{=}\sqrt{s}\,\eta+\sqrt{1-\rho}\,(\xi-\bar\xi)_{(k)}$ with $\eta\sim N(0,1)$
+independent of the second term, so
+$\operatorname{Var}(Z_{(k)})=s+(1-\rho)\operatorname{Var}\big((\xi-\bar\xi)_{(k)}\big)$. Both terms
+are affine in $\rho$; matching $v_k$ at $\rho=0$ forces
+$\operatorname{Var}((\xi-\bar\xi)_{(k)})=v_k-1/n$, and substituting gives $v_k+\rho(1-v_k)$.
+\end{proof}
+
+\begin{remark}
+This is the per-level contraction, exact and monotone, on the Gaussian scale, unifying the two sides:
+the single line $v_k+\rho(1-v_k)$ runs from inflation at $\rho>0$ through the independent value at
+$\rho=0$ to the floor at $\rho=-1/(n-1)$. Under the Gaussian copula $U_i=\Phi(Z_i)$, which restores
+uniform marginals, $\operatorname{Var}(U_{(k)})$ is numerically monotone in $\rho$ and below the
+independent value throughout $\rho<0$ (\texttt{check\_fan.py}); the only gap to the uniform-marginal
+conjecture is that the monotone map $\Phi$ preserve the contraction, a dispersive-order transfer.
+\end{remark}
+
 The same convex-order contraction $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$ that drives the aggregate
 bound is available per level, but turning it into the single-$k$ statement needs the tail
 $\mathbb P(N(u)\ge k)$ to cross the binomial tail once in $u$, which the total positivity of the
