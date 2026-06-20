@@ -98,3 +98,14 @@ if __name__ == "__main__":
                 worst = max(worst, Us[kk - 1].var() / bv)
         print(f"  n={m}: max ratio = {worst:.3f}")
     print("  (all <= 1 => no counterexample; ratio is furthest below 1 at the contest floor.)")
+
+    # Proposition (exact path): mix iid (1-t) and contest (t); both share mean k/(n+1),
+    # so Var(c) = (1-t)*Beta exactly, the fan collapsing linearly to the floor.
+    print("\nProposition (exact path) iid <-> contest: Var(c) should equal (1-t)*Beta:")
+    grid = np.arange(1, n+1)/(n+1)
+    for t in [0.0, 0.25, 0.5, 0.75, 1.0]:
+        cc = np.empty(T)
+        for i in range(T):
+            u = rng.permutation(grid) if rng.random() < t else rng.random(n)
+            cc[i] = np.sort(u)[k-1]
+        print(f"  t={t:.2f}: Var(c)={cc.var():.4e}  (1-t)*Beta={(1-t)*beta_var:.4e}  ratio={cc.var()/beta_var:.3f}")

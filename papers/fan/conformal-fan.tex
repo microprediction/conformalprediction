@@ -146,9 +146,30 @@ $\operatorname{Var}(c)=0$: the realized coverage equals the nominal level on eve
 
 Both endpoints agree with Theorem~\ref{thm:coeff} at $R=1$ and $R=0$. Between them the fan contracts
 monotonically as the scores become more negatively dependent, and the contraction is exactly the
-$R<1$ of the fan coefficient. We can prove this contraction exactly at the endpoints and to leading
-order everywhere; the exact finite-sample inequality is a statement about the spread of an order
-statistic under negative dependence.
+$R<1$ of the fan coefficient. The two endpoints are in fact joined by an exact path.
+
+\begin{proposition}[An exact path from independence to the floor]\label{prop:path}
+Let the calibration law be, with probability $1-t$, $n$ independent uniforms, and with probability
+$t$, a contest (a uniformly random permutation of the grid $\{1/(n+1),\dots,n/(n+1)\}$). Both
+components yield realized coverage with the same mean $k/(n+1)$, the contest with zero variance, so by
+the law of total variance the between-component term vanishes and
+\begin{equation}
+\operatorname{Var}(c)=(1-t)\,\frac{k(n-k+1)}{(n+1)^2(n+2)} .
+\end{equation}
+The pairwise correlation of the scores is $-t/(n-1)$, so as $t$ runs from $0$ to $1$ the family runs
+from independence to the contest floor and the fan collapses linearly to zero.
+\end{proposition}
+
+\begin{proof}
+Condition on the component. $\mathbb E[c\mid\text{iid}]=\mathbb E[c\mid\text{contest}]=k/(n+1)$, so
+$\operatorname{Var}(\mathbb E[c\mid\cdot])=0$; and $\mathbb E[\operatorname{Var}(c\mid\cdot)]=
+(1-t)\cdot\tfrac{k(n-k+1)}{(n+1)^2(n+2)}+t\cdot 0$. Add the two. The correlation is
+$(1-t)\cdot 0+t\cdot(-1/(n-1))$ since both components share the mean.
+\end{proof}
+
+So we can prove the contraction exactly at both endpoints and along this whole interpolating family,
+and to leading order everywhere (Theorem~\ref{thm:coeff}). What is left open is the exact
+finite-sample inequality for an \emph{arbitrary} negatively associated law.
 
 \begin{conjecture}[Finite-sample contraction]\label{conj:disp}
 If the calibration scores are negatively associated then $\operatorname{Var}(c)$ is at most the
@@ -212,6 +233,27 @@ offset between $k/n$ and $k/(n+1)$, a band of width $O(1/n)$ on which the integr
 everywhere else it is negative. So the identity proves the contraction up to that single $O(1/n)$
 boundary term, a second route to the leading order of Theorem~\ref{thm:coeff}, and isolates exactly
 what a finite-sample proof must control: the boundary remainder against the slack $\Delta^2$.
+\end{remark}
+
+\begin{remark}[Why the closed form does not close it, and the lemma that would]
+The closed form is, by itself, circular. Substituting the moment identities
+$\int u\,\delta=\tfrac12(\mathbb E[c_{\mathrm{iid}}^2]-\mathbb E[c^2])$ and
+$\int\delta=\mathbb E[c_{\mathrm{iid}}]-\mathbb E[c]$ into any elementary rearrangement of the
+difference, single-crossing splits, Abel summation, the exact first-order perturbation, collapses it
+back to $\operatorname{Var}(c)-\operatorname{Var}(c_{\mathrm{iid}})$ with the auxiliary crossing
+point cancelling: these structural facts carry no magnitude. Nor is the per-level convex order of
+Lemma-\ref{lem:count} enough on its own. Because $\operatorname{Var}(c)$ depends only on the single
+curve $g(u)=\mathbb P(N(u)\ge k)$, one might hope $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$ at each
+$u$ suffices; it does not, since a curve dominated pointwise can have larger variance (place an atom
+at the boundary), and such curves are excluded only because they are not realizable by a genuine
+sample. The content is therefore an extremal statement about the realizable curves, not their
+marginals:
+\begin{quote}
+\emph{Open lemma.} Among all $g(u)=\mathbb P(N(u)\ge k)$ realizable by a negatively associated uniform
+sample, the independent (binomial) curve maximizes $\operatorname{Var}(c)$.
+\end{quote}
+This is what a total-positivity or coupling argument would have to deliver. Proposition~\ref{prop:path}
+and the contest endpoint are the cases settled by hand.
 \end{remark}
 
 \begin{remark}[The signed measure as a negative between-term]
