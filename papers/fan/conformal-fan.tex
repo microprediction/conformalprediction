@@ -21,24 +21,25 @@ Dependence and the Variance of Realized Coverage}
 \maketitle
 
 \begin{abstract}
-Split conformal prediction's realized, calibration-conditional coverage fluctuates around the
-nominal $1-\alpha$. For exchangeable-but-independent calibration scores it follows the
-$\mathrm{Beta}(k,n-k+1)$ law, variance about $\alpha(1-\alpha)/n$, the classical fan. We show the
-width of that fan is governed by the sign of the cross-sample dependence. The mean stays pinned at
-the marginal level whatever the dependence; the variance, to leading order, is the average pairwise
-covariance of the exceedance indicators at the operating quantile times the independent fan.
-Positive (extendable) dependence adds a between-dataset term and widens the fan; negative dependence
-narrows it, to exactly zero at the maximally negatively associated contest floor
-$\rho=-1/(n-1)$, where the realized coverage equals the nominal level identically. We prove the
-positive side exactly through de Finetti and the law of total variance, the negative side exactly at
-the floor and to leading order in general, and, summed over all target levels, exactly: a
-convex-order contraction of the exceedance count against a concave functional shows negative
-association never widens the total fan. For the canonical equicorrelated Gaussian family the single
-level is exact and monotone, and dispersively so, via a strong-log-concavity argument and Tweedie's
-formula. The general single-level statement is left as a conjecture, supported numerically across
-dependence structures. The governing sign is the
-one the companion note attaches to the finite de Finetti measure: a genuine prior widens the fan, the
-signed corner collapses it.
+Fix a split-conformal calibration set and ask how often a fresh, \emph{independent} draw from the
+score marginal falls under the threshold $U_{(k)}$. That realized coverage $c=U_{(k)}$ is a random
+variable; for independent calibration scores it follows the $\mathrm{Beta}(k,n-k+1)$ law, variance
+about $\alpha(1-\alpha)/n$, the classical fan. We study how dependence among the calibration scores
+reshapes it. The organizing identity is that $c$ is a functional of the exceedance-count process
+alone, so its variance is governed by the count's covariance kernel, and negatively associated scores
+have a less variable count (Lemma~\ref{lem:count}). Three results follow. A leading-order fan
+coefficient: in a Bahadur regime $\operatorname{Var}(c)=n^{-2}\operatorname{Var}(N(1-\alpha))+o(1/n)$,
+so the average pairwise covariance of the exceedance indicators sets the leading constant. An exact
+aggregate bound: summed over all levels $k$, negative association never widens the fan, by a
+convex-order contraction of the count against a concave functional and majorization. And, for
+equicorrelated normals, the single level is exact and monotone in the correlation,
+$\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)$, dispersively so via strong log-concavity and Tweedie's
+formula. We keep $c$ (coverage against an independent test draw) distinct from conformal conditional
+coverage with an exchangeable test point: under dependence the \emph{mean} of $c$ is not pinned, and
+the positive-dependence decomposition we give is an exact identity that does not by itself order the
+fan against the independent one. The general single-level negative-association contraction is left as
+a conjecture, supported numerically. The governing sign is the one the companion note attaches to the
+finite de Finetti measure.
 \end{abstract}
 
 \section{Setup}
@@ -52,18 +53,26 @@ the marginal is
 \begin{equation}
 c=U_{(k)} .
 \end{equation}
-For independent (or merely exchangeable, de facto independent) calibration scores this is the
-classical result \citep{vovk2012,marques2024}: $c\sim\mathrm{Beta}(k,n-k+1)$, with
+For \emph{independent} calibration scores this is the classical result \citep{vovk2012,marques2024}:
+$c\sim\mathrm{Beta}(k,n-k+1)$, with
 \begin{equation}\label{eq:betavar}
 \mathbb E[c]=\frac{k}{n+1},\qquad \operatorname{Var}(c)=\frac{k(n-k+1)}{(n+1)^2(n+2)}\;\approx\;
 \frac{\alpha(1-\alpha)}{n}.
 \end{equation}
 This is the fan: the per-dataset coverage scatters around $1-\alpha$ with a spread that shrinks like
-$1/n$. The question of this note is what the dependence among the calibration scores does to that
-spread. The companion notes treat the orthogonal, within-dataset axis (coverage uneven across $x$
-for a fixed dataset, the information gap $I(R;X)$ and its sign \citealp{cotton_marginally,
-cotton_signed}); here every statement is about the across-dataset fluctuation of the single number
-$c$.
+$1/n$. The question of this note is what the dependence among the calibration scores does to it.
+
+Two cautions fix the object of study. First, $c=U_{(k)}$ is coverage against a test draw
+\emph{independent} of the calibration set; it is not the conformal conditional coverage
+$\mathbb P(U_{n+1}\le U_{(k)}\mid U_1,\dots,U_n)$ for a test point exchangeable with, and dependent
+on, the calibration scores, which need not equal $U_{(k)}$. The marginal conformal guarantee comes
+from the rank symmetry of $U_{n+1}$ among the $n+1$ scores and is not what controls $c$. Second, the
+mean $\mathbb E[c]=k/(n+1)$ is an \emph{independence} statement, not a consequence of uniform
+marginals or exchangeability: if $U_1=\dots=U_n=V\sim\mathrm{Unif}(0,1)$ then $U_{(k)}=V$ and
+$\mathbb E[c]=\tfrac12$ for every $k$. So under dependence both the mean and the variance of $c$
+respond; this note studies the variance, and flags the mean where it matters. The companion notes
+treat the orthogonal, within-dataset axis \citep{cotton_marginally,cotton_signed}; here every
+statement is about the across-dataset fluctuation of $c$.
 
 The whole problem passes through the count process $N(u)=\sum_{i=1}^n\mathbf 1\{U_i\le u\}$, because
 $U_{(k)}=\int_0^1\mathbf 1\{N(u)<k\}\,\mathrm du$, so
@@ -87,52 +96,59 @@ $\operatorname{Var}(N(u))=\sum_i\operatorname{Var}+\sum_{i\ne j}\operatorname{Co
 
 \section{The fan coefficient}
 
-Let $p=1-\alpha$ be the operating level and $\xi_i=\mathbf 1\{U_i\le p\}$, so $N(p)=\sum_i\xi_i$.
-The Bahadur representation for the uniform quantile \citep{bahadur1966}, which holds for negatively
-associated sequences under mild conditions, gives $U_{(k)}-p = p-N(p)/n + o_P(n^{-1/2})$. Because
-$U_{(k)}$ and $N(p)/n$ both lie in $[0,1]$, the remainder is bounded, so the convergence is also in
-$L^2$ and the variance passes to the limit; hence
+Let $p=1-\alpha$ and $\xi_i=\mathbf 1\{U_i\le p\}$, so $N(p)=\sum_i\xi_i$.
 
 \begin{theorem}[Fan coefficient]\label{thm:coeff}
-As $n\to\infty$,
+Suppose $k/n\to p\in(0,1)$ and the scores satisfy a Bahadur representation
+$U_{(k)}-p=p-N(p)/n+r_n$ with the remainder negligible in $L^2$ relative to $n^{-1}
+\operatorname{Var}(N(p))^{1/2}$. Then
 \begin{equation}
-\operatorname{Var}(c)=\frac{1}{n^2}\operatorname{Var}(N(p))\,(1+o(1))
-=\frac{\alpha(1-\alpha)}{n}\,R\,(1+o(1)),\qquad
-R=1+\frac{n-1}{\alpha(1-\alpha)}\,\bar c,
+\operatorname{Var}(c)=\frac1{n^2}\operatorname{Var}(N(p))+o\!\Big(\frac{\operatorname{Var}(N(p))}{n^2}\Big).
 \end{equation}
-where $\bar c=\tfrac{1}{n(n-1)}\sum_{i\ne j}\operatorname{Cov}(\xi_i,\xi_j)$ is the average pairwise
-covariance of the exceedance indicators at the operating quantile.
+If moreover $\operatorname{Var}(N(p))\asymp n$, writing it as
+$np(1-p)+n(n-1)\bar c$ with $\bar c=\tfrac1{n(n-1)}\sum_{i\ne j}\operatorname{Cov}(\xi_i,\xi_j)$,
+\begin{equation}
+\operatorname{Var}(c)=\frac{p(1-p)}{n}\,R\,(1+o(1)),\qquad R=1+\frac{n-1}{p(1-p)}\,\bar c .
+\end{equation}
 \end{theorem}
 
-The fan's leading coefficient is, exactly, the variance of the exceedance count at $1-\alpha$. Under
-independence $\bar c=0$ and $R=1$, recovering \eqref{eq:betavar}. Negative association makes
-$\bar c<0$ and $R<1$: the fan narrows. At the contest floor $\bar c=-\alpha(1-\alpha)/(n-1)$ one gets
-$R=0$. The reduction factor $R$ is the single number to carry away.
+So the leading fan coefficient is the exceedance-count variance at the operating quantile. Under
+independence $\bar c=0$, $R=1$, recovering \eqref{eq:betavar}; negative association makes $\bar c<0$
+and $R<1$, narrowing the fan. Two caveats the statement respects. The multiplicative form needs
+$\operatorname{Var}(N(p))\asymp n$: under strong negative dependence the count variance can be
+$o(n)$ (zero at the floor), and then only the additive form is safe. And the Bahadur regime itself
+fails under a fixed positive latent (de Finetti) dependence, where $N(p)/n$ has a non-degenerate
+random limit $Q([0,p])$ and $U_{(k)}$ converges to a random conditional quantile rather than
+linearizing at $p$; the next section handles that regime exactly and separately.
 
-\section{Positive dependence widens the fan, exactly}
+\section{Positive dependence: an exact decomposition}
 
-When the scores are extendable, that is, drawn from an infinitely exchangeable sequence, de Finetti
+When the scores are extendable, drawn from an infinitely exchangeable sequence, de Finetti
 \citep{definetti1937,kerns2006} makes them conditionally independent given a latent directing measure
-$Q$. Conditional on $Q$ the coverage $c$ is an ordinary independent-sample order statistic, so the
-law of total variance gives an exact decomposition.
+$Q$. The law of total variance then gives an exact decomposition.
 
-\begin{theorem}[Positive dependence]\label{thm:pos}
+\begin{theorem}[Positive-dependence decomposition]\label{thm:pos}
 For an extendable exchangeable calibration sequence with directing measure $Q$,
 \begin{equation}
-\operatorname{Var}(c)=\underbrace{\mathbb E_Q\!\big[\operatorname{Var}(c\mid Q)\big]}
-_{\text{average within-dataset fan}}
-+\underbrace{\operatorname{Var}_Q\!\big(\mathbb E[c\mid Q]\big)}_{\text{between-dataset term}}.
+\operatorname{Var}(c)=\underbrace{\mathbb E_Q\!\big[\operatorname{Var}(U_{(k)}\mid Q)\big]}
+_{\text{average within-}Q\text{ order-stat variance}}
++\underbrace{\operatorname{Var}_Q\!\big(m_k(Q)\big)}_{\text{between-}Q\text{ term}},
+\qquad m_k(Q)=\mathbb E[U_{(k)}\mid Q].
 \end{equation}
-The between-dataset term is non-negative and vanishes under independence. Positive cross-sample
-dependence is exactly this term: a per-dataset latent that shifts the conditional quantile, on top of
-the ordinary fan.
+The between-$Q$ term is non-negative and vanishes under independence.
 \end{theorem}
 
-The decomposition is exact and needs no asymptotics. It says the danger of positive dependence is
-not bias but variance: you draw a dataset, the latent $Q$ places the whole calibration sample high or
-low, and the realized coverage rides with it. Numerically, a one-factor Gaussian model at pairwise
-correlation $0.2$ has $\operatorname{Var}(c)$ about $3.3$ times the independent fan, of which the
-between-dataset term is more than half.
+The decomposition is exact and needs no asymptotics, but note what conditioning gives: $U_i\mid Q$ are
+i.i.d.\ $Q$, so $U_{(k)}\mid Q$ is the $k$-th order statistic of $Q$ on the marginal scale, \emph{not}
+a uniform $\mathrm{Beta}$ variable, and its mean $m_k(Q)$ moves with $Q$. The within-$Q$ term is thus
+not the independent fan \eqref{eq:betavar}, and the identity by itself does \emph{not} prove
+$\operatorname{Var}(c)$ exceeds the independent value: that comparison would need a separate theorem
+relating the average within-$Q$ order-stat variance to the uniform fan. What the identity does isolate
+is the between-$Q$ term, the signature of positive dependence: a per-dataset latent shifts the whole
+calibration sample, and the realized coverage rides with it. Empirically the net effect is a wider
+fan, e.g.\ a one-factor Gaussian copula at correlation $0.2$ gives $\operatorname{Var}(c)\approx 3.3$
+times the independent value (and the comonotone limit $U_1=\dots=U_n$ gives $\tfrac1{12}$, far above
+it), but that widening is observed, not proved by Theorem~\ref{thm:pos} alone.
 
 \section{Negative dependence narrows the fan}
 
@@ -142,18 +158,24 @@ of Theorem~\ref{thm:pos} is unavailable: there is no $Q$ to condition on, and th
 term would be a negative quasi-variance. That is precisely the regime where the fan contracts.
 
 \begin{theorem}[Endpoints]\label{thm:ends}
-Independent scores give $c\sim\mathrm{Beta}(k,n-k+1)$, the widest fan at fixed marginals. At the
-maximally negatively associated floor, where the calibration scores are a uniformly random
-permutation of the grid $\{1/(n+1),\dots,n/(n+1)\}$ (sampling without replacement, pairwise
-correlation $-1/(n-1)$), the order statistic is deterministic, $U_{(k)}=k/(n+1)$ almost surely, so
-$\operatorname{Var}(c)=0$: the realized coverage equals the nominal level on every draw.
+Independent scores give $c\sim\mathrm{Beta}(k,n-k+1)$, the benchmark fan. At the maximally negatively
+associated floor, take the discrete rank idealization in which the calibration scores are a uniformly
+random permutation of the grid $\{1/(n+1),\dots,n/(n+1)\}$ (sampling without replacement, pairwise
+correlation $-1/(n-1)$): the order statistic is deterministic, $U_{(k)}=k/(n+1)$ a.s., so
+$\operatorname{Var}(c)=0$.
 \end{theorem}
 
-Both endpoints agree with Theorem~\ref{thm:coeff} at $R=1$ and $R=0$. Between them the fan contracts
-monotonically as the scores become more negatively dependent, and the contraction is exactly the
-$R<1$ of the fan coefficient. The two endpoints are in fact joined by an exact path.
+Independence is the benchmark, not the maximum: positive dependence can widen the fan well past it
+(the comonotone limit reaches $\tfrac1{12}$). The claim of this note is the other direction, that
+\emph{negative} association does not widen it, with independence the (conjectural) upper endpoint of
+the negative-dependence range. Two model cautions on the floor. The grid permutation has
+\emph{discrete}-uniform marginals, not the continuous $\mathrm{Unif}(0,1)$ of $U_i=F(S_i)$, so it sits
+in the model only if one allows discrete or rank scores; the continuous-marginal analogue is a Latin
+hypercube (one point per stratum, randomly permuted), whose fan is small, of order $1/n^2$, but not
+exactly zero. And the endpoints agree with Theorem~\ref{thm:coeff} at $R=1$ and $R=0$. The two are
+joined by an exact path.
 
-\begin{proposition}[An exact path from independence to the floor]\label{prop:path}
+\begin{proposition}[An exact variance interpolation]\label{prop:path}
 Let the calibration law be, with probability $1-t$, $n$ independent uniforms, and with probability
 $t$, a contest (a uniformly random permutation of the grid $\{1/(n+1),\dots,n/(n+1)\}$). Both
 components yield realized coverage with the same mean $k/(n+1)$, the contest with zero variance, so by
@@ -161,27 +183,31 @@ the law of total variance the between-component term vanishes and
 \begin{equation}
 \operatorname{Var}(c)=(1-t)\,\frac{k(n-k+1)}{(n+1)^2(n+2)} .
 \end{equation}
-The pairwise correlation of the scores is $-t/(n-1)$, so as $t$ runs from $0$ to $1$ the family runs
-from independence to the contest floor and the fan collapses linearly to zero.
 \end{proposition}
 
 \begin{proof}
 Condition on the component. $\mathbb E[c\mid\text{iid}]=\mathbb E[c\mid\text{contest}]=k/(n+1)$, so
-$\operatorname{Var}(\mathbb E[c\mid\cdot])=0$; and $\mathbb E[\operatorname{Var}(c\mid\cdot)]=
-(1-t)\cdot\tfrac{k(n-k+1)}{(n+1)^2(n+2)}+t\cdot 0$. Add the two. The correlation is
-$(1-t)\cdot 0+t\cdot(-1/(n-1))$ since both components share the mean.
+$\operatorname{Var}(\mathbb E[c\mid\cdot])=0$, and $\mathbb E[\operatorname{Var}(c\mid\cdot)]=
+(1-t)\,\tfrac{k(n-k+1)}{(n+1)^2(n+2)}$.
 \end{proof}
+
+So the fan collapses linearly to zero as $t\to1$. Two honest caveats. The mixture's pairwise
+correlation is $\operatorname{Corr}(U_i,U_j)=-t/(n+1-2t)$, not $-t/(n-1)$: the grid component
+contributes $\operatorname{Cov}=-1/(12(n+1))$ but mixing changes the marginal variance to
+$(n+1-2t)/(12(n+1))$; the correlation reaches the floor $-1/(n-1)$ only at $t=1$. And the mixture's
+one-dimensional marginal is neither continuous uniform nor discrete-grid uniform, so this is an exact
+\emph{variance} interpolation, not a fixed-marginal copula path.
 
 So we can prove the contraction exactly at both endpoints and along this whole interpolating family,
 and to leading order everywhere (Theorem~\ref{thm:coeff}). For an \emph{arbitrary} negatively
 associated law the contraction also holds once it is summed over all levels.
 
 \begin{theorem}[Aggregate fan bound]\label{thm:agg}
-For exchangeable, negatively associated scores with uniform marginals,
+For negatively associated scores with uniform marginals,
 \begin{equation}
 \sum_{k=1}^n\operatorname{Var}(U_{(k)})\;\le\;\sum_{k=1}^n\frac{k(n-k+1)}{(n+1)^2(n+2)},
 \end{equation}
-the independent value, with equality iff the scores are independent. Summed over all target levels,
+the independent value, with equality holding under independence. Summed over all target levels,
 the fan is never widened by negative association.
 \end{theorem}
 
@@ -206,7 +232,11 @@ $\sum_k(\mathbb E\,U_{(k)})^2\ge\sum_k(\tfrac k{n+1})^2$, and the displayed iden
 $\sum_k\operatorname{Var}(U_{(k)})$ finishes it.
 \end{proof}
 
-The per-level refinement, for the single conformal $k$, remains open, and the obstruction is exactly
+The proof uses only identical uniform marginals and the convex-order domination
+$N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$, not exchangeability as such. Equality holds under
+independence; that equality \emph{forces} independence is not established here and would need a
+separate tightness lemma. The per-level refinement, for the single conformal $k$, remains open, and
+the obstruction is exactly
 why: the step $\mathbf 1\{N(u)<k\}$ behind a single $\operatorname{Var}(U_{(k)})$ is neither concave
 nor convex, so the convex order does not sign it, whereas the smooth aggregate functional
 $\min(j,n-N)$ is concave and it does.
@@ -291,17 +321,26 @@ log-concave to the reciprocal of that coordinate's reference variance; for $w_{(
 $\tfrac{n-1}n$ (the diagonal of $I-\tfrac1nJ$), giving constant at least $\tfrac n{n-1}$.
 \end{proof}
 
-\begin{proposition}[Gaussian-scale dispersive monotonicity]\label{prop:disp}
-For equicorrelated standard normals, $Z_{(k)}$ is increasing in the dispersive order as $\rho$ increases.
+\begin{proposition}[Gaussian-scale dispersive monotonicity]\label{prop:dispmon}
+For equicorrelated standard normals with $\rho\in(-\tfrac1{n-1},1)$, $Z_{(k)}$ is increasing in the
+dispersive order as $\rho$ increases.
 \end{proposition}
 
 \begin{proof}
-The posterior of $D$ given $Y=aD+b\eta$ has $-\log$ density with Hessian
-$(-\log g_D)''+a^2/b^2\ge \tfrac n{n-1}+\tfrac{a^2}{b^2}$ by Lemma~\ref{lem:slc}, and the budget
-$\tfrac{n-1}n a^2+b^2=1$ makes $\tfrac n{n-1}+\tfrac{a^2}{b^2}=\tfrac{n}{(n-1)b^2}$. The Brascamp--Lieb
-variance inequality \citep{brascamplieb1976} then gives $\operatorname{Var}(D\mid Y=q)\le (n-1)b^2/n$,
-the bound above, so $\tfrac{d}{dq}\mathbb E[D\mid Y=q]\le (n-1)a/n$ and the quantile density of $Z_{(k)}$
-decreases in $\rho$, which is the dispersive monotonicity.
+For a smooth one-parameter family the quantile evolves by $\partial_\rho q_\rho(u)=
+\mathbb E[\dot Y\mid Y=q_\rho(u)]$ with $\dot Y=\partial_\rho Z_{(k)}$, and dispersive monotonicity is
+exactly $\partial_\rho q_\rho(u)$ increasing in $u$, i.e.\ increasing in $q$. Writing
+$Y=aD+b\eta$ and using $a\,\mathbb E[D\mid Y]+b\,\mathbb E[\eta\mid Y]=Y$ together with the budget
+$\tfrac{n-1}na^2+b^2=1$, this reduces to $m'(q)\le (n-1)a/n$, where $m(q)=\mathbb E[D\mid Y=q]$.
+Tweedie's identity for Gaussian signal extraction gives $m'(q)=a\operatorname{Var}(D\mid Y=q)/b^2$.
+The posterior of $D$ given $Y$ has $-\log$ density with Hessian
+$(-\log g_D)''+a^2/b^2\ge \tfrac n{n-1}+\tfrac{a^2}{b^2}=\tfrac{n}{(n-1)b^2}$, the last equality by the
+budget and Lemma~\ref{lem:slc}; the Brascamp--Lieb variance inequality \citep{brascamplieb1976} then
+gives $\operatorname{Var}(D\mid Y=q)\le (n-1)b^2/n$, hence $m'(q)\le (n-1)a/n$. Equivalently the
+quantile density $q_\rho'(u)=1/f_\rho(q_\rho(u))$ increases in $\rho$ at each level (the density at each
+quantile decreases), which is the dispersive monotonicity. At the open-interval ends the statement is
+read in the limit: $b\to0$ at $\rho=-1/(n-1)$ (the degenerate floor, $Z_{(k)}\to\sqrt{n/(n-1)}\,D$) and
+$a\to0$ at $\rho=1$ ($Z_{(k)}\to\eta$).
 \end{proof}
 
 This settles the Gaussian-scale per-level statement in the strong (dispersive, not merely variance)
@@ -338,8 +377,9 @@ one-factor, $\rho=+0.2$                & $0.863$ & $1.33\times10^{-2}$ & $3.41$ 
 \end{center}
 
 Every negatively associated structure, exchangeable or not, comes in under the independent fan; the
-positive control widens it. The mean drifts up slightly under negative dependence and down under
-positive dependence, but stays near $1-\alpha$; the action is in the variance. A wider search agrees:
+positive control widens it. The mean of $c$ also responds to dependence, drifting up under negative
+and down under positive (to $0.863$ in the one-factor row), confirming it is not pinned; the variance
+is what we track here. A wider search agrees:
 over exchangeable, moving-average, block, and randomly-generated non-exchangeable negatively-correlated
 Gaussian copulas at $n\le 8$ and every $k$, the ratio to the independent fan never exceeds one
 (it ranges from about $0.30$ at the floor to $0.80$ for weak dependence), with no counterexample. In all
@@ -408,14 +448,19 @@ principle: stratification never increases variance \citep{cochran1977}, antithet
 the monotone empirical CDF, and determinantal or repulsive designs give negative association with
 faster-than-independent concentration \citep{hough2006,bardenet2016}.
 
-\begin{remark}[The exchangeability constraint]
-The marginal guarantee needs each calibration score exchangeable with the test score; it does not
-need the calibration scores independent of one another. So negative association is admissible, but
-only if it is induced by a map symmetric across all $n+1$ points, a pooled de-meaning or ranking,
-which preserves the exchangeability of the joint. Selecting or curating the calibration set by its
-scores, the obvious way to balance it, breaks exchangeability with the test point and voids the
-guarantee. The viable construction is transductive and symmetric; that is also why the contest grid,
-a symmetric function of the pooled sample, both keeps the marginal guarantee and zeroes the fan.
+\begin{remark}[What is and is not admissible]
+The marginal guarantee needs each calibration score exchangeable with the test score, not the
+calibration scores independent of one another, so negative association is in principle compatible. But
+the routes differ in what they cost. Score-dependent curation of the calibration set, the obvious way
+to balance it, breaks exchangeability with the test point and voids the guarantee. A pooling that uses
+all $n+1$ scores together (pooled ranks or de-meaning) preserves rank validity, but it is
+transductive, full-conformal in flavour, not split conformal with a threshold fixed before the test
+point is seen, and once the test score enters the pooled construction the realized-coverage variable
+is no longer the fixed-threshold $c=U_{(k)}$ studied here. The safe message is the design one: a
+pre-specified, exchangeability-preserving randomized design (or covariate stratification independent
+of the response) can lower the run-to-run variance of the threshold without disturbing validity. Exact
+zero fan is the discrete rank/grid idealization; continuous-marginal designs (Latin hypercube) give a
+small but nonzero fan, of order $1/n^2$.
 \end{remark}
 
 \section{Related work}
@@ -433,9 +478,11 @@ dependence is \citet{christofides2004}; the Bahadur representation is \citet{bah
 stratification is \citet{cochran1977}. The finite signed de Finetti representation is
 \citet{kerns2006}, and the within-dataset, across-$x$ reading of its sign is the companion note
 \citep{cotton_signed}; the information gap is \citep{cotton_marginally}. The contribution here is to
-make the dependence the control variable for the \emph{variance} of realized coverage: the exact
-fan coefficient $R$, the exact de Finetti decomposition for the positive side, the exact zero at the
-contest floor, and the reduction of the general negative case to a dispersive ordering.
+make the dependence the control variable for the \emph{variance} of realized coverage: the
+leading-order fan coefficient, the exact law-of-total-variance decomposition on the positive side, the
+exact aggregate contraction under negative association (Theorem~\ref{thm:agg}), and, for equicorrelated
+normals, the exact and dispersively-monotone per-level law. The general single-level negative-association
+contraction is left as a conjecture.
 
 \begin{thebibliography}{99}
 \bibitem[Bahadur(1966)]{bahadur1966} Bahadur, R.~R. (1966). A note on quantiles in large samples.
