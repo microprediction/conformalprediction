@@ -121,3 +121,17 @@ if __name__ == "__main__":
             OS = np.array([fn(m) for _ in range(200000)])
             print(f"  n={m} {nm:8s}: sum Var={OS.var(0).sum():.4e}  iid sum={iid_sum:.4e}  "
                   f"<= ? {OS.var(0).sum() <= iid_sum + 2e-3}")
+
+    # Proposition (equicorrelated normals): Var(Z_(k)) = v_k + rho*(1-v_k), exact & monotone;
+    # under the Gaussian copula U=Phi(Z) the uniform-scale fan is monotone in rho and <= iid for rho<0.
+    print("\nProposition (equicorrelated normals), n=10, k=8: Var(Z_(k)) = v_k + rho*(1-v_k);"
+          " U-scale monotone:")
+    nn, kk = 10, 8
+    vk = np.sort(rng.standard_normal((300000, nn)), axis=1)[:, kk-1].var()
+    bU = kk*(nn-kk+1)/((nn+1)**2*(nn+2))
+    for rho in [-1/(nn-1), -0.05, 0.0, 0.2]:
+        R = (1-rho)*np.eye(nn) + rho*np.ones((nn, nn))
+        Z = (np.linalg.cholesky(R + 1e-12*np.eye(nn)) @ rng.standard_normal((nn, 600000))).T
+        Zk = np.sort(Z, axis=1)[:, kk-1]
+        print(f"  rho={rho:+.3f}: Var(Z_(k))={Zk.var():.4f} pred {vk+rho*(1-vk):.4f} | "
+              f"Var(U_(k))/iid={norm.cdf(Zk).var()/bU:.3f}")
