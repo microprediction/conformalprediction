@@ -56,13 +56,23 @@
   a genuine prior widens the fan, the signed corner collapses it.</p>
 
   <h2>What is proved, and what is left</h2>
-  <p>Exact: the de Finetti decomposition for positive dependence, and the zero at the contest floor.
-  Asymptotic, with an explicit reduction factor: the fan coefficient in general. The remaining
-  finite-sample inequality &mdash; negative association never widens the fan &mdash; rests on a
-  convex-order contraction of the exceedance count (proved) plus a single-crossing step, and is
-  confirmed numerically across dependence structures by <code>check_fan.py</code>. The stronger
-  dispersive ordering is deliberately not claimed; it can fail at fixed marginals. A constructive corollary: a balanced, transductively
-  symmetric calibration set tightens coverage without disturbing the marginal guarantee.</p>
+  <p>The positive side is exact: a de Finetti / law-of-total-variance decomposition shows positive
+  dependence adds a non-negative between-dataset term. The negative side is exact at both endpoints,
+  along the whole iid-to-floor path (mixing in the contest keeps the mean fixed, so
+  \(\operatorname{Var}=(1-t)\cdot\text{Beta}\)), and &mdash; the new result &mdash; <em>exact summed
+  over all levels</em>:</p>
+  <p style="text-align:center;"><strong>\(\sum_k \operatorname{Var}(U_{(k)}) \le\) the independent
+  value, for any negatively associated sample.</strong></p>
+  <p>The proof uses the convex-order contraction of the exceedance count against a <em>concave</em>
+  functional, \(\min(j,\,n-N(u))\), the top-\(j\) sum: convex order reverses for concave maps, so the
+  expected-order-statistic profile majorizes the independent one, and Schur-convexity finishes it.
+  What stays open is the single-level statement (for one fixed \(k\)), and the obstruction is exactly
+  why: the step behind one \(\operatorname{Var}(U_{(k)})\) is neither concave nor convex, so the same
+  order cannot sign it; no counterexample appears in a wide numerical hunt, and the order-statistic
+  CDFs cross the independent ones exactly once. The stronger dispersive ordering is deliberately not
+  claimed; it can fail at fixed marginals. All checks are reproduced by <code>check_fan.py</code>; a
+  constructive corollary is that a balanced, transductively symmetric calibration set tightens
+  coverage without disturbing the marginal guarantee.</p>
 
   <div class="prevnext">
     <a href="/papers/">&larr; All papers</a>
