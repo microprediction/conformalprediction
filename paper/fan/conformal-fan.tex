@@ -25,11 +25,11 @@ Fix a split-conformal calibration set and ask how often a fresh, \emph{independe
 score marginal falls under the threshold $U_{(k)}$. That realized coverage $c=U_{(k)}$ is a random
 variable; for independent calibration scores it follows the $\mathrm{Beta}(k,n-k+1)$ law, variance
 about $\alpha(1-\alpha)/n$, the classical fan. We study how dependence among the calibration scores
-reshapes it. The organizing identity is that $c$ is a functional of the exceedance-count process
+reshapes it. The organizing identity is that $c$ is a functional of the count process
 alone, so its variance is governed by the count's covariance kernel, and negatively associated scores
 have a less variable count (Lemma~\ref{lem:count}). Three results follow. A leading-order fan
 coefficient: in a Bahadur regime $\operatorname{Var}(c)=n^{-2}\operatorname{Var}(N(1-\alpha))+o(1/n)$,
-so the average pairwise covariance of the exceedance indicators sets the leading constant. An exact
+so the average pairwise covariance of the sub-threshold indicators sets the leading constant. An exact
 aggregate bound: summed over all levels $k$, negative association never widens the fan, by a
 convex-order contraction of the count against a concave functional and majorization. And, for
 equicorrelated normals, the single level is exact and monotone in the correlation,
@@ -46,10 +46,12 @@ finite de Finetti measure.
 
 Split conformal returns a set with marginal coverage $1-\alpha$. Fix the calibration set; the
 coverage you then realize on fresh test points is a random variable, and it is not $1-\alpha$ on the
-nose. Write the scores on the probability-integral scale, $U_i=F(S_i)$, so each $U_i$ is marginally
-uniform whatever the model. With $k=\lceil(n+1)(1-\alpha)\rceil$ the conformal threshold is the order
-statistic $U_{(k)}$, and the calibration-conditional coverage against an independent test draw from
-the marginal is
+nose. Write the scores on the probability-integral scale, $U_i=F(S_i)$. We assume throughout that the
+score marginal $F$ is continuous, so each $U_i\sim\mathrm{Unif}(0,1)$; if $F$ has atoms, read $U_i$ as
+the randomised PIT $F(S_i^-)+V_i\,(F(S_i)-F(S_i^-))$ with $V_i\sim\mathrm{Unif}(0,1)$ independent,
+which restores exact uniformity. With $k=\lceil(n+1)(1-\alpha)\rceil$ the conformal threshold is the
+order statistic $U_{(k)}$, and the calibration-conditional coverage against an independent test draw
+from the marginal is
 \begin{equation}
 c=U_{(k)} .
 \end{equation}
@@ -84,35 +86,38 @@ a functional of the law of the count process alone. Two facts about $N$ drive ev
 
 \begin{lemma}[Count variance]\label{lem:count}
 If the scores are negatively associated \citep{joagdev1983}, then for every $u$,
-$\operatorname{Var}(N(u))\le n\,u(1-u)$, with equality iff the exceedance indicators are pairwise
+$\operatorname{Var}(N(u))\le n\,u(1-u)$, with equality iff the sub-threshold indicators are pairwise
 uncorrelated.
 \end{lemma}
 \begin{proof}
-The indicators $\mathbf 1\{U_i\le u\}$ are coordinatewise-monotone functions of single distinct
-coordinates, hence negatively associated, hence pairwise non-positively correlated. So
+The indicators $\mathbf 1\{U_i\le u\}$ are functions of single distinct coordinates, all nondecreasing
+in the same direction, so negative association is preserved and they are pairwise non-positively
+correlated. So
 $\operatorname{Var}(N(u))=\sum_i\operatorname{Var}+\sum_{i\ne j}\operatorname{Cov}\le
 \sum_i u(1-u)=n\,u(1-u)$.
 \end{proof}
 
 \section{The fan coefficient}
 
-Let $p=1-\alpha$ and $\xi_i=\mathbf 1\{U_i\le p\}$, so $N(p)=\sum_i\xi_i$.
+Let $p=1-\alpha$ and $b_i=\mathbf 1\{U_i\le p\}$, so $N(p)=\sum_i b_i$. (We reserve $\xi$ for the
+i.i.d.\ normals of Proposition~\ref{prop:gauss}.) The representation is on the uniform scale, where the
+quantile density is $1/f(p)=1$, so the usual $1/f$ factor is absent.
 
 \begin{theorem}[Fan coefficient]\label{thm:coeff}
-Suppose $k/n\to p\in(0,1)$ and the scores satisfy a Bahadur representation
-$U_{(k)}-p=p-N(p)/n+r_n$ with the remainder negligible in $L^2$ relative to $n^{-1}
-\operatorname{Var}(N(p))^{1/2}$. Then
+Suppose $F$ is continuous (or a randomised PIT is used), $k/n\to p\in(0,1)$, and the scores satisfy a
+Bahadur representation $U_{(k)}-p=p-N(p)/n+r_n$ with the remainder negligible in $L^2$ relative to
+$n^{-1}\operatorname{Var}(N(p))^{1/2}$. Then
 \begin{equation}
 \operatorname{Var}(c)=\frac1{n^2}\operatorname{Var}(N(p))+o\!\Big(\frac{\operatorname{Var}(N(p))}{n^2}\Big).
 \end{equation}
 If moreover $\operatorname{Var}(N(p))\asymp n$, writing it as
-$np(1-p)+n(n-1)\bar c$ with $\bar c=\tfrac1{n(n-1)}\sum_{i\ne j}\operatorname{Cov}(\xi_i,\xi_j)$,
+$np(1-p)+n(n-1)\bar c$ with $\bar c=\tfrac1{n(n-1)}\sum_{i\ne j}\operatorname{Cov}(b_i,b_j)$,
 \begin{equation}
 \operatorname{Var}(c)=\frac{p(1-p)}{n}\,R\,(1+o(1)),\qquad R=1+\frac{n-1}{p(1-p)}\,\bar c .
 \end{equation}
 \end{theorem}
 
-So the leading fan coefficient is the exceedance-count variance at the operating quantile. Under
+So the leading fan coefficient is the count variance at the operating quantile. Under
 independence $\bar c=0$, $R=1$, recovering \eqref{eq:betavar}; negative association makes $\bar c<0$
 and $R<1$, narrowing the fan. Two caveats the statement respects. The multiplicative form needs
 $\operatorname{Var}(N(p))\asymp n$: under strong negative dependence the count variance can be
@@ -144,7 +149,8 @@ a uniform $\mathrm{Beta}$ variable, and its mean $m_k(Q)$ moves with $Q$. The wi
 not the independent fan \eqref{eq:betavar}, and the identity by itself does \emph{not} prove
 $\operatorname{Var}(c)$ exceeds the independent value: that comparison would need a separate theorem
 relating the average within-$Q$ order-stat variance to the uniform fan. What the identity does isolate
-is the between-$Q$ term, the signature of positive dependence: a per-dataset latent shifts the whole
+is the between-$Q$ term, one signature of positive dependence (it also shifts the within-$Q$ law from
+uniform to $Q$): a per-dataset latent shifts the whole
 calibration sample, and the realized coverage rides with it. Empirically the net effect is a wider
 fan, e.g.\ a one-factor Gaussian copula at correlation $0.2$ gives $\operatorname{Var}(c)\approx 3.3$
 times the independent value (and the comonotone limit $U_1=\dots=U_n$ gives $\tfrac1{12}$, far above
@@ -216,8 +222,10 @@ The order statistics are a permutation of the sample, so $\sum_k U_{(k)}^2=\sum_
 uniform marginals, $\sum_k\mathbb E[U_{(k)}^2]=n\,\mathbb E[U_1^2]=n/3$ for every such law; hence
 $\sum_k\operatorname{Var}(U_{(k)})=\tfrac n3-\sum_k(\mathbb E\,U_{(k)})^2$. For the top $j$ statistics,
 $\sum_{k>n-j}U_{(k)}=\int_0^1\min\!\big(j,n-N(u)\big)\,\mathrm du$, and $m\mapsto\min(j,n-m)$ is
-concave. By \citet{shao2000} the exceedance count obeys $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$, so
-for a concave map the inequality reverses,
+concave (equivalently $-\min(j,n-m)=\max(-j,m-n)$ is convex and nondecreasing). \citet{shao2000}
+compares a negatively associated sum to its independent counterpart in convex order,
+$N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$, so $\mathbb E[\phi(N(u))]\le\mathbb E[\phi(\mathrm{Bin})]$ for
+convex $\phi$ and the reverse for concave; applied to $m\mapsto\min(j,n-m)$,
 $\mathbb E\min(j,n-N(u))\ge\mathbb E\min(j,n-\mathrm{Bin}(n,u))$; integrating,
 \begin{equation}\label{eq:topj}
 \sum_{k>n-j}\mathbb E\,U_{(k)}\;\ge\;\sum_{k>n-j}\tfrac{k}{n+1}\qquad\text{for every }j=1,\dots,n,
@@ -331,7 +339,8 @@ For a smooth one-parameter family the quantile evolves by $\partial_\rho q_\rho(
 \mathbb E[\dot Y\mid Y=q_\rho(u)]$ with $\dot Y=\partial_\rho Z_{(k)}$, and dispersive monotonicity is
 exactly $\partial_\rho q_\rho(u)$ increasing in $u$, i.e.\ increasing in $q$. Writing
 $Y=aD+b\eta$ and using $a\,\mathbb E[D\mid Y]+b\,\mathbb E[\eta\mid Y]=Y$ together with the budget
-$\tfrac{n-1}na^2+b^2=1$, this reduces to $m'(q)\le (n-1)a/n$, where $m(q)=\mathbb E[D\mid Y=q]$.
+$\tfrac{n-1}na^2+b^2=1$, this reduces to $m'(q)\le (n-1)a/n$, where $m(q)=\mathbb E[D\mid Y=q]$ (the
+computation of $M'(q)$ is in the Appendix).
 Tweedie's identity for Gaussian signal extraction gives $m'(q)=a\operatorname{Var}(D\mid Y=q)/b^2$.
 The posterior of $D$ given $Y$ has $-\log$ density with Hessian
 $(-\log g_D)''+a^2/b^2\ge \tfrac n{n-1}+\tfrac{a^2}{b^2}=\tfrac{n}{(n-1)b^2}$, the last equality by the
@@ -440,13 +449,22 @@ whether the fan is inflated or cancelled here.
 
 \section{A constructive corollary}
 
-If negative dependence narrows the fan, one can engineer it. A balanced calibration set whose scores
-behave like the grid of Theorem~\ref{thm:ends} concentrates the realized coverage far inside the
-independent fan, so the same reliability is bought with fewer calibration points, or the same number
-of points gives less run-to-run wobble. The classical variance-reduction designs all apply in
-principle: stratification never increases variance \citep{cochran1977}, antithetic pairing helps for
-the monotone empirical CDF, and determinantal or repulsive designs give negative association with
-faster-than-independent concentration \citep{hough2006,bardenet2016}.
+If negative dependence narrows the fan, one can engineer it, and there is a clean continuous-marginal
+construction that stays inside the $U_i\sim\mathrm{Unif}(0,1)$ model (unlike the discrete grid of
+Theorem~\ref{thm:ends}). Take a one-per-stratum design: with $\pi$ a uniform random permutation of
+$\{1,\dots,n\}$,
+\begin{equation}
+U_i=\frac{\pi(i)-1+V_i}{n}\quad(\text{Latin hypercube, }V_i\stackrel{\text{iid}}{\sim}\mathrm{Unif}(0,1)),
+\qquad\text{or}\qquad U_i=\frac{\pi(i)-1+T}{n}\quad(\text{common jitter, }T\sim\mathrm{Unif}(0,1)).
+\end{equation}
+Each $U_i$ is exactly $\mathrm{Unif}(0,1)$ and the sample is exchangeable, with one point per stratum,
+so the $k$-th order statistic lies in the $k$-th stratum and
+$\mathbb E[U_{(k)}]=(k-\tfrac12)/n$, $\operatorname{Var}(U_{(k)})=1/(12n^2)$, a fan of order $1/n^2$
+rather than $1/n$. (Note these continuous designs give mean $(k-\tfrac12)/n$, not the grid's exact
+$k/(n+1)$.) More generally the classical variance-reduction designs apply: stratification never
+increases variance \citep{cochran1977}, antithetic pairing helps for the monotone empirical CDF, and
+determinantal or repulsive designs give negative association with faster-than-independent
+concentration \citep{hough2006,bardenet2016}.
 
 \begin{remark}[What is and is not admissible]
 The marginal guarantee needs each calibration score exchangeable with the test score, not the
@@ -466,9 +484,8 @@ small but nonzero fan, of order $1/n^2$.
 \section{Related work}
 
 The $\mathrm{Beta}(k,n-k+1)$ law of calibration-conditional coverage and its variance are
-\citet{vovk2012} and \citet{marques2024}; the entire prior literature treats the calibration scores
-as independent or exchangeable and reads off a single number, never varying the dependence to move
-it. Negative association and its consequences are \citet{joagdev1983}; that negatively associated
+\citet{vovk2012} and \citet{marques2024}; to our knowledge the papers cited here do not study the
+dependence among calibration scores as a control variable for the realized-coverage variance. Negative association and its consequences are \citet{joagdev1983}; that negatively associated
 sums are dominated in convex order by independent ones is \citet{shao2000}, and sampling without
 replacement concentrates at least as tightly as with replacement \citep{serfling1974}. The total
 positivity behind the single-crossing step is \citet{karlin1968}; that an order statistic of a
@@ -483,6 +500,26 @@ leading-order fan coefficient, the exact law-of-total-variance decomposition on 
 exact aggregate contraction under negative association (Theorem~\ref{thm:agg}), and, for equicorrelated
 normals, the exact and dispersively-monotone per-level law. The general single-level negative-association
 contraction is left as a conjecture.
+
+\section*{Appendix: the quantile-slope reduction for Proposition~\ref{prop:dispmon}}
+
+With $Z_{(k)}=aD+b\eta$, $a=\sqrt{1-\rho}$, $b=\sqrt{(1+(n-1)\rho)/n}$, the budget
+$(n-1)a^2+nb^2=n$ holds and $da/d\rho=-1/(2a)$, $db/d\rho=(n-1)/(2nb)$. Under the natural coupling
+(the same $D,\eta$ for all $\rho$), $\dot Y:=\partial_\rho Z_{(k)}=-D/(2a)+(n-1)\eta/(2nb)$, and the
+quantile evolves by $\partial_\rho q_\rho(u)=\mathbb E[\dot Y\mid Y=q]=:M(q)$. Writing
+$m(q)=\mathbb E[D\mid Y=q]$ and $b\,\mathbb E[\eta\mid Y=q]=q-a\,m(q)$,
+\begin{equation}
+M(q)=-\frac{m(q)}{2a}+\frac{n-1}{2nb^2}\big(q-a\,m(q)\big).
+\end{equation}
+Differentiating and using $\tfrac1{2a}+\tfrac{(n-1)a}{2nb^2}=\tfrac{nb^2+(n-1)a^2}{2anb^2}=\tfrac1{2ab^2}$
+(the budget),
+\begin{equation}
+M'(q)=\frac{n-1}{2nb^2}-\frac{m'(q)}{2ab^2},
+\end{equation}
+so $M'(q)\ge0$, dispersive monotonicity ($\partial_\rho q_\rho$ increasing in $q$), is equivalent to
+$m'(q)\le (n-1)a/n$. Tweedie's identity $m'(q)=a\operatorname{Var}(D\mid Y=q)/b^2$ turns this into the
+posterior-variance bound $\operatorname{Var}(D\mid Y=q)\le (n-1)b^2/n$, which Lemma~\ref{lem:slc} and
+the Brascamp--Lieb inequality deliver, as in Proposition~\ref{prop:dispmon}.
 
 \begin{thebibliography}{99}
 \bibitem[Bahadur(1966)]{bahadur1966} Bahadur, R.~R. (1966). A note on quantiles in large samples.
