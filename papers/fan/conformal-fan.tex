@@ -247,6 +247,20 @@ is that this outweighs the simultaneous $\sqrt{1-\rho}$ shrinkage of $D$ as $\rh
 density-quantile monotonicity under the variance budget $\tfrac{n-1}n(1-\rho)+s=1$, which holds
 numerically but which no off-the-shelf convolution theorem delivers. (Dispersive order does survive
 the increasing map $\Phi$, so the residual is the whole of what remains.)
+
+Tweedie's formula sharpens that residual to a single posterior-variance bound. Reading
+$Y:=Z_{(k)}=aD+b\eta$ ($a=\sqrt{1-\rho}$, $b=\sqrt s$) as Gaussian signal extraction of the
+log-concave signal $D$, the slope of the posterior mean equals the scaled posterior variance,
+$\frac{d}{dq}\mathbb E[D\mid Y=q]=a\,\operatorname{Var}(D\mid Y=q)/b^2$
+\citep{efron2011,hansen2026}. The dispersive monotonicity is equivalent to this slope being at most
+$(n-1)a/n$, so, using $\tfrac{n-1}n a^2+b^2=1$, the entire transfer reduces to
+\begin{equation}
+\operatorname{Var}(D\mid Y=q)\;\le\;\frac{n-1}{n}\,b^2\qquad\text{for all }q,
+\end{equation}
+a posterior-variance bound for log-concave Gaussian denoising, the precise lemma that remains. The
+score-driven reading of the same identity \citep{hansen2026} is the econometric form of modelling the
+conditional spread, which is exactly what closes the information gap a conformal wrapper leaves
+\citep{cotton_marginally}.
 \end{remark}
 
 The same convex-order contraction $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$ that drives the aggregate
@@ -405,6 +419,10 @@ empirical coverage in split conformal prediction. \emph{Statistics \& Probabilit
 (2025). arXiv:2303.02770.
 \bibitem[Serfling(1974)]{serfling1974} Serfling, R.~J. (1974). Probability inequalities for the sum
 in sampling without replacement. \emph{The Annals of Statistics} 2(1):39--48.
+\bibitem[Efron(2011)]{efron2011} Efron, B. (2011). Tweedie's formula and selection bias.
+\emph{Journal of the American Statistical Association} 106(496):1602--1614.
+\bibitem[Hansen and Tong(2026)]{hansen2026} Hansen, P.~R. and Tong, C. (2026). Tweedie's formula and
+score-driven updating. Preprint, arXiv:2605.15902.
 \bibitem[Karlin(1968)]{karlin1968} Karlin, S. (1968). \emph{Total Positivity, Vol.~1}. Stanford
 University Press.
 \bibitem[Lewis and Thompson(1981)]{lewis1981} Lewis, T. and Thompson, J.~W. (1981). Dispersive
