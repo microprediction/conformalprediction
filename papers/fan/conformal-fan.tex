@@ -61,8 +61,9 @@ $c\sim\mathrm{Beta}(k,n-k+1)$, with
 \mathbb E[c]=\frac{k}{n+1},\qquad \operatorname{Var}(c)=\frac{k(n-k+1)}{(n+1)^2(n+2)}\;\approx\;
 \frac{\alpha(1-\alpha)}{n}.
 \end{equation}
-This is the fan: the per-dataset coverage scatters around $1-\alpha$ with a spread that shrinks like
-$1/n$. The question of this note is what the dependence among the calibration scores does to it.
+This is the fan: the per-dataset coverage scatters around $1-\alpha$ with variance of order $1/n$
+(standard deviation of order $n^{-1/2}$). The question of this note is what the dependence among the
+calibration scores does to it.
 
 Two cautions fix the object of study. First, $c=U_{(k)}$ is coverage against a test draw
 \emph{independent} of the calibration set; it is not the conformal conditional coverage
@@ -74,7 +75,11 @@ marginals or exchangeability: if $U_1=\dots=U_n=V\sim\mathrm{Unif}(0,1)$ then $U
 $\mathbb E[c]=\tfrac12$ for every $k$. So under dependence both the mean and the variance of $c$
 respond; this note studies the variance, and flags the mean where it matters. The companion notes
 treat the orthogonal, within-dataset axis \citep{cotton_marginally,cotton_signed}; here every
-statement is about the across-dataset fluctuation of $c$.
+statement is about the across-dataset fluctuation of $c$. The results separate by type:
+Theorems~\ref{thm:pos} and \ref{thm:agg} and Propositions~\ref{prop:path}--\ref{prop:gauss} are
+finite-sample exact, Theorem~\ref{thm:coeff} is asymptotic and conditional on a Bahadur
+representation, and the general per-level negative-association contraction (Conjecture~\ref{conj:disp})
+is open.
 
 The whole problem passes through the count process $N(u)=\sum_{i=1}^n\mathbf 1\{U_i\le u\}$, because
 $U_{(k)}=\int_0^1\mathbf 1\{N(u)<k\}\,\mathrm du$, so
@@ -164,11 +169,11 @@ of Theorem~\ref{thm:pos} is unavailable: there is no $Q$ to condition on, and th
 term would be a negative quasi-variance. That is precisely the regime where the fan contracts.
 
 \begin{theorem}[Endpoints]\label{thm:ends}
-Independent scores give $c\sim\mathrm{Beta}(k,n-k+1)$, the benchmark fan. At the maximally negatively
-associated floor, take the discrete rank idealization in which the calibration scores are a uniformly
-random permutation of the grid $\{1/(n+1),\dots,n/(n+1)\}$ (sampling without replacement, pairwise
-correlation $-1/(n-1)$): the order statistic is deterministic, $U_{(k)}=k/(n+1)$ a.s., so
-$\operatorname{Var}(c)=0$.
+Independent scores give $c\sim\mathrm{Beta}(k,n-k+1)$, the benchmark fan. At the exchangeable
+pairwise-correlation floor, take the discrete rank idealization in which the calibration scores are a
+uniformly random permutation of the grid $\{1/(n+1),\dots,n/(n+1)\}$ (sampling without replacement,
+pairwise correlation $-1/(n-1)$, the smallest attainable for an exchangeable vector): the order
+statistic is deterministic, $U_{(k)}=k/(n+1)$ a.s., so $\operatorname{Var}(c)=0$.
 \end{theorem}
 
 Independence is the benchmark, not the maximum: positive dependence can widen the fan well past it
@@ -221,11 +226,12 @@ the fan is never widened by negative association.
 The order statistics are a permutation of the sample, so $\sum_k U_{(k)}^2=\sum_i U_i^2$ and, under
 uniform marginals, $\sum_k\mathbb E[U_{(k)}^2]=n\,\mathbb E[U_1^2]=n/3$ for every such law; hence
 $\sum_k\operatorname{Var}(U_{(k)})=\tfrac n3-\sum_k(\mathbb E\,U_{(k)})^2$. For the top $j$ statistics,
-$\sum_{k>n-j}U_{(k)}=\int_0^1\min\!\big(j,n-N(u)\big)\,\mathrm du$, and $m\mapsto\min(j,n-m)$ is
-concave (equivalently $-\min(j,n-m)=\max(-j,m-n)$ is convex and nondecreasing). \citet{shao2000}
-compares a negatively associated sum to its independent counterpart in convex order,
-$N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$, so $\mathbb E[\phi(N(u))]\le\mathbb E[\phi(\mathrm{Bin})]$ for
-convex $\phi$ and the reverse for concave; applied to $m\mapsto\min(j,n-m)$,
+$\sum_{k>n-j}U_{(k)}=\int_0^1\min\!\big(j,n-N(u)\big)\,\mathrm du$. The function $\phi(m)=\max(-j,m-n)$
+is convex and \emph{nondecreasing}, which is exactly the class for which \citet{shao2000} compares a
+negatively associated sum to its independent counterpart, $\mathbb E\phi(N(u))\le\mathbb E\phi(\mathrm{Bin}(n,u))$.
+(Because the means agree, $\mathbb E N(u)=nu=\mathbb E\,\mathrm{Bin}$, one may add any affine term, so
+the comparison in fact extends to all convex $\phi$, the full convex order; the monotone-convex form
+already suffices here.) Since $\min(j,n-m)=-\phi(m)$, this gives
 $\mathbb E\min(j,n-N(u))\ge\mathbb E\min(j,n-\mathrm{Bin}(n,u))$; integrating,
 \begin{equation}\label{eq:topj}
 \sum_{k>n-j}\mathbb E\,U_{(k)}\;\ge\;\sum_{k>n-j}\tfrac{k}{n+1}\qquad\text{for every }j=1,\dots,n,
@@ -326,7 +332,8 @@ set by the Gaussian quadratic alone; the cone can only raise it, never lower it,
 does not interfere through its boundary. Strong log-concavity passes to marginals
 \citep{prekopa1973,brascamplieb1976,saumard2014}, the marginal of a coordinate being strongly
 log-concave to the reciprocal of that coordinate's reference variance; for $w_{(k)}$ this is
-$\tfrac{n-1}n$ (the diagonal of $I-\tfrac1nJ$), giving constant at least $\tfrac n{n-1}$.
+$\tfrac{n-1}n$ (the diagonal of $I-\tfrac1nJ$), giving constant at least $\tfrac n{n-1}$ (the
+parameter bookkeeping is in the Appendix).
 \end{proof}
 
 \begin{proposition}[Gaussian-scale dispersive monotonicity]\label{prop:dispmon}
@@ -367,8 +374,10 @@ the stronger dispersive ordering: an order statistic of a dependent sample need 
 smaller than the independent one even at fixed marginals \citep{panja2022}, so the result is specific
 to the variance and is not a corollary of a dispersive theorem. The natural sufficient condition on
 the dependence is negative supermodular dependence \citep{christofides2004}, which all the structures
-below satisfy. We verify the per-level conjecture across them (one run each, reproduced by
-\texttt{check\_fan.py}; $n=20$, $\alpha=0.1$, independent fan variance $3.92\times10^{-3}$).
+below satisfy. The table is illustrative, each row a single Monte Carlo estimate ($6\times10^4$ draws,
+so the variance entries carry a relative Monte Carlo error of a few percent), fully reproduced by
+\texttt{check\_fan.py} ($n=20$, $\alpha=0.1$, independent fan variance $3.92\times10^{-3}$); it is
+evidence for the conjecture, not a proof.
 
 \begin{center}
 \begin{tabular}{lcccc}
@@ -407,13 +416,15 @@ and $\Delta=\int_0^1\delta$,
 =2\int_0^1\big[(1-u)-A\big]\,\delta(u)\,\mathrm du-\Delta^2 .
 \end{equation}
 The $-\Delta^2$ term is non-positive. The weight $(1-u)-A$ changes sign at
-$u=\mathbb E[c^{\mathrm{iid}}]=k/(n+1)$, and under negative association $\delta$ changes sign once,
-at the level $u\approx k/n$ where the operating quantile crosses the count mean and the contraction
-of Lemma~\ref{lem:count} flips the tail comparison. The two sign changes agree up to the conformal
-offset between $k/n$ and $k/(n+1)$, a band of width $O(1/n)$ on which the integrand is positive;
-everywhere else it is negative. So the identity proves the contraction up to that single $O(1/n)$
-boundary term, a second route to the leading order of Theorem~\ref{thm:coeff}, and isolates exactly
-what a finite-sample proof must control: the boundary remainder against the slack $\Delta^2$.
+$u=\mathbb E[c^{\mathrm{iid}}]=k/(n+1)$. Empirically (across every structure in the table, and in the
+wider search below) $\delta$ changes sign exactly once, near $u\approx k/n$; we emphasize this is an
+\emph{observed} single-crossing, not a consequence of Lemma~\ref{lem:count}, since count-variance
+contraction alone does not force one-crossing of the tail curve $g$. \emph{Granting} that single
+crossing, the two sign changes agree up to the conformal offset between $k/n$ and $k/(n+1)$, a band of
+width $O(1/n)$ on which the integrand is positive and elsewhere negative, so the identity gives the
+contraction up to that $O(1/n)$ boundary term, a second route to the leading order of
+Theorem~\ref{thm:coeff}, and isolates what a finite-sample proof must control: the boundary remainder
+against the slack $\Delta^2$.
 \end{remark}
 
 \begin{remark}[Why the closed form does not close it, and the lemma that would]
@@ -475,10 +486,12 @@ all $n+1$ scores together (pooled ranks or de-meaning) preserves rank validity, 
 transductive, full-conformal in flavour, not split conformal with a threshold fixed before the test
 point is seen, and once the test score enters the pooled construction the realized-coverage variable
 is no longer the fixed-threshold $c=U_{(k)}$ studied here. The safe message is the design one: a
-pre-specified, exchangeability-preserving randomized design (or covariate stratification independent
-of the response) can lower the run-to-run variance of the threshold without disturbing validity. Exact
-zero fan is the discrete rank/grid idealization; continuous-marginal designs (Latin hypercube) give a
-small but nonzero fan, of order $1/n^2$.
+pre-specified, exchangeability-preserving randomized design can lower the run-to-run variance of the
+threshold without disturbing validity. What makes such a design admissible is not that it is merely
+randomized and pre-specified, but that it preserves the exchangeability the validity argument needs;
+covariate stratification qualifies only when it is external to the responses and applied symmetrically
+across the $n+1$ points. Exact zero fan is the discrete rank/grid idealization; continuous-marginal
+designs (Latin hypercube) give a small but nonzero fan, of order $1/n^2$.
 \end{remark}
 
 \section{Related work}
@@ -520,6 +533,20 @@ so $M'(q)\ge0$, dispersive monotonicity ($\partial_\rho q_\rho$ increasing in $q
 $m'(q)\le (n-1)a/n$. Tweedie's identity $m'(q)=a\operatorname{Var}(D\mid Y=q)/b^2$ turns this into the
 posterior-variance bound $\operatorname{Var}(D\mid Y=q)\le (n-1)b^2/n$, which Lemma~\ref{lem:slc} and
 the Brascamp--Lieb inequality deliver, as in Proposition~\ref{prop:dispmon}.
+
+\medskip
+\noindent\emph{The strong-log-concavity constant in Lemma~\ref{lem:slc}.} The constant $n/(n-1)$ is
+tracked as follows. On the hyperplane $H=\{\sum_i w_i=0\}$ the centred vector $w$ has $-\log$ density
+$\tfrac12\|w\|^2$ (the covariance $I-\tfrac1nJ$ restricts to the identity on $H$), so the measure is
+$1$-strongly-log-concave there; restricting to the convex cone $\{w_1\le\dots\le w_n\}\cap H$ adds a
+convex term to $-\log$ and keeps it $1$-strongly-log-concave. Strong log-concavity is preserved under
+marginalization along a linear functional \citep{prekopa1973,brascamplieb1976,saumard2014}: for an
+$m$-strongly-log-concave measure and $\ell(x)=\langle v,x\rangle$, the law of $\ell$ is
+$(m/\|v\|^2)$-strongly-log-concave (the marginal along the unit direction $v/\|v\|$ is $m$-slc, and
+rescaling the argument by $\|v\|$ scales the constant by $1/\|v\|^2$). Here $D=w_{(k)}=\langle e_k,w\rangle$
+on the cone, with $v=\mathrm{proj}_H(e_k)=e_k-\tfrac1n\mathbf 1$ and $\|v\|^2=\tfrac{n-1}n$, so
+$m=1$ gives the constant $n/(n-1)$ (the cone restriction only raises it). Numerically the realized
+constant is larger still, $(\log g_D)''\le-2.5$ in the cases checked, so the bound holds with room.
 
 \begin{thebibliography}{99}
 \bibitem[Bahadur(1966)]{bahadur1966} Bahadur, R.~R. (1966). A note on quantiles in large samples.
