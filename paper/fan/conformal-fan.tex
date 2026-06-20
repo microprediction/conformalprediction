@@ -237,8 +237,16 @@ This is the per-level contraction, exact and monotone, on the Gaussian scale, un
 the single line $v_k+\rho(1-v_k)$ runs from inflation at $\rho>0$ through the independent value at
 $\rho=0$ to the floor at $\rho=-1/(n-1)$. Under the Gaussian copula $U_i=\Phi(Z_i)$, which restores
 uniform marginals, $\operatorname{Var}(U_{(k)})$ is numerically monotone in $\rho$ and below the
-independent value throughout $\rho<0$ (\texttt{check\_fan.py}); the only gap to the uniform-marginal
-conjecture is that the monotone map $\Phi$ preserve the contraction, a dispersive-order transfer.
+independent value throughout $\rho<0$ (\texttt{check\_fan.py}). The transfer to the uniform scale is
+a dispersive-order statement, and it is half rigorous. Decompose along the common mean,
+$Z_{(k)}=\sqrt{1-\rho}\,D+\bar Z$ with $D=(\xi-\bar\xi)_{(k)}$ and $\bar Z\sim N(0,s)$ independent.
+$D$ is log-concave, being the order statistic of a vector with log-concave (Gaussian) joint density
+\citep{prekopa1973}; and convolution with a log-concave density increases the dispersive order
+\citep{lewis1981}, so adding the Gaussian shift $\bar Z$ disperses, monotonically in $s$. The residual
+is that this outweighs the simultaneous $\sqrt{1-\rho}$ shrinkage of $D$ as $\rho$ grows, a one-parameter
+density-quantile monotonicity under the variance budget $\tfrac{n-1}n(1-\rho)+s=1$, which holds
+numerically but which no off-the-shelf convolution theorem delivers. (Dispersive order does survive
+the increasing map $\Phi$, so the residual is the whole of what remains.)
 \end{remark}
 
 The same convex-order contraction $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$ that drives the aggregate
@@ -399,6 +407,11 @@ empirical coverage in split conformal prediction. \emph{Statistics \& Probabilit
 in sampling without replacement. \emph{The Annals of Statistics} 2(1):39--48.
 \bibitem[Karlin(1968)]{karlin1968} Karlin, S. (1968). \emph{Total Positivity, Vol.~1}. Stanford
 University Press.
+\bibitem[Lewis and Thompson(1981)]{lewis1981} Lewis, T. and Thompson, J.~W. (1981). Dispersive
+distributions, and the connection between dispersivity and strong unimodality. \emph{Journal of
+Applied Probability} 18(1):76--90.
+\bibitem[Pr\'ekopa(1973)]{prekopa1973} Pr\'ekopa, A. (1973). On logarithmic concave measures and
+functions. \emph{Acta Scientiarum Mathematicarum} 34:335--343.
 \bibitem[Panja et~al.(2022)]{panja2022} Panja, A., Kundu, P. and Pradhan, B. (2022). Dispersive and
 star ordering of sample extremes from dependent random variables following the proportional odds
 model. Preprint, arXiv:2006.04454.

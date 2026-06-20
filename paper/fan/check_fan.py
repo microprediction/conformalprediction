@@ -135,3 +135,16 @@ if __name__ == "__main__":
         Zk = np.sort(Z, axis=1)[:, kk-1]
         print(f"  rho={rho:+.3f}: Var(Z_(k))={Zk.var():.4f} pred {vk+rho*(1-vk):.4f} | "
               f"Var(U_(k))/iid={norm.cdf(Zk).var()/bU:.3f}")
+
+    # Dispersive-transfer check: U_(k)(rho)=Phi(Z_(k)) dispersively monotone in rho
+    # (all quantile gaps grow with rho) => Var(U_(k)) monotone; the half-rigorous step.
+    print("  dispersive monotonicity of U_(k) in rho (all quantile gaps grow):")
+    qs = np.linspace(0.02, 0.98, 25); prev = None; mono = True
+    for rho in [-1/(nn-1), -0.06, 0.0, 0.15]:
+        R = (1-rho)*np.eye(nn) + rho*np.ones((nn, nn))
+        Z = (np.linalg.cholesky(R + 1e-12*np.eye(nn)) @ rng.standard_normal((nn, 800000))).T
+        Q = np.quantile(norm.cdf(np.sort(Z, axis=1)[:, kk-1]), qs)
+        if prev is not None and not (np.abs(Q[:, None]-Q[None, :]) >= np.abs(prev[:, None]-prev[None, :]) - 2e-3).all():
+            mono = False
+        prev = Q
+    print(f"    monotone? {mono}")
