@@ -31,9 +31,10 @@ Positive (extendable) dependence adds a between-dataset term and widens the fan;
 narrows it, to exactly zero at the maximally negatively associated contest floor
 $\rho=-1/(n-1)$, where the realized coverage equals the nominal level identically. We prove the
 positive side exactly through de Finetti and the law of total variance, the negative side exactly at
-the floor and to leading order in general, and reduce the remaining finite-sample inequality to a
-convex-order contraction of the exceedance count, supported numerically across dependence
-structures. The governing sign is the
+the floor and to leading order in general, and, summed over all target levels, exactly: a
+convex-order contraction of the exceedance count against a concave functional shows negative
+association never widens the total fan. The single-level statement is left as a conjecture, supported
+numerically across dependence structures. The governing sign is the
 one the companion note attaches to the finite de Finetti measure: a genuine prior widens the fan, the
 signed corner collapses it.
 \end{abstract}
@@ -168,26 +169,53 @@ $(1-t)\cdot 0+t\cdot(-1/(n-1))$ since both components share the mean.
 \end{proof}
 
 So we can prove the contraction exactly at both endpoints and along this whole interpolating family,
-and to leading order everywhere (Theorem~\ref{thm:coeff}). What is left open is the exact
-finite-sample inequality for an \emph{arbitrary} negatively associated law.
+and to leading order everywhere (Theorem~\ref{thm:coeff}). For an \emph{arbitrary} negatively
+associated law the contraction also holds once it is summed over all levels.
 
-\begin{conjecture}[Finite-sample contraction]\label{conj:disp}
+\begin{theorem}[Aggregate fan bound]\label{thm:agg}
+For exchangeable, negatively associated scores with uniform marginals,
+\begin{equation}
+\sum_{k=1}^n\operatorname{Var}(U_{(k)})\;\le\;\sum_{k=1}^n\frac{k(n-k+1)}{(n+1)^2(n+2)},
+\end{equation}
+the independent value, with equality iff the scores are independent. Summed over all target levels,
+the fan is never widened by negative association.
+\end{theorem}
+
+\begin{proof}
+The order statistics are a permutation of the sample, so $\sum_k U_{(k)}^2=\sum_i U_i^2$ and, under
+uniform marginals, $\sum_k\mathbb E[U_{(k)}^2]=n\,\mathbb E[U_1^2]=n/3$ for every such law; hence
+$\sum_k\operatorname{Var}(U_{(k)})=\tfrac n3-\sum_k(\mathbb E\,U_{(k)})^2$. For the top $j$ statistics,
+$\sum_{k>n-j}U_{(k)}=\int_0^1\min\!\big(j,n-N(u)\big)\,\mathrm du$, and $m\mapsto\min(j,n-m)$ is
+concave. By \citet{shao2000} the exceedance count obeys $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$, so
+for a concave map the inequality reverses,
+$\mathbb E\min(j,n-N(u))\ge\mathbb E\min(j,n-\mathrm{Bin}(n,u))$; integrating,
+$\mathbb E\big[\sum_{k>n-j}U_{(k)}\big]$ is at least its independent value for every $j$. As the totals
+agree ($\sum_k\mathbb E\,U_{(k)}=n/2$), the profile $(\mathbb E\,U_{(1)},\dots,\mathbb E\,U_{(n)})$
+majorizes the independent profile $(\tfrac1{n+1},\dots,\tfrac n{n+1})$. Since $\sum_k x_k^2$ is
+Schur-convex, $\sum_k(\mathbb E\,U_{(k)})^2$ is at least its independent value, and the identity above
+finishes it.
+\end{proof}
+
+The per-level refinement, for the single conformal $k$, remains open, and the obstruction is exactly
+why: the step $\mathbf 1\{N(u)<k\}$ behind a single $\operatorname{Var}(U_{(k)})$ is neither concave
+nor convex, so the convex order does not sign it, whereas the smooth aggregate functional
+$\min(j,n-N)$ is concave and it does.
+
+\begin{conjecture}[Per-level contraction]\label{conj:disp}
 If the calibration scores are negatively associated then $\operatorname{Var}(c)$ is at most the
-independent value \eqref{eq:betavar}.
+independent value \eqref{eq:betavar} for each $k$ individually.
 \end{conjecture}
 
-One ingredient is already exact. The exceedance indicators are negatively associated with
-$\mathrm{Bernoulli}(u)$ marginals, so by \citet{shao2000} the count is convex-order dominated by the
-independent binomial, $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$, with the same mean $nu$: a
-mean-preserving contraction at every level. Carrying this to $\operatorname{Var}(c)$ needs the level
-comparison $\mathbb P(N(u)\ge k)$ to cross the binomial tail once in $u$, which the total positivity
-of the binomial tail in $(k,u)$ \citep{karlin1968} makes plausible, followed by a
+The same convex-order contraction $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$ that drives the aggregate
+bound is available per level, but turning it into the single-$k$ statement needs the tail
+$\mathbb P(N(u)\ge k)$ to cross the binomial tail once in $u$, which the total positivity of the
+binomial tail in $(k,u)$ \citep{karlin1968} makes plausible, followed by a
 single-crossing-implies-less-spread step. We claim only the variance statement, and deliberately not
 the stronger dispersive ordering: an order statistic of a dependent sample need not be dispersively
 smaller than the independent one even at fixed marginals \citep{panja2022}, so the result is specific
 to the variance and is not a corollary of a dispersive theorem. The natural sufficient condition on
 the dependence is negative supermodular dependence \citep{christofides2004}, which all the structures
-below satisfy. We verify the conjecture across them (one run each, reproduced by
+below satisfy. We verify the per-level conjecture across them (one run each, reproduced by
 \texttt{check\_fan.py}; $n=20$, $\alpha=0.1$, independent fan variance $3.92\times10^{-3}$).
 
 \begin{center}
