@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>The conformal fan: dependence and coverage variance — Conformal Prediction</title>
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/literature.html">Literature</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration</p>
+  <h1>The conformal fan: dependence and coverage variance</h1>
+  <p class="subtitle">Drag the correlation and watch the inequalities of <a href="/papers/fan/">the fan note</a> move. The mean of the realized coverage is not what changes; its variance is.</p>
+
+  <p>Fix a split-conformal calibration set of \(n\) scores and ask how often a fresh, independent draw
+  lands under the threshold \(U_{(k)}\), \(k=\lceil(n+1)(1-\alpha)\rceil\). That realized coverage
+  \(c=U_{(k)}\) is a random number; for independent scores it follows the
+  \(\mathrm{Beta}(k,n-k+1)\) law, the classical fan. The note asks what cross-sample
+  \emph{dependence} does to it. Here the scores are an equicorrelated Gaussian copula at correlation
+  \(\rho\); drag \(\rho\) from the floor \(-1/(n-1)\) up through \(0\) to \(+0.9\).</p>
+
+  <div class="demo">
+    <div class="canvas-box tall"><canvas id="fan"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <p>The top panel is the distribution of \(c\) (orange) against the iid fan (blue). At the floor the
+  fan collapses to a spike on \(1-\alpha\); near \(\rho=0\) it is the Beta fan; at large \(\rho\) it
+  blows up. The readouts track the two inequalities the note proves on the negative side: the
+  per-level ratio \(\operatorname{Var}(c)/\text{fan}\le 1\), and the aggregate
+  \(\sum_k\operatorname{Var}(U_{(k)})/\text{iid}\le 1\) (Theorem 4, proved for negative association).
+  On the Gaussian scale the exact affine law \(\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)\)
+  (Proposition 2) is checked against simulation.</p>
+
+  <div class="canvas-box med demo"><canvas id="perlevel"></canvas></div>
+  <p class="note">The second panel shows the variance of \emph{every} order statistic
+  \(\operatorname{Var}(U_{(k)})\) (orange) against the iid Beta variance curve (blue). For \(\rho<0\)
+  the orange curve sits entirely under the blue one, a contraction at every level, and its total area
+  is the aggregate bound. For \(\rho>0\) it lifts above. The other buttons swap in a moving-average
+  copula, the discrete contest/grid floor (variance exactly zero), and a Latin hypercube (continuous
+  marginals, fan of order \(1/n^2\)).</p>
+
+  <div class="takeaway">
+    <p>Takeaway. The dependence does not, as one might guess, just bias the coverage; it reshapes its
+    whole distribution, and the cleanest summary is the variance. Negative association narrows the fan,
+    to zero at the floor; positive widens it. The note proves this exactly in aggregate and, for these
+    equicorrelated normals, exactly per level via the affine law you can read off the panel. The
+    per-level contraction for general negative association is still a conjecture, but every structure
+    here keeps the orange curve under the blue. It is the same sign the
+    <a href="/papers/definetti-feynman/">signed-de-Finetti note</a> reads off the finite mixing
+    measure: a genuine prior widens the fan, the signed corner collapses it.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="17-laplace-vs-conformal.html">&larr; laplace vs conformal</a>
+    <span class="spacer"></span>
+    <a href="../index.html">&uarr; Back to overview</a>
+  </div>
+
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demonstration</span></div></footer>
+
+<script type="module" src="../js/demo18.js"></script>
+</body>
+</html>
