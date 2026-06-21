@@ -87,7 +87,9 @@ $U_{(k)}=\int_0^1\mathbf 1\{N(u)<k\}\,\mathrm du$, so
 \operatorname{Var}(c)=\int_0^1\!\!\int_0^1\operatorname{Cov}\big(\mathbf 1\{N(u)<k\},\,
 \mathbf 1\{N(v)<k\}\big)\,\mathrm du\,\mathrm dv,
 \end{equation}
-a functional of the law of the count process alone. Two facts about $N$ drive everything.
+a functional of the law of the count process alone --- equivalently, by Sklar's theorem, of the score
+\emph{copula}, since the uniform marginal has factored out (we return to this in
+Remark~\ref{rmk:copula}). Two facts about $N$ drive everything.
 
 \begin{lemma}[Count variance]\label{lem:count}
 If the scores are negatively associated \citep{joagdev1983}, then for every $u$,
@@ -494,6 +496,27 @@ across the $n+1$ points. Exact zero fan is the discrete rank/grid idealization; 
 designs (Latin hypercube) give a small but nonzero fan, of order $1/n^2$.
 \end{remark}
 
+\begin{remark}[The copula viewpoint]\label{rmk:copula}
+Because the scores are read on the uniform PIT scale, the joint law of $(U_1,\dots,U_n)$ is, by Sklar's
+theorem, a copula $C$, with the marginal $F$ factored out entirely. So $\operatorname{Var}(c)$ is a
+\emph{copula functional}: the fan is a copula invariant, identical for any score whose calibration
+dependence is $C$. The fan coefficient is read off the bivariate copula diagonal,
+$\bar c=\tfrac1{n(n-1)}\sum_{i\ne j}\big(C_{ij}(p,p)-p^2\big)$ at the operating quantile $p=1-\alpha$;
+for the maximum ($k=n$) $\operatorname{Var}(c)$ is exactly a functional of the diagonal $u\mapsto
+C(u,u)$, since $\mathbb P(U_{(n)}\le u)=C(u,u)$. The endpoints are the Fr\'echet bounds: independence
+$\Pi$ gives the Beta fan, the comonotone copula $M$ ($U_1=\dots=U_n$) the maximal fan $\tfrac1{12}$;
+the negative side has no dual, as the countermonotone lower bound is not a copula for $n>2$, which is
+why the floor is only the most negative \emph{exchangeable} copula, $\rho=-1/(n-1)$.
+Theorem~\ref{thm:pos} then says that the \emph{extendable} copulas, the exchangeable Archimedean
+families (Clayton, Gumbel, Frank), each with a de Finetti frailty $W$ as directing variable, carry a
+non-negative between-$Q$ term and widen the fan; the negative regime is the signed-de-Finetti corner
+with no such mixture, which is why its contraction needed convex order rather than conditioning.
+Finally, tail dependence acts through the copula's tails: a copula dependent in one tail pins the
+order statistics there and fattens the opposite end, so lower-tail dependence (Clayton) inflates the
+high, conformal quantile more than upper-tail dependence (Gumbel) --- the reverse of the naive guess,
+as the companion demonstration shows.
+\end{remark}
+
 \section{Related work}
 
 The $\mathrm{Beta}(k,n-k+1)$ law of calibration-conditional coverage and its variance are
@@ -512,7 +535,10 @@ make the dependence the control variable for the \emph{variance} of realized cov
 leading-order fan coefficient, the exact law-of-total-variance decomposition on the positive side, the
 exact aggregate contraction under negative association (Theorem~\ref{thm:agg}), and, for equicorrelated
 normals, the exact and dispersively-monotone per-level law. The general single-level negative-association
-contraction is left as a conjecture.
+contraction is left as a conjecture. The copula reading (Remark~\ref{rmk:copula}) rests on Sklar's
+theorem \citep{sklar1959,nelsen2006}; copulas enter conformal prediction elsewhere through the
+multivariate \emph{output} (e.g.\ \citealp{sunyu2024}), a different axis from the calibration-set
+copula here.
 
 \section*{Appendix: the quantile-slope reduction for Proposition~\ref{prop:dispmon}}
 
@@ -597,6 +623,12 @@ Log-concavity and strong log-concavity: a review. \emph{Statistics Surveys} 8:45
 \bibitem[Panja et~al.(2022)]{panja2022} Panja, A., Kundu, P. and Pradhan, B. (2022). Dispersive and
 star ordering of sample extremes from dependent random variables following the proportional odds
 model. Preprint, arXiv:2006.04454.
+\bibitem[Nelsen(2006)]{nelsen2006} Nelsen, R.~B. (2006). \emph{An Introduction to Copulas}, 2nd ed.
+Springer.
+\bibitem[Sklar(1959)]{sklar1959} Sklar, A. (1959). Fonctions de r\'epartition \`a $n$ dimensions et
+leurs marges. \emph{Publications de l'Institut de Statistique de l'Universit\'e de Paris} 8:229--231.
+\bibitem[Sun and Yu(2024)]{sunyu2024} Sun, S.~H. and Yu, R. (2024). Copula conformal prediction for
+multi-step time series forecasting. \emph{ICLR}. arXiv:2212.03281.
 \bibitem[Shao(2000)]{shao2000} Shao, Q.-M. (2000). A comparison theorem on moment inequalities
 between negatively associated and independent random variables. \emph{Journal of Theoretical
 Probability} 13(2):343--356.
