@@ -43,9 +43,10 @@
   <p>Fix the calibration set and the coverage you then realize is a random number, not
   \(1-\alpha\) exactly. For independent scores it follows the Beta\((k,n-k+1)\) law &mdash; the
   &ldquo;fan,&rdquo; with variance about \(\alpha(1-\alpha)/n\). This note shows the width of that
-  fan is set by the sign of the cross-sample dependence. The mean stays pinned at the nominal
-  level; the variance, to leading order, is the average pairwise covariance of the exceedance
-  indicators at the operating quantile, times the independent fan.</p>
+  fan is set by the sign of the cross-sample dependence. The mean moves with the dependence too
+  (under independence it is the nominal \(k/(n+1)\); comonotone scores push it to \(\tfrac12\)), but
+  the sharp story is the variance: to leading order it is the average pairwise covariance of the
+  sub-threshold indicators at the operating quantile, times the independent fan.</p>
 
   <h2>What the sign does</h2>
   <p>Positive (extendable) dependence adds a between-dataset term and widens the fan &mdash; proved
@@ -63,7 +64,7 @@
   over all levels</em>:</p>
   <p style="text-align:center;"><strong>\(\sum_k \operatorname{Var}(U_{(k)}) \le\) the independent
   value, for any negatively associated sample.</strong></p>
-  <p>The proof uses the convex-order contraction of the exceedance count against a <em>concave</em>
+  <p>The proof uses the convex-order contraction of the sub-threshold count against a <em>concave</em>
   functional, \(\min(j,\,n-N(u))\), the top-\(j\) sum: convex order reverses for concave maps, so the
   expected-order-statistic profile majorizes the independent one, and Schur-convexity finishes it.
   What stays open is the single-level statement (for one fixed \(k\)), and the obstruction is exactly
