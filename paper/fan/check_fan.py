@@ -160,3 +160,48 @@ if __name__ == "__main__":
         lg = np.log(kde(t)); d2 = (lg[2:]-2*lg[1:-1]+lg[:-2])/(t[1]-t[0])**2
         print(f"    n={n2} k={k2}: need <= -{n2/(n2-1):.3f}; core max (log g_D)'' = {d2.max():.2f}  "
               f"=> n/(n-1)-slc with margin? {d2.max() <= -n2/(n2-1)}")
+
+    # Max-case (k=n) diagonal reduction. U_(n)<=u iff all scores <=u, so the law of U_(n)
+    # is the copula diagonal delta(u)=C(u,...,u); under NA the negative-orthant bound gives
+    # delta(u) <= u^n, with deficit g(u)=u^n-delta(u) >= 0. The exact identity
+    #   Var(U_(n)) = Var_iid + 2*int (u-mu*) g du - (int g)^2,   mu* = n/(n+1),
+    # makes the per-level conjecture at k=n EQUIVALENT to a centroid inequality on g:
+    #   centroid(g) = int u g / int g  <=  mu* + 0.5*int g.
+    print("\nMax-case (k=n) diagonal reduction: exact identity + centroid equivalence:")
+    def neg_eq_max(m, rho, M=400000):
+        xi = rng.standard_normal((M, m)); xb = xi.mean(1, keepdims=True)
+        s = (1 + (m-1)*rho) / m; eta = rng.standard_normal((M, 1))
+        return norm.cdf(np.sqrt(s)*eta + np.sqrt(1-rho)*(xi - xb)).max(1)
+    grid = np.linspace(0, 1, 6001)
+    for m in [6, 12]:
+        mx = neg_eq_max(m, -0.9/(m-1)); mu = m/(m+1); Viid = m/((m+1)**2*(m+2))
+        delta = np.searchsorted(np.sort(mx), grid, side='right')/mx.size
+        g = np.maximum(grid**m - delta, 0.0)
+        intg = np.trapezoid(g, grid); cen = np.trapezoid((grid-mu)*g, grid)
+        pred = Viid + 2*cen - intg**2
+        cg = np.trapezoid(grid*g, grid)/intg
+        print(f"  n={m}: Var(direct)={mx.var():.4e}  Var(identity)={pred:.4e}  "
+              f"centroid(g)={cg:.4f} <= mu*+0.5*mass={mu+0.5*intg:.4f}? {cg <= mu+0.5*intg}")
+
+    # The centroid inequality is NOT forced by the diagonal alone: a linear program over every
+    # function meeting the copula-diagonal characterization (monotone, 0->1, delta<=u, n-Lipschitz,
+    # Frechet lower bound) AND the NA bound delta<=u^n returns a diagonal that violates it. So the
+    # single level is irreducibly a property of the off-diagonal negative-orthant probabilities.
+    print("  LP certificate (elementary diagonal constraints are insufficient => need off-diagonal NA):")
+    from scipy.optimize import linprog
+    for m in [5, 10, 20]:
+        N = 300; u = (np.arange(N)+0.5)/N; du = 1/N; mu = m/(m+1)
+        A = []; b = []
+        for i in range(N):
+            r = np.zeros(N); r[i] = 1; A.append(r); b.append(min(u[i]**m, u[i]))   # delta <= min(u^n,u)
+        for i in range(N-1):
+            r = np.zeros(N); r[i] = 1; r[i+1] = -1; A.append(r); b.append(0)         # monotone
+        for i in range(N-1):
+            r = np.zeros(N); r[i+1] = 1; r[i] = -1; A.append(r); b.append(m*du)       # n-Lipschitz
+        lb = np.maximum(0, m*u - (m-1))                                              # Frechet lower
+        res = linprog((u-mu)*du, A_ub=np.array(A), b_ub=np.array(b),
+                      bounds=[(lb[i], 1) for i in range(N)], method='highs')
+        g = np.maximum(u**m - res.x, 0); intg = g.sum()*du
+        cg = (u*g).sum()*du/intg; thr = mu + 0.5*intg
+        print(f"    n={m}: adversarial centroid(g)={cg:.4f} vs needed <= {thr:.4f}  "
+              f"=> diagonal constraints {'INSUFFICIENT' if cg > thr else 'suffice'}")

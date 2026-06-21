@@ -72,7 +72,11 @@
   order cannot sign it; no counterexample appears in a wide numerical hunt, the order-statistic
   CDFs cross the independent ones exactly once, and on the Gaussian scale the single-level statement
   is exact and monotone in the correlation (\(\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)\) for
-  equicorrelated normals). The stronger dispersive ordering is deliberately not
+  equicorrelated normals). The top level \(k=n\) is exactly tractable for <em>any</em> negative
+  association: the maximum's law is the copula diagonal \(\delta(u)=C(u,\dots,u)\le u^n\), and the
+  conjecture there reduces to a single centroid inequality on the diagonal deficit \(u^n-\delta(u)\)
+  &mdash; which, an LP shows, the diagonal constraints alone do not force, pinning the difficulty on
+  the off-diagonal negative-orthant structure. The stronger dispersive ordering is deliberately not
   claimed; it can fail at fixed marginals. All checks are reproduced by <code>check_fan.py</code>; a
   constructive corollary is that a balanced, transductively symmetric calibration set tightens
   coverage without disturbing the marginal guarantee.</p>
