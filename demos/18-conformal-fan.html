@@ -63,9 +63,20 @@
   <p class="note">The second panel shows the variance of \emph{every} order statistic
   \(\operatorname{Var}(U_{(k)})\) (orange) against the iid Beta variance curve (blue). For \(\rho<0\)
   the orange curve sits entirely under the blue one, a contraction at every level, and its total area
-  is the aggregate bound. For \(\rho>0\) it lifts above. The other buttons swap in a moving-average
-  copula, the discrete contest/grid floor (variance exactly zero), and a Latin hypercube (continuous
-  marginals, fan of order \(1/n^2\)).</p>
+  is the aggregate bound. For \(\rho>0\) it lifts above. Because the marginals are fixed uniform, the
+  whole picture is a property of the \emph{copula} alone: the fan is a copula functional, and the two
+  variance bounds depend only on the bivariate copula diagonal at the operating quantile.</p>
+
+  <p>The other buttons make that copula viewpoint concrete. Beyond the symmetric Gaussian and the MA(1)
+  copula, the discrete contest/grid floor (variance exactly zero) and a Latin hypercube (continuous
+  marginals, fan of order \(1/n^2\)), there are two Archimedean copulas with one-sided tail dependence:
+  Clayton (lower tail) and Gumbel (upper tail), sampled through their de Finetti frailty
+  \(W\), the directing variable of Theorem 2. They reveal a surprise. Tail dependence pins the order
+  statistics in its \emph{own} tail and pushes the fan to the \emph{opposite} one: Clayton (small
+  scores cluster) fattens the upper order statistics, Gumbel the lower, both far above iid. The
+  ``tail asymmetry'' readout reports the low-\(k\) and high-\(k\) variance ratios so you can watch
+  them split. Since the conformal \(k\) sits high (small \(\alpha\)), lower-tail dependence inflates
+  the conformal fan more than upper-tail dependence, which is the reverse of the naive guess.</p>
 
   <div class="takeaway">
     <p>Takeaway. The dependence does not, as one might guess, just bias the coverage; it reshapes its

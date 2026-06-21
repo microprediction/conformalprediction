@@ -30,15 +30,40 @@ const perlevel = new Plot(document.getElementById("perlevel"), {
 
 const setRO = readouts(document.getElementById("readouts"),
   ["target 1−α", "E[c]", "Var(c) / iid fan", "Σ_k Var(U_(k)) / iid  (Thm 4)",
-   "Var(Z_(k)): affine vs sim"]);
+   "tail asymmetry  low-k | high-k", "Var(Z_(k)): affine (Gaussian)"]);
 
 const COL = { iid: "#1f4ed8", dep: "#c2410c", oracle: "rgba(120,120,120,0.85)" };
 const META = {
-  gauss:   { name: "equicorrelated Gaussian", rho: true },
-  ma:      { name: "MA(1), corr −½", rho: false },
-  contest: { name: "contest / grid floor", rho: false },
-  lhs:     { name: "Latin hypercube", rho: false },
+  gauss:   { name: "equicorrelated Gaussian", dep: true },
+  clayton: { name: "Clayton (lower-tail)", dep: true },
+  gumbel:  { name: "Gumbel (upper-tail)", dep: true },
+  ma:      { name: "MA(1), corr −½", dep: false },
+  contest: { name: "contest / grid floor", dep: false },
+  lhs:     { name: "Latin hypercube", dep: false },
 };
+
+// --- Archimedean copula samplers via the Marshall-Olkin frailty (the de Finetti
+//     directing variable W): U_i = psi(E_i / W), E_i iid Exp(1). ---
+function gammaRV(rng, k) {                 // shape k, scale 1 (Marsaglia-Tsang)
+  if (k < 1) return gammaRV(rng, k + 1) * Math.pow(rng(), 1 / k);
+  const d = k - 1 / 3, c = 1 / Math.sqrt(9 * d);
+  for (;;) {
+    let x, v; do { x = sampleNormal(rng); v = 1 + c * x; } while (v <= 0);
+    v = v * v * v; const u = rng();
+    if (u < 1 - 0.0331 * x * x * x * x) return d * v;
+    if (Math.log(u) < 0.5 * x * x + d * (1 - v + Math.log(v))) return d * v;
+  }
+}
+function posStable(rng, a) {               // positive a-stable, 0<a<1 (Kanter)
+  const U = Math.PI * rng(), E = -Math.log(rng());
+  return Math.sin(a * U) / Math.pow(Math.sin(U), 1 / a)
+       * Math.pow(Math.sin((1 - a) * U) / E, (1 - a) / a);
+}
+const exp1 = rng => -Math.log(rng());
+// slider value -> Kendall tau (positive) -> Archimedean parameter theta
+const tauOf = dep => Math.min(0.85, Math.max(0.02, dep));
+const claytonTheta = tau => 2 * tau / (1 - tau);
+const gumbelTheta = tau => 1 / (1 - tau);
 const state = { rho: -0.05, n: 20, alpha: 0.10, struct: "gauss", M: 4000 };
 let seed = 3;
 
@@ -50,6 +75,16 @@ function betaVar(k, n) { return k * (n - k + 1) / ((n + 1) ** 2 * (n + 2)); }
 
 // ---- draw one calibration sample of n scores on the uniform scale ----
 function sampleScores(rng, n, struct, rho) {
+  if (struct === "clayton") {
+    const th = claytonTheta(tauOf(rho)), W = gammaRV(rng, 1 / th);
+    const u = []; for (let i = 0; i < n; i++) u.push(Math.pow(1 + exp1(rng) / W, -1 / th));
+    return u;
+  }
+  if (struct === "gumbel") {
+    const th = gumbelTheta(tauOf(rho)), W = posStable(rng, 1 / th);
+    const u = []; for (let i = 0; i < n; i++) u.push(Math.exp(-Math.pow(exp1(rng) / W, 1 / th)));
+    return u;
+  }
   if (struct === "contest") {
     const grid = []; for (let i = 1; i <= n; i++) grid.push(i / (n + 1));
     for (let i = n - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [grid[i], grid[j]] = [grid[j], grid[i]]; }
@@ -165,9 +200,11 @@ function draw() {
   setRO("E[c]", fmt(S.eC, 3), eCls);
   setRO("Var(c) / iid fan", fmt(S.varC / S.betaC, 2), S.varC <= S.betaC + 1e-9 ? "good" : "bad");
   setRO("Σ_k Var(U_(k)) / iid  (Thm 4)", fmt(S.aggRatio, 2), S.aggRatio <= 1.01 ? "good" : "bad");
+  const loK = S.varK[2] / betaVar(2, S.n), hiK = S.varK[S.n - 1] / betaVar(S.n - 1, S.n);
+  setRO("tail asymmetry  low-k | high-k", `${fmt(loK, 2)} | ${fmt(hiK, 2)}`);
   if (state.struct === "gauss")
-    setRO("Var(Z_(k)): affine vs sim", `${fmt(S.vkAffine, 3)} vs ${fmt(S.zVarSim, 3)}`, "good");
-  else setRO("Var(Z_(k)): affine vs sim", "(Gaussian mode)");
+    setRO("Var(Z_(k)): affine (Gaussian)", `${fmt(S.vkAffine, 3)} vs ${fmt(S.zVarSim, 3)}`, "good");
+  else setRO("Var(Z_(k)): affine (Gaussian)", "—");
 }
 
 // ---- controls ----
@@ -186,12 +223,12 @@ function refresh() {
     b.style.color = on ? "var(--accent)" : "var(--ink)";
     b.style.background = on ? "var(--accent-soft)" : "var(--panel)";
   }
-  if (rhoSlider) rhoSlider.style.opacity = META[state.struct].rho ? "1" : "0.35";
+  if (rhoSlider) rhoSlider.style.opacity = META[state.struct].dep ? "1" : "0.35";
 }
 for (const kk in META) selBtns[kk] = button(btnRow, META[kk].name, () => { state.struct = kk; refresh(); draw(); });
 
 const rhoFloor = () => -1 / (state.n - 1);
-rhoSlider = slider(ctrls, { label: "correlation ρ (equicorrelated)", min: -0.052, max: 0.9, step: 0.002, value: state.rho, fmt: v => v.toFixed(3) },
+rhoSlider = slider(ctrls, { label: "dependence  (ρ for Gaussian; Kendall τ for Archimedean)", min: -0.052, max: 0.9, step: 0.002, value: state.rho, fmt: v => v.toFixed(3) },
   v => { state.rho = Math.max(rhoFloor(), v); draw(); });
 slider(ctrls, { label: "sample size n", min: 6, max: 40, step: 1, value: state.n, fmt: v => v.toFixed(0) },
   v => { state.n = v; perlevel.xlim = [1, v]; state.rho = Math.max(rhoFloor(), state.rho); draw(); });
