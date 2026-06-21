@@ -367,6 +367,34 @@ through $\Phi$: being S-shaped, $\Phi$ is neither convex nor concave, so it need
 dispersive order, and $\operatorname{Var}(U_{(k)})=\operatorname{Var}(\Phi(Z_{(k)}))$ monotone in
 $\rho$ is confirmed numerically (\texttt{check\_fan.py}) but not by a transfer theorem.
 
+The Gaussian case fixes the copula and varies $k$; the opposite slice, the top level $k=n$ for
+\emph{any} negatively associated sample, is also exactly tractable and is where the conjecture becomes
+one-dimensional. There $U_{(n)}\le u$ iff every score lies below $u$, so the law of $U_{(n)}$ is the
+copula diagonal $\delta(u)=C(u,\dots,u)=\mathbb P(N(u)=n)$, and
+$\operatorname{Var}(U_{(n)})=\int_0^1\!\!\int_0^1[\delta(u\wedge v)-\delta(u)\delta(v)]\,du\,dv$.
+Negative association enters only as the negative-orthant bound $\delta(u)\le u^n$
+\citep{joagdev1983} --- equivalently the convex-order image of the discretely convex indicator
+$\mathbf 1\{N=n\}$. Writing the deficit $g(u)=u^n-\delta(u)\ge 0$ and $\mu^\ast=n/(n+1)=\mathbb
+E[U_{(n)}^{\mathrm{iid}}]$, the variance has the exact closed form
+\begin{equation}\label{eq:maxdiag}
+\operatorname{Var}(U_{(n)})=\operatorname{Var}^{\mathrm{iid}}(U_{(n)})
++2\int_0^1(u-\mu^\ast)\,g(u)\,du-\Big(\int_0^1 g\Big)^{\!2},
+\end{equation}
+so the per-level conjecture at $k=n$ is \emph{equivalent} to a centroid inequality on the deficit,
+\begin{equation}\label{eq:centroid}
+\frac{\int_0^1 u\,g(u)\,du}{\int_0^1 g(u)\,du}\;\le\;\mu^\ast+\tfrac12\!\int_0^1 g\,:
+\end{equation}
+the mass by which the diagonal falls short of independence must sit, on average, at most a half-deficit
+above the independent-maximum mean. This is \emph{not} a consequence of the diagonal alone. A linear
+program over the functions meeting every condition a copula diagonal must satisfy (monotone, $0\to1$,
+$\delta\le u$, $n$-Lipschitz, Fr\'echet lower bound; \citealp{nelsen2006}) together with the negative-orthant
+bound $\delta\le u^n$ returns a diagonal that violates \eqref{eq:centroid} (\texttt{check\_fan.py}).
+The single level is therefore irreducibly a property of the off-diagonal negative-orthant probabilities
+across thresholds, not of the diagonal that determines $U_{(n)}$'s law: exactly the content the
+aggregate convex-order bound uses in bulk and that a one-level statement cannot read off. It is the same
+obstruction that blocks localizing Theorem~\ref{thm:agg} to a single $k$, now in closed form, and every
+negatively associated structure tested satisfies \eqref{eq:centroid} with margin.
+
 The same convex-order contraction $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$ that drives the aggregate
 bound is available per level, but turning it into the single-$k$ statement needs the tail
 $\mathbb P(N(u)\ge k)$ to cross the binomial tail once in $u$, which the total positivity of the
