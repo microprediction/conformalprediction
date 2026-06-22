@@ -543,6 +543,12 @@ generic negatively associated design lowers the dispersion only by also nudging 
 $1-\alpha$ (the mean is not pinned), so coverage that is both reproducible \emph{and} on-target demands
 a \emph{mean-preserving} symmetric design. Distribution-free validity and minimal coverage dispersion
 cannot both be driven to their limit at once, save in the degenerate zero-fan grid.
+A deeper caveat: the dispersion is a \emph{within-model} quantity, computed with the marginal $F$ and
+the copula $C$ held fixed. Shrinking it by design lowers sampling variability but does nothing for
+model risk --- whether $F$ is the right target at all --- and removes the run-to-run scatter that is
+the cheapest diagnostic of misspecification. A vanishing fan against an assumed $F$ certifies
+reproducibility, not correctness; the zero-fan grid reads $1-\alpha$ every draw by construction, not
+because the world obliges.
 \end{remark}
 
 \begin{remark}[The copula viewpoint]\label{rmk:copula}
