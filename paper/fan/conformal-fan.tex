@@ -268,11 +268,17 @@ $\sum_k\operatorname{Var}(U_{(k)})$ finishes it.
 The proof uses only identical uniform marginals and the convex-order domination
 $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$, not exchangeability as such. Equality holds under
 independence; that equality \emph{forces} independence is not established here and would need a
-separate tightness lemma. The per-level refinement, for the single conformal $k$, remains open, and
-the obstruction is exactly
-why: the step $\mathbf 1\{N(u)<k\}$ behind a single $\operatorname{Var}(U_{(k)})$ is neither concave
-nor convex, so the convex order does not sign it, whereas the smooth aggregate functional
-$\min(j,n-N)$ is concave and it does.
+separate tightness lemma.
+
+\section{The single level: partial progress and a conjecture}
+
+Everything above is proved for general negative association. The single conformal level --- the
+operationally relevant one --- is not, and the obstruction is exactly why the aggregate succeeds: the
+step $\mathbf 1\{N(u)<k\}$ behind a single $\operatorname{Var}(U_{(k)})$ is neither concave nor convex,
+so the convex order does not sign it, whereas the smooth aggregate functional $\min(j,n-N)$ is concave
+and it does. We collect here what \emph{is} established at this level --- exactly on the Gaussian scale,
+and reduced to a copula-diagonal inequality at the extreme $k=n$ --- and state the general claim as a
+conjecture.
 
 \begin{conjecture}[Per-level contraction]\label{conj:disp}
 If the calibration scores are negatively associated then $\operatorname{Var}(c)$ is at most the
