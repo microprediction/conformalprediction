@@ -24,8 +24,9 @@ Dependence and the Variance of Realized Coverage}
 Fix a split-conformal calibration set and ask how often a fresh, \emph{independent} draw from the
 score marginal falls under the threshold $U_{(k)}$. That realized coverage $c=U_{(k)}$ is a random
 variable; for independent calibration scores it follows the $\mathrm{Beta}(k,n-k+1)$ law, variance
-about $\alpha(1-\alpha)/n$, the classical fan. We study how dependence among the calibration scores
-reshapes it. The organizing identity is that $c$ is a functional of the count process
+about $\alpha(1-\alpha)/n$. We call this across-sample spread of realized coverage its
+\emph{dispersion}, and the family of laws the dependence sweeps out the \emph{fan} for short; we study
+how that dependence reshapes it. The organizing identity is that $c$ is a functional of the count process
 alone, so its variance is governed by the count's covariance kernel, and negatively associated scores
 have a less variable count (Lemma~\ref{lem:count}). Three results follow. A leading-order fan
 coefficient: in a Bahadur regime $\operatorname{Var}(c)=n^{-2}\operatorname{Var}(N(1-\alpha))+o(1/n)$,
@@ -61,9 +62,11 @@ $c\sim\mathrm{Beta}(k,n-k+1)$, with
 \mathbb E[c]=\frac{k}{n+1},\qquad \operatorname{Var}(c)=\frac{k(n-k+1)}{(n+1)^2(n+2)}\;\approx\;
 \frac{\alpha(1-\alpha)}{n}.
 \end{equation}
-This is the fan: the per-dataset coverage scatters around $1-\alpha$ with variance of order $1/n$
-(standard deviation of order $n^{-1/2}$). The question of this note is what the dependence among the
-calibration scores does to it.
+This across-sample spread of realized coverage is its \emph{dispersion}, the formal object of this
+note; the family of such laws swept out as the calibration dependence varies is the \emph{fan}, for
+short (we use the vivid word freely, but it always means this dispersion). The per-dataset coverage
+scatters around $1-\alpha$ with variance of order $1/n$ (standard deviation of order $n^{-1/2}$). The
+question of this note is what the dependence among the calibration scores does to it.
 
 Two cautions fix the object of study. First, $c=U_{(k)}$ is coverage against a test draw
 \emph{independent} of the calibration set; it is not the conformal conditional coverage
@@ -535,7 +538,11 @@ threshold without disturbing validity. What makes such a design admissible is no
 randomized and pre-specified, but that it preserves the exchangeability the validity argument needs;
 covariate stratification qualifies only when it is external to the responses and applied symmetrically
 across the $n+1$ points. Exact zero fan is the discrete rank/grid idealization; continuous-marginal
-designs (Latin hypercube) give a small but nonzero fan, of order $1/n^2$.
+designs (Latin hypercube) give a small but nonzero fan, of order $1/n^2$. The tension is intrinsic: a
+generic negatively associated design lowers the dispersion only by also nudging $\mathbb E[c]$ off
+$1-\alpha$ (the mean is not pinned), so coverage that is both reproducible \emph{and} on-target demands
+a \emph{mean-preserving} symmetric design. Distribution-free validity and minimal coverage dispersion
+cannot both be driven to their limit at once, save in the degenerate zero-fan grid.
 \end{remark}
 
 \begin{remark}[The copula viewpoint]\label{rmk:copula}
@@ -572,7 +579,11 @@ only the variance, is \citet{panja2022}; the connection between supermodular ord
 dependence is \citet{christofides2004}; the Bahadur representation is \citet{bahadur1966}. Determinantal and repulsive designs are \citet{hough2006,bardenet2016} and
 stratification is \citet{cochran1977}. The finite signed de Finetti representation is
 \citet{kerns2006}, and the within-dataset, across-$x$ reading of its sign is the companion note
-\citep{cotton_signed}; the information gap is \citep{cotton_marginally}. The contribution here is to
+\citep{cotton_signed}; the information gap is \citep{cotton_marginally}. The de Finetti directing
+measure behind the positive side is a prior in all but name; the Bayesian--conformal interface, where
+priors meet finite-sample coverage and the trade is validity against efficiency, is surveyed by
+\citet{deliu2025}, and the dispersion-versus-guarantee tension above is a variance-side instance of it.
+The contribution here is to
 make the dependence the control variable for the \emph{variance} of realized coverage: the
 leading-order fan coefficient, the exact law-of-total-variance decomposition on the positive side, the
 exact aggregate contraction under negative association (Theorem~\ref{thm:agg}), and, for equicorrelated
@@ -633,6 +644,8 @@ in Conformal Prediction. Companion paper.
 Conformal Prediction via Signed de Finetti Representations. Companion note.
 \bibitem[de Finetti(1937)]{definetti1937} de Finetti, B. (1937). La pr\'evision: ses lois logiques,
 ses sources subjectives. \emph{Annales de l'Institut Henri Poincar\'e} 7(1):1--68.
+\bibitem[Deliu and Liseo(2025)]{deliu2025} Deliu, N. and Liseo, B. (2025). The interplay between
+Bayesian inference and conformal prediction. arXiv:2510.26930.
 \bibitem[Hough et~al.(2006)]{hough2006} Hough, J.~B., Krishnapur, M., Peres, Y. and Vir\'ag, B.
 (2006). Determinantal processes and independence. \emph{Probability Surveys} 3:206--229.
 \bibitem[Joag-Dev and Proschan(1983)]{joagdev1983} Joag-Dev, K. and Proschan, F. (1983). Negative
