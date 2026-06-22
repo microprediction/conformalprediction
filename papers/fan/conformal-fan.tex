@@ -81,6 +81,20 @@ finite-sample exact, Theorem~\ref{thm:coeff} is asymptotic and conditional on a 
 representation, and the general per-level negative-association contraction (Conjecture~\ref{conj:disp})
 is open.
 
+A third point fixes what kind of dependence is in scope, since it has to square with an independent
+test. What the analysis requires is only that the test draw be independent of the calibration scores;
+the calibration dependence is then necessarily \emph{design-induced} --- a property of how the
+calibration set is assembled, not of a data stream the test belongs to. Antithetic pairs
+$(V,1-V)$, stratified and Latin-hypercube designs, or balanced subsampling from a pool all make
+$(U_1,\dots,U_n)$ negatively associated while keeping each $U_i$ marginally uniform, and a deployed test
+point is exogenous, hence independent. Dependence inherited from a source the test shares --- the next
+step of a time series, or the unsampled remainder of a without-replacement draw --- instead couples the
+test to the calibration, so that $c\ne U_{(k)}$ and a different analysis applies; that case is out of
+scope here. The maximally negatively associated floor is read the same way: a deterministic grid laid
+down by design, not a draw whose leftover is the test. This is the standard split-conformal test
+assumption (a fresh, independent future point); the only non-standard ingredient is letting the
+\emph{calibration} set carry an engineered dependence.
+
 The whole problem passes through the count process $N(u)=\sum_{i=1}^n\mathbf 1\{U_i\le u\}$, because
 $U_{(k)}=\int_0^1\mathbf 1\{N(u)<k\}\,\mathrm du$, so
 \begin{equation}\label{eq:reduction}
