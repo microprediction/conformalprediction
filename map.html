@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>The map — Conformal Prediction</title>
+<meta name="description" content="A four-way map of the conformal prediction literature: relaxing assumptions and refining the coverage certificate on one side, measuring and crossing the information gap on the other. The divider is built from the no-go theorems, and one quadrant is nearly empty." />
+<meta property="og:title" content="Conformal Prediction — the map" />
+<meta property="og:description" content="Most of the literature lives on one side of the information gap. A four-way map makes the imbalance visible." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  #mapbox { width: 100%; border: 1px solid var(--line, #ddd); border-radius: 8px; background: #fff; }
+  #tooltip { position: absolute; pointer-events: none; background: rgba(30,30,30,0.95); color: #eee;
+    padding: 8px 11px; border-radius: 5px; font-size: 13px; max-width: 340px; display: none; line-height: 1.35; z-index: 50; }
+  .maplegend { font-size: 0.85em; color: #555; display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 12px 0; }
+  .maplegend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/literature.html">Literature</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">The map</p>
+  <h1>Where the literature lives</h1>
+  <p class="subtitle">Four regions and a wall. Almost everything is on the left, improving the coverage
+  certificate; the wall is the information gap, built from the no-go theorems; and one quadrant on the
+  right is nearly empty. That emptiness is the point of this site.</p>
+
+  <p>Every dot is a paper from <a href="/literature.html">the bibliography</a> (hover for the one-line
+  reading, click to open). The left half works in the <em>coverage currency</em>: the top quadrant
+  relaxes the assumptions the guarantee needs, the bottom refines what the certificate says &mdash;
+  sharper laws, broader loss classes, group-conditional targets, smaller sets at fixed coverage. None
+  of it moves the forecast: by the results mortared into the wall, no re-levelling of coverage can add
+  conditional information. The right half works in the <em>sharpness currency</em>: the top quadrant
+  measures what marginal calibration leaves on the table; the bottom quadrant &mdash; actually adding
+  conditional information &mdash; belongs to the wrapped model, not to conformal prediction, and the
+  dashed markers are open problems.</p>
+
+  <div style="position:relative;">
+    <svg id="mapbox" viewBox="0 0 1100 780" preserveAspectRatio="xMidYMid meet"></svg>
+    <div id="tooltip"></div>
+  </div>
+
+  <div class="maplegend" id="legend"></div>
+
+  <p class="note">Placement within a region is alphabetical-ish and means nothing; the region does.
+  Boundary cases are noted in their tooltips (localized and group-conditional methods spend
+  information about <em>x</em> inside the wrapper, which is as close as the coverage currency gets to the
+  wall). Dashed outlines are problems, not papers. Corrections welcome &mdash; especially nominations
+  for the empty quadrant.</p>
+
+  <div class="prevnext">
+    <a href="/literature.html">&larr; The bibliography</a>
+    <span class="spacer"></span>
+    <a href="/connections.html">Connections &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Conformal Prediction: a practical guide.</span>
+    <span>A curated, opinionated map. Corrections welcome.</span>
+  </div>
+</footer>
+
+<script>
+// ---- data: every item carries a region, a short label, a one-line note, and a link ----
+const C = {
+  relax:   "#2563eb",  // relax assumptions (coverage currency)
+  refine:  "#0e7490",  // refine the certificate (coverage currency)
+  wall:    "#111111",  // the no-go theorems
+  measure: "#b45309",  // measure the gap (sharpness currency)
+  cross:   "#15803d",  // cross the gap
+  open:    "#b91c1c",  // open problems (dashed)
+};
+
+const ITEMS = [
+// ---------- top-left: RELAX THE ASSUMPTIONS ----------
+{r:"relax", l:"Tibshirani+ 19", u:"https://arxiv.org/abs/1904.06019", n:"Covariate shift via weighted exchangeability, when the likelihood ratio is known."},
+{r:"relax", l:"Barber+ 23", u:"https://arxiv.org/abs/2202.13415", n:"Beyond exchangeability: coverage gap bounded by a total-variation term per swapped point."},
+{r:"relax", l:"Prinster+ 24", u:"https://arxiv.org/abs/2405.06627", n:"Weighted conformal extends in principle to any joint distribution; the catch is knowing the weights."},
+{r:"relax", l:"Fannjiang+ 22", u:"https://arxiv.org/abs/2202.03613", n:"Feedback covariate shift: exact coverage when the model chooses its own next inputs."},
+{r:"relax", l:"Podkopaev–Ramdas 21", u:"https://arxiv.org/abs/2103.03323", n:"Label shift."},
+{r:"relax", l:"Park+ 22", u:"https://arxiv.org/abs/2106.09848", n:"PAC prediction sets under covariate shift."},
+{r:"relax", l:"JAWS 22", u:"https://arxiv.org/abs/2207.10716", n:"Weighted jackknife+ under shift."},
+{r:"relax", l:"CWZ 18", u:"https://arxiv.org/abs/1802.06300", n:"Permute blocks, not points: approximate validity under ergodicity."},
+{r:"relax", l:"CWZ 21", u:"https://arxiv.org/abs/1909.07889", n:"Distributional conformal prediction: PIT scores, built for dependent-data uses."},
+{r:"relax", l:"Oliveira+ 24", u:"https://arxiv.org/abs/2203.15885", n:"Unmodified split conformal on β-mixing data loses at most ~√(t_mix/n) coverage — blocking + concentration."},
+{r:"relax", l:"Barber–Pananjady 26", u:"https://arxiv.org/abs/2510.02471", n:"The switch coefficient: loss ≤ min τ/n + 2β(τ). Linear, tight, two-sided. The sharp accounting."},
+{r:"relax", l:"EnbPI 21", u:"https://arxiv.org/abs/2010.09107", n:"Ensemble residuals on one series; needs mixing errors and a consistent predictor."},
+{r:"relax", l:"SPCI 23", u:"https://arxiv.org/abs/2212.03463", n:"Fitted conditional quantile of recent residuals."},
+{r:"relax", l:"CF-RNN 21", u:"https://proceedings.neurips.cc/paper/2021/hash/312f1ba2a72318edaaa995a67835fad5-Abstract.html", n:"Bonferroni across horizons; guarantee across independent series."},
+{r:"relax", l:"HopCPT 23", u:"https://arxiv.org/abs/2303.12783", n:"Attention over similar past regimes."},
+{r:"relax", l:"TQA 22", u:"https://arxiv.org/abs/2205.09940", n:"Per-step quantile adjustment."},
+{r:"relax", l:"CopulaCPTS 24", u:"https://arxiv.org/abs/2212.03281", n:"Copula across horizons for joint multi-step coverage."},
+{r:"relax", l:"ACI 21", u:"https://arxiv.org/abs/2106.00170", n:"Adaptive conformal inference: long-run time-average coverage, any sequence, adversarial included."},
+{r:"relax", l:"Gibbs–Candès 24", u:"https://arxiv.org/abs/2208.08401", n:"Online conformal under arbitrary distribution shift."},
+{r:"relax", l:"AgACI 22", u:"https://arxiv.org/abs/2202.07282", n:"Expert-aggregated ACI on electricity prices."},
+{r:"relax", l:"SAOL 23", u:"https://arxiv.org/abs/2302.07869", n:"Strongly adaptive online conformal."},
+{r:"relax", l:"Conformal PID 23", u:"https://arxiv.org/abs/2307.16895", n:"Control-theoretic width updates for time series."},
+{r:"relax", l:"BCI 24", u:"https://arxiv.org/abs/2402.05203", n:"Bellman conformal inference: minimize length subject to long-run coverage. An optimizer, not a theorem."},
+
+// ---------- bottom-left: REFINE THE CERTIFICATE ----------
+{r:"refine", l:"Vovk 12", u:"https://arxiv.org/abs/1209.2673", n:"Object/label-conditional validity; the calibration-conditional Beta law."},
+{r:"refine", l:"Marques 25", u:"https://arxiv.org/abs/2303.02770", n:"The exact Beta law of calibration-conditional coverage."},
+{r:"refine", l:"Bian–Barber 23", u:"https://arxiv.org/abs/2205.03647", n:"Training-conditional coverage: split has it, full and jackknife+ need assumptions."},
+{r:"refine", l:"Liang–Barber 25", u:"https://arxiv.org/abs/2311.04295", n:"Algorithmic stability implies training-conditional coverage."},
+{r:"refine", l:"Kuchibhotla 20", u:"https://arxiv.org/abs/2005.06095", n:"Conformal as a classical rank test."},
+{r:"refine", l:"Barber–Tibshirani 25", u:"https://arxiv.org/abs/2504.02292", n:"One frame for the robustness-to-non-exchangeability results."},
+{r:"refine", l:"Snell–Griffiths 25", u:"https://arxiv.org/abs/2502.13228", n:"Bayesian quadrature: a posterior over realized risk. Crosses the fan, not the gap."},
+{r:"refine", l:"RCPS 21", u:"https://arxiv.org/abs/2101.02703", n:"Risk-controlling prediction sets: any bounded loss, high probability."},
+{r:"refine", l:"CRC 24", u:"https://arxiv.org/abs/2208.02814", n:"Conformal risk control: expectation of any monotone loss."},
+{r:"refine", l:"LTT 21", u:"https://arxiv.org/abs/2110.01052", n:"Learn-then-test: risk control as multiple testing."},
+{r:"refine", l:"Pareto testing 23", u:"https://arxiv.org/abs/2210.07913", n:"Multiple risks, efficiently."},
+{r:"refine", l:"Sadinle+ 19", u:"https://arxiv.org/abs/1609.00451", n:"Least ambiguous set-valued classifiers: minimal size subject to coverage."},
+{r:"refine", l:"Yang–Kuchibhotla 25", u:"https://arxiv.org/abs/2104.13871", n:"Pick the score giving the smallest valid set."},
+{r:"refine", l:"Kiyani+ 24", u:"https://arxiv.org/abs/2406.18814", n:"Length optimization."},
+{r:"refine", l:"ConfTr 22", u:"https://arxiv.org/abs/2110.09192", n:"Differentiate through conformalization to train for small sets."},
+{r:"refine", l:"CQR 19", u:"https://arxiv.org/abs/1905.03222", n:"Conformalized quantile regression — the certificate rides a conditional model."},
+{r:"refine", l:"Jackknife+ 21", u:"https://arxiv.org/abs/1905.02928", n:"Leave-one-out with provable coverage."},
+{r:"refine", l:"APS 20", u:"https://arxiv.org/abs/2006.02544", n:"Adaptive prediction sets for classification."},
+{r:"refine", l:"RAPS 21", u:"https://arxiv.org/abs/2009.14193", n:"Regularized APS for image classifiers."},
+{r:"refine", l:"Mondrian 03", u:"https://www.alrw.net", n:"Per-category validity — the certificate refined toward pre-specified groups."},
+{r:"refine", l:"Clustered 23", u:"https://arxiv.org/abs/2306.09335", n:"Class-conditional with many classes."},
+{r:"refine", l:"Equalized 20", u:"https://arxiv.org/abs/1908.05428", n:"Equal coverage across protected groups."},
+{r:"refine", l:"Multivalid 23", u:"https://arxiv.org/abs/2209.15145", n:"The multicalibration bridge."},
+{r:"refine", l:"Gibbs–Cherian–Candès 25", u:"https://arxiv.org/abs/2305.12616", n:"Exact coverage over a finite-dimensional class of shifts — the strongest honest conditional statement; the class is chosen in advance."},
+{r:"refine", l:"Guan 23", u:"https://academic.oup.com/biomet/article/110/1/33/6647831", n:"Localized conformal: reweight calibration toward the neighbourhood. Spends x-information inside the wrapper."},
+{r:"refine", l:"Hore–Barber 25", u:"https://arxiv.org/abs/2310.07850", n:"Randomized local weights buy a genuine local guarantee. As close as the coverage currency gets to the wall."},
+{r:"refine", l:"CPD 19", u:"https://link.springer.com/article/10.1007/s10994-018-5755-8", n:"Conformal predictive distributions: a full CDF with finite-sample validity — still one residual shape per x."},
+
+// ---------- the wall ----------
+{r:"wall", l:"Lei–Wasserman 14", u:"https://doi.org/10.1111/rssb.12021", n:"Distribution-free conditional coverage forces infinite intervals. The first brick."},
+{r:"wall", l:"Barber+ 21", u:"https://arxiv.org/abs/1903.04684", n:"Even approximate X-conditional coverage, uniformly over subgroups, is essentially unattainable. The second brick."},
+{r:"wall", l:"I(R;X)", u:"/papers/marginally-useful/", n:"The information gap: for a fixed single-shape system the log-score regret to the oracle is exactly the mutual information between residual and input — untouched by any re-levelling of coverage."},
+
+// ---------- top-right: MEASURE THE GAP ----------
+{r:"measure", l:"Diebold+ 98", u:"https://www.jstor.org/stable/2527342", n:"The PIT: a calibrated forecast gives iid uniform PITs."},
+{r:"measure", l:"Gneiting+ 07", u:"https://doi.org/10.1111/j.1467-9868.2007.00587.x", n:"Maximize sharpness subject to calibration — the frame the gap lives in."},
+{r:"measure", l:"Gneiting–Raftery 07", u:"https://doi.org/10.1198/016214506000001437", n:"Proper scoring rules: the graders that see what coverage cannot."},
+{r:"measure", l:"Widmann+ 19/21", u:"https://arxiv.org/abs/1910.11385", n:"Kernel calibration tests."},
+{r:"measure", l:"Cauchois+ 21", u:"https://arxiv.org/abs/2004.10181", n:"Worst-slab coverage diagnostic."},
+{r:"measure", l:"ERT 25", u:"https://arxiv.org/abs/2512.11779", n:"Classify the coverage indicator on the features."},
+{r:"measure", l:"Correia+ 24", u:"https://arxiv.org/abs/2405.02140", n:"Set size bounds conditional entropy — information theory meets conformal."},
+{r:"measure", l:"Marginally Useful", u:"/papers/marginally-useful/", n:"The gap named and priced: coverage–sharpness gap = I(R;X)."},
+{r:"measure", l:"Feynman–Wigner", u:"/papers/definetti-feynman/", n:"The runnable, level-free check: distance covariance between conformal rank and features."},
+{r:"measure", l:"Parimutuel", u:"/papers/parimutuel/", n:"The gap as the rent an X-informed bettor extracts."},
+{r:"measure", l:"Fan", u:"/papers/fan/", n:"Across-calibration dispersion of realized coverage — the orthogonal axis."},
+{r:"measure", l:"Slots (herding)", u:"/papers/herding/", n:"Why the certificate is counting, not concentration — and why counting cannot create information."},
+
+// ---------- bottom-right: CROSS THE GAP ----------
+{r:"cross", l:"The wrapped model", u:"/faq.html", n:"Quantile regression, GARCH-family, mixtures, flows, DeepAR: conditional information comes from modelling the conditional distribution. Not a conformal method — which is the point."},
+{r:"cross", l:"Orthogonal QR 21", u:"https://arxiv.org/abs/2106.00394", n:"Train the quantile model so miscoverage is independent of width — model training aimed at the gap."},
+{r:"open",  l:"I(R; past) — open", u:"/timeseries-conditional.html", n:"The sharpness cost of marginal calibration on a stationary series. Nobody has priced it; the mirror of Barber–Pananjady."},
+{r:"open",  l:"Sharpness under dependence — open", u:"/timeseries-conditional.html", n:"A distribution-free-modulo-mixing width statement. Does not exist."},
+{r:"open",  l:"Aimed slot steering — open", u:"/papers/herding/", n:"Herding-like feedback in index space that balances the rank count conditionally. Localized weights are the first step; the ceiling is I(R;X)."},
+];
+
+// ---- regions: x0,y0,x1,y1 in viewBox coords ----
+const W = 1100, H = 780, WALLX0 = 620, WALLX1 = 700, MIDY = 400;
+const REGIONS = {
+  relax:   { x0: 20,  y0: 78,  x1: WALLX0 - 15, y1: MIDY - 12, title: "RELAX THE ASSUMPTIONS", sub: "validity beyond iid: shift, dependence, adversaries", color: C.relax },
+  refine:  { x0: 20,  y0: MIDY + 30, x1: WALLX0 - 15, y1: H - 46, title: "REFINE THE CERTIFICATE", sub: "sharper laws, broader losses, group targets, smaller sets", color: C.refine },
+  measure: { x0: WALLX1 + 15, y0: 78, x1: W - 20, y1: MIDY - 12, title: "MEASURE THE GAP", sub: "diagnostics and accounting of what marginality forfeits", color: C.measure },
+  cross:   { x0: WALLX1 + 15, y0: MIDY + 30, x1: W - 20, y1: H - 46, title: "CROSS THE GAP", sub: "add conditional information (nearly empty)", color: C.cross },
+};
+
+const svg = document.getElementById("mapbox");
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  (parent || svg).appendChild(e);
+  return e;
+}
+
+// currency banners
+el("text", { x: (20 + WALLX0) / 2, y: 40, "text-anchor": "middle", "font-size": 19, "font-weight": 700, fill: "#333" }).textContent = "the coverage currency";
+el("text", { x: (WALLX1 + W) / 2, y: 40, "text-anchor": "middle", "font-size": 19, "font-weight": 700, fill: "#333" }).textContent = "the sharpness currency";
+el("text", { x: (20 + WALLX0) / 2, y: 60, "text-anchor": "middle", "font-size": 12, fill: "#777" }).textContent = "what the certificate says, and when it holds";
+el("text", { x: (WALLX1 + W) / 2, y: 60, "text-anchor": "middle", "font-size": 12, fill: "#777" }).textContent = "what the forecast knows";
+
+// the wall
+el("rect", { x: WALLX0, y: 20, width: WALLX1 - WALLX0, height: H - 40, fill: "#f3f1ec", stroke: "#999", "stroke-width": 1 });
+const wallLabel = el("text", { x: (WALLX0 + WALLX1) / 2, y: H / 2, "text-anchor": "middle", "font-size": 15, "font-weight": 700, fill: "#111", transform: `rotate(-90 ${(WALLX0 + WALLX1) / 2} ${H / 2})` });
+wallLabel.textContent = "THE INFORMATION GAP — no re-levelling of coverage adds conditional information";
+
+// region frames + titles
+for (const key in REGIONS) {
+  const R = REGIONS[key];
+  el("rect", { x: R.x0, y: R.y0, width: R.x1 - R.x0, height: R.y1 - R.y0, fill: "none", stroke: R.color, "stroke-opacity": 0.35, "stroke-width": 1.2, rx: 8 });
+  el("text", { x: R.x0 + 10, y: R.y0 + 20, "font-size": 13.5, "font-weight": 700, fill: R.color }).textContent = R.title;
+  el("text", { x: R.x0 + 10, y: R.y0 + 36, "font-size": 11, fill: "#888" }).textContent = R.sub;
+}
+
+// lay items out in a grid inside each region
+const tooltip = document.getElementById("tooltip");
+const byRegion = {};
+for (const it of ITEMS) {
+  const key = it.r === "open" ? "cross" : it.r === "wall" ? "wall" : it.r;
+  (byRegion[key] = byRegion[key] || []).push(it);
+}
+function placeRegion(key) {
+  if (key === "wall") return;
+  const R = REGIONS[key], items = byRegion[key] || [];
+  const pad = 14, top = R.y0 + 52;
+  const wAvail = R.x1 - R.x0 - 2 * pad, hAvail = R.y1 - top - pad;
+  const cols = Math.max(2, Math.round(Math.sqrt(items.length * wAvail / Math.max(hAvail, 1))));
+  const rows = Math.max(1, Math.ceil(items.length / cols));
+  items.forEach((it, i) => {
+    const cx = R.x0 + pad + (wAvail / cols) * ((i % cols) + 0.5);
+    const cy = top + (hAvail / rows) * (Math.floor(i / cols) + 0.45);
+    drawItem(it, cx, cy, (i % cols) % 2 === 0 ? 17 : -11);   // stagger labels to avoid collisions
+  });
+}
+function drawItem(it, cx, cy, labelDy) {
+  const color = it.r === "open" ? C.open : C[it.r];
+  const a = el("a", { href: it.u, target: it.u.startsWith("/") ? "_self" : "_blank" });
+  const dot = el("circle", {
+    cx, cy, r: it.r === "wall" ? 7 : 5.5,
+    fill: it.r === "open" ? "none" : color,
+    stroke: color, "stroke-width": it.r === "open" ? 1.8 : 1,
+    "stroke-dasharray": it.r === "open" ? "4 3" : "none", opacity: 0.92,
+  }, a);
+  const t = el("text", { x: cx, y: cy + (labelDy === undefined ? 17 : labelDy), "text-anchor": "middle", "font-size": 10.2, fill: "#333" }, a);
+  t.textContent = it.l;
+  const show = (ev) => {
+    tooltip.style.display = "block";
+    tooltip.innerHTML = "<b>" + it.l + "</b> — " + it.n;
+    const box = svg.parentElement.getBoundingClientRect();
+    tooltip.style.left = Math.min(ev.clientX - box.left + 14, box.width - 350) + "px";
+    tooltip.style.top = (ev.clientY - box.top + 14) + "px";
+  };
+  a.addEventListener("mousemove", show);
+  a.addEventListener("mouseleave", () => { tooltip.style.display = "none"; });
+}
+["relax", "refine", "measure", "cross"].forEach(placeRegion);
+
+// wall bricks
+(byRegion.wall || []).forEach((it, i) => {
+  const cy = 130 + i * 210;
+  drawItem(it, (WALLX0 + WALLX1) / 2, cy);
+});
+
+// counts, the punchline
+function count(rs) { return ITEMS.filter(it => rs.includes(it.r)).length; }
+el("text", { x: (20 + WALLX0) / 2, y: H - 14, "text-anchor": "middle", "font-size": 13, "font-weight": 700, fill: "#555" })
+  .textContent = `${count(["relax", "refine"])} papers on this side`;
+el("text", { x: (WALLX1 + W) / 2, y: H - 14, "text-anchor": "middle", "font-size": 13, "font-weight": 700, fill: "#555" })
+  .textContent = `${count(["measure"])} measuring · ${count(["cross"])} crossing (both really the model) · ${ITEMS.filter(i => i.r === "open").length} open problems`;
+
+// legend
+const leg = document.getElementById("legend");
+[["relax", "relax assumptions"], ["refine", "refine the certificate"], ["wall", "the wall (no-go theorems)"],
+ ["measure", "measure the gap"], ["cross", "cross the gap"], ["open", "open problem (dashed)"]].forEach(([k, label]) => {
+  const s = document.createElement("span");
+  const d = document.createElement("span");
+  d.className = "dot";
+  d.style.background = k === "open" ? "transparent" : C[k];
+  d.style.border = "2px " + (k === "open" ? "dashed" : "solid") + " " + C[k];
+  s.appendChild(d); s.appendChild(document.createTextNode(" " + label));
+  leg.appendChild(s);
+});
+</script>
+</body>
+</html>

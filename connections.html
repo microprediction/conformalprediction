@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Connections — Conformal Prediction</title>
+<meta name="description" content="An interactive graph of the ideas on this site and the papers they connect to. Solid edges are established connections; dashed red edges are connections that do not yet exist — the research agenda." />
+<meta property="og:title" content="Conformal Prediction — connections" />
+<meta property="og:description" content="The site's threads and their neighbours, with the missing connections drawn in dashed red: the research agenda." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  #graph { width: 100%; height: 720px; border: 1px solid var(--line, #ddd); background: #fff; border-radius: 8px; }
+  .conlegend { font-size: 0.85em; color: #555; display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 12px 0; }
+  .conlegend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .line { width: 26px; height: 0; border-top: 2.5px solid #999; display: inline-block; }
+  #tooltip { position: absolute; pointer-events: none; background: rgba(30,30,30,0.95); color: #eee;
+    padding: 8px 11px; border-radius: 5px; font-size: 13px; max-width: 340px; display: none; line-height: 1.35; z-index: 50; }
+  text.nodelabel { font: 11px ui-sans-serif, system-ui, sans-serif; fill: #222; pointer-events: none; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/literature.html">Literature</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Connections</p>
+  <h1>The threads, and the missing ones</h1>
+  <p class="subtitle">Each node is an idea from this site or a paper it touches. Solid edges are
+  established connections; <b style="color:#b91c1c">dashed red edges are connections that do not yet
+  exist</b> &mdash; verified absences as of mid-2026, i.e. the research agenda. Click a node to open
+  it; drag to rearrange; hover for the one-line story. The wide view, with the whole bibliography
+  placed, is <a href="/map.html">the map</a>.</p>
+
+  <div class="conlegend" id="cluster-legend"></div>
+  <div class="conlegend">
+    <span><span class="line" style="border-color:#888"></span> builds on / prices</span>
+    <span><span class="line" style="border-color:#2563eb; border-top-width:3.5px"></span> same object, two readings</span>
+    <span><span class="line" style="border-top-style:dotted; border-color:#7d3c98"></span> dual mechanisms</span>
+    <span><span class="line" style="border-top-style:dashed; border-color:#b91c1c"></span> GAP &mdash; does not exist yet</span>
+  </div>
+
+  <div style="position:relative;">
+    <svg id="graph"></svg>
+    <div id="tooltip"></div>
+  </div>
+
+  <p class="note">The dashed edges are the point: the coverage side of every question below is
+  settled or settling, and the sharpness side is open. Corrections and counterexamples welcome.</p>
+
+  <div class="prevnext">
+    <a href="/map.html">&larr; The map</a>
+    <span class="spacer"></span>
+    <a href="/papers/">The papers &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Conformal Prediction: a practical guide.</span>
+    <span>Solid: what is known. Dashed red: what is not.</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script>
+const CLUSTERS = {
+  gap:     { label: "The information gap (this site)", color: "#111111" },
+  fanax:   { label: "The fan axis (calibration-conditional)", color: "#b45309" },
+  mech:    { label: "Mechanism (slots, herding, quadrature)", color: "#7d3c98" },
+  ts:      { label: "Time series / dependence", color: "#2563eb" },
+  found:   { label: "Foundations & no-gos", color: "#5d6d7e" },
+};
+
+const NODES = [
+ {id:"gap", label:"I(R;X) — THE GAP", c:"gap", r:15, url:"/papers/marginally-useful/", note:"The residual-information gap: coverage–sharpness shortfall = mutual information between residual and input. The quantity no re-levelling of coverage can touch."},
+ {id:"parimutuel", label:"Parimutuel rent", c:"gap", url:"/papers/parimutuel/", note:"The same gap derived from a betting mechanism: an X-informed bettor grows wealth against the conformal book at rate I(R;X)."},
+ {id:"definetti", label:"Feynman–Wigner sign", c:"gap", url:"/papers/definetti-feynman/", note:"The sign of the finite de Finetti measure decides whether per-case coverage adapts or fans; distance covariance is the runnable check."},
+ {id:"fan", label:"The conformal fan", c:"fanax", url:"/papers/fan/", note:"Across-calibration dispersion of realized coverage; its width is set by the sign of cross-sample dependence."},
+ {id:"snell", label:"Snell–Griffiths 2025", c:"fanax", url:"https://arxiv.org/abs/2502.13228", note:"Conformal prediction as Bayesian quadrature: a Dirichlet posterior over realized risk. The loss-side fan; HPD = report the fan's quantile, not its mean."},
+ {id:"kerns", label:"Kerns–Székely 2006", c:"found", url:"https://doi.org/10.1007/s10959-006-0028-z", note:"Finite exchangeable laws admit signed mixing measures — the negative probability the sign note runs on."},
+ {id:"herding", label:"Slots, not balls", c:"mech", url:"/papers/herding/", note:"Conformal as the contragredient of herding: the quantile steers the acceptance boundary, the proof transports the test label; bounded ledger over n."},
+ {id:"welling", label:"Welling 2009", c:"mech", url:"https://dl.acm.org/doi/10.1145/1553374.1553517", note:"Herding: steer the particles so feature averages balance the target; bounded weights give 1/n."},
+ {id:"bach", label:"Bach+ 2012", c:"mech", url:"https://arxiv.org/abs/1203.4523", note:"Herding = Frank–Wolfe on the marginal polytope; where the boundedness conditions live."},
+ {id:"bp", label:"Barber–Pananjady 2026", c:"ts", url:"https://arxiv.org/abs/2510.02471", note:"The switch coefficient: unmodified split conformal on a mixing series loses at most min τ/n + 2β(τ) — linear, tight, two-sided. The coverage cost of dependence, priced."},
+ {id:"oliveira", label:"Oliveira+ 2024", c:"ts", url:"https://arxiv.org/abs/2203.15885", note:"The same question by blocking and concentration: √(t_mix/n). Counting beats concentration."},
+ {id:"aci", label:"ACI / online", c:"ts", url:"https://arxiv.org/abs/2106.00170", note:"Long-run time-average coverage for any sequence; no distribution, no per-step statement."},
+ {id:"bci", label:"BCI 2024", c:"ts", url:"https://arxiv.org/abs/2402.05203", note:"Width as the objective subject to long-run coverage, by dynamic programming. An optimizer, not a theorem."},
+ {id:"vovk", label:"Vovk–Gammerman–Shafer 2005", c:"found", url:"https://link.springer.com/book/10.1007/978-3-031-06649-8", note:"The founding monograph: exchangeability, rank symmetry, the exact guarantee."},
+ {id:"lw", label:"Lei–Wasserman 2014", c:"found", url:"https://doi.org/10.1111/rssb.12021", note:"Distribution-free conditional coverage forces infinite intervals — a brick in the wall."},
+ {id:"limits", label:"Barber+ 2021 (limits)", c:"found", url:"https://arxiv.org/abs/1903.04684", note:"Approximate X-conditional coverage over all subgroups is essentially unattainable — the second brick."},
+ {id:"gneiting", label:"Gneiting+ 2007", c:"found", url:"https://doi.org/10.1111/j.1467-9868.2007.00587.x", note:"Sharpness subject to calibration; proper scores as the graders."},
+];
+
+const LINKS = [
+ // same object, two readings (blue, thick)
+ {source:"gap", target:"parimutuel", type:"dual", label:"same number: MI = Kelly rent"},
+ {source:"fan", target:"snell", type:"dual", label:"same law, coverage/loss sides"},
+ {source:"definetti", target:"fan", type:"dual", label:"same sign, two axes"},
+ // builds on / prices (grey)
+ {source:"vovk", target:"gap", type:"build", label:"the certificate the gap is priced against"},
+ {source:"kerns", target:"definetti", type:"build", label:"signed measure"},
+ {source:"gneiting", target:"gap", type:"build", label:"the frame"},
+ {source:"lw", target:"gap", type:"build", label:"brick"},
+ {source:"limits", target:"gap", type:"build", label:"brick"},
+ {source:"vovk", target:"fan", type:"build", label:"Beta law"},
+ {source:"bp", target:"herding", type:"build", label:"the τ/n ledger, read as slots"},
+ {source:"oliveira", target:"bp", type:"build", label:"same question, weaker rate"},
+ {source:"aci", target:"bci", type:"build", label:"width added as objective"},
+ // dual mechanisms (purple dotted)
+ {source:"welling", target:"herding", type:"mech", label:"balls vs slots"},
+ {source:"bach", target:"welling", type:"mech", label:"Frank–Wolfe"},
+ {source:"snell", target:"herding", type:"mech", label:"quadrature vs slot transport"},
+ // GAPS — do not exist yet (dashed red)
+ {source:"bp", target:"gap", type:"gapmiss", label:"I(R;past): sharpness cost of dependence — unpriced"},
+ {source:"fan", target:"kerns", type:"gapmiss", label:"single-level NA contraction — open"},
+ {source:"herding", target:"gap", type:"gapmiss", label:"aimed slot steering for conditional balance — open"},
+ {source:"aci", target:"gap", type:"gapmiss", label:"per-step statement from a time-average — impossible? unformalized"},
+];
+
+const EDGESTYLE = {
+  build:   { stroke: "#888",    width: 1.6, dash: null },
+  dual:    { stroke: "#2563eb", width: 3.0, dash: null },
+  mech:    { stroke: "#7d3c98", width: 2.0, dash: "2 4" },
+  gapmiss: { stroke: "#b91c1c", width: 2.0, dash: "7 5" },
+};
+
+const svg = d3.select("#graph");
+const box = document.getElementById("graph").getBoundingClientRect();
+const Wd = box.width || 1060, Hd = 720;
+svg.attr("viewBox", [0, 0, Wd, Hd]);
+
+const sim = d3.forceSimulation(NODES)
+  .force("link", d3.forceLink(LINKS.filter(l => !l.self)).id(d => d.id).distance(l => l.type === "gapmiss" ? 200 : 120).strength(0.5))
+  .force("charge", d3.forceManyBody().strength(-620))
+  .force("center", d3.forceCenter(Wd / 2, Hd / 2))
+  .force("collide", d3.forceCollide(38));
+
+const link = svg.append("g").selectAll("line")
+  .data(LINKS.filter(l => !l.self)).join("line")
+  .attr("stroke", l => EDGESTYLE[l.type].stroke)
+  .attr("stroke-width", l => EDGESTYLE[l.type].width)
+  .attr("stroke-dasharray", l => EDGESTYLE[l.type].dash)
+  .attr("opacity", 0.75);
+
+const tooltip = document.getElementById("tooltip");
+const wrapEl = document.getElementById("graph").parentElement;
+
+const node = svg.append("g").selectAll("g")
+  .data(NODES).join("g")
+  .style("cursor", "pointer")
+  .call(d3.drag()
+    .on("start", (ev, d) => { if (!ev.active) sim.alphaTarget(0.25).restart(); d.fx = d.x; d.fy = d.y; })
+    .on("drag", (ev, d) => { d.fx = ev.x; d.fy = ev.y; })
+    .on("end", (ev, d) => { if (!ev.active) sim.alphaTarget(0); d.fx = null; d.fy = null; }))
+  .on("click", (ev, d) => { if (d.url) window.open(d.url, d.url.startsWith("/") ? "_self" : "_blank"); })
+  .on("mousemove", (ev, d) => {
+    tooltip.style.display = "block";
+    tooltip.innerHTML = "<b>" + d.label + "</b> — " + d.note + (LINKS.some(l => l.type === "gapmiss" && (l.source.id === d.id || l.target.id === d.id)) ? "<br><span style='color:#f5b7b1'>Touches an open problem.</span>" : "");
+    const b = wrapEl.getBoundingClientRect();
+    tooltip.style.left = Math.min(ev.clientX - b.left + 14, b.width - 350) + "px";
+    tooltip.style.top = (ev.clientY - b.top + 14) + "px";
+  })
+  .on("mouseleave", () => { tooltip.style.display = "none"; });
+
+node.append("circle")
+  .attr("r", d => d.r || 9)
+  .attr("fill", d => CLUSTERS[d.c].color)
+  .attr("opacity", 0.92)
+  .attr("stroke", "#fff").attr("stroke-width", 1.5);
+
+node.append("text")
+  .attr("class", "nodelabel")
+  .attr("text-anchor", "middle")
+  .attr("dy", d => (d.r || 9) + 13)
+  .text(d => d.label);
+
+// edge labels for the missing connections only (the agenda deserves ink)
+const misslabel = svg.append("g").selectAll("text")
+  .data(LINKS.filter(l => l.type === "gapmiss" && !l.self)).join("text")
+  .attr("font-size", 10).attr("font-style", "italic").attr("fill", "#b91c1c")
+  .attr("text-anchor", "middle")
+  .style("paint-order", "stroke").style("stroke", "#fff").style("stroke-width", "3px")
+  .text(l => l.label);
+
+sim.on("tick", () => {
+  link.attr("x1", l => l.source.x).attr("y1", l => l.source.y)
+      .attr("x2", l => l.target.x).attr("y2", l => l.target.y);
+  node.attr("transform", d => {
+    d.x = Math.max(30, Math.min(Wd - 30, d.x));
+    d.y = Math.max(30, Math.min(Hd - 40, d.y));
+    return `translate(${d.x},${d.y})`;
+  });
+  misslabel.attr("x", l => (l.source.x + l.target.x) / 2)
+           .attr("y", l => (l.source.y + l.target.y) / 2 - 6);
+});
+
+// cluster legend
+const cl = document.getElementById("cluster-legend");
+for (const k in CLUSTERS) {
+  const s = document.createElement("span");
+  const d = document.createElement("span");
+  d.className = "dot"; d.style.background = CLUSTERS[k].color;
+  s.appendChild(d); s.appendChild(document.createTextNode(" " + CLUSTERS[k].label));
+  cl.appendChild(s);
+}
+</script>
+</body>
+</html>
