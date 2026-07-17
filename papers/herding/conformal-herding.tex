@@ -25,28 +25,15 @@ Conformal Prediction as the Contragredient of Herding}
 \maketitle
 
 \begin{abstract}
-Herding constructs a point set whose empirical feature averages track a target measure: it
-\emph{moves the particles} against fixed test functionals, and when its weight sequence stays
-bounded it earns an $O(1/n)$ discrepancy where i.i.d.\ sampling gives $O(1/\sqrt n)$. We observe
-that the coverage argument behind split conformal prediction is the dual operation. The realized
-scores are never touched; the proof transports the \emph{designation} ``this slot holds the test
-point'' across the index set, and because the empirical quantile is a symmetric function of the
-scores, a deterministic counting identity holds: exactly $\lceil(1-\alpha)(n+1)\rceil$ of the $n+1$
-possible placements of that designation point at covered scores. In the roulette image: herding
-moves the balls to balance a fixed wheel; conformal holds the balls fixed and rotates the slot
-labels under the pointer. We make the duality precise as a statement about the permutation action
-on score vectors and its contragredient action on coordinate functionals, and we use it to read
-the switch-coefficient analysis of \citet{barberpananjady2026} as index-space low-discrepancy
-accounting: deleting $\tau$ slots damages the rank count by at most $\tau$, worth $\tau/n$ of
-coverage, and the only probabilistic price is the total-variation failure of rotation invariance,
-$\bar\Psi_\tau \le 2\beta(\tau)$. The linear $1/n$ rates on both sides are the signature of
-counting rather than concentration, which is why they beat the $\sqrt{\tau/n}$ obtained when the
-counting structure is abandoned for blocking and empirical processes. We are explicit about where
-the steering sits: conformal \emph{does} perform feedback control --- the empirical quantile moves
-the acceptance boundary until the accumulated acceptance-rate error is bounded by a single unit
---- but the control acts in the dual space of thresholds, acceptance sets, and index labels, never
-on the generation of observations, and the probabilistic work is still done by exchangeability or
-its mixing surrogate.
+Split conformal prediction is herding run on the other side of the pairing. Herding moves
+particles to balance fixed tests, earning $1/n$ from a bounded weight ledger; conformal holds the
+scores fixed and transports the test label across slots, where the rank count is already balanced
+--- exactly $\lceil(1-\alpha)(n+1)\rceil$ of the $n+1$ placements are covered, for any scores. The
+empirical quantile is the matching feedback controller, holding the accumulated acceptance-rate
+error below one unit, and the switch-coefficient bound for dependent series
+\citep{barberpananjady2026} is the same ledger: $\tau/n$ for deleted slots plus a total-variation
+charge for failed rotation invariance. Nothing concentrates, which is why both rates beat
+$\sqrt{n}$. Exchangeability still does all the probabilistic work.
 \end{abstract}
 
 \section{Two mechanisms}\label{sec:setup}
