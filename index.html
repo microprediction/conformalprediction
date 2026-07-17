@@ -118,11 +118,14 @@
   <h2 id="wont">3 &middot; The one thing it likely won&rsquo;t do: improve your forecast</h2>
   <p>The most common hope is that conformalizing a model makes its uncertainty <em>better</em>. It doesn&rsquo;t, and seeing exactly why is worth a few minutes. The coverage certificate is independent of forecast quality: the same 90% attaches to a brilliant model and a useless one, and you can hold coverage fixed while the predictive log-likelihood does anything at all. Sharpness comes from the model; conformal supplies the certificate on top.</p>
 
-  <p>This is the kind of pushback you might get, or want to make yourself, and it is worth being able to answer:</p>
-  <blockquote>
-    <p>If the model is miscalibrated, fix the model. If the probabilities are miscalibrated, calibrate the probabilities. If the quantiles are wrong, estimate the quantiles better. Why should I be impressed that someone looked at held-out residuals and widened intervals until empirical coverage matches a target?</p>
-  </blockquote>
-  <p>The fair answer: you shouldn&rsquo;t be impressed by the widening as a <em>forecast</em>, but it does buy one thing nothing else does, a finite-sample, distribution-free guarantee that the band covers, under almost no assumptions. That certificate is the product. The sharper forecast underneath is still the model&rsquo;s job.</p>
+  <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
+    <summary style="cursor:pointer;font-weight:600;">Provisional advice</summary>
+    <p style="margin-top:10px;">The author is new to conformal prediction, so take this as provisional. It is the kind of pushback you might get, or want to make yourself, and it is worth being able to answer:</p>
+    <blockquote>
+      <p>If the model is miscalibrated, fix the model. If the probabilities are miscalibrated, calibrate the probabilities. If the quantiles are wrong, estimate the quantiles better. Why should I be impressed that someone looked at held-out residuals and widened intervals until empirical coverage matches a target?</p>
+    </blockquote>
+    <p>The fair answer: you shouldn&rsquo;t be impressed by the widening as a <em>forecast</em>, but it does buy one thing nothing else does, a finite-sample, distribution-free guarantee that the band covers, under almost no assumptions. That certificate is the product. The sharper forecast underneath is still the model&rsquo;s job.</p>
+  </details>
   <div class="cards">
     <a class="card" href="demos/03-trivial-validity.html">
       <h3>The fence is the horizon</h3>
