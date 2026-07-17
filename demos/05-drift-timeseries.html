@@ -51,10 +51,9 @@
   </ul>
 
   <p>Pick the method shown in the main panel; turn up <em>drift</em> and watch the green points go red for fixed split. The readouts report, for the selected method, marginal coverage, the worst-window coverage (the local collapse the marginal hides), and the interval (Winkler) score at level \(1-\alpha\),
-  $$\mathrm{IS} = \overline{\;(\hat h-\hat\ell) + \tfrac{2}{\alpha}(\hat\ell-y)\mathbf 1\{y<\hat\ell\} + \tfrac{2}{\alpha}(y-\hat h)\mathbf 1\{y>\hat h\}\;},$$
-  a proper score that rewards narrow bands and penalises misses, lower is better. The overbar is an
-  average: the per-step scores are computed at every \(t&gt;t_0\) with that step&rsquo;s interval
-  \([\hat\ell,\hat h]\) and outcome \(y\), then averaged over the evaluation window.</p>
+  $$\mathrm{IS} = \frac{1}{T}\sum_{t>t_0}\Bigl[(\hat h_t-\hat\ell_t) + \tfrac{2}{\alpha}(\hat\ell_t-y_t)\,\mathbf 1\{y_t<\hat\ell_t\} + \tfrac{2}{\alpha}(y_t-\hat h_t)\,\mathbf 1\{y_t>\hat h_t\}\Bigr],$$
+  a proper score that rewards narrow bands and penalises misses, lower is better; \(T\) counts the
+  evaluation steps and \([\hat\ell_t,\hat h_t]\) is that step&rsquo;s interval.</p>
 
   <div class="demo">
     <div class="canvas-box tall"><canvas id="main"></canvas></div>
