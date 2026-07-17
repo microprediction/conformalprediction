@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Moving the balls, moving the slots — Conformal Prediction</title>
+<meta name="description" content="Herding steers particles to balance a fixed target at rate 1/n; conformal prediction leaves the scores alone and rotates the test label, exposing an already-balanced rank count. Two mechanisms, one ledger." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/literature.html">Literature</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration</p>
+  <h1>Moving the balls, moving the slots</h1>
+  <p class="subtitle">Herding steers particles to balance a fixed target and earns \(1/n\). Conformal prediction leaves the scores alone, rotates the label &ldquo;test&rdquo; through the slots, and the balance is already there. The <a href="/papers/herding/">companion note</a> argues these are two sides of one pairing.</p>
+
+  <h2>Moving the balls: herding vs Monte Carlo</h2>
+  <p>Kernel herding (Welling 2009; Chen, Welling &amp; Smola 2010) picks points one at a time to keep the running feature average pinned to a target &mdash; here the mean embedding \(\mu(x)=\mathbb E\,k(x,X)\) of a standard Gaussian under an RBF kernel, everything closed-form. The first panel shows where the points land: herding spaces them like a quasi&ndash;Monte Carlo sequence under the density, while i.i.d.\ draws clump and leave gaps. The second panel is the ledger: the discrepancy (MMD to the target) on log&ndash;log axes, herding tracking the \(1/n\) guide, Monte Carlo the \(1/\sqrt n\) guide. The mechanism: the accumulated feature error stays <em>bounded</em>, and a bounded ledger divided by \(n\) is \(1/n\).</p>
+
+  <div class="demo">
+    <div class="canvas-box med demo"><canvas id="pts"></canvas></div>
+    <div class="canvas-box med demo"><canvas id="err"></canvas></div>
+    <div class="readouts" id="herd-readouts"></div>
+    <div class="controls" id="herd-controls"></div>
+  </div>
+
+  <h2>Moving the slots: the rank count is already balanced</h2>
+  <p>Now the conformal side. Draw \(n+1\) scores &mdash; i.i.d., serially dependent, heavy-tailed, or adversarially trending, your choice &mdash; and <em>never touch them again</em>. Rotate the designation &ldquo;this slot holds the test point&rdquo; through all \(n+1\) slots; a placement is covered when its score is at most the \(k\)-th smallest of the others, \(k=\lceil(1-\alpha)(n+1)\rceil\). Watch the counter: exactly \(k\) placements are covered, <em>every single time, for every distribution</em>, because covered \(\Leftrightarrow\) rank \(\le k\) and every rank appears exactly once. Nothing was steered; the low-discrepancy sequence came for free. All the probability in conformal prediction lives in one final step &mdash; the claim that the <em>actual</em> test slot is exchangeable with the rest. Dependence damages that step, not the count: delete \(\tau\) slots around the splice and the count moves by at most \(\tau\), which is the \(\tau/n\) term in <a href="/demos/19-dependence-tax.html">the dependence tax</a>.</p>
+
+  <div class="demo">
+    <div class="canvas-box tall"><canvas id="slots"></canvas></div>
+    <div class="readouts" id="slot-readouts"></div>
+    <div class="controls" id="slot-controls"></div>
+  </div>
+
+  <div class="takeaway">
+    <p>Takeaway. Herding moves the observations to balance the measure; conformal moves the observation <em>labels</em> to expose an already-balanced rank count. Both rates are counting rates &mdash; bounded accumulated error over \(n\) &mdash; which is why herding beats Monte Carlo&rsquo;s \(1/\sqrt n\) and why the switch-coefficient analysis of split conformal on time series beats the \(\sqrt{\tau/n}\) of blocking-and-concentration arguments. What the slot picture does <em>not</em> supply is the statistics: turning &ldquo;\(k\) of \(n+1\) placements&rdquo; into a probability about <em>your</em> test point is exchangeability&rsquo;s job, or its mixing surrogate. The <a href="/papers/herding/">note</a> states the duality precisely &mdash; and its limits.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="19-dependence-tax.html">&larr; The dependence tax</a>
+    <span class="spacer"></span>
+    <a href="/papers/herding/">The note &rarr;</a>
+  </div>
+
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Conformal Prediction</span><span>Demonstration</span></div></footer>
+
+<script type="module" src="../js/demo21.js"></script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+\newtheorem{observation}{Observation}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+
+\title{Moving the Slots, Not the Balls:\\
+Conformal Prediction as the Contragredient of Herding}
+\author{Peter Cotton\\\texttt{peter.cotton@microprediction.com}}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Herding constructs a point set whose empirical feature averages track a target measure: it
+\emph{moves the particles} against fixed test functionals, and when its weight sequence stays
+bounded it earns an $O(1/n)$ discrepancy where i.i.d.\ sampling gives $O(1/\sqrt n)$. We observe
+that the coverage argument behind split conformal prediction is the dual operation. The realized
+scores are never touched; the proof transports the \emph{designation} ``this slot holds the test
+point'' across the index set, and because the empirical quantile is a symmetric function of the
+scores, a deterministic counting identity holds: exactly $\lceil(1-\alpha)(n+1)\rceil$ of the $n+1$
+possible placements of that designation point at covered scores. In the roulette image: herding
+moves the balls to balance a fixed wheel; conformal holds the balls fixed and rotates the slot
+labels under the pointer. We make the duality precise as a statement about the permutation action
+on score vectors and its contragredient action on coordinate functionals, and we use it to read
+the switch-coefficient analysis of \citet{barberpananjady2026} as index-space low-discrepancy
+accounting: deleting $\tau$ slots damages the rank count by at most $\tau$, worth $\tau/n$ of
+coverage, and the only probabilistic price is the total-variation failure of rotation invariance,
+$\bar\Psi_\tau \le 2\beta(\tau)$. The linear $1/n$ rates on both sides are the signature of
+counting rather than concentration, which is why they beat the $\sqrt{\tau/n}$ obtained when the
+counting structure is abandoned for blocking and empirical processes. We are explicit about what
+the duality does not claim: conformal performs no active steering, and the probabilistic work is
+still done by exchangeability or its mixing surrogate.
+\end{abstract}
+
+\section{Two mechanisms}\label{sec:setup}
+
+\paragraph{Herding moves the balls.}
+Fix a feature map $\phi:\mathcal X\to\mathcal H$ and a target expectation
+$\mu=\E_{P}\,\phi(X)$. Herding \citep{welling2009} generates points deterministically,
+\begin{equation}\label{eq:herding}
+x_{t}\;=\;\arg\max_{x\in\mathcal X}\,\langle w_{t-1},\,\phi(x)\rangle,
+\qquad
+w_{t}\;=\;w_{t-1}+\mu-\phi(x_{t}),
+\end{equation}
+so that the weight vector $w_t = w_0 + t\mu - \sum_{s\le t}\phi(x_s)$ is, up to initialization,
+$t$ times the running discrepancy between the target mean and the empirical feature mean. If the
+dynamics keep $\|w_t\|$ bounded --- guaranteed in finite dimension under mild conditions, and more
+delicately in a general RKHS \citep{chen2010,bach2012} --- then
+\begin{equation}\label{eq:herdingrate}
+\Bigl\|\tfrac1n\textstyle\sum_{t=1}^{n}\phi(x_t)-\mu\Bigr\|
+\;=\;\frac{\|w_n-w_0\|}{n}\;=\;O\!\left(\frac1n\right),
+\end{equation}
+a quasi--Monte Carlo rate, against the $O(n^{-1/2})$ of i.i.d.\ sampling. The tests $\phi$ are
+held fixed; the \emph{state-space locations} of the particles are what the algorithm manipulates.
+\citet{bach2012} identify \eqref{eq:herding} with the Frank--Wolfe algorithm on the marginal
+polytope, which is where the boundedness conditions live; \citet{chen2010} read it as greedy
+quasi--Monte Carlo.
+
+\paragraph{Conformal moves the slots.}
+Split conformal prediction \citep{vovk2005,lei2018} computes conformity scores
+$S_1,\dots,S_n$ on a calibration set, a score $S_{n+1}$ on the test point, and declares coverage
+when $S_{n+1}$ falls below the inflated empirical quantile
+$Q_{1-\alpha}=\text{the }k\text{-th smallest of }S_1,\dots,S_n$, with
+$k=\lceil(1-\alpha)(n+1)\rceil$. Nothing in the procedure moves a score. The proof of validity
+instead moves a \emph{label}. Write $S=(S_1,\dots,S_{n+1})\in\R^{n+1}$ for the realized scores ---
+the balls, resting where they fell --- and let $e_i^{*}$ denote the coordinate functional that
+reads slot $i$. The coverage event is a statement about the pairing
+$\langle e_{n+1}^{*},S\rangle$ and the symmetric function $Q_{1-\alpha}$ of the remaining
+coordinates. The proof asks: what if the designation ``test'' had pointed at slot $i$ instead?
+
+\begin{observation}[The rank count is already balanced]\label{obs:count}
+Let $s_1,\dots,s_{n+1}$ be distinct reals and $k=\lceil(1-\alpha)(n+1)\rceil$. For each placement
+$i\in\{1,\dots,n+1\}$, say the placement is \emph{covered} when $s_i$ is at most the $k$-th
+smallest of the other $n$ values. Then the number of covered placements is exactly $k$:
+placement $i$ is covered if and only if the rank of $s_i$ among all $n+1$ values is at most $k$.
+In particular the covered fraction is $k/(n+1)\ge 1-\alpha$, \emph{deterministically, for any
+score vector whatsoever}.
+\end{observation}
+
+This is the whole finite-sample content of the guarantee. No mass is transported, no point is
+steered; the balance that herding must manufacture by moving particles is already present in the
+rank structure, and the proof merely rotates the pointer to exhibit it. Probability enters once,
+at the end: exchangeability says the realized designation (slot $n+1$) is indistinguishable from a
+uniform draw over the $n+1$ placements, so the deterministic fraction becomes a probability.
+
+\section{The contragredient}\label{sec:contragredient}
+
+The duality can be said precisely. The symmetric group acts on score vectors through permutation
+matrices, $\rho(\pi)S=P_\pi S$; the contragredient (dual) representation acts on covectors,
+$\rho^{*}(\pi)f = f\circ\rho(\pi^{-1})$, so that the pairing is invariant:
+\[
+\bigl\langle \rho^{*}(\pi)\,e_{n+1}^{*},\,\rho(\pi)\,S\bigr\rangle
+=\bigl\langle e_{n+1}^{*},\,S\bigr\rangle .
+\]
+Every exchangeability proof of conformal validity can be run on either side of this pairing:
+\emph{either} rearrange the data, $S\mapsto P_\pi S$, holding the test functional fixed,
+\emph{or} hold the data fixed and pull the functional back,
+$e_{n+1}^{*}\mapsto \rho^{*}(\pi^{-1})e_{n+1}^{*}=e_{\pi(n+1)}^{*}$. Because the quantile
+threshold is a symmetric --- that is, invariant --- function of the score multiset, the two
+descriptions agree event by event. The textbook proof is usually narrated in the first voice
+(``swap the test point with a calibration point''); Observation~\ref{obs:count} is the second
+voice, and the second voice is the one in which the mechanism is visible: the orbit being averaged
+is the orbit of the \emph{functional}, $\{e_i^{*}\}_{i=1}^{n+1}$, not an orbit of datasets.
+
+Two honesty clauses. First, permutation representations are orthogonal, so the contragredient is
+\emph{equivalent} to the original representation; the term is apt not because the dual carries
+different structure but because it names which side of the pairing the action sits on --- the
+covector side. Second, herding and conformal are not the same algorithm run in opposite
+categories: herding actively optimizes \eqref{eq:herding}, while conformal optimizes nothing.
+The duality lives at the level of the finite-sample ledger, and it is exact there:
+\begin{center}
+herding moves the observations to balance the measure;\\
+conformal moves the observation \emph{labels} to expose an already-balanced rank count.
+\end{center}
+
+\section{The $1/n$ ledger, and dependence as damaged slots}\label{sec:ledger}
+
+Both mechanisms produce $1/n$ rates, and for the same bookkeeping reason: an error that
+accumulates \emph{boundedly} is divided by the sample size.
+\begin{align*}
+\text{herding:}\qquad
+&\text{error}\;\le\;\frac{\text{bounded cumulative feature discrepancy }\|w_n\|}{n},\\[2pt]
+\text{conformal:}\qquad
+&\text{coverage damage}\;\le\;\frac{\text{number of damaged or deleted ranks}}{n}.
+\end{align*}
+The second line is not a metaphor; it is the proof technique of \citet{barberpananjady2026} for
+split conformal on a dependent series. There, exact slot symmetry is unavailable: rotating the
+test designation to slot $k$ is no longer distribution-preserving, because neighbouring scores
+remember one another. The repair is to delete a buffer of $\tau$ slots around the splice before
+rotating. Deleting $\tau$ of $n$ entries moves the $k$-th order statistic by at most $\tau$
+ranks --- order statistics are insertion/deletion stable --- so the quantile level shifts by at
+most $\tau/n$; and the residual failure of rotation invariance is charged at its total-variation
+price, the switch coefficient $\bar\Psi_\tau$, bounded by $2\beta(\tau)$ for a stationary
+$\beta$-mixing sequence. The coverage floor
+\[
+\Prob(\text{cover})\;\ge\;1-\alpha-\min_{\tau}\Bigl\{\underbrace{\tfrac{\tau}{n+1}}_{\text{slots
+sacrificed}}+\underbrace{\bar\Psi_\tau}_{\text{failed invariance}}\Bigr\}
+\]
+is index-space low-discrepancy accounting, and nothing in it concentrates: no variance appears,
+no square root can. The contrast is instructive --- when the same problem is attacked by blocking
+and empirical-process concentration \citep{oliveira2024}, the rate degrades to the Monte Carlo
+$\sqrt{\tau/n}$, precisely because the counting structure has been traded away for a maximal
+inequality. Herding's advantage over i.i.d.\ sampling and the switch coefficient's advantage over
+blocking are the same advantage.
+
+The quasi--Monte Carlo reading closes the loop. \citet{chen2010} present herding as a greedy
+low-discrepancy construction: choose the next point to keep the running discrepancy bounded. The
+rank sequence of any sample is, tautologically, a perfectly low-discrepancy sequence over its own
+index set --- every rank appears exactly once --- and Observation~\ref{obs:count} is the
+Koksma--Hlawka-style consequence: a test functional averaged over slots inherits the balance of
+the ranks. Conformal prediction is what you get when the low-discrepancy sequence comes for free
+and only the pointer needs transporting. The quadrature reading of conformal prediction is not
+ours alone: \citet{snellgriffiths2025} recast the coverage computation as Bayesian quadrature over
+the calibration scores, recovering the frequentist guarantee as a special case of a posterior over
+test loss. The slot-transport view is the deterministic, index-space face of the same coin:
+quadrature weights over scores on one side, a rotating evaluation functional over slots on the
+other.
+
+\section{What the duality does and does not explain}\label{sec:limits}
+
+It explains the finite-sample ledger: why the guarantee is exact at finite $n$, why corrections
+enter linearly in the number of damaged slots, and why dependence is a tax of size
+(dependence range)/(calibration size) rather than its square root. It does not explain, and we do
+not claim it explains, the statistical content: the step from ``$k$ of $n+1$ placements are
+covered'' to ``the realized placement is covered with probability $k/(n+1)$'' is exchangeability,
+or its quantitative surrogate under mixing, and no amount of slot bookkeeping supplies it. Nor
+does the passive character of the slot transport create information: moving labels over fixed
+scores can re-level coverage, but the conditional sharpness of the resulting intervals is fixed by
+the scores themselves --- the information-gap point made elsewhere on this site
+\citep{cotton_marginally}. A natural question is whether an \emph{active} dual exists: a
+herding-like procedure in index space that chooses which calibration slots to retain or reweight,
+steering conditional coverage the way herding steers feature means. Localized and weighted
+conformal methods can be read as first steps in that direction, and the same information-theoretic
+ceiling applies to them. We leave the speculation at one sentence.
+
+\bibliographystyle{plainnat}
+\bibliography{../notes}
+
+\end{document}
