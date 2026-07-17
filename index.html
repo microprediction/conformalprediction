@@ -140,7 +140,16 @@
 
   <!-- ============================================================ -->
   <h2 id="ts">6 &middot; Time series &amp; distribution shift</h2>
-  <p>The base guarantee needs <em>exchangeability</em>, which time series break. Conformal coverage can hold beautifully, right up until the distribution shifts out from under it. The adaptive variants (ACI, conformal PID, EnbPI) genuinely help, but they recover a long-run <em>average</em> coverage, not coverage for the step in front of you, useful to know before you deploy.</p>
+  <p>Time series break <em>exchangeability</em>, but that turns out to be the least of it: plain split
+  conformal degrades gracefully, with a coverage loss provably bounded by
+  (dependence&nbsp;range)&thinsp;/&thinsp;(calibration&nbsp;size) for stationary series whose dependence dies
+  out with lag (Barber &amp; Pananjady 2026). The real question is which assumption replaces
+  exchangeability, and what the resulting 90% averages over: stationarity plus mixing, block structure
+  (permute blocks, not points), a consistent wrapped model (EnbPI, SPCI), or nothing at all for the online
+  variants (ACI, conformal PID), which certify a long-run average along your one path. Each is an average
+  &mdash; over paths, or over time &mdash; rather than coverage for the step in front of you;
+  <a href="/timeseries.html">the coverage games</a> sorts them, and
+  <a href="/timeseries-conditional.html">a second page</a> covers the attempts at conditional coverage.</p>
   <div class="cards">
     <a class="card" href="demos/05-exchangeability-timeseries.html">
       <h3>Exchangeability &amp; time series</h3>
