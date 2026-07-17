@@ -175,13 +175,13 @@ const ITEMS = [
 // ---------- bottom-right: CROSS THE GAP ----------
 {r:"cross", l:"The wrapped model", u:"/faq.html", n:"Quantile regression, GARCH-family, mixtures, flows, DeepAR: conditional information comes from modelling the conditional distribution. Not a conformal method — which is the point."},
 {r:"cross", l:"Orthogonal QR 21", u:"https://arxiv.org/abs/2106.00394", n:"Train the quantile model so miscoverage is independent of width — model training aimed at the gap."},
-{r:"open",  l:"I(R; past) — open", u:"/timeseries-conditional.html", n:"The sharpness cost of marginal calibration on a stationary series. Nobody has priced it; the mirror of Barber–Pananjady."},
-{r:"open",  l:"Sharpness under dependence — open", u:"/timeseries-conditional.html", n:"A distribution-free-modulo-mixing width statement. Does not exist."},
-{r:"open",  l:"Aimed slot steering — open", u:"/papers/herding/", n:"Herding-like feedback in index space that balances the rank count conditionally. Localized weights are the first step; the ceiling is I(R;X)."},
+{r:"open",  l:"I(R; past) (open)", u:"/timeseries-conditional.html", n:"The sharpness cost of marginal calibration on a stationary series. Nobody has priced it; the mirror of Barber–Pananjady."},
+{r:"open",  l:"width vs dependence (open)", u:"/timeseries-conditional.html", n:"A distribution-free-modulo-mixing width statement. Does not exist."},
+{r:"open",  l:"aimed slot steering (open)", u:"/papers/herding/", n:"Herding-like feedback in index space that balances the rank count conditionally. Localized weights are the first step; the ceiling is I(R;X)."},
 ];
 
 // ---- regions: x0,y0,x1,y1 in viewBox coords ----
-const W = 1100, H = 780, WALLX0 = 620, WALLX1 = 700, MIDY = 400;
+const W = 1100, H = 780, WALLX0 = 600, WALLX1 = 700, MIDY = 400;
 const REGIONS = {
   relax:   { x0: 20,  y0: 78,  x1: WALLX0 - 15, y1: MIDY - 12, title: "RELAX THE ASSUMPTIONS", sub: "validity beyond iid: shift, dependence, adversaries", color: C.relax },
   refine:  { x0: 20,  y0: MIDY + 30, x1: WALLX0 - 15, y1: H - 46, title: "REFINE THE CERTIFICATE", sub: "sharper laws, broader losses, group targets, smaller sets", color: C.refine },
@@ -204,9 +204,9 @@ el("text", { x: (WALLX1 + W) / 2, y: 40, "text-anchor": "middle", "font-size": 1
 el("text", { x: (20 + WALLX0) / 2, y: 60, "text-anchor": "middle", "font-size": 12, fill: "#777" }).textContent = "what the certificate says, and when it holds";
 el("text", { x: (WALLX1 + W) / 2, y: 60, "text-anchor": "middle", "font-size": 12, fill: "#777" }).textContent = "what the forecast knows";
 
-// the wall
+// the wall: rotated title along its left edge, bricks along its right edge
 el("rect", { x: WALLX0, y: 20, width: WALLX1 - WALLX0, height: H - 40, fill: "#f3f1ec", stroke: "#999", "stroke-width": 1 });
-const wallLabel = el("text", { x: (WALLX0 + WALLX1) / 2, y: H / 2, "text-anchor": "middle", "font-size": 15, "font-weight": 700, fill: "#111", transform: `rotate(-90 ${(WALLX0 + WALLX1) / 2} ${H / 2})` });
+const wallLabel = el("text", { x: WALLX0 + 22, y: H / 2, "text-anchor": "middle", "font-size": 15, "font-weight": 700, fill: "#111", transform: `rotate(-90 ${WALLX0 + 22} ${H / 2})` });
 wallLabel.textContent = "THE INFORMATION GAP — no re-levelling of coverage adds conditional information";
 
 // region frames + titles
@@ -234,10 +234,11 @@ function placeRegion(key) {
   items.forEach((it, i) => {
     const cx = R.x0 + pad + (wAvail / cols) * ((i % cols) + 0.5);
     const cy = top + (hAvail / rows) * (Math.floor(i / cols) + 0.45);
-    drawItem(it, cx, cy, (i % cols) % 2 === 0 ? 17 : -11);   // stagger labels to avoid collisions
+    const lx = Math.max(R.x0 + 58, Math.min(R.x1 - 58, cx));  // keep labels inside the region
+    drawItem(it, cx, cy, (i % cols) % 2 === 0 ? 17 : -11, lx); // stagger labels to avoid collisions
   });
 }
-function drawItem(it, cx, cy, labelDy) {
+function drawItem(it, cx, cy, labelDy, labelX) {
   const color = it.r === "open" ? C.open : C[it.r];
   const a = el("a", { href: it.u, target: it.u.startsWith("/") ? "_self" : "_blank" });
   const dot = el("circle", {
@@ -246,7 +247,7 @@ function drawItem(it, cx, cy, labelDy) {
     stroke: color, "stroke-width": it.r === "open" ? 1.8 : 1,
     "stroke-dasharray": it.r === "open" ? "4 3" : "none", opacity: 0.92,
   }, a);
-  const t = el("text", { x: cx, y: cy + (labelDy === undefined ? 17 : labelDy), "text-anchor": "middle", "font-size": 10.2, fill: "#333" }, a);
+  const t = el("text", { x: labelX === undefined ? cx : labelX, y: cy + (labelDy === undefined ? 17 : labelDy), "text-anchor": "middle", "font-size": 10.2, fill: "#333" }, a);
   t.textContent = it.l;
   const show = (ev) => {
     tooltip.style.display = "block";
@@ -260,10 +261,21 @@ function drawItem(it, cx, cy, labelDy) {
 }
 ["relax", "refine", "measure", "cross"].forEach(placeRegion);
 
-// wall bricks
+// wall bricks: dots on the right edge of the band, labels rotated like the title
 (byRegion.wall || []).forEach((it, i) => {
-  const cy = 130 + i * 210;
-  drawItem(it, (WALLX0 + WALLX1) / 2, cy);
+  const cy = 150 + i * 230, bx = WALLX1 - 30;
+  const a = el("a", { href: it.u, target: it.u.startsWith("/") ? "_self" : "_blank" });
+  el("circle", { cx: bx, cy, r: 7, fill: C.wall, stroke: C.wall, opacity: 0.92 }, a);
+  const t = el("text", { x: bx + 16, y: cy, "text-anchor": "middle", "font-size": 10.5, fill: "#333", transform: `rotate(-90 ${bx + 16} ${cy})` }, a);
+  t.textContent = it.l;
+  a.addEventListener("mousemove", (ev) => {
+    tooltip.style.display = "block";
+    tooltip.innerHTML = "<b>" + it.l + "</b> — " + it.n;
+    const box = svg.parentElement.getBoundingClientRect();
+    tooltip.style.left = Math.min(ev.clientX - box.left + 14, box.width - 350) + "px";
+    tooltip.style.top = (ev.clientY - box.top + 14) + "px";
+  });
+  a.addEventListener("mouseleave", () => { tooltip.style.display = "none"; });
 });
 
 // counts, the punchline
