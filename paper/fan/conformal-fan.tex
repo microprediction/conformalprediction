@@ -221,7 +221,7 @@ $\operatorname{Var}(\mathbb E[c\mid\cdot])=0$, and $\mathbb E[\operatorname{Var}
 (1-t)\,\tfrac{k(n-k+1)}{(n+1)^2(n+2)}$.
 \end{proof}
 
-So the fan collapses linearly to zero as $t\to1$. Two honest caveats. The mixture's pairwise
+So the fan collapses linearly to zero as $t\to1$. Two caveats. The mixture's pairwise
 correlation is $\operatorname{Corr}(U_i,U_j)=-t/(n+1-2t)$, not $-t/(n-1)$: the grid component
 contributes $\operatorname{Cov}=-1/(12(n+1))$ but mixing changes the marginal variance to
 $(n+1-2t)/(12(n+1))$; the correlation reaches the floor $-1/(n-1)$ only at $t=1$. And the mixture's
@@ -506,7 +506,7 @@ Theorem~\ref{thm:pos} reads the fan as within-dataset variance plus a non-negati
 variance. In the signed-de-Finetti picture of the companion note, the negative corner is exactly
 where that between-dataset object turns negative, a Feynman--Wigner quasi-variance that subtracts from
 the within-dataset fan rather than adding to it, reaching the full cancellation $R=0$ at the contest
-floor. This is heuristic, since a signed measure has no honest conditional variance, but it is the
+floor. This is heuristic, since a signed measure has no genuine conditional variance, but it is the
 right cartoon: the same sign that decides conditional adaptivity in \citet{cotton_signed} decides
 whether the fan is inflated or cancelled here.
 \end{remark}

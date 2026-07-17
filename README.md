@@ -77,7 +77,7 @@ papers/                     # the papers as served on the site (landing pages + 
 | 10 | Calibrated anomaly detection | Where it shines: conformal p-values give exact distribution-free Type-I error control. |
 | 11 | Guaranteed recall | Where it shines: one conformal threshold certifies recall for screening and retrieval. |
 | 12 | A certified safety envelope | Where it shines: a conformal safety tube for containment in robotics and control. |
-| 13 | The coverage–score plane | Synthesis: conformalizing moves a model horizontally to honest coverage; only conditioning lifts it toward the oracle. The gap is I(R;X). |
+| 13 | The coverage–score plane | Synthesis: conformalizing moves a model horizontally to nominal coverage; only conditioning lifts it toward the oracle. The gap is I(R;X). |
 | 14 | One number, five pictures | The information gap read five ways: false pooling, an average log Bayes factor, non-uniform conformal ranks, a projection, a Kelly betting rent. |
 | 15 | de Finetti, and where it goes negative | Exchangeable laws as mixtures of i.i.d. ones; push the correlation negative and the mixing measure turns signed. |
 | 16 | A Thurstone contest at the −1/n floor | Marginal coverage holds while per-case coverage fans: the conformal error at the negative-association floor. |

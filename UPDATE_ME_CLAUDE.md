@@ -51,7 +51,7 @@ data/cp_papers_labeled.tsv   wheat/chaff labels from the patterns study
    (right domain section, with a one-line annotation). Keep the two from duplicating each
    other. **Skip promotional / overselling material** — that filter is the point.
 4. Append new labels to `data/cp_papers_labeled.tsv`; if you re-sample, update the
-   percentages and counts in `patterns.html` (and keep the caveats honest).
+   percentages and counts in `patterns.html` (and keep the caveats accurate).
 
 ## Regenerating figures and the benchmark
 

@@ -43,7 +43,7 @@
 
   <p>Two facts frame every attempt. First, exact distribution-free conditional coverage is impossible in
   finite samples (Lei &amp; Wasserman 2014; Barber et al. 2021) &mdash; dependence does not soften that, so
-  every route below is an approximation plus, ideally, some honesty about the residual gap. Second, there is
+  every route below is an approximation plus, ideally, a measurement of the residual gap. Second, there is
   no distribution-free width theorem anywhere in this literature, for a structural reason: the interval&rsquo;s
   width is a quantile of whatever scores you supply, so with no assumption on the model behind the scores there
   is nothing to prove. Coverage theorems are assumption-free; sharpness theorems are always model-quality
@@ -64,7 +64,7 @@
   <p>Localized conformal prediction (Guan 2023) weights calibration points by similarity to the current one;
   Hore &amp; Barber (2025) show randomized local weights buy a genuine local guarantee; Gibbs, Cherian &amp;
   Cand&egrave;s (2025) deliver exact coverage simultaneously over a finite-dimensional class of covariate
-  shifts, chosen in advance. These are the strongest honest conditional statements on offer. The price: the
+  shifts, chosen in advance. These are the strongest conditional statements actually on offer. The price: the
   conditioning class is fixed a priori and necessarily coarse &mdash; &ldquo;calm vs stormy&rdquo; you can
   have; &ldquo;conditional on this exact history&rdquo; you cannot, by the impossibility results. And the
   time-series versions of these guarantees mostly lack the dependence accounting that the marginal case now
@@ -82,7 +82,7 @@
   model learns the truth, and sharpness follows from the assumption.</p>
 
   <h2>Route 4: measure the gap that remains</h2>
-  <p>Whatever route you take, the honest deliverable includes a measurement of what marginality left on the
+  <p>Whatever route you take, the deliverable should include a measurement of what marginality left on the
   table. The classical tool is the PIT (Diebold, Gunther &amp; Tay 1998); the level-free versions are the
   distance covariance between the conformal rank and the visible past
   (<a href="/papers/definetti-feynman/">the Feynman&ndash;Wigner note</a>, runnable via the guardrails on the
