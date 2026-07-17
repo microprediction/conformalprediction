@@ -39,9 +39,10 @@
   <p class="subtitle">Two things you actually need: a way to audit and fix a setup you already have, and recipes for the uses where coverage is genuinely the objective.</p>
 
   <p>The method is always the same idea: score a held-out calibration fold, take an order
-  statistic, act on it. Two assumptions hold throughout. The calibration data must be
-  exchangeable with the test point, plain split conformal does not survive drift (see the
-  <a href="demos/05-exchangeability-timeseries.html">time-series</a> case). And the
+  statistic, act on it. Two cautions hold throughout. The guarantee is exact when the calibration
+  data are exchangeable with the test point; stationary, fading dependence costs provably little
+  coverage, but plain split conformal does not survive drift (see the
+  <a href="demos/05-drift-timeseries.html">time-series</a> case). And the
   calibration fold must be disjoint from whatever the model trained on. Here <code>alpha</code>
   is the miscoverage level, so <code>alpha = 0.1</code> asks for 90%.</p>
 
@@ -203,7 +204,7 @@ hi = hi_m.predict(X_test) + q                            # adaptive width, exact
   <h3>Time series (adaptive conformal inference)</h3>
   <p>Exchangeability fails under drift, so the fixed quantile is replaced by an online one. ACI
   recovers long-run coverage, not per-step conditional coverage
-  (<a href="demos/05-exchangeability-timeseries.html">exchangeability &amp; time series</a>).</p>
+  (<a href="demos/05-drift-timeseries.html">exchangeability &amp; time series</a>).</p>
 <pre><code>import numpy as np
 from collections import deque
 alpha_t, gamma, W = alpha, 0.01, deque(maxlen=200)       # trailing |residual| window

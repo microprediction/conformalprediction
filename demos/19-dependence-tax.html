@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>The dependence tax — Conformal Prediction</title>
+<meta name="description" content="Barber and Pananjady's Figure 1, live: split conformal on MA(t) noise loses coverage linearly in t/n, an order of magnitude more gently than the worst-case bound." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/literature.html">Literature</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration</p>
+  <h1>The dependence tax</h1>
+  <p class="subtitle">Barber &amp; Pananjady&rsquo;s Figure 1, live: split conformal on moving-average noise loses coverage linearly in \(t/n\) &mdash; and an order of magnitude more gently than the worst case allows.</p>
+
+  <p>The setup, precisely, because everything hangs on it. Let \(W_j\) be i.i.d. standard normals and give the noise a memory of \(t\) steps: \(\varepsilon_i = \sum_{j=i-t}^{i} W_j\), a moving average of order \(t\), so \(\varepsilon_i\) and \(\varepsilon_{i'}\) share terms whenever \(|i-i'|\le t\) and are independent beyond that. Data are \(Y_i = f(X_i) + \varepsilon_i\) with a <em>pretrained, memoryless oracle</em> \(f\), so the score is \(s_i = |Y_i - f(X_i)| = |\varepsilon_i|\). Split conformal does exactly what it always does: take the \((1-\alpha)(1+1/n)\) empirical quantile of the \(n\) calibration scores and ask whether the test score \(s_{n+1}\) falls below it. Coverage is the probability of that event <em>over the whole path</em> \((\varepsilon_1,\dots,\varepsilon_{n+1})\) &mdash; a marginal, ensemble-of-histories statement, estimated below by a running Monte Carlo that accumulates while you watch (the shaded ribbons are \(\pm 2\) standard errors).</p>
+
+  <p>Three calibration sizes \(n\), \(2n\), \(3n\) run side by side against the ratio \(t/n\). Two things to see. First, the curves <em>collapse</em>: coverage depends on dependence only through \(t/n\), the paper&rsquo;s Figure 1 in both directions at once. Second, the collapse is a straight line, and a shallow one &mdash; the grey reference has slope \(\alpha\) per unit of \(t/n\), so at 90% nominal a dependence range of a tenth of your calibration window costs about one point of coverage.</p>
+
+  <div class="demo">
+    <div class="canvas-box tall"><canvas id="main"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <p class="note">Tick the zoom-out box to see what the theory actually promises: the switch-coefficient bound of Barber &amp; Pananjady (2026) caps the loss at \(\min_\tau\{\tau/(n+1) + 2\beta(\tau)\}\), and for MA(\(t\)) noise the \(\beta\)-mixing coefficient vanishes beyond lag \(t\), so the floor is \(1-\alpha-(t+1)/(n+1)\) &mdash; the dashed blue line. The bound is linear in \(t/n\) (earlier analyses gave \(\sqrt{t/n}\)), it is tight over stationary mixing processes, and it is two-sided: a matching ceiling stops the set silently over-covering. The empirical tax then comes in an order of magnitude under the cap.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. Nothing about the algorithm was changed, and nothing about the guarantee was redefined: this is plain split conformal on a dependent series, and its marginal coverage bends rather than breaks &mdash; by about \(\alpha\cdot t/n\) in practice, by at most \(t/n\) in the worst case. That is why the folklore says conformal &ldquo;works&rdquo; on time series. Two cautions carry over from the rest of the guide: the statement is an average over paths, so it says nothing about coverage given the regime you can see (see <a href="/timeseries-conditional.html">conditional coverage and sharpness</a>), and what it does <em>not</em> survive is drift &mdash; the <a href="05-drift-timeseries.html">drift demo</a> is the companion failure mode.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="05-drift-timeseries.html">&larr; Drift &amp; time series</a>
+    <span class="spacer"></span>
+    <a href="/timeseries.html">The coverage games &rarr;</a>
+  </div>
+
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Conformal Prediction</span><span>Demonstration</span></div></footer>
+
+<script type="module" src="../js/demo19.js"></script>
+</body>
+</html>
