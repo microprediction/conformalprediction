@@ -243,24 +243,23 @@ footer.site .wrap { display: flex; justify-content: space-between; flex-wrap: wr
 /* MathJax shouldn't overflow on mobile */
 mjx-container { overflow-x: auto; overflow-y: hidden; max-width: 100%; }
 
-/* ---- dropdown navigation ---- */
-header.site nav { display: flex; align-items: center; flex-wrap: wrap; }
-header.site nav details.menu { position: relative; display: inline-block; margin-left: 16px; }
-header.site nav details.menu summary {
-  cursor: pointer; list-style: none; color: var(--muted);
-  font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px;
+/* ---- dropdown navigation (skaters-style) ---- */
+header.site nav .menu { position: relative; display: inline-block; margin-left: 16px; }
+header.site nav .menu > .menu-label {
+  color: var(--muted); font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px; cursor: default;
 }
-header.site nav details.menu summary::-webkit-details-marker { display: none; }
-header.site nav details.menu summary::after { content: " \25BE"; font-size: 0.72em; }
-header.site nav details.menu summary:hover { color: var(--accent); }
-header.site nav details.menu .drop {
-  position: absolute; top: calc(100% + 8px); left: -8px; z-index: 200;
-  display: flex; flex-direction: column; min-width: 230px;
-  background: var(--bg, #fff); border: 1px solid var(--line, #ddd); border-radius: 8px;
-  padding: 6px 0; box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+header.site nav .menu:hover > .menu-label,
+header.site nav .menu:focus-within > .menu-label { color: var(--accent); }
+header.site nav .menu .drop {
+  display: none; position: absolute; left: 0; top: 100%; z-index: 50;
+  min-width: 12em; padding: 6px 0;
+  background: #fff; border: 1px solid var(--line);
+  border-radius: 0 0 6px 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.12);
 }
-header.site nav details.menu .drop a { margin-left: 0; padding: 7px 14px; white-space: nowrap; }
+header.site nav .menu:hover .drop,
+header.site nav .menu:focus-within .drop { display: block; }
+header.site nav .menu .drop a { display: block; padding: 4px 14px; margin-left: 0; }
 @media (max-width: 640px) {
-  header.site nav details.menu { margin-left: 0; }
-  header.site nav details.menu .drop { position: static; box-shadow: none; border: none; padding: 2px 0 4px 12px; }
+  header.site nav .menu { margin-left: 0; }
 }
