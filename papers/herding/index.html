@@ -62,13 +62,21 @@
   same reason herding beats Monte Carlo. Bounded accumulated error, divided by \(n\): herding's
   bounded feature discrepancy, conformal's bounded count of damaged ranks.</p>
 
+  <h2>Where the steering sits</h2>
+  <p>Conformal does perform corrective steering &mdash; but in the dual space. Choosing the
+  calibration quantile enforces \(0\le\sum_i(\mathbf 1\{S_i\le q_n\}-p)&lt;1\): a feedback-control
+  identity, the cutoff moving so the accumulated acceptance-rate error stays bounded by one unit,
+  the exact analogue of herding&rsquo;s bounded weight vector. The two mechanisms steer different
+  members of the pairing \(\langle h,\nu\rangle\): herding moves the empirical measure against
+  fixed tests; conformal moves the acceptance test against the fixed empirical measure of scores.
+  What conformal never controls is the generation of the next observation.</p>
+
   <h2>What is and is not claimed</h2>
   <p>The duality is exact at the level of the finite-sample ledger and silent on the statistics:
   the step from &ldquo;\(k\) of \(n{+}1\) placements are covered&rdquo; to a probability is
-  exchangeability, or its mixing surrogate, and slot bookkeeping does not supply it. Conformal
-  also does no active steering &mdash; the balance herding must manufacture is already present in
-  the ranks. And moving labels over fixed scores creates no information: it re-levels coverage
-  while the conditional sharpness stays with the scores, the
+  exchangeability, or its mixing surrogate, and slot bookkeeping does not supply it. And
+  dual-space steering creates no information: thresholds and labels moving over fixed scores
+  re-level coverage exactly, while the conditional sharpness stays with the scores &mdash; the
   <a href="/papers/marginally-useful/">information-gap</a> point in another costume.</p>
 
   <p>The <a href="/demos/21-herding-slots.html">companion demo</a> runs both mechanisms side by

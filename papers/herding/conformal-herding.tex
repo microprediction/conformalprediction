@@ -41,9 +41,12 @@ accounting: deleting $\tau$ slots damages the rank count by at most $\tau$, wort
 coverage, and the only probabilistic price is the total-variation failure of rotation invariance,
 $\bar\Psi_\tau \le 2\beta(\tau)$. The linear $1/n$ rates on both sides are the signature of
 counting rather than concentration, which is why they beat the $\sqrt{\tau/n}$ obtained when the
-counting structure is abandoned for blocking and empirical processes. We are explicit about what
-the duality does not claim: conformal performs no active steering, and the probabilistic work is
-still done by exchangeability or its mixing surrogate.
+counting structure is abandoned for blocking and empirical processes. We are explicit about where
+the steering sits: conformal \emph{does} perform feedback control --- the empirical quantile moves
+the acceptance boundary until the accumulated acceptance-rate error is bounded by a single unit
+--- but the control acts in the dual space of thresholds, acceptance sets, and index labels, never
+on the generation of observations, and the probabilistic work is still done by exchangeability or
+its mixing surrogate.
 \end{abstract}
 
 \section{Two mechanisms}\label{sec:setup}
@@ -116,15 +119,43 @@ descriptions agree event by event. The textbook proof is usually narrated in the
 voice, and the second voice is the one in which the mechanism is visible: the orbit being averaged
 is the orbit of the \emph{functional}, $\{e_i^{*}\}_{i=1}^{n+1}$, not an orbit of datasets.
 
-Two honesty clauses. First, permutation representations are orthogonal, so the contragredient is
+One honesty clause first: permutation representations are orthogonal, so the contragredient is
 \emph{equivalent} to the original representation; the term is apt not because the dual carries
 different structure but because it names which side of the pairing the action sits on --- the
-covector side. Second, herding and conformal are not the same algorithm run in opposite
-categories: herding actively optimizes \eqref{eq:herding}, while conformal optimizes nothing.
-The duality lives at the level of the finite-sample ledger, and it is exact there:
+covector side.
+
+Where, then, is the steering? An earlier draft of this note claimed conformal performs none; that
+is wrong, and the correction sharpens the duality. Write $p=1-\alpha$ and
+$h_q(s)=\mathbf 1\{s\le q\}$ for the acceptance test at threshold $q$. Choosing the calibration
+quantile $q_n=S_{(k)}$ with $k=\lceil p\,(n+1)\rceil$ enforces, up to ties, the identity
+\begin{equation}\label{eq:steering}
+0\;\le\;\sum_{i=1}^{n}\bigl(h_{q_n}(S_i)-p\bigr)\;<\;1
+\qquad\text{(up to the $\pm1$ bookkeeping of the $(n+1)$-inflation),}
+\end{equation}
+and \eqref{eq:steering} is unmistakably a feedback-control identity: the realized scores determine
+how the cutoff moves, and the cutoff moves so as to keep the accumulated acceptance-rate error
+bounded by one unit --- the exact analogue of herding's bounded weight $\|w_n\|$, and the same
+division by $n$ yields the same $1/n$. The difference between the two mechanisms is therefore not
+steering versus no steering but \emph{which member of the pairing}
+$\langle h,\nu\rangle=\int h\,d\nu$ is controlled: herding moves the empirical measure
+$\nu_n=\tfrac1n\sum_i\delta_{x_i}$ against fixed tests $h=\phi$; conformal calibration moves the
+test $h_{q_n}$ against the fixed empirical measure of scores. There are, in fact, two slot
+movements in a conformal argument, and it is worth keeping them separate:
+\begin{center}
+\begin{tabular}{rl}
+\emph{steering:}& the acceptance boundary $q_n$ moves until the empirical rank count balances;\\[2pt]
+\emph{transport:}& the proof moves the designation ``test'' among the slots (Observation~\ref{obs:count}).
+\end{tabular}
+\end{center}
+Under exchangeability the transport is exact --- the pointer is equally entitled to indicate any
+slot --- and the guarantee is the steering identity carried to the future slot intact. The
+residual asymmetry with herding is only this: conformal does not control the generation of the
+next observation. The steering is real, but it lives in the dual space of thresholds, acceptance
+sets, and index labels rather than in the primal space of generated points:
 \begin{center}
 herding moves the observations to balance the measure;\\
-conformal moves the observation \emph{labels} to expose an already-balanced rank count.
+conformal moves the acceptance boundary and the observation \emph{labels}\\
+to balance --- and then transport --- an empirical rank count.
 \end{center}
 
 \section{The $1/n$ ledger, and dependence as damaged slots}\label{sec:ledger}
@@ -150,8 +181,9 @@ $\beta$-mixing sequence. The coverage floor
 \Prob(\text{cover})\;\ge\;1-\alpha-\min_{\tau}\Bigl\{\underbrace{\tfrac{\tau}{n+1}}_{\text{slots
 sacrificed}}+\underbrace{\bar\Psi_\tau}_{\text{failed invariance}}\Bigr\}
 \]
-is index-space low-discrepancy accounting, and nothing in it concentrates: no variance appears,
-no square root can. The contrast is instructive --- when the same problem is attacked by blocking
+is index-space low-discrepancy accounting --- in the decomposition above, the steering term is the
+exact empirical rank correction and the switch term is the price of transporting that correction
+to the future slot --- and nothing in it concentrates: no variance appears, no square root can. The contrast is instructive --- when the same problem is attacked by blocking
 and empirical-process concentration \citep{oliveira2024}, the rate degrades to the Monte Carlo
 $\sqrt{\tau/n}$, precisely because the counting structure has been traded away for a maximal
 inequality. Herding's advantage over i.i.d.\ sampling and the switch coefficient's advantage over
@@ -178,14 +210,14 @@ enter linearly in the number of damaged slots, and why dependence is a tax of si
 not claim it explains, the statistical content: the step from ``$k$ of $n+1$ placements are
 covered'' to ``the realized placement is covered with probability $k/(n+1)$'' is exchangeability,
 or its quantitative surrogate under mixing, and no amount of slot bookkeeping supplies it. Nor
-does the passive character of the slot transport create information: moving labels over fixed
-scores can re-level coverage, but the conditional sharpness of the resulting intervals is fixed by
+does dual-space steering create information: moving thresholds and labels over fixed scores can
+re-level coverage exactly, but the conditional sharpness of the resulting intervals is fixed by
 the scores themselves --- the information-gap point made elsewhere on this site
-\citep{cotton_marginally}. A natural question is whether an \emph{active} dual exists: a
-herding-like procedure in index space that chooses which calibration slots to retain or reweight,
-steering conditional coverage the way herding steers feature means. Localized and weighted
-conformal methods can be read as first steps in that direction, and the same information-theoretic
-ceiling applies to them. We leave the speculation at one sentence.
+\citep{cotton_marginally}. A natural question is whether the steering can be aimed: a herding-like
+feedback in index space that retains or reweights calibration slots to balance the rank count
+\emph{conditionally}, not just marginally. Localized and weighted conformal methods are exactly
+such aimed controllers, and the same information-theoretic ceiling applies to them. We leave the
+speculation at one sentence.
 
 \bibliographystyle{plainnat}
 \bibliography{../notes}
