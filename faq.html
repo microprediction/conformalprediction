@@ -79,7 +79,7 @@
   <a href="/papers/parimutuel/">the parimutuel note</a>.</p>
 
   <h3>Does it work for time series?</h3>
-  <p>The basic guarantee needs exchangeability, which time series violate. Adaptive methods (ACI, conformal PID, EnbPI) restore a long-run average coverage and are well worth using; just don&rsquo;t read them as a per-step guarantee. Surprisingly, plain split conformal also holds up: the coverage loss is provably only (dependence range)/(calibration size) &mdash; see <a href="/timeseries.html">the coverage games</a> and <a href="/timeseries-conditional.html">conditional coverage and sharpness</a>.</p>
+  <p>Better than the folklore says. Exchangeability is the assumption under which the guarantee is exact, not a switch that turns it off: on a stationary series whose dependence fades with lag, plain split conformal provably loses at most (dependence range)/(calibration size) of its coverage. What genuinely breaks a fixed band is drift; there the adaptive methods (ACI, conformal PID, EnbPI) recover a long-run average coverage and are well worth using &mdash; just don&rsquo;t read them as a per-step guarantee. See <a href="/timeseries.html">the coverage games</a> and <a href="/timeseries-conditional.html">conditional coverage and sharpness</a>.</p>
 
   <h3>Then what should I use to make forecasts better?</h3>
   <p>Model the conditional distribution (heteroscedastic models, quantile regression, mixture or flow densities) and recalibrate against a proper score. <em>Then</em> conformalize, if you also need a distribution-free coverage certificate. The order matters: estimate first, certify second.</p>

@@ -83,7 +83,7 @@
     <li>The accuracy-improver (4), presenting conformalization as making the forecast itself better, or evaluating a conformal layer by accuracy / AUROC, when coverage is what it controls.</li>
     <li>Coverage as quality (3), selling marginal coverage as &ldquo;reliable&rdquo; or &ldquo;well-calibrated&rdquo; uncertainty, with the marginal-versus-conditional distinction left out.</li>
     <li>The conditional overclaim (2), implying per-instance or conditional validity that is not available distribution-free.</li>
-    <li>Exchangeability ignored (1), asserting the vanilla split-conformal guarantee on time-series or shifted data without adaptation or caveat.</li>
+    <li>Dependence unpriced (1), asserting the exact vanilla split-conformal guarantee on shifted or drifting data with no caveat &mdash; under stationary, fading dependence the coverage loss is provably small, but under drift or shift it is not, and the reader is owed the distinction.</li>
     <li>The silver bullet (1), framing conformal prediction as the answer to uncertainty quantification in general.</li>
   </ul>
 
