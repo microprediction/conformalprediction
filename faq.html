@@ -55,28 +55,17 @@
   <p>Not exactly, and not for free: distribution-free, finite-sample conditional coverage forces infinite-length intervals (<a href="/demos/07-price-of-conditional-coverage.html">the price of conditional coverage</a>). You can <em>approach</em> it under assumptions, conformalized quantile regression, normalized/Mondrian conformal, recent pivotal-score and optimal-transport methods, all of which condition on \(x\).</p>
 
   <h3>What about option pricing, or financial distributions generally?</h3>
-  <p>This is where the coverage objective is most clearly the wrong one. An option price is an
-  integral over the conditional tail, \(\mathbb E[(S_T-K)^+]\), a functional of the whole density
-  shape, and coverage integrates exactly that away: you can move mass around within the covered
-  region and within the tail without changing coverage at all, while the price moves a lot. Two
-  forecasts with identical 90% coverage can price the same out-of-the-money option an order of
-  magnitude apart. Worse, the value usually lives in the sparse, extrapolation states where the
-  marginal guarantee is averaging over precisely the cases you care about. So a conformal interval,
-  or a conformalized density read off one residual shape, is not what prices a contract. The target
-  is the conditional density itself, and finance has two well-developed ways to get it, neither a
-  coverage test. You can recover the risk-neutral density directly from the option surface: it is
-  the second derivative of the call price in the strike (<a href="https://www.jstor.org/stable/2352653">Breeden&ndash;Litzenberger, 1978</a>),
-  an ill-posed step that is stabilised by regularized fitting, nonparametric state-price density
-  estimation (<a href="https://doi.org/10.1111/0022-1082.215228">A&iuml;t-Sahalia&ndash;Lo, 1998</a>),
-  arbitrage-free smoothing-spline fits to the implied-volatility surface
-  (<a href="https://doi.org/10.1080/14697680802595585">Fengler, 2009</a>), or positive-convolution
-  and shape-constrained fits (Bondarenko, 2003; Figlewski, 2010). Or you forecast the conditional
-  density and score it with a proper score (log-likelihood, CRPS): heteroscedastic and
-  stochastic-volatility models, GARCH-family fits, quantile and expectile regression, mixture and
-  normalizing-flow densities. Conformal can wrap any of these for a coverage certificate, but the
-  tail shape that sets the price is the model&rsquo;s work, not the wrapper&rsquo;s. The gap between
-  a flat conformal interval and a desk that fits the conditional tail is made precise in
-  <a href="/papers/parimutuel/">the parimutuel note</a>.</p>
+  <p>This is where the coverage objective is most clearly the wrong one. An option price is a tail
+  integral, \(\mathbb E[(S_T-K)^+]\), a functional of the density&rsquo;s shape &mdash; and coverage
+  is blind to shape: two forecasts with an identical 90% interval can price the same
+  out-of-the-money contract orders of magnitude apart.
+  <a href="/demos/20-coverage-vs-price.html">Watch it happen</a>. The target is the conditional
+  density itself: recover the risk-neutral density from the option surface
+  (<a href="https://www.jstor.org/stable/2352653">Breeden&ndash;Litzenberger, 1978</a> and its
+  successors), or model the conditional density directly and grade it with a proper score.
+  Conformal can wrap either for a coverage certificate, but the tail shape that sets the price is
+  the model&rsquo;s work, not the wrapper&rsquo;s; <a href="/papers/parimutuel/">the parimutuel
+  note</a> makes the gap precise. The demo page carries the fuller reference trail.</p>
 
   <h3>Does it work for time series?</h3>
   <p>Better than the folklore says. Exchangeability is the assumption under which the guarantee is exact, not a switch that turns it off: on a stationary series whose dependence fades with lag, plain split conformal provably loses at most (dependence range)/(calibration size) of its coverage. What genuinely breaks a fixed band is drift; there the adaptive methods (ACI, conformal PID, EnbPI) recover a long-run average coverage and are well worth using &mdash; just don&rsquo;t read them as a per-step guarantee. See <a href="/timeseries.html">the coverage games</a> and <a href="/timeseries-conditional.html">conditional coverage and sharpness</a>.</p>
