@@ -27,23 +27,25 @@
 \maketitle
 
 \begin{abstract}
-Conformal calibration and herding each achieve $O(1/n)$ accuracy from the same finite-sample
-mechanism: a cumulative discrepancy held bounded by an absolute constant and divided by the sample
-size. We give the two constructions parallel formal treatments and show that they act on opposite
-sides of the pairing $\langle h,\nu\rangle=\int h\,d\nu$: herding steers the empirical measure
-$\nu$ against fixed test functionals, while conformal calibration steers the acceptance functional
-$h$ --- and, in the validity proof, transports the evaluation index --- against the fixed
-empirical measure of scores. The correspondence is stated as a contragredient relation for the
-permutation action, and it accounts for the linear $\tau/n$ dependence penalty of
-\citet{barberpananjady2026}, where blocking arguments yield $\sqrt{\tau/n}$. Since the conformal
-mechanism \citep{vovk2005} predates herding \citep{welling2009}, the contragredient is herding.
+Conformal calibration and herding each achieve $O(1/n)$ accuracy by the same finite-sample
+device: a cumulative discrepancy held bounded by an absolute constant and divided by the sample
+size. We give the two constructions parallel formal treatments and show that they control
+opposite arguments of a single bilinear pairing between test functions and measures,
+$\langle h,\nu\rangle=\int h\,d\nu$: herding steers the empirical measure $\nu$ against fixed
+tests, while conformal calibration steers the acceptance test $h$ --- and, in the validity proof,
+transports the evaluation index --- against the fixed empirical measure of scores. The
+correspondence is stated as a contragredient relation for the permutation action, and it accounts
+for the linear $\tau/n$ dependence penalty of \citet{barberpananjady2026}, where blocking
+arguments yield $\sqrt{\tau/n}$. Since the conformal mechanism \citep{vovk2005} predates herding
+\citep{welling2009}, the contragredient is herding.
 \end{abstract}
 
 \section{Introduction}
 
 Two finite-sample constructions, developed independently, obtain $O(1/n)$ rates where sampling
 arguments give $O(n^{-1/2})$: the calibration step of conformal prediction, whose mechanism dates
-to the confidence machines of the late 1990s \citep{vovk2005,lei2018}, and herding
+to the confidence machines of the late 1990s (see \citealp{vovk2005}, for the canonical
+treatment, and \citealp{lei2018}, for the split form used here), and herding
 \citep{welling2009}. This note gives the
 two mechanisms parallel formal statements (Sections~\ref{sec:conformal} and~\ref{sec:herding}),
 proves that they are dual actions on the two sides of a single pairing
@@ -97,8 +99,10 @@ $\Prob\{S_{n+1}\le q_n\}=k/(n+1)\ge 1-\alpha$.
 \end{corollary}
 
 \begin{proof}
-By exchangeability the indicator of the event ``placement $i$ is covered'' has the same
-expectation for every $i$; average Proposition~\ref{prop:count} over $i$.
+The coverage event $\{S_{n+1}\le q_n\}$ is the event that placement $n+1$ is covered, since
+$q_n$ is the $k$-th smallest of the values other than $S_{n+1}$. By exchangeability the indicator
+of ``placement $i$ is covered'' has the same expectation for every $i$; average
+Proposition~\ref{prop:count} over $i$.
 \end{proof}
 
 No probabilistic inequality enters before the final step, and the final step is an identity in
@@ -138,16 +142,16 @@ $O(n^{-1/2})$.
 
 Sections~\ref{sec:conformal} and~\ref{sec:herding} exhibit the same ledger: a cumulative
 discrepancy --- $k-pn$ in Lemma~\ref{lem:steer}, $w_0-w_n$ in Proposition~\ref{prop:herd} ---
-bounded by a constant and divided by $n$. The two mechanisms differ in which argument of the
-pairing
+bounded by a constant and divided by $n$. To compare the mechanisms, write both in terms of the
+bilinear pairing between bounded test functions $h$ and finite measures $\nu$,
 \[
-\langle h,\nu\rangle\;=\;\int h\,d\nu
+\langle h,\nu\rangle\;=\;\int h\,d\nu .
 \]
-they control. Herding fixes the test functionals $h=\langle w,\phi(\cdot)\rangle$ (equivalently,
-the coordinates of $\phi$) and constructs the empirical measure
-$\nu_n=\frac1n\sum_t\delta_{x_t}$. Conformal calibration fixes the empirical measure of scores and
-constructs the test $h_{q_n}$; its validity proof additionally moves the evaluation index, as
-follows.
+Each mechanism controls one argument of this pairing and holds the other fixed. Herding fixes the
+family of tests (the coordinates of $\phi$, whose $\nu$-averages are to match $\mu$) and
+constructs the measure, $\nu_n=\frac1n\sum_t\delta_{x_t}$. Conformal calibration fixes the
+measure --- the empirical distribution of scores --- and constructs the test $h_{q_n}$; its
+validity proof additionally moves the evaluation index, as follows.
 
 Let $\rho$ denote the permutation representation of the symmetric group $\mathfrak S_{n+1}$ on
 $\R^{n+1}$, $\rho(\pi)e_i=e_{\pi(i)}$, and let
@@ -163,7 +167,8 @@ coordinate $i$ deleted. Then for every $\pi\in\mathfrak S_{n+1}$,
 \chi_{n+1}\bigl(\rho(\pi)s\bigr)\;=\;\chi_{\pi^{-1}(n+1)}(s).
 \]
 Consequently the average of $\chi_{n+1}$ over rearrangements of the data equals the average of
-$s\mapsto\chi_i(s)$ over placements $i$ of the evaluation index, and
+$s\mapsto\chi_i(s)$ over placements $i$ of the evaluation index --- equivalently, over the orbit
+$\{\rho^{*}(\pi)\,e^{*}_{n+1}\}$ of the evaluation functional at fixed data --- and
 Corollary~\ref{cor:valid} may be proved on either side of the pairing.
 \end{proposition}
 
@@ -195,6 +200,11 @@ probabilistic input & exchangeability & none (deterministic target) \\
 \end{tabular}
 \end{center}
 
+\begin{remark}[An image]
+In a gambling idiom: herding moves the balls to balance a fixed wheel; conformal prediction
+leaves the balls where they fell and relabels the slots under the pointer.
+\end{remark}
+
 \section{Dependent data}\label{sec:dependence}
 
 The dual reading extends to the time-series analysis of \citet{barberpananjady2026}, where
@@ -212,15 +222,10 @@ The resulting floor,
 contains no concentration step, and correspondingly no square root: when the same problem is
 attacked by blocking and empirical-process methods \citep{oliveira2024} the rate degrades to
 $\sqrt{\tau/n}$. The advantage of \citet{barberpananjady2026} over blocking is the advantage of
-Proposition~\ref{prop:herd} over Monte Carlo, transported across the pairing.
+a bounded ledger over sampling error --- Proposition~\ref{prop:herd}'s advantage over Monte
+Carlo, transported across the pairing.
 
 \section{Interpretation and limits}\label{sec:remarks}
-
-\begin{remark}[An image]
-Herding holds the tests fixed and moves the points; conformal holds the points fixed and moves
-the test --- in a gambling idiom, one moves the balls, the other relabels the slots under the
-pointer. We record the image once and do not lean on it.
-\end{remark}
 
 \begin{remark}[Quadrature]
 \citet{snellgriffiths2025} recast the conformal computation as Bayesian quadrature over the

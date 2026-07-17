@@ -32,7 +32,7 @@
 <div class="wrap">
   <p class="tag">Technical note</p>
   <h1>Herding as the contragredient of conformal prediction</h1>
-  <p class="subtitle">Two 1/n mechanisms, one pairing &mdash; and conformal came first.</p>
+  <p class="subtitle">Two 1/n mechanisms, dual to one another &mdash; and conformal came first.</p>
 
   <p>
     <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="conformal-herding.pdf">Read the PDF</a>
@@ -44,8 +44,9 @@
   discrepancy held bounded by an absolute constant: the quantile choice enforces
   \(\sum_i(\mathbf 1\{S_i\le q_n\}-p)\in[p,1+p)\), and herding&rsquo;s weight recursion keeps
   \(\|w_n\|\) bounded. The note gives the two constructions parallel formal treatments and proves
-  they act on opposite sides of the pairing \(\langle h,\nu\rangle=\int h\,d\nu\): herding steers
-  the empirical measure against fixed test functionals; conformal steers the acceptance functional
+  they control opposite arguments of a bilinear pairing between test functions and measures,
+  \(\langle h,\nu\rangle=\int h\,d\nu\): herding steers the empirical measure against fixed
+  tests; conformal steers the acceptance functional
   &mdash; and, in the validity proof, transports the evaluation index &mdash; against the fixed
   empirical measure of scores. The validity step itself is a deterministic counting identity:
   exactly \(\lceil(1-\alpha)(n+1)\rceil\) of the \(n+1\) placements of the evaluation index are
