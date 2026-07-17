@@ -217,14 +217,14 @@ for x_t, y_t, pred_t in stream:
 </code></pre>
 
   <div class="takeaway">
-    <p>If the actual problem is univariate distributional time-series, consider stopping here and
-    using <code>laplace</code> from the <a href="https://github.com/microprediction/skaters">skaters</a>
-    package instead. It models the conditional distribution directly, so it crosses the information
-    gap a conformal wrapper cannot: on thousands of economic series it wins on log-likelihood and
-    ties on CRPS, which is conformal&rsquo;s own metric. It is also far lighter, dependency-free and
-    online, where the conformal route means fitting AutoARIMA (or similar) and wrapping it in crepes
-    or ACI. The whole forecaster is one import (and <a href="demos/17-laplace-vs-conformal.html">a
-    demo</a> shows the two side by side):</p>
+    <p>If the actual problem is univariate distributional time-series, consider modelling the
+    conditional distribution directly rather than wrapping a point forecaster: that is what crosses
+    the information gap a conformal wrapper cannot. Any conditional-scale model does the job &mdash;
+    a t-GARCH fit is the classical choice and would likely do as well or better; the snippet below
+    uses <code>laplace</code> from the <a href="https://github.com/microprediction/skaters">skaters</a>
+    package only because it is online and keeps the example to a few lines
+    (<a href="demos/17-laplace-vs-conformal.html">a demo</a> shows it side by side with a conformal
+    wrap):</p>
 <pre><code>from skaters import laplace
 f = laplace(k=3)
 state = None
@@ -236,11 +236,18 @@ for y in stream:
   </div>
 
   <div class="takeaway">
-    <p>Every recipe is one order statistic of a calibration score. That is the whole method,
-    and it is why it composes with any model. Conformal hands you the coverage certificate; the
-    sharpness of the band, set, or shortlist is still the model&rsquo;s job, and the audit above
-    is how you check the certificate is not hiding uneven coverage
-    (<a href="/papers/marginally-useful/">the paper</a> makes that split precise).</p>
+    <p>Every recipe above is one order statistic of a calibration score. That is the whole
+    method, and it is why it composes with any model. And now, to be frank: you can try to use
+    conformal prediction for time-series prediction, but at some point you realize it is half an
+    idea next to a more fruitful approach in which you successively model distributional
+    residuals. So the real answer is that I wrote this site while trying to squeeze some ideas
+    out of conformal prediction, and stumbled on the information gap as the explanation for its
+    poor performance on <a href="https://skaters.microprediction.org/metrics.html">the metrics
+    that matter to me</a> &mdash; and average coverage is certainly not one of them. My view is
+    blunt: conformal prediction is a collection of overly normative, simple modelling
+    suggestions for residuals, not nearly as good as <code>laplace</code> across a broad
+    spectrum of real-world examples &mdash; and all you need is Claude in a terminal to form
+    your own judgement quickly.</p>
   </div>
 
   <div class="prevnext">
