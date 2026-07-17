@@ -126,11 +126,11 @@ const ITEMS = [
 
 // ---------- bottom-left: REFINE THE CERTIFICATE ----------
 {r:"refine", l:"Vovk 12", u:"https://arxiv.org/abs/1209.2673", n:"Object/label-conditional validity; the calibration-conditional Beta law."},
-{r:"refine", l:"Marques 25", u:"https://arxiv.org/abs/2303.02770", n:"The exact Beta law of calibration-conditional coverage."},
+{r:"refine", l:"Marques 25", u:"https://arxiv.org/abs/2303.02770", n:"The exact finite-batch law of empirical coverage; the Beta law in the limit."},
 {r:"refine", l:"Bian–Barber 23", u:"https://arxiv.org/abs/2205.03647", n:"Training-conditional coverage: split has it, full and jackknife+ need assumptions."},
 {r:"refine", l:"Liang–Barber 25", u:"https://arxiv.org/abs/2311.04295", n:"Algorithmic stability implies training-conditional coverage."},
 {r:"refine", l:"Kuchibhotla 20", u:"https://arxiv.org/abs/2005.06095", n:"Conformal as a classical rank test."},
-{r:"refine", l:"Barber–Tibshirani 25", u:"https://arxiv.org/abs/2504.02292", n:"One frame for the robustness-to-non-exchangeability results."},
+{r:"refine", l:"Barber–Tibshirani 25", u:"https://arxiv.org/abs/2504.02292", n:"One frame for standard, weighted, nonexchangeable, and localized conformal."},
 {r:"refine", l:"Snell–Griffiths 25", u:"https://arxiv.org/abs/2502.13228", n:"Bayesian quadrature: a posterior over realized risk. Crosses the fan, not the gap."},
 {r:"refine", l:"RCPS 21", u:"https://arxiv.org/abs/2101.02703", n:"Risk-controlling prediction sets: any bounded loss, high probability."},
 {r:"refine", l:"CRC 24", u:"https://arxiv.org/abs/2208.02814", n:"Conformal risk control: expectation of any monotone loss."},
@@ -144,7 +144,7 @@ const ITEMS = [
 {r:"refine", l:"Jackknife+ 21", u:"https://arxiv.org/abs/1905.02928", n:"Leave-one-out with provable coverage."},
 {r:"refine", l:"APS 20", u:"https://arxiv.org/abs/2006.02544", n:"Adaptive prediction sets for classification."},
 {r:"refine", l:"RAPS 21", u:"https://arxiv.org/abs/2009.14193", n:"Regularized APS for image classifiers."},
-{r:"refine", l:"Mondrian 03", u:"https://www.alrw.net", n:"Per-category validity — the certificate refined toward pre-specified groups."},
+{r:"refine", l:"Mondrian 03", u:"https://pure.royalholloway.ac.uk/en/publications/mondrian-confidence-machine", n:"Per-category validity — the certificate refined toward pre-specified groups."},
 {r:"refine", l:"Clustered 23", u:"https://arxiv.org/abs/2306.09335", n:"Class-conditional with many classes."},
 {r:"refine", l:"Equalized 20", u:"https://arxiv.org/abs/1908.05428", n:"Equal coverage across protected groups."},
 {r:"refine", l:"Multivalid 23", u:"https://arxiv.org/abs/2209.15145", n:"The multicalibration bridge."},
@@ -153,9 +153,14 @@ const ITEMS = [
 {r:"refine", l:"Hore–Barber 25", u:"https://arxiv.org/abs/2310.07850", n:"Randomized local weights buy a genuine local guarantee. As close as the coverage currency gets to the wall."},
 {r:"refine", l:"CPD 19", u:"https://link.springer.com/article/10.1007/s10994-018-5755-8", n:"Conformal predictive distributions: a full CDF with finite-sample validity — still one residual shape per x."},
 
-// ---------- the wall ----------
-{r:"wall", l:"Lei–Wasserman 14", u:"https://doi.org/10.1111/rssb.12021", n:"Distribution-free conditional coverage forces infinite intervals. The first brick."},
-{r:"wall", l:"Barber+ 21", u:"https://arxiv.org/abs/1903.04684", n:"Even approximate X-conditional coverage, uniformly over subgroups, is essentially unattainable. The second brick."},
+// ---------- the wall (chronological, top to bottom) ----------
+{r:"wall", l:"Vovk 12", u:"https://arxiv.org/abs/1209.2673", n:"The germ of the wall: exact object-conditional validity is impossible nontrivially for inductive conformal predictors."},
+{r:"wall", l:"Lei–Wasserman 14", u:"https://doi.org/10.1111/rssb.12021", n:"Distribution-free conditional coverage forces infinite intervals at nonatomic points. The first full brick."},
+{r:"wall", l:"Shah–Peters 20", u:"https://arxiv.org/abs/1804.07203", n:"Conditional independence testing is hard: no finite-sample valid test has nontrivial power. Why conditional coverage can be detected but never certified."},
+{r:"wall", l:"Barber 20", u:"https://arxiv.org/abs/2004.09477", n:"Binary regression: an explicit lower bound on the length of any distribution-free confidence interval for the conditional probability."},
+{r:"wall", l:"Gupta+ 20", u:"https://arxiv.org/abs/2006.10564", n:"Distribution-free calibration with continuous features is possible only through binning — the calibration-side no-go."},
+{r:"wall", l:"Barber+ 21", u:"https://arxiv.org/abs/1903.04684", n:"Even approximate X-conditional coverage, uniformly over subgroups, is essentially unattainable."},
+{r:"wall", l:"M–Candès 21", u:"https://arxiv.org/abs/2102.07967", n:"Sharp limits on distribution-free confidence intervals for the conditional median (Medarametla & Candès)."},
 {r:"wall", l:"I(R;X)", u:"/papers/marginally-useful/", n:"The information gap: for a fixed single-shape system the log-score regret to the oracle is exactly the mutual information between residual and input — untouched by any re-levelling of coverage."},
 
 // ---------- top-right: MEASURE THE GAP ----------
@@ -163,7 +168,7 @@ const ITEMS = [
 {r:"measure", l:"Gneiting+ 07", u:"https://doi.org/10.1111/j.1467-9868.2007.00587.x", n:"Maximize sharpness subject to calibration — the frame the gap lives in."},
 {r:"measure", l:"Gneiting–Raftery 07", u:"https://doi.org/10.1198/016214506000001437", n:"Proper scoring rules: the graders that see what coverage cannot."},
 {r:"measure", l:"Widmann+ 19/21", u:"https://arxiv.org/abs/1910.11385", n:"Kernel calibration tests."},
-{r:"measure", l:"Cauchois+ 21", u:"https://arxiv.org/abs/2004.10181", n:"Worst-slab coverage diagnostic."},
+{r:"measure", l:"Cauchois+ 21", u:"https://arxiv.org/abs/2004.10181", n:"Origin of the worst-slab coverage diagnostic (inside a method paper)."},
 {r:"measure", l:"ERT 25", u:"https://arxiv.org/abs/2512.11779", n:"Classify the coverage indicator on the features."},
 {r:"measure", l:"Correia+ 24", u:"https://arxiv.org/abs/2405.02140", n:"Set size bounds conditional entropy — information theory meets conformal."},
 {r:"measure", l:"Marginally Useful", u:"/papers/marginally-useful/", n:"The gap named and priced: coverage–sharpness gap = I(R;X)."},
@@ -261,12 +266,16 @@ function drawItem(it, cx, cy, labelDy, labelX) {
 }
 ["relax", "refine", "measure", "cross"].forEach(placeRegion);
 
-// wall bricks: dots on the right edge of the band, labels rotated like the title
-(byRegion.wall || []).forEach((it, i) => {
-  const cy = 150 + i * 230, bx = WALLX1 - 30;
+// wall bricks: dots on the right edge of the band, labels rotated like the title,
+// staggered across two columns so adjacent labels cannot collide
+const bricks = byRegion.wall || [];
+bricks.forEach((it, i) => {
+  const cy = 80 + (i * (H - 170)) / Math.max(bricks.length - 1, 1);
+  const bx = WALLX1 - 30;
   const a = el("a", { href: it.u, target: it.u.startsWith("/") ? "_self" : "_blank" });
-  el("circle", { cx: bx, cy, r: 7, fill: C.wall, stroke: C.wall, opacity: 0.92 }, a);
-  const t = el("text", { x: bx + 16, y: cy, "text-anchor": "middle", "font-size": 10.5, fill: "#333", transform: `rotate(-90 ${bx + 16} ${cy})` }, a);
+  el("circle", { cx: bx, cy, r: 6, fill: C.wall, stroke: C.wall, opacity: 0.92 }, a);
+  const lxx = bx + (i % 2 === 0 ? 14 : -16);
+  const t = el("text", { x: lxx, y: cy, "text-anchor": "middle", "font-size": 10, fill: "#333", transform: `rotate(-90 ${lxx} ${cy})` }, a);
   t.textContent = it.l;
   a.addEventListener("mousemove", (ev) => {
     tooltip.style.display = "block";
