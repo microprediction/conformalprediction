@@ -77,6 +77,13 @@ Exactly $k$ of the $n$ calibration scores satisfy $S_i\le S_{(k)}$, so the sum e
 Since $p(n+1)\le k<p(n+1)+1$, we have $p\le k-pn<1+p$.
 \end{proof}
 
+The control-theoretic reading of conformal prediction is established in the online setting: the
+level update of adaptive conformal inference \citep{gibbscandes2021} is integral feedback on
+realized miscoverage, and \citet{angelopoulos2023pid} make the identification explicit as
+proportional--integral--derivative control. There the controlled quantity is the time-average
+miscoverage along a sequence; Lemma~\ref{lem:steer} is the batch counterpart, a single dead-beat
+correction applied to the calibration set before any test data arrive.
+
 Validity rests on a deterministic counting identity concerning the \emph{placement} of the test
 index.
 
