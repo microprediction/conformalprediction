@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Moving the slots, not the balls — note</title>
+<link rel="stylesheet" href="../../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/literature.html">Literature</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+  <p class="tag">Technical note</p>
+  <h1>Moving the slots, not the balls</h1>
+  <p class="subtitle">Conformal prediction as the contragredient of herding.</p>
+
+  <p>
+    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="conformal-herding.pdf">Read the PDF</a>
+    <a class="card" style="display:inline-block;padding:10px 16px;" href="conformal-herding.tex">LaTeX source</a>
+  </p>
+
+  <h2>The idea</h2>
+  <p>Herding (Welling 2009) moves the balls: it steers particles \(x_t\) so their empirical
+  feature averages balance a fixed target, \(\tfrac1n\sum_t \phi(x_t)\approx\mu\), and a bounded
+  weight sequence buys the quasi&ndash;Monte Carlo rate \(O(1/n)\) where i.i.d.\ sampling gets
+  \(O(1/\sqrt n)\). Split conformal's coverage proof is the dual operation: the realized scores
+  are never touched, and what moves is the <em>designation</em> &ldquo;this slot holds the test
+  point.&rdquo; Because the quantile threshold is a symmetric function of the scores, a
+  deterministic counting identity holds &mdash; exactly \(\lceil(1-\alpha)(n+1)\rceil\) of the
+  \(n+1\) placements of that label point at covered scores, for <em>any</em> score vector.
+  Herding holds the roulette wheel fixed and moves the balls; conformal holds the balls fixed and
+  rotates the slot labels under the pointer.</p>
+
+  <h2>The contragredient, and the 1/n ledger</h2>
+  <p>The duality is stated on the permutation pairing: rearrange the data with \(P_\pi\), or hold
+  the data fixed and pull the coordinate functional back, \(e_{n+1}^{*}\mapsto e_{\pi(n+1)}^{*}\)
+  &mdash; the contragredient side. The payoff is a clean reading of the Barber&ndash;Pananjady
+  time-series bound: deleting \(\tau\) slots damages the rank count by at most \(\tau\) (order
+  statistics are insertion/deletion stable), worth \(\tau/n\) of coverage, and the only
+  probabilistic charge is the total-variation failure of rotation invariance,
+  \(\bar\Psi_\tau\le 2\beta(\tau)\). Nothing concentrates, so no square root appears &mdash; the
+  same reason herding beats Monte Carlo. Bounded accumulated error, divided by \(n\): herding's
+  bounded feature discrepancy, conformal's bounded count of damaged ranks.</p>
+
+  <h2>Where the steering sits</h2>
+  <p>Conformal does perform corrective steering &mdash; but in the dual space. Choosing the
+  calibration quantile enforces \(0\le\sum_i(\mathbf 1\{S_i\le q_n\}-p)&lt;1\): a feedback-control
+  identity, the cutoff moving so the accumulated acceptance-rate error stays bounded by one unit,
+  the exact analogue of herding&rsquo;s bounded weight vector. The two mechanisms steer different
+  members of the pairing \(\langle h,\nu\rangle\): herding moves the empirical measure against
+  fixed tests; conformal moves the acceptance test against the fixed empirical measure of scores.
+  What conformal never controls is the generation of the next observation.</p>
+
+  <h2>What is and is not claimed</h2>
+  <p>The duality is exact at the level of the finite-sample ledger and silent on the statistics:
+  the step from &ldquo;\(k\) of \(n{+}1\) placements are covered&rdquo; to a probability is
+  exchangeability, or its mixing surrogate, and slot bookkeeping does not supply it. And
+  dual-space steering creates no information: thresholds and labels moving over fixed scores
+  re-level coverage exactly, while the conditional sharpness stays with the scores &mdash; the
+  <a href="/papers/marginally-useful/">information-gap</a> point in another costume.</p>
+
+  <p>The <a href="/demos/21-herding-slots.html">companion demo</a> runs both mechanisms side by
+  side: kernel herding closing on its target at \(1/n\) against Monte Carlo's \(1/\sqrt n\), and
+  the slot pointer rotating over a fixed, arbitrarily dependent score vector while the covered
+  count sits at exactly \(k\) of \(n+1\).</p>
+
+  <div class="prevnext">
+    <a href="/papers/">&larr; All papers &amp; notes</a>
+    <span class="spacer"></span>
+    <a href="/demos/21-herding-slots.html">The demo &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Conformal Prediction: a practical guide.</span>
+    <span>Technical note.</span>
+  </div>
+</footer>
+</body>
+</html>
