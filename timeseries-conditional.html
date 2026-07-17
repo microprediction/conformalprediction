@@ -44,6 +44,7 @@
         <span class="drop">
           <a href="/recipes.html">Recipes &amp; audits</a>
           <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
         
         </span>
       </span>
@@ -100,8 +101,7 @@
   <h2>Route 3: make width the objective</h2>
   <p>Bellman conformal inference (Yang, Cand&egrave;s &amp; Lei 2024) treats interval length as the thing to
   minimize, subject to long-run coverage, and solves the resulting stochastic control problem by dynamic
-  programming over multi-step forecasts. It fixes the known degeneracy of the online game: adaptive methods can satisfy their guarantee with intervals oscillating between empty and infinite. Empirically it produces much shorter intervals. It is an optimizer, not a theorem: no distributional width
-  guarantee is claimed, and by the structural point above, none could be without model assumptions. The
+  programming over multi-step forecasts. It fixes the known degeneracy of the online game: adaptive methods can satisfy their guarantee with intervals oscillating between empty and infinite. Empirically it produces much shorter intervals. No distributional width guarantee is claimed, and by the structural point above, none could be without model assumptions. The
   consistency-based width results (EnbPI, SPCI converging to oracle width) live in the same trade: assume the
   model learns the truth, and sharpness follows from the assumption.</p>
 
@@ -122,7 +122,7 @@
   min<sub>&tau;</sub> {&tau;/(n+1) + 2&beta;(&tau;)}, tight, two-sided, vanishing as the calibration grows.
   The <em>sharpness</em> cost of marginality is priced in <a href="/papers/two-prices/">the two-prices
   note</a>, for the single-shape family: the per-step log-score regret of the marginal predictive against the
-  past-conditional oracle equals the entropy-rate gap &Delta;H = I(S&#8320;; past). That is the <a href="/papers/marginally-useful/">information-gap identity</a> with the past as the side information. For Gaussian scores it exponentiates into width: oracle intervals are
+  past-conditional oracle equals the entropy-rate gap &Delta;H = I(S&#8320;; past). That is the <a href="/papers/marginally-useful/">information-gap identity</a> applied to the past. For Gaussian scores it exponentiates into width: oracle intervals are
   e<sup>&minus;&Delta;H</sup> narrower at matched coverage, &radic;(1&minus;&phi;&sup2;) for AR(1). The
   asymmetry is the point: the coverage tax vanishes in n, the sharpness rent never does. What remains open is
   the general accounting &mdash; beyond the single-shape family, with estimation costs for the feasible

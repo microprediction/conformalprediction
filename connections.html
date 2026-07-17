@@ -54,6 +54,7 @@
         <span class="drop">
           <a href="/recipes.html">Recipes &amp; audits</a>
           <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
         
         </span>
       </span>
@@ -125,18 +126,18 @@ const CLUSTERS = {
 const NODES = [
  {id:"gap", label:"I(R;X) — THE GAP", c:"gap", r:15, url:"/papers/marginally-useful/", note:"The residual-information gap: coverage–sharpness shortfall = mutual information between residual and input. The quantity no re-levelling of coverage can touch."},
  {id:"parimutuel", label:"Parimutuel rent", c:"gap", url:"/papers/parimutuel/", note:"The same gap derived from a betting mechanism: an X-informed bettor grows wealth against the conformal book at rate I(R;X)."},
- {id:"twoprices", label:"Two prices", c:"gap", url:"/papers/two-prices/", note:"The coverage tax of dependence vanishes with n; the sharpness rent ΔH = I(S₀; past) never does — the information-gap identity with the past as the side information."},
+ {id:"twoprices", label:"Two prices", c:"gap", url:"/papers/two-prices/", note:"The coverage tax of dependence vanishes with n; the sharpness rent ΔH = I(S₀; past) never does — the information-gap identity applied to the past."},
  {id:"definetti", label:"Feynman–Wigner sign", c:"gap", url:"/papers/definetti-feynman/", note:"The sign of the finite de Finetti measure decides whether per-case coverage adapts or fans; distance covariance is the runnable check."},
  {id:"fan", label:"The conformal fan", c:"fanax", url:"/papers/fan/", note:"Across-calibration dispersion of realized coverage; its width is set by the sign of cross-sample dependence."},
  {id:"snell", label:"Snell–Griffiths 2025", c:"fanax", url:"https://arxiv.org/abs/2502.13228", note:"Conformal prediction as Bayesian quadrature: a Dirichlet posterior over realized risk. The loss-side fan; HPD = report the fan's quantile, not its mean."},
  {id:"kerns", label:"Kerns–Székely 2006", c:"found", url:"https://doi.org/10.1007/s10959-006-0028-z", note:"Finite exchangeable laws admit signed mixing measures — the negative probability the sign note runs on."},
- {id:"herding", label:"Herding dual", c:"mech", url:"/papers/herding/", note:"Herding as the contragredient of conformal prediction (which came first): the quantile steers the acceptance boundary, the proof transports the test label; bounded ledger over n."},
+ {id:"herding", label:"Herding dual", c:"mech", url:"/papers/herding/", note:"Herding as the contragredient of conformal prediction: the quantile steers the acceptance boundary, the proof transports the test label; bounded ledger over n."},
  {id:"welling", label:"Welling 2009", c:"mech", url:"https://dl.acm.org/doi/10.1145/1553374.1553517", note:"Herding: steer the particles so feature averages balance the target; bounded weights give 1/n."},
  {id:"bach", label:"Bach+ 2012", c:"mech", url:"https://arxiv.org/abs/1203.4523", note:"Herding = Frank–Wolfe on the marginal polytope; where the boundedness conditions live."},
  {id:"bp", label:"Barber–Pananjady 2026", c:"ts", url:"https://arxiv.org/abs/2510.02471", note:"The switch coefficient: unmodified split conformal on a mixing series loses at most min τ/n + 2β(τ) — linear, tight, two-sided. The coverage cost of dependence, priced."},
  {id:"oliveira", label:"Oliveira+ 2024", c:"ts", url:"https://arxiv.org/abs/2203.15885", note:"The same question by blocking and concentration: √(t_mix/n). Counting beats concentration."},
  {id:"aci", label:"ACI / online", c:"ts", url:"https://arxiv.org/abs/2106.00170", note:"Long-run time-average coverage for any sequence; no distribution, no per-step statement."},
- {id:"bci", label:"BCI 2024", c:"ts", url:"https://arxiv.org/abs/2402.05203", note:"Width as the objective subject to long-run coverage, by dynamic programming. An optimizer, not a theorem."},
+ {id:"bci", label:"BCI 2024", c:"ts", url:"https://arxiv.org/abs/2402.05203", note:"Width as the objective subject to long-run coverage, by dynamic programming. Width optimized by dynamic programming; the guarantee stays long-run coverage."},
  {id:"vovk", label:"Vovk–Gammerman–Shafer 2005", c:"found", url:"https://link.springer.com/book/10.1007/978-3-031-06649-8", note:"The founding monograph: exchangeability, rank symmetry, the exact guarantee."},
  {id:"lw", label:"Lei–Wasserman 2014", c:"found", url:"https://doi.org/10.1111/rssb.12021", note:"Distribution-free conditional coverage forces infinite intervals — a brick in the wall."},
  {id:"limits", label:"Barber+ 2021 (limits)", c:"found", url:"https://arxiv.org/abs/1903.04684", note:"Approximate X-conditional coverage over all subgroups is essentially unattainable — the second brick."},

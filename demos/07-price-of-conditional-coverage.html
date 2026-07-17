@@ -44,6 +44,7 @@
         <span class="drop">
           <a href="/recipes.html">Recipes &amp; audits</a>
           <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
         
         </span>
       </span>
@@ -80,7 +81,7 @@
   <p class="note">Above: sweeping the conditioning resolution \(B\) from \(1\) (pure global/marginal conformal) to \(60\) (approaching per-\(x\) conditioning). The worst-bin coverage (green) climbs to the target as \(B\) grows, conditional validity is being achieved. But it climbs <em>in lockstep with</em> the fraction of test points whose band is \(\infty\) (red) and the mean finite band length (orange, normalized). You buy uniform conditional coverage only by paying unbounded length. The vertical line marks your current \(B\).</p>
 
   <div class="takeaway">
-    <p>Takeaway. This is Lei &amp; Wasserman (2014, Lemma&nbsp;1) made tangible: for a continuous \(x\), <em>non-trivial</em> finite-sample <em>conditional</em> validity is impossible distribution-free, any procedure with exact conditional coverage must have <em>infinite expected interval length</em> at almost every \(x\). The localized &ldquo;fix&rdquo; is not a fix; it <em>is</em> the theorem. As you refine \(B\), bins starve, \(q_b\to\infty\), and the band degenerates to the trivial \((-\infty,\infty)\) exactly where conditioning would have mattered most. This is why <a href="02-marginal-vs-conditional.html">Demo&nbsp;02</a>&rsquo;s gap cannot simply be closed by binning harder. You <em>can</em> approach conditional coverage, via smoothness assumptions, or quantile-regression scores (CQR) that let band width vary with \(x\), but only by leaving the distribution-free setting and trusting a model. The guarantee you keep for free is marginal; the conditional one is for sale, and its distribution-free price is \(\infty\).</p>
+    <p>Takeaway. This is Lei &amp; Wasserman (2014, Lemma&nbsp;1) made tangible: for a continuous \(x\), <em>non-trivial</em> finite-sample <em>conditional</em> validity is impossible distribution-free, any procedure with exact conditional coverage must have <em>infinite expected interval length</em> at almost every \(x\). The localized &ldquo;fix&rdquo; is the theorem itself. As you refine \(B\), bins starve, \(q_b\to\infty\), and the band degenerates to the trivial \((-\infty,\infty)\) exactly where conditioning would have mattered most. This is why <a href="02-marginal-vs-conditional.html">Demo&nbsp;02</a>&rsquo;s gap cannot simply be closed by binning harder. You <em>can</em> approach conditional coverage, via smoothness assumptions, or quantile-regression scores (CQR) that let band width vary with \(x\), but only by leaving the distribution-free setting and trusting a model. The guarantee you keep for free is marginal; the conditional one is for sale, and its distribution-free price is \(\infty\).</p>
   </div>
 
   <div class="prevnext">

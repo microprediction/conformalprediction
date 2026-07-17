@@ -44,6 +44,7 @@
         <span class="drop">
           <a href="/recipes.html">Recipes &amp; audits</a>
           <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
         
         </span>
       </span>
@@ -66,7 +67,7 @@
   <h1>Drift &amp; time series</h1>
   <p class="subtitle">Fixed split conformal is a straw man here. The adaptive methods are not, so judge everyone on a proper score.</p>
 
-  <p>The textbook coverage statement is proved under exchangeability: the calibration data and the future point can be reordered without changing the joint distribution. Stationary dependence alone turns out to be survivable &mdash; the coverage loss is provably bounded by (dependence range)/(calibration size) (see <a href="/timeseries.html">the coverage games</a>) &mdash; but the series here is worse than dependent: the level trends and occasionally jumps to a new regime. A <em>fixed</em> split-conformal band that freezes a single width does not weaken gracefully under that kind of drift; it simply stops covering.</p>
+  <p>The textbook coverage statement is proved under exchangeability: the calibration data and the future point can be reordered without changing the joint distribution. Stationary dependence alone turns out to be survivable: the coverage loss is provably bounded by (dependence range)/(calibration size) (see <a href="/timeseries.html">the coverage games</a>). But the series here is worse than dependent: the level trends and occasionally jumps to a new regime. A <em>fixed</em> split-conformal band that freezes a single width does not weaken gracefully under that kind of drift; it simply stops covering.</p>
 
   <p>The literature has strong online repairs. A fair test pits them not only against fixed split but against a plain probabilistic model, and scores all of them on a <em>proper</em> criterion, not marginal coverage alone (which several methods hit by construction). So below we forecast a nonstationary series \(y_t = \text{level}_t + \sigma_t\,\varepsilon_t\) with known, time-varying \(\sigma_t\), a trend, a regime jump at the orange line, and a high-volatility block afterwards. The point forecast \(\hat y_t\) is a trivial rolling mean. We calibrate on \([0,t_0]\) (the dashed line) and then run five methods online over \(t>t_0\), all consuming the same \(\hat y_t\):</p>
 
@@ -89,13 +90,13 @@
     <div class="controls" id="controls"></div>
   </div>
 
-  <p>The second panel overlays the rolling coverage (trailing 80 steps) of whichever methods you tick on, against the dashed target. This is where you see fixed split (blue) collapse after the regime jump while ACI, conformal PID and the EWMA model track \(1-\alpha\). They are doing real work, they are not straw men.</p>
+  <p>The second panel overlays the rolling coverage (trailing 80 steps) of whichever methods you tick on, against the dashed target. This is where you see fixed split (blue) collapse after the regime jump while ACI, conformal PID and the EWMA model track \(1-\alpha\). They are doing real work.</p>
 
   <div class="canvas-box med demo"><canvas id="cov"></canvas></div>
   <p class="note">Fixed split sits near target while the data are roughly stationary, then collapses once the trend and the volatility block bite. The adaptive conformal methods and the EWMA-vol model oscillate around target because they re-estimate the width from recent realized residuals. Note what stays true for <em>all</em> of them: the trailing window dips hard right after the jump. The long-run average recovers; the window you are standing in does not.</p>
 
   <div class="takeaway">
-    <p>Takeaway. Two readings, both from <a href="../benchmark.html">the worked example</a>. First, fixed split conformal really does collapse under drift (≈0.56 marginal, ≈0.17 worst-window), a straw man. But ACI, conformal PID and NexCP genuinely recover long-run and marginal coverage; they are competitive, not strawmen. Second, the repair is <em>conditional modeling</em>, not the conformal step itself: a plain EWMA-volatility Gaussian matches the adaptive conformal methods on the interval score (≈6.9 vs ≈7.0, against an oracle ≈5.5) <em>and</em> returns a full predictive distribution. Where conformal helps under drift, it helps by adapting the width to recent residuals, local conditional modeling, with conformal supplying the coverage leveling on top. And none of these delivers per-step <em>conditional</em> coverage: even the oracle&rsquo;s worst-window coverage is ~0.82. The repairs buy long-run/marginal coverage, never coverage <em>now</em>. <a href="/papers/marginally-useful/">The paper</a> works through why. <a href="06-conformal-vs-recalibration.html">Conformal vs. recalibration</a> asks whether plain probabilistic recalibration would have served you better all along.</p>
+    <p>Takeaway. Two readings, both from <a href="../benchmark.html">the worked example</a>. First, fixed split conformal really does collapse under drift (≈0.56 marginal, ≈0.17 worst-window). But ACI, conformal PID and NexCP genuinely recover long-run and marginal coverage; they are competitive. Second, the repair is <em>conditional modeling</em>, not the conformal step itself: a plain EWMA-volatility Gaussian matches the adaptive conformal methods on the interval score (≈6.9 vs ≈7.0, against an oracle ≈5.5) <em>and</em> returns a full predictive distribution. Where conformal helps under drift, it helps by adapting the width to recent residuals, local conditional modeling, with conformal supplying the coverage leveling on top. And none of these delivers per-step <em>conditional</em> coverage: even the oracle&rsquo;s worst-window coverage is ~0.82. The repairs buy long-run/marginal coverage, never coverage <em>now</em>. <a href="/papers/marginally-useful/">The paper</a> works through why. <a href="06-conformal-vs-recalibration.html">Conformal vs. recalibration</a> asks whether plain probabilistic recalibration would have served you better all along.</p>
   </div>
 
   <div class="prevnext">

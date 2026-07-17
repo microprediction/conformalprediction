@@ -41,6 +41,7 @@
         <span class="drop">
           <a href="/recipes.html">Recipes &amp; audits</a>
           <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
         
         </span>
       </span>
@@ -69,7 +70,7 @@
   </p>
 
   <h2>Abstract</h2>
-  <p>Conformal prediction gives a distribution-free, finite-sample guarantee of <em>marginal</em> coverage for a set. It is easy to read this as more than it is, as evidence that the underlying forecast is sharper or better calibrated as a distribution. The paper separates the two. The new result is one decomposition; the familiar cautions (marginal coverage is not conditional, validity is trivially satisfiable, exchangeability is required) are assembled with citations as context, not as discoveries.</p>
+  <p>Conformal prediction gives a distribution-free, finite-sample guarantee of <em>marginal</em> coverage for a set. It is easy to read this as more than it is, as evidence that the underlying forecast is sharper or better calibrated as a distribution. The paper separates the two. The new result is one decomposition; the familiar cautions (marginal coverage is not conditional, validity is trivially satisfiable, exchangeability is required) are assembled with citations as context.</p>
   <ul>
     <li>The residual-information gap (Propositions&nbsp;2&ndash;3): the result. A single-shape conformal predictive system re-levels the base model&rsquo;s residual shape; its log-score regret to the oracle is the mutual information \(I(R;X)\) between residual and input, which no recalibration that ignores \(X\) can reduce. Within the class of objects it produces, the system is log-score optimal: the cost is the class, not the calibration step.</li>
     <li>Orthogonality (Proposition&nbsp;1): folklore, made precise. For a residual score the conformal set depends on the nonconformity scores alone, so marginal coverage places no constraint on the log-score of an accompanying density: pin coverage at \(1-\alpha\) while the log-score goes to \(-\infty\).</li>

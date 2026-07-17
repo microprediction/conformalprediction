@@ -33,9 +33,7 @@ functionals instead of the points. We show that this is the exact relation betwe
 calibration, whose validity proof transports an evaluation functional over fixed scores, and
 herding, which transports points against fixed functionals; both control one argument of the
 bilinear pairing $\langle h,\nu\rangle=\int h\,d\nu$ while a cumulative discrepancy stays bounded
-by a constant, which is where both $O(1/n)$ rates come from. The relation is useful exactly
-insofar as proofs cross it, and we cross it in both directions through a stability lemma for the
-pairing: the coverage floor of \citet{barberpananjady2026} for split conformal on $\beta$-mixing
+by a constant, which is where both $O(1/n)$ rates come from. A stability lemma for the pairing carries proofs across the relation in both directions: the coverage floor of \citet{barberpananjady2026} for split conformal on $\beta$-mixing
 series factors into the lemma's two Lipschitz legs (buffer deletion as a measure perturbation; the switch coefficient as a distributional total variation), which is why their rate is linear
 in $\tau/n$ where blocking arguments give $\sqrt{\tau/n}$; and, in the reverse direction, the
 herding argument transfers to the calibration set, so that a low-discrepancy design makes
@@ -204,8 +202,7 @@ fixes the direction of the phrase: the conformal mechanism predates herding by r
 so it is herding that realises the contragredient, in the primal space of generated points, with
 active selection of $x_t$ replacing the transport of an evaluation index. The dependence
 analysis of \citet{barberpananjady2026} is more recent than either; the duality claims kinship of
-proofs, not priority of authors. Whether the relation is more than a name is settled by
-Section~\ref{sec:transfer}, where arguments cross it in both directions.
+proofs, not priority of authors.
 \end{remark}
 
 The correspondence is summarised below.
@@ -278,8 +275,7 @@ definition of $\Psi_{k,\tau}$, a total variation between the laws of the two arr
 the lemma applied to the distribution of the pairing rather than to a fixed realisation. Both
 legs are linear, so the floor is linear in $\tau/n$; a blocking argument
 \citep{oliveira2024} bounds the same quantity through an empirical-process maximal inequality
-and pays the Monte Carlo rate $\sqrt{\tau/n}$. Linearity is not an accident of their proof; it is
-the linearity of the pairing.
+and pays the Monte Carlo rate $\sqrt{\tau/n}$. The linearity of the floor is the linearity of the pairing.
 
 \subsection{Toward herding: designed calibration}\label{sec:design}
 
