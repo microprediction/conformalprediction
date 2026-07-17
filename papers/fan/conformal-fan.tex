@@ -582,7 +582,15 @@ as the companion demonstration shows.
 
 The $\mathrm{Beta}(k,n-k+1)$ law of calibration-conditional coverage and its variance are
 \citet{vovk2012} and \citet{marques2024}; to our knowledge the papers cited here do not study the
-dependence among calibration scores as a control variable for the realized-coverage variance. Negative association and its consequences are \citet{joagdev1983}; that negatively associated
+dependence among calibration scores as a control variable for the realized-coverage variance. The
+loss-side generalization of the calibration-conditional law is \citet{snellgriffiths2025}, who put
+$\mathrm{Dirichlet}(1,\dots,1)$ weights on the ordered calibration losses via the
+Aitchison--Dunsmore quantile-spacing result and report a posterior over realized risk: with the
+0--1 miscoverage loss their construction collapses to the Beta fan above, their recovery of
+conformal risk control is the fan's \emph{mean}, and their highest-posterior-density rule is the
+prescription ``report the fan's quantile, not its mean.'' Their guarantee is what they call
+data-conditional --- conditional on the calibration draw, our axis --- and, as they note, not
+input-conditional; it moves along the fan, not across the information gap. Negative association and its consequences are \citet{joagdev1983}; that negatively associated
 sums are dominated in convex order by independent ones is \citet{shao2000}, and sampling without
 replacement concentrates at least as tightly as with replacement \citep{serfling1974}. The total
 positivity behind the single-crossing step is \citet{karlin1968}; that an order statistic of a

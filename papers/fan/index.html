@@ -87,6 +87,18 @@
   distribution narrow and widen, with the per-level and aggregate inequalities and the exact affine
   Gaussian law checked live against simulation.</p>
 
+  <h2>Closest relative</h2>
+  <p>Snell &amp; Griffiths (2025), <em>Conformal prediction as Bayesian quadrature</em>
+  (<a href="https://arxiv.org/abs/2502.13228">arXiv:2502.13228</a>), is the loss-side
+  generalization of the calibration-conditional law this note studies: Dirichlet(1,&hellip;,1)
+  weights on the ordered calibration losses give a distribution-free posterior over realized risk,
+  which collapses to the Beta fan under the 0&ndash;1 miscoverage loss. Conformal risk control is
+  that posterior&rsquo;s mean; their highest-posterior-density rule is the prescription
+  &ldquo;report the fan&rsquo;s quantile, not its mean.&rdquo; The guarantee is data-conditional
+  &mdash; conditional on the calibration draw, this note&rsquo;s axis &mdash; not
+  input-conditional: it moves along the fan, not across the
+  <a href="/papers/marginally-useful/">information gap</a>.</p>
+
   <div class="prevnext">
     <a href="/papers/">&larr; All papers</a>
     <span class="spacer"></span>
