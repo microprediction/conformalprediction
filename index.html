@@ -54,11 +54,11 @@
   <!-- ============================================================ -->
   <a id="demos"></a>
   <h2 id="how">1 &middot; How it works</h2>
-  <p>Hold out a calibration set, score how &ldquo;surprising&rdquo; each point is, and take the empirical quantile of those scores to size a band around new predictions. That is the whole method, model-agnostic, a few lines of code, and it delivers exactly what it promises.</p>
+  <p>Hold out a calibration set, score how &ldquo;surprising&rdquo; each point is, and take the empirical quantile of those scores to size a band around new predictions. That is the whole method: model-agnostic, a few lines of code.</p>
   <div class="cards">
     <a class="card" href="demos/01-how-conformal-works.html">
       <h3>How split conformal works</h3>
-      <p>Build a prediction band from nonconformity scores and watch it hit your target coverage. Sound, simple, and elegant.</p>
+      <p>Build a prediction band from nonconformity scores and watch it hit your target coverage.</p>
     </a>
     <a class="card" href="demos/21-herding-slots.html">
       <h3>Moving the balls, moving the slots</h3>
@@ -162,6 +162,10 @@
     <a class="card" href="demos/19-dependence-tax.html">
       <h3>The dependence tax</h3>
       <p>Barber &amp; Pananjady&rsquo;s Figure 1, live: split conformal on MA(t) noise loses coverage linearly in t/n &mdash; curves for n, 2n, 3n collapse onto one shallow line, an order of magnitude under the worst-case floor.</p>
+    </a>
+    <a class="card" href="demos/22-timeseries-fan.html">
+      <h3>The time-series fan</h3>
+      <p>Serial dependence moves both moments of realized coverage: the mean by a tax that vanishes with n, the dispersion by a long-run-variance factor that never does. Drag &phi; and watch the fan shift and widen.</p>
     </a>
     <a class="card" href="demos/05-drift-timeseries.html">
       <h3>Drift &amp; time series</h3>

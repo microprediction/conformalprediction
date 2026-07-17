@@ -58,6 +58,14 @@
   conditional information &mdash; belongs to the wrapped model, not to conformal prediction, and the
   dashed markers are open problems.</p>
 
+  <p>Why the wall is one structure rather than eight separate results: a procedure whose guarantee
+  holds for every continuous distribution is, by the classical characterization of
+  distribution-free statistics, a function of the <em>ranks</em>. The information that conditional
+  coverage and sharpness require lives in the <em>concomitants</em> &mdash; the x-values riding
+  alongside the order statistics &mdash; which the rank &sigma;-algebra discards by construction.
+  The left half of the map works inside the rank &sigma;-algebra; the right half asks about what it
+  discarded; the bricks are quantitative versions of that one decomposition.</p>
+
   <div style="position:relative;">
     <svg id="mapbox" viewBox="0 0 1100 780" preserveAspectRatio="xMidYMid meet"></svg>
     <div id="tooltip"></div>
@@ -176,11 +184,12 @@ const ITEMS = [
 {r:"measure", l:"Parimutuel", u:"/papers/parimutuel/", n:"The gap as the rent an X-informed bettor extracts."},
 {r:"measure", l:"Fan", u:"/papers/fan/", n:"Across-calibration dispersion of realized coverage — the orthogonal axis."},
 {r:"measure", l:"Slots (herding)", u:"/papers/herding/", n:"Why the certificate is counting, not concentration — and why counting cannot create information."},
+{r:"measure", l:"Two Prices", u:"/papers/two-prices/", n:"Dependence priced twice: a coverage tax that vanishes with n, and a sharpness rent ΔH = I(S₀; past) — the entropy-rate gap — that never does."},
 
 // ---------- bottom-right: CROSS THE GAP ----------
 {r:"cross", l:"The wrapped model", u:"/faq.html", n:"Quantile regression, GARCH-family, mixtures, flows, DeepAR: conditional information comes from modelling the conditional distribution. Not a conformal method — which is the point."},
 {r:"cross", l:"Orthogonal QR 21", u:"https://arxiv.org/abs/2106.00394", n:"Train the quantile model so miscoverage is independent of width — model training aimed at the gap."},
-{r:"open",  l:"I(R; past) (open)", u:"/timeseries-conditional.html", n:"The sharpness cost of marginal calibration on a stationary series. Nobody has priced it; the mirror of Barber–Pananjady."},
+{r:"open",  l:"I(R;past): general case (open)", u:"/timeseries-conditional.html", n:"The sharpness cost of marginality is priced for the single-shape family in the two-prices note (rent = entropy-rate gap). Open beyond that family, and with estimation costs for the feasible conditional model included."},
 {r:"open",  l:"width vs dependence (open)", u:"/timeseries-conditional.html", n:"A distribution-free-modulo-mixing width statement. Does not exist."},
 {r:"open",  l:"aimed slot steering (open)", u:"/papers/herding/", n:"Herding-like feedback in index space that balances the rank count conditionally. Localized weights are the first step; the ceiling is I(R;X)."},
 ];

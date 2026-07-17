@@ -93,19 +93,19 @@
   (<a href="/papers/marginally-useful/">Marginally Useful</a>) &mdash; and for a time series the ignored side
   information is the recent past itself.</p>
 
-  <h2>The open problem</h2>
+  <h2>The price, and what remains open</h2>
   <p>Barber &amp; Pananjady priced the <em>coverage</em> cost of dependence: at most
-  min<sub>&tau;</sub> {&tau;/n + 2&beta;(&tau;)}, tight, two-sided. Nobody has priced the <em>sharpness</em>
-  cost of marginality with comparable generality. The two are opposite sides of one coin: temporal dependence
-  is a small coverage tax on split conformal, but it is also an unclaimed sharpness subsidy &mdash; the past
-  carries information about the next score, and a marginal calibration quantile throws that information away.
-  The quantity that should appear in such a theorem is I(R; past), the mutual information between the conformal
-  rank and the recent history: zero exactly when marginal calibration is also past-conditional calibration, and
-  otherwise the rent a past-informed forecaster extracts from the marginal intervals, in the sense of the
-  <a href="/papers/parimutuel/">parimutuel note</a>. A stationary-series bound of the form &ldquo;excess width
-  of marginal split conformal over the past-conditional oracle, in terms of I(R; past) and the mixing
-  profile&rdquo; would complete the accounting that the coverage side now has. As far as we can tell, it does
-  not yet exist.</p>
+  min<sub>&tau;</sub> {&tau;/(n+1) + 2&beta;(&tau;)}, tight, two-sided, vanishing as the calibration grows.
+  The <em>sharpness</em> cost of marginality is priced in <a href="/papers/two-prices/">the two-prices
+  note</a>, for the single-shape family: the per-step log-score regret of the marginal predictive against the
+  past-conditional oracle equals the entropy-rate gap &Delta;H = I(S&#8320;; past) &mdash; the
+  <a href="/papers/marginally-useful/">information-gap identity</a> with the past as the side information
+  &mdash; and for Gaussian scores it exponentiates into width: oracle intervals are
+  e<sup>&minus;&Delta;H</sup> narrower at matched coverage, &radic;(1&minus;&phi;&sup2;) for AR(1). The
+  asymmetry is the point: the coverage tax vanishes in n, the sharpness rent never does. What remains open is
+  the general accounting &mdash; beyond the single-shape family, with estimation costs for the feasible
+  conditional model included, and a distribution-free-modulo-mixing width statement rather than an oracle
+  comparison.</p>
 
   <div class="prevnext">
     <a href="timeseries.html">&larr; Time series I: the coverage games</a>

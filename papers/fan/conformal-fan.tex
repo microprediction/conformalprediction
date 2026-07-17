@@ -530,7 +530,7 @@ increases variance \citep{cochran1977}, antithetic pairing helps for the monoton
 determinantal or repulsive designs give negative association with faster-than-independent
 concentration \citep{hough2006,bardenet2016}.
 
-\begin{remark}[What is and is not admissible]
+\begin{remark}[Admissible designs]
 The marginal guarantee needs each calibration score exchangeable with the test score, not the
 calibration scores independent of one another, so negative association is in principle compatible. But
 the routes differ in what they cost. Score-dependent curation of the calibration set, the obvious way
@@ -577,6 +577,33 @@ order statistics there and fattens the opposite end, so lower-tail dependence (C
 high, conformal quantile more than upper-tail dependence (Gumbel) --- the reverse of the naive guess,
 as the companion demonstration shows.
 \end{remark}
+
+\section{The time-series fan}\label{sec:tsfan}
+
+When the calibration scores are a stationary segment of a series --- the deployment mode priced
+by \citet{barberpananjady2026} --- the coupled-test caution of the setup applies: the coverage
+statement for the next step of the same series is theirs, not ours. What the machinery above
+supplies is the dispersion of the \emph{threshold} $U_{(k)}$ across calibration segments, and
+with it the second moment of realized coverage against the stationary law. The mean shifts by at most the switch-coefficient tax,
+$|\mathbb E[c]-(1-\alpha)|$ bounded through $\min_\tau\{\tau/(n+1)+2\beta(\tau)\}$ by their two-sided
+bounds. The variance is governed by the same covariance kernel as Theorem~\ref{thm:coeff}: in the
+Bahadur regime,
+\[
+\operatorname{Var}(c)\;=\;\frac{\sigma^2_{\mathrm{LR}}(1-\alpha)}{n}+o(1/n),
+\qquad
+\sigma^2_{\mathrm{LR}}(u)\;=\;\sum_{j\in\mathbb Z}\operatorname{Cov}\bigl(\mathbf 1\{U_0\le
+u\},\,\mathbf 1\{U_j\le u\}\bigr),
+\]
+the long-run variance of the sub-threshold indicator process at the operating quantile ---
+equivalently $2\pi$ times its spectral density at zero. For positively serially dependent scores
+$\sigma^2_{\mathrm{LR}}\ge\alpha(1-\alpha)$ and the fan widens by the constant factor
+$\sigma^2_{\mathrm{LR}}/(\alpha(1-\alpha))$, which does not shrink with $n$. Realized coverage on
+a time-series calibration set is thus approximately
+$\mathcal N\!\bigl(1-\alpha-\text{tax},\ \sigma^2_{\mathrm{LR}}/n\bigr)$: the mean damage
+vanishes at rate $1/n$ while the dispersion carries a permanent inflation factor. Dependence
+therefore presents three separate charges --- the vanishing mean tax, the fixed fan inflation,
+and the fixed sharpness rent of the companion note \citep{cotton_twoprices} --- and only the
+first is reduced by more calibration data.
 
 \section{Related work}
 

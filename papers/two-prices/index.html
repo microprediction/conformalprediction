@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>The two prices of dependence — note</title>
+<link rel="stylesheet" href="../../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/literature.html">Literature</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+  <p class="tag">Technical note</p>
+  <h1>The two prices of dependence</h1>
+  <p class="subtitle">A vanishing coverage tax, and a fixed sharpness rent.</p>
+
+  <p>
+    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="two-prices.pdf">Read the PDF</a>
+    <a class="card" style="display:inline-block;padding:10px 16px;" href="two-prices.tex">LaTeX source</a>
+  </p>
+
+  <h2>The result</h2>
+  <p>Temporal dependence charges split conformal two different prices. The coverage price is a
+  tax that vanishes with the calibration size: at most
+  \(\min_\tau\{\tau/(n+1)+2\beta(\tau)\}\) for a stationary \(\beta\)-mixing score process
+  (Barber&ndash;Pananjady). The sharpness price is a rent that does not: the per-step log-score
+  regret of the marginal predictive against the past-conditional oracle equals the entropy-rate
+  gap \(\Delta H = H(S_0)-h = I(S_0;\text{past})\), a constant independent of \(n\), untouched by
+  any re-levelling of the marginal shape. For Gaussian score processes the rent exponentiates
+  into width: oracle intervals are narrower by exactly \(e^{-\Delta H}\) at matched coverage
+  &mdash; \(\sqrt{1-\phi^2}\) for AR(1), so less than half the width at \(\phi=0.9\).</p>
+
+  <h2>The asymmetry</h2>
+  <p>Fix the dependence and grow \(n\): the tax is \(O(\log n/n)\); the rent is
+  \(-\tfrac12\log(1-\phi^2)\) at every \(n\). The two prices answer different questions &mdash;
+  what the certificate loses because the calibration data are dependent, versus what the forecast
+  loses because the calibration ignores the dependence. The time-series conformal literature has
+  concentrated on driving the first price to zero; the second is the one a forecaster pays at
+  every step, and no amount of calibration data reduces it. This resolves, for the single-shape
+  family, the pricing question posed on
+  <a href="/timeseries-conditional.html">the conditional-coverage page</a>: it is the
+  <a href="/papers/marginally-useful/">information-gap identity</a> with the side information
+  taken to be the past.</p>
+
+  <h2>Limits</h2>
+  <p>The comparison prices marginality against the oracle, not against a feasible estimator; the
+  width form is Gaussian; and when scores are residuals of a fixed predictor, dependence the
+  predictor already absorbs does not appear in \(\Delta H\). The direction of the asymmetry
+  survives all three limits: the tax vanishes in \(n\) and the rent does not.</p>
+
+  <div class="prevnext">
+    <a href="/papers/">&larr; All papers &amp; notes</a>
+    <span class="spacer"></span>
+    <a href="two-prices.pdf">Open the PDF &rarr;</a>
+  </div>
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Conformal Prediction: a practical guide.</span>
+    <span>Technical note.</span>
+  </div>
+</footer>
+</body>
+</html>
