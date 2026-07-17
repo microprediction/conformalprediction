@@ -216,14 +216,14 @@ for x_t, y_t, pred_t in stream:
 </code></pre>
 
   <div class="takeaway">
-    <p>If the actual problem is univariate distributional time-series, consider stopping here and
-    using <code>laplace</code> from the <a href="https://github.com/microprediction/skaters">skaters</a>
-    package instead. It models the conditional distribution directly, so it crosses the information
-    gap a conformal wrapper cannot: on thousands of economic series it wins on log-likelihood and
-    ties on CRPS, which is conformal&rsquo;s own metric. It is also far lighter, dependency-free and
-    online, where the conformal route means fitting AutoARIMA (or similar) and wrapping it in crepes
-    or ACI. The whole forecaster is one import (and <a href="demos/17-laplace-vs-conformal.html">a
-    demo</a> shows the two side by side):</p>
+    <p>If the actual problem is univariate distributional time-series, consider modelling the
+    conditional distribution directly rather than wrapping a point forecaster: that is what crosses
+    the information gap a conformal wrapper cannot. Any conditional-scale model does the job &mdash;
+    a t-GARCH fit is the classical choice and would likely do as well or better; the snippet below
+    uses <code>laplace</code> from the <a href="https://github.com/microprediction/skaters">skaters</a>
+    package only because it is online and keeps the example to a few lines
+    (<a href="demos/17-laplace-vs-conformal.html">a demo</a> shows it side by side with a conformal
+    wrap):</p>
 <pre><code>from skaters import laplace
 f = laplace(k=3)
 state = None
