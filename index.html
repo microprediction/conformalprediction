@@ -75,18 +75,18 @@
     <p class="lead" style="margin-top:10px;">This site began as a hunt for anything in conformal prediction that might improve the out-of-sample performance of autonomous time-series algorithms, the kind that run unattended at <a href="https://skaters.microprediction.org">skaters.microprediction.org</a>. It grew into a dozen or so interactive demonstrations and a few <a href="/papers/">notes</a>. The difficulty is only marginally calibrated: some of it is elementary, some the field has not yet noticed, but on average it is pitched exactly right.</p>
   </details>
 
+  <p>Everything below is something you can check by moving a slider.</p>
+
+  <!-- ============================================================ -->
+  <a id="demos"></a>
+  <h2 id="how">1 &middot; How Split Conformal Prediction works</h2>
+  <p>Hold out a calibration set, score how &ldquo;surprising&rdquo; each point is, and take the empirical quantile of those scores to size a band around new predictions. All of it fits in a few lines of model-agnostic code, and it delivers the following guarantee.</p>
   <blockquote>
     <p>Given exchangeable data, a model, and a nonconformity score, split conformal prediction returns a set \(C(X)\) with
     $$\mathbb{P}\big(Y_{n+1}\in C(X_{n+1})\big)\;\ge\;1-\alpha.$$
     A real and remarkable guarantee. The art is in reading it: the probability averages over the input \(X_{n+1}\), so it describes the <em>average</em> case, not necessarily the one in front of you.</p>
   </blockquote>
-
-  <p>Everything below is something you can check by moving a slider. The companion <a href="/papers/marginally-useful/">paper</a> states it precisely, with proofs and citations.</p>
-
-  <!-- ============================================================ -->
-  <a id="demos"></a>
-  <h2 id="how">1 &middot; How it works</h2>
-  <p>Hold out a calibration set, score how &ldquo;surprising&rdquo; each point is, and take the empirical quantile of those scores to size a band around new predictions. All of it fits in a few lines of model-agnostic code.</p>
+  <p>The companion <a href="/papers/marginally-useful/">paper</a> states this precisely, with proofs and citations.</p>
   <div class="cards">
     <a class="card" href="demos/01-how-conformal-works.html">
       <h3>How split conformal works</h3>
