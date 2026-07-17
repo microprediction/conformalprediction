@@ -55,6 +55,7 @@
     <div class="readouts" id="readouts"></div>
     <div class="controls" id="controls"></div>
   </div>
+  <p class="note">The same two knobs are repeated under every panel below; they are one control &mdash; move any copy and all five readings respond in lockstep.</p>
 
   <h2 style="margin-top:1.4em;">(i) A false-pooling cost</h2>
   <p>A single-shape system insists that, once the location \(\hat\mu\) is fixed, one residual
@@ -62,6 +63,7 @@
   (coloured, narrow for easy inputs, wide for hard ones) genuinely differ. The gap is the
   log-score you forfeit by pooling them into the one grey curve \(\bar r\).</p>
   <div class="canvas-box med demo"><canvas id="pool"></canvas></div>
+  <div class="controls ctlclone"></div>
 
   <h2 style="margin-top:1.4em;">(ii) An average log Bayes factor</h2>
   <p>Since \(I(R;X)=\mathbb{E}\,\log\frac{r(R\mid X)}{\bar r(R)}\), every observation contributes
@@ -69,6 +71,7 @@
   histogram is those per-sample log Bayes factors; the oracle&rsquo;s expected per-sample edge
   is their mean, and that mean is \(I(R;X)\).</p>
   <div class="canvas-box med demo"><canvas id="bayes"></canvas></div>
+  <div class="controls ctlclone"></div>
 
   <h2 style="margin-top:1.4em;">(iii) Conditional non-uniformity of conformal ranks</h2>
   <p>Let \(U=G(R)\) be the conformal rank under the pooled law &mdash; the PIT that signed CPS
@@ -76,6 +79,7 @@
   Conditionally it is not. Easy inputs (green) bunch \(U\) near \(\tfrac12\); hard inputs (red)
   push it to the tails. The average of that conditional non-uniformity is again \(I(R;X)\).</p>
   <div class="canvas-box med demo"><canvas id="ranks"></canvas></div>
+  <div class="controls ctlclone"></div>
 
   <h2 style="margin-top:1.4em;">(iv) A projection onto independence</h2>
   <p>\(I(R;X)=\mathrm{KL}\!\left(P_{X,R}\,\|\,P_X\!\otimes\!P_R\right)\): the joint
@@ -84,6 +88,7 @@
   \(x\). The right field is the independence model \(P_X\!\otimes\!\bar r\), every column
   identical. The structure the projection throws away is the gap.</p>
   <div class="canvas-box med demo"><canvas id="proj"></canvas></div>
+  <div class="controls ctlclone"></div>
 
   <h2 style="margin-top:1.4em;">(v) A Kelly betting rent</h2>
   <p>This is the one with teeth. By the log-optimal (Kelly) growth theorem, a gambler who knows
@@ -95,6 +100,7 @@
   r)=I(R;X)\): the same number, now in money. The per-round increments are exactly the log Bayes
   factors of panel (ii). Conformalizing re-levels the book; it cannot change the rent.</p>
   <div class="canvas-box med demo"><canvas id="wealth"></canvas></div>
+  <div class="controls ctlclone"></div>
 
   <div class="takeaway">
     <p>False pooling, an average log Bayes factor, non-uniform conformal ranks, a projection

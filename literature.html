@@ -74,6 +74,7 @@
     <li>Liang &amp; Barber (2025). <em>Algorithmic stability implies training-conditional coverage.</em> Annals of Statistics. <a href="https://arxiv.org/abs/2311.04295">arXiv:2311.04295</a></li>
     <li>Kuchibhotla (2020). <em>Exchangeability, conformal prediction, and rank tests.</em> <a href="https://arxiv.org/abs/2005.06095">arXiv:2005.06095</a> &mdash; conformal as a classical rank test.</li>
     <li>Marques F. (2025). <em>Universal distribution of the empirical coverage in split conformal prediction.</em> Stat. &amp; Prob. Letters. <a href="https://arxiv.org/abs/2303.02770">arXiv:2303.02770</a> &mdash; the exact Beta law of calibration-conditional coverage.</li>
+    <li>Barber &amp; Tibshirani (2025). <em>Unifying different theories of conformal prediction.</em> <a href="https://arxiv.org/abs/2504.02292">arXiv:2504.02292</a> &mdash; one frame for the many robustness-to-non-exchangeability results, each as an explicit deviation from exchangeability.</li>
   </ul>
 
   <h2>Game-theoretic foundations, e-values, exchangeability testing</h2>
@@ -160,20 +161,42 @@
     <li>Podkopaev &amp; Ramdas (2021). <em>Distribution-free uncertainty quantification for classification under label shift.</em> UAI. <a href="https://arxiv.org/abs/2103.03323">arXiv:2103.03323</a></li>
     <li>Park, Dobriban, Lee &amp; Bastani (2022). <em>PAC prediction sets under covariate shift.</em> ICLR. <a href="https://arxiv.org/abs/2106.09848">arXiv:2106.09848</a></li>
     <li>Prinster, Liu &amp; Saria (2022). <em>JAWS: auditing predictive uncertainty under covariate shift.</em> NeurIPS. <a href="https://arxiv.org/abs/2207.10716">arXiv:2207.10716</a> &mdash; weighted jackknife+.</li>
+    <li>Fannjiang, Bates, Angelopoulos, Listgarten &amp; Jordan (2022). <em>Conformal prediction under feedback covariate shift for biomolecular design.</em> PNAS. <a href="https://arxiv.org/abs/2202.03613">arXiv:2202.03613</a> &mdash; exact coverage when the model chooses its own next inputs.</li>
+    <li>Prinster, Stanton, Liu &amp; Saria (2024). <em>Conformal validity guarantees exist for any data distribution (and how to find them).</em> ICML. <a href="https://arxiv.org/abs/2405.06627">arXiv:2405.06627</a> &mdash; weighted conformal extends in principle to any joint distribution; the catch is that you must know the weights, which a time series rarely tells you.</li>
   </ul>
 
-  <h2>Time series and non-exchangeability</h2>
+  <h2 id="time-series">Time series and non-exchangeability</h2>
+  <p>A guided tour of this section &mdash; which game each result plays, and what remains open &mdash; is on
+  the time-series pages: <a href="timeseries.html">the coverage games</a> and
+  <a href="timeseries-conditional.html">conditional coverage and sharpness</a>.</p>
+  <p>Two threads run through this literature. One modifies the method to survive
+  dependence &mdash; blocks, ensembles, weights, fitted residual quantiles. The other
+  leaves split conformal untouched and prices the damage: how much coverage does
+  temporal dependence actually cost? That accounting is now essentially settled, and the
+  answer is remarkably benign: the loss is (dependence range)&thinsp;/&thinsp;(calibration
+  size), linear and tight, with a matching bound against over-coverage. First the
+  accounting:</p>
   <ul class="refs">
-    <li>Chernozhukov, W&uuml;thrich &amp; Zhu (2018). <em>Exact and robust conformal inference for dependent data.</em> COLT. <a href="https://arxiv.org/abs/1802.06300">arXiv:1802.06300</a> &mdash; block permutations.</li>
-    <li>Stankevi&#269;i&#363;t&#279;, Alaa &amp; van der Schaar (2021). <em>Conformal time-series forecasting.</em> NeurIPS. <a href="https://proceedings.neurips.cc/paper/2021/hash/312f1ba2a72318edaaa995a67835fad5-Abstract.html">proceedings</a></li>
-    <li>Xu &amp; Xie (2021). <em>Conformal prediction interval for dynamic time-series</em> (EnbPI). ICML. <a href="https://arxiv.org/abs/2010.09107">arXiv:2010.09107</a></li>
-    <li>Xu &amp; Xie (2023). <em>Sequential predictive conformal inference for time series</em> (SPCI). ICML. <a href="https://arxiv.org/abs/2212.03463">arXiv:2212.03463</a></li>
-    <li>Lin, Trivedi &amp; Sun (2022). <em>Conformal prediction with temporal quantile adjustments</em> (TQA). NeurIPS. <a href="https://arxiv.org/abs/2205.09940">arXiv:2205.09940</a></li>
-    <li>Sun &amp; Yu (2024). <em>Copula conformal prediction for multi-step time series</em> (CopulaCPTS). ICLR. <a href="https://arxiv.org/abs/2212.03281">arXiv:2212.03281</a></li>
-    <li>Auer, Gauch, Klotz &amp; Hochreiter (2023). <em>Conformal prediction for time series with modern Hopfield networks</em> (HopCPT). NeurIPS. <a href="https://arxiv.org/abs/2303.12783">arXiv:2303.12783</a></li>
-    <li>Barber, Cand&egrave;s, Ramdas &amp; Tibshirani (2023). <em>Conformal prediction beyond exchangeability.</em> Annals of Statistics. <a href="https://arxiv.org/abs/2202.13415">arXiv:2202.13415</a> &mdash; the coverage gap bounded by a total-variation term.</li>
-    <li>Oliveira, Orenstein, Ramos &amp; Romano (2024). <em>Split conformal prediction and non-exchangeable data.</em> JMLR. <a href="https://arxiv.org/abs/2203.15885">arXiv:2203.15885</a></li>
-    <li>Barber &amp; Pananjady (2026). <em>Predictive inference for time series: why is split conformal effective despite temporal dependence?</em> ALT. <a href="https://arxiv.org/abs/2510.02471">arXiv:2510.02471</a></li>
+    <li>Barber, Cand&egrave;s, Ramdas &amp; Tibshirani (2023). <em>Conformal prediction beyond exchangeability.</em> Annals of Statistics. <a href="https://arxiv.org/abs/2202.13415">arXiv:2202.13415</a> &mdash; the general-purpose robustness result: the coverage gap bounded by a total-variation term per calibration point. But swapping single points is the wrong deformation for a time series &mdash; under short-range dependence the TV term stays large &mdash; which is what the two entries below repair.</li>
+    <li>Oliveira, Orenstein, Ramos &amp; Romano (2024). <em>Split conformal prediction and non-exchangeable data.</em> JMLR. <a href="https://arxiv.org/abs/2203.15885">arXiv:2203.15885</a> &mdash; blocking plus empirical-process concentration: unmodified split conformal on a &beta;-mixing series loses at most on the order of &radic;(t<sub>mix</sub>/n) of its coverage. The first general no-modification guarantee, at the classical square-root rate.</li>
+    <li>Barber &amp; Pananjady (2026). <em>Predictive inference for time series: why is split conformal effective despite temporal dependence?</em> ALT. <a href="https://arxiv.org/abs/2510.02471">arXiv:2510.02471</a> &mdash; the sharp accounting. A &ldquo;switch coefficient&rdquo; (the total variation between the score sequence and a copy with a block of &tau; entries deleted and one point rotated to the end) bounds the coverage loss by min<sub>&tau;</sub> {&tau;/n + 2&beta;(&tau;)} &mdash; linear in &tau;/n where blocking arguments gave the square root, tight over stationary &beta;-mixing processes, and paired with a matching upper bound so the set cannot silently over-cover either. Handles predictors with memory L (an extra L/n) and calibration-trained scores (a second buffer &tau;<sub>&#8727;</sub> after the training block). The trick is quantile stability under insertion and deletion rather than concentration. The best explanation yet of why vanilla split conformal works on time series.</li>
+    <li>Chernozhukov, W&uuml;thrich &amp; Zhu (2018). <em>Exact and robust conformal inference for dependent data.</em> COLT. <a href="https://arxiv.org/abs/1802.06300">arXiv:1802.06300</a> &mdash; permute blocks rather than points: approximately valid under ergodicity, exact under block-exchangeability.</li>
+    <li>Chernozhukov, W&uuml;thrich &amp; Zhu (2021). <em>Distributional conformal prediction.</em> PNAS. <a href="https://arxiv.org/abs/1909.07889">arXiv:1909.07889</a> &mdash; probability-integral-transform scores with permuted estimated ranks; built for dependent-data uses such as k-step forecasts, synthetic controls, and counterfactuals.</li>
+  </ul>
+  <p>Background for the bounds above, from the mixing literature:</p>
+  <ul class="refs">
+    <li>Doukhan (1994). <em>Mixing: properties and examples.</em> Springer &mdash; the standard reference for &beta;-mixing coefficients.</li>
+    <li>Yu (1994). <em>Rates of convergence for empirical processes of stationary mixing sequences.</em> Annals of Probability &mdash; the blocking technique behind most square-root-rate analyses under mixing.</li>
+    <li>Mohri &amp; Rostamizadeh (2010). <em>Stability bounds for stationary &phi;-mixing and &beta;-mixing processes.</em> JMLR. <a href="https://jmlr.org/papers/v11/mohri10a.html">jmlr.org</a> &mdash; generalization under dependence, same toolbox.</li>
+  </ul>
+  <p>And the modified methods:</p>
+  <ul class="refs">
+    <li>Stankevi&#269;i&#363;t&#279;, Alaa &amp; van der Schaar (2021). <em>Conformal time-series forecasting.</em> NeurIPS. <a href="https://proceedings.neurips.cc/paper/2021/hash/312f1ba2a72318edaaa995a67835fad5-Abstract.html">proceedings</a> &mdash; Bonferroni across horizons for RNN forecasts; the guarantee runs across independent series, not along a single path.</li>
+    <li>Xu &amp; Xie (2021; TPAMI 2023). <em>Conformal prediction interval for dynamic time-series</em> (EnbPI). ICML. <a href="https://arxiv.org/abs/2010.09107">arXiv:2010.09107</a> &mdash; out-of-bag ensemble residuals along a single series; approximate coverage under strongly-mixing errors <em>and</em> a consistent predictor &mdash; the second assumption is the one a black box may not honour.</li>
+    <li>Xu &amp; Xie (2023). <em>Sequential predictive conformal inference for time series</em> (SPCI). ICML. <a href="https://arxiv.org/abs/2212.03463">arXiv:2212.03463</a> &mdash; replaces the empirical residual quantile with a fitted conditional quantile of recent residuals.</li>
+    <li>Lin, Trivedi &amp; Sun (2022). <em>Conformal prediction with temporal quantile adjustments</em> (TQA). NeurIPS. <a href="https://arxiv.org/abs/2205.09940">arXiv:2205.09940</a> &mdash; adjusts the quantile level per time step from recent errors.</li>
+    <li>Sun &amp; Yu (2024). <em>Copula conformal prediction for multi-step time series</em> (CopulaCPTS). ICLR. <a href="https://arxiv.org/abs/2212.03281">arXiv:2212.03281</a> &mdash; a copula across horizons for joint multi-step coverage.</li>
+    <li>Auer, Gauch, Klotz &amp; Hochreiter (2023). <em>Conformal prediction for time series with modern Hopfield networks</em> (HopCPT). NeurIPS. <a href="https://arxiv.org/abs/2303.12783">arXiv:2303.12783</a> &mdash; attention over similar past regimes to reweight residuals.</li>
   </ul>
 
   <h2>Online and adaptive</h2>
@@ -183,6 +206,7 @@
     <li>Zaffran, F&eacute;ron, Goude, Josse &amp; Dieuleveut (2022). <em>Adaptive conformal predictions for time series</em> (AgACI). ICML. <a href="https://arxiv.org/abs/2202.07282">arXiv:2202.07282</a></li>
     <li>Bhatnagar, Wang, Xiong &amp; Bai (2023). <em>Improved online conformal prediction via strongly adaptive online learning.</em> ICML. <a href="https://arxiv.org/abs/2302.07869">arXiv:2302.07869</a></li>
     <li>Angelopoulos, Cand&egrave;s &amp; Tibshirani (2023). <em>Conformal PID control for time series prediction.</em> NeurIPS. <a href="https://arxiv.org/abs/2307.16895">arXiv:2307.16895</a></li>
+    <li>Yang, Cand&egrave;s &amp; Lei (2024). <em>Bellman conformal inference: calibrating prediction intervals for time series.</em> <a href="https://arxiv.org/abs/2402.05203">arXiv:2402.05203</a> &mdash; the rare entry that makes width the objective: minimize average interval length subject to long-run coverage, by dynamic programming over multi-step forecasts. An optimizer, not a guarantee &mdash; there is still no distribution-free width theorem in this thread.</li>
   </ul>
 
   <h2>Conformal predictive distributions and systems</h2>

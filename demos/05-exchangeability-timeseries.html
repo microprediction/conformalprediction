@@ -2,85 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<title>Exchangeability &amp; time series — Conformal Prediction</title>
-<meta property="og:image" content="https://conformalprediction.net/og.png" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
-<link rel="stylesheet" href="../css/style.css" />
-<script>
-  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
-</script>
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<title>Drift &amp; time series — Conformal Prediction</title>
+<link rel="canonical" href="https://conformalprediction.net/demos/05-drift-timeseries.html" />
+<meta http-equiv="refresh" content="0; url=/demos/05-drift-timeseries.html" />
+<meta name="robots" content="noindex" />
+<script>location.replace("/demos/05-drift-timeseries.html" + location.hash);</script>
 </head>
 <body>
-<header class="site">
-  <div class="wrap">
-    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
-    <nav>
-      <a href="/index.html">Demonstrations</a>
-      <a href="/literature.html">Literature</a>
-      <a href="/applications.html">Applications</a>
-      <a href="/recipes.html">Code</a>
-      <a href="/benchmark.html">Example</a>
-      <a href="/faq.html">FAQ</a>
-      <a href="/papers/">Papers</a>
-    </nav>
-  </div>
-</header>
-
-
-<main>
-<div class="wrap">
-
-  <p class="tag">Demonstration</p>
-  <h1>Exchangeability &amp; time series</h1>
-  <p class="subtitle">Fixed split conformal is a straw man here. The adaptive methods are not, so judge everyone on a proper score.</p>
-
-  <p>Every coverage statement in conformal prediction is paid for by one assumption: the calibration data and the future point are exchangeable, their joint distribution is invariant to reordering. That is plausible for an i.i.d. sample. It is rarely true for a series unfolding in time, where the level trends and occasionally jumps to a new regime. A <em>fixed</em> split-conformal band that freezes a single width does not weaken gracefully under drift; it simply stops covering.</p>
-
-  <p>But it would be cheap to stop there. The literature has strong online repairs, and a fair test pits them not only against fixed split but against a plain probabilistic model, and scores all of them on a <em>proper</em> criterion, not marginal coverage alone (which several methods hit by construction). So below we forecast a nonstationary series \(y_t = \text{level}_t + \sigma_t\,\varepsilon_t\) with known, time-varying \(\sigma_t\), a trend, a regime jump at the orange line, and a high-volatility block afterwards. The point forecast \(\hat y_t\) is a trivial rolling mean. We calibrate on \([0,t_0]\) (the dashed line) and then run five methods online over \(t>t_0\), all consuming the same \(\hat y_t\):</p>
-
-  <ul>
-    <li>fixed split (CP), constant half-width \(q\) from the calibration residuals. The straw man, kept for contrast.</li>
-    <li>ACI (Gibbs &amp; Candès, 2021), online \(\alpha_t\), width from the \((1-\alpha_t)\) quantile of a trailing window of \(|y-\hat y|\), updated by \(\alpha_{t+1}=\operatorname{clip}\!\big(\alpha_t+\gamma(\alpha-\mathrm{err}_t)\big)\).</li>
-    <li>conformal PID (after Angelopoulos, Candès &amp; Tibshirani, 2024), trailing-quantile base radius plus an integral correction on the running coverage error.</li>
-    <li>NexCP (weighted) (Barber et&nbsp;al., 2023), a recency-weighted quantile of trailing residuals, weights \(\rho^{\,\text{age}}\).</li>
-    <li>EWMA-vol Gaussian, the yardstick: estimate the conditional sd by RiskMetrics EWMA of squared residuals (\(\lambda=0.94\)) and emit \(\hat y_t \pm z\,\sigma_t\). This models the spread directly, so it also returns a full predictive distribution.</li>
-  </ul>
-
-  <p>Pick the method shown in the main panel; turn up <em>drift</em> and watch the green points go red for fixed split. The readouts report, for the selected method, marginal coverage, the worst-window coverage (the local collapse the marginal hides), and the interval (Winkler) score at level \(1-\alpha\),
-  $$\mathrm{IS} = \overline{\;(\hat h-\hat\ell) + \tfrac{2}{\alpha}(\hat\ell-y)\mathbf 1\{y<\hat\ell\} + \tfrac{2}{\alpha}(y-\hat h)\mathbf 1\{y>\hat h\}\;},$$
-  a proper score that rewards narrow bands and penalises misses, lower is better.</p>
-
-  <div class="demo">
-    <div class="canvas-box tall"><canvas id="main"></canvas></div>
-    <div class="readouts" id="readouts"></div>
-    <div class="controls" id="controls"></div>
-  </div>
-
-  <p>The second panel overlays the rolling coverage (trailing 80 steps) of whichever methods you tick on, against the dashed target. This is where you see fixed split (blue) collapse after the regime jump while ACI, conformal PID and the EWMA model track \(1-\alpha\). They are doing real work, they are not straw men.</p>
-
-  <div class="canvas-box med demo"><canvas id="cov"></canvas></div>
-  <p class="note">Fixed split sits near target while the data are roughly stationary, then collapses once the trend and the volatility block bite. The adaptive conformal methods and the EWMA-vol model oscillate around target because they re-estimate the width from recent realized residuals. Note what stays true for <em>all</em> of them: the trailing window dips hard right after the jump. The long-run average recovers; the window you are standing in does not.</p>
-
-  <div class="takeaway">
-    <p>Takeaway. Two readings, both from <a href="../benchmark.html">the worked example</a>. First, fixed split conformal really does collapse under drift (≈0.56 marginal, ≈0.17 worst-window), a straw man. But ACI, conformal PID and NexCP genuinely recover long-run and marginal coverage; they are competitive, not strawmen. Second, the repair is <em>conditional modeling</em>, not the conformal step itself: a plain EWMA-volatility Gaussian matches the adaptive conformal methods on the interval score (≈6.9 vs ≈7.0, against an oracle ≈5.5) <em>and</em> returns a full predictive distribution. Where conformal helps under drift, it helps by adapting the width to recent residuals, local conditional modeling, with conformal supplying the coverage leveling on top. And none of these delivers per-step <em>conditional</em> coverage: even the oracle&rsquo;s worst-window coverage is ~0.82. The repairs buy long-run/marginal coverage, never coverage <em>now</em>. <a href="/papers/marginally-useful/">The paper</a> works through why. <a href="06-conformal-vs-recalibration.html">Conformal vs. recalibration</a> asks whether plain probabilistic recalibration would have served you better all along.</p>
-  </div>
-
-  <div class="prevnext">
-    <a href="04-coverage-vs-logscore.html">&larr; Coverage &perp; log-score</a>
-    <span class="spacer"></span>
-    <a href="06-conformal-vs-recalibration.html">Conformal vs. recalibration &rarr;</a>
-  </div>
-
-</div>
-  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
-</main>
-
-<footer class="site"><div class="wrap"><span>Marginally Useful</span><span>Demonstration</span></div></footer>
-
-<script type="module" src="../js/demo05.js"></script>
+<p>This page moved to <a href="/demos/05-drift-timeseries.html">/demos/05-drift-timeseries.html</a>.</p>
 </body>
 </html>
