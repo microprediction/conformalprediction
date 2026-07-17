@@ -96,16 +96,17 @@
   </div>
 
   <div class="card" style="padding:16px 20px;margin-top:18px;">
-    <h2 style="margin-top:0;"><a href="/papers/herding/">Moving the Slots, Not the Balls</a></h2>
-    <p class="note" style="margin-top:2px;">conformal prediction as the contragredient of herding</p>
-    <p>Herding moves the particles to balance a fixed target, earning 1/n where Monte Carlo gets
-    1/&radic;n. Conformal prediction&rsquo;s coverage proof is the dual operation: the scores never
-    move, and the designation &ldquo;test&rdquo; is transported through the slots &mdash; exactly
-    &lceil;(1&minus;&alpha;)(n+1)&rceil; of the n+1 placements are covered, deterministically, for
-    any score vector. The duality is stated on the permutation pairing, and it reads the
-    Barber&ndash;Pananjady time-series bound as index-space low-discrepancy accounting: &tau;/n for
-    sacrificed slots plus a total-variation charge for failed rotation invariance. No square root,
-    for the same reason herding has none.</p>
+    <h2 style="margin-top:0;"><a href="/papers/herding/">Herding as the Contragredient of Conformal Prediction</a></h2>
+    <p class="note" style="margin-top:2px;">two 1/n mechanisms, one pairing &mdash; and conformal came first</p>
+    <p>Conformal calibration and herding each earn 1/n from a cumulative discrepancy held bounded
+    by an absolute constant, where sampling gives 1/&radic;n. The note treats the two symmetrically
+    and proves they act on opposite sides of the pairing &lang;h,&nu;&rang;: herding steers the
+    empirical measure against fixed tests; conformal steers the acceptance functional &mdash; and
+    transports the evaluation index &mdash; against the fixed empirical measure of scores, where a
+    counting identity makes exactly &lceil;(1&minus;&alpha;)(n+1)&rceil; of the n+1 placements
+    covered for any scores. The same ledger prices dependence: &tau;/(n+1) for deleted slots plus
+    a total-variation charge, with no square root &mdash; the Barber&ndash;Pananjady rate, read
+    across the pairing.</p>
     <p style="margin-bottom:0;">
       <a href="/papers/herding/">Read more &rarr;</a>
       &nbsp;&middot;&nbsp;
