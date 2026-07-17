@@ -42,7 +42,7 @@
 
   <ul>
     <li><strong>conformal (split)</strong>: a constant half-width \(q\) from the calibration residual quantile, \(\hat y_t\pm q\). The implied predictive is a Gaussian of constant scale. This is what wrapping a point forecaster (AutoARIMA, ETS, &hellip;) in crepes or MAPIE gives you.</li>
-    <li><strong>laplace-style</strong>: an online conditional distribution. Here, illustratively, a RiskMetrics EWMA volatility recalibrated by one scale so its calibration coverage hits target. The real <a href="https://github.com/microprediction/skaters">skaters</a> <code>laplace</code> is a likelihood-weighted ensemble that does at least this well; the principle is the same, model the conditional spread directly.</li>
+    <li><strong>laplace-style</strong>: an online conditional distribution. Here, illustratively, a RiskMetrics EWMA volatility recalibrated by one scale so its calibration coverage hits target. It stands in for any conditional-scale model &mdash; a t-GARCH fit, or the <a href="https://github.com/microprediction/skaters">skaters</a> <code>laplace</code> filter; the principle is the same, model the conditional spread directly.</li>
   </ul>
 
   <p>Both clear the marginal coverage target, so the conformal guarantee and the model&rsquo;s calibration agree there. The readouts report, for each (conformal | laplace), marginal coverage, mean half-width (sharpness), mean log-likelihood, and CRPS. Turn up the volatility contrast and watch the laplace band breathe while the conformal band stays rigid; slide it back to zero and the two coincide, since homoscedastic data gives the conditional model nothing to exploit.</p>
