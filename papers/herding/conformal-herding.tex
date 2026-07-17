@@ -36,8 +36,7 @@ bilinear pairing $\langle h,\nu\rangle=\int h\,d\nu$ while a cumulative discrepa
 by a constant, which is where both $O(1/n)$ rates come from. The relation is useful exactly
 insofar as proofs cross it, and we cross it in both directions through a stability lemma for the
 pairing: the coverage floor of \citet{barberpananjady2026} for split conformal on $\beta$-mixing
-series factors into the lemma's two Lipschitz legs --- buffer deletion as a measure perturbation,
-the switch coefficient as a distributional total variation --- which is why their rate is linear
+series factors into the lemma's two Lipschitz legs (buffer deletion as a measure perturbation; the switch coefficient as a distributional total variation), which is why their rate is linear
 in $\tau/n$ where blocking arguments give $\sqrt{\tau/n}$; and, in the reverse direction, the
 herding argument transfers to the calibration set, so that a low-discrepancy design makes
 realized coverage deterministic to $O(1/n)$. The conformal mechanism (late 1990s) predates
@@ -172,8 +171,7 @@ bilinear pairing between bounded test functions $h$ and finite measures $\nu$,
 \]
 Each mechanism controls one argument of this pairing and holds the other fixed. Herding fixes the
 family of tests (the coordinates of $\phi$, whose $\nu$-averages are to match $\mu$) and
-constructs the measure, $\nu_n=\frac1n\sum_t\delta_{x_t}$. Conformal calibration fixes the
-measure --- the empirical distribution of scores --- and constructs the test $h_{q_n}$; its
+constructs the measure, $\nu_n=\frac1n\sum_t\delta_{x_t}$. Conformal calibration fixes the measure, the empirical distribution of scores, and constructs the test $h_{q_n}$; its
 validity proof additionally moves the evaluation index, as follows.
 
 Let $\rho$ denote the permutation representation of the symmetric group $\mathfrak S_{n+1}$ on
@@ -189,8 +187,7 @@ coordinate $i$ deleted. Then for every $\pi\in\mathfrak S_{n+1}$,
 \chi_{n+1}\bigl(\rho(\pi)s\bigr)\;=\;\chi_{\pi^{-1}(n+1)}(s).
 \]
 Consequently the average of $\chi_{n+1}$ over rearrangements of the data equals the average of
-$s\mapsto\chi_i(s)$ over placements $i$ of the evaluation index --- equivalently, over the orbit
-$\{\rho^{*}(\pi)\,e^{*}_{n+1}\}$ of the evaluation functional at fixed data --- and
+$s\mapsto\chi_i(s)$ over placements $i$ of the evaluation index (equivalently, over the orbit $\{\rho^{*}(\pi)\,e^{*}_{n+1}\}$ of the evaluation functional at fixed data), and
 Corollary~\ref{cor:valid} may be proved on either side of the pairing.
 \end{proposition}
 
@@ -327,9 +324,7 @@ The duality concerns the finite-sample ledger only. The passage from
 Proposition~\ref{prop:count} to Corollary~\ref{cor:valid} is exchangeability's, or, in
 Section~\ref{sec:bp}, its mixing surrogate's; no bookkeeping supplies it. Nor does control of
 thresholds and labels create information: it re-levels coverage while conditional sharpness
-remains a property of the scores \citep{cotton_marginally}. Whether the steering can be aimed
-conditionally --- selecting or reweighting calibration slots to balance the rank count given the
-input, as herding aims its particles at a target --- is open; localized and weighted conformal
+remains a property of the scores \citep{cotton_marginally}. Whether the steering can be aimed conditionally is open: selecting or reweighting calibration slots to balance the rank count given the input, as herding aims its particles at a target. Localized and weighted conformal
 methods are the nearest existing steps, and the same information-theoretic ceiling applies to
 them.
 \end{remark}

@@ -54,9 +54,7 @@
   |y &minus; f&#770;(x)| / &sigma;&#770;(past), quantile scores with lagged covariates, SPCI&rsquo;s fitted
   conditional quantile of recent residuals, HopCPT&rsquo;s attention over similar past regimes, TQA&rsquo;s
   per-step quantile adjustment. This is the right default in practice, and the <a href="benchmark.html">worked
-  example</a> shows both its power and its ceiling: the conditional quality is exactly the conditional quality
-  of the wrapped model &mdash; raw quantile regression ties conformalized quantile regression on conditional
-  metrics &mdash; while the conformal layer contributes the marginal certificate on top. The certificate never
+  example</a> shows both its power and its ceiling: the conditional quality is exactly the conditional quality of the wrapped model. Raw quantile regression ties conformalized quantile regression on conditional metrics, while the conformal layer contributes the marginal certificate on top. The certificate never
   becomes conditional; it just stops being violated so visibly, and by Barber &amp; Pananjady&rsquo;s
   accounting the marginal certificate survives the dependence for any of these scores.</p>
 
@@ -74,9 +72,7 @@
   <h2>Route 3: make width the objective</h2>
   <p>Bellman conformal inference (Yang, Cand&egrave;s &amp; Lei 2024) treats interval length as the thing to
   minimize, subject to long-run coverage, and solves the resulting stochastic control problem by dynamic
-  programming over multi-step forecasts. It fixes the known degeneracy of the online game &mdash; adaptive
-  methods can satisfy their guarantee with intervals oscillating between empty and infinite &mdash; and
-  empirically produces much shorter intervals. It is an optimizer, not a theorem: no distributional width
+  programming over multi-step forecasts. It fixes the known degeneracy of the online game: adaptive methods can satisfy their guarantee with intervals oscillating between empty and infinite. Empirically it produces much shorter intervals. It is an optimizer, not a theorem: no distributional width
   guarantee is claimed, and by the structural point above, none could be without model assumptions. The
   consistency-based width results (EnbPI, SPCI converging to oracle width) live in the same trade: assume the
   model learns the truth, and sharpness follows from the assumption.</p>
@@ -98,9 +94,7 @@
   min<sub>&tau;</sub> {&tau;/(n+1) + 2&beta;(&tau;)}, tight, two-sided, vanishing as the calibration grows.
   The <em>sharpness</em> cost of marginality is priced in <a href="/papers/two-prices/">the two-prices
   note</a>, for the single-shape family: the per-step log-score regret of the marginal predictive against the
-  past-conditional oracle equals the entropy-rate gap &Delta;H = I(S&#8320;; past) &mdash; the
-  <a href="/papers/marginally-useful/">information-gap identity</a> with the past as the side information
-  &mdash; and for Gaussian scores it exponentiates into width: oracle intervals are
+  past-conditional oracle equals the entropy-rate gap &Delta;H = I(S&#8320;; past). That is the <a href="/papers/marginally-useful/">information-gap identity</a> with the past as the side information. For Gaussian scores it exponentiates into width: oracle intervals are
   e<sup>&minus;&Delta;H</sup> narrower at matched coverage, &radic;(1&minus;&phi;&sup2;) for AR(1). The
   asymmetry is the point: the coverage tax vanishes in n, the sharpness rent never does. What remains open is
   the general accounting &mdash; beyond the single-shape family, with estimation costs for the feasible

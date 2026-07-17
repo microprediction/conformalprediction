@@ -272,8 +272,7 @@ separate tightness lemma.
 
 \section{The single level: partial progress and a conjecture}
 
-Everything above is proved for general negative association. The single conformal level --- the
-operationally relevant one --- is not, and the obstruction is exactly why the aggregate succeeds: the
+Everything above is proved for general negative association. The single conformal level, the operationally relevant one, is not, and the obstruction is exactly why the aggregate succeeds: the
 step $\mathbf 1\{N(u)<k\}$ behind a single $\operatorname{Var}(U_{(k)})$ is neither concave nor convex,
 so the convex order does not sign it, whereas the smooth aggregate functional $\min(j,n-N)$ is concave
 and it does. We collect here what \emph{is} established at this level --- exactly on the Gaussian scale,
@@ -550,8 +549,7 @@ $1-\alpha$ (the mean is not pinned), so coverage that is both reproducible \emph
 a \emph{mean-preserving} symmetric design. Distribution-free validity and minimal coverage dispersion
 cannot both be driven to their limit at once, save in the degenerate zero-fan grid.
 A deeper caveat: the dispersion is a \emph{within-model} quantity, computed with the marginal $F$ and
-the copula $C$ held fixed. Shrinking it by design lowers sampling variability but does nothing for
-model risk --- whether $F$ is the right target at all --- and removes the run-to-run scatter that is
+the copula $C$ held fixed. Shrinking it by design lowers sampling variability but does nothing for model risk (whether $F$ is the right target at all) and removes the run-to-run scatter that is
 the cheapest diagnostic of misspecification. A vanishing fan against an assumed $F$ certifies
 reproducibility, not correctness; the zero-fan grid reads $1-\alpha$ every draw by construction, not
 because the world obliges.
@@ -580,8 +578,7 @@ as the companion demonstration shows.
 
 \section{The time-series fan}\label{sec:tsfan}
 
-When the calibration scores are a stationary segment of a series --- the deployment mode priced
-by \citet{barberpananjady2026} --- the coupled-test caution of the setup applies: the coverage
+When the calibration scores are a stationary segment of a series (the deployment mode priced by \citealp{barberpananjady2026}), the coupled-test caution of the setup applies: the coverage
 statement for the next step of the same series is theirs, not ours. What the machinery above
 supplies is the dispersion of the \emph{threshold} $U_{(k)}$ across calibration segments, and
 with it the second moment of realized coverage against the stationary law. The mean shifts by at most the switch-coefficient tax,
@@ -601,9 +598,7 @@ $\sigma^2_{\mathrm{LR}}/(\alpha(1-\alpha))$, which does not shrink with $n$. Rea
 a time-series calibration set is thus approximately
 $\mathcal N\!\bigl(1-\alpha-\text{tax},\ \sigma^2_{\mathrm{LR}}/n\bigr)$: the mean damage
 vanishes at rate $1/n$ while the dispersion carries a permanent inflation factor. Dependence
-therefore presents three separate charges --- the vanishing mean tax, the fixed fan inflation,
-and the fixed sharpness rent of the companion note \citep{cotton_twoprices} --- and only the
-first is reduced by more calibration data.
+therefore presents three separate charges: the vanishing mean tax, the fixed fan inflation, and the fixed sharpness rent of the companion note \citep{cotton_twoprices}. Only the first is reduced by more calibration data.
 
 \section{Related work}
 
@@ -615,9 +610,7 @@ $\mathrm{Dirichlet}(1,\dots,1)$ weights on the ordered calibration losses via th
 Aitchison--Dunsmore quantile-spacing result and report a posterior over realized risk: with the
 0--1 miscoverage loss their construction collapses to the Beta fan above, their recovery of
 conformal risk control is the fan's \emph{mean}, and their highest-posterior-density rule is the
-prescription ``report the fan's quantile, not its mean.'' Their guarantee is what they call
-data-conditional --- conditional on the calibration draw, our axis --- and, as they note, not
-input-conditional; it moves along the fan, not across the information gap. Negative association and its consequences are \citet{joagdev1983}; that negatively associated
+prescription ``report the fan's quantile, not its mean.'' Their guarantee is what they call data-conditional (conditional on the calibration draw, our axis) and, as they note, not input-conditional; it moves along the fan, not across the information gap. Negative association and its consequences are \citet{joagdev1983}; that negatively associated
 sums are dominated in convex order by independent ones is \citet{shao2000}, and sampling without
 replacement concentrates at least as tightly as with replacement \citep{serfling1974}. The total
 positivity behind the single-crossing step is \citet{karlin1968}; that an order statistic of a
