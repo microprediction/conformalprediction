@@ -97,6 +97,7 @@ const CLUSTERS = {
 const NODES = [
  {id:"gap", label:"I(R;X) — THE GAP", c:"gap", r:15, url:"/papers/marginally-useful/", note:"The residual-information gap: coverage–sharpness shortfall = mutual information between residual and input. The quantity no re-levelling of coverage can touch."},
  {id:"parimutuel", label:"Parimutuel rent", c:"gap", url:"/papers/parimutuel/", note:"The same gap derived from a betting mechanism: an X-informed bettor grows wealth against the conformal book at rate I(R;X)."},
+ {id:"twoprices", label:"Two prices", c:"gap", url:"/papers/two-prices/", note:"The coverage tax of dependence vanishes with n; the sharpness rent ΔH = I(S₀; past) never does — the information-gap identity with the past as the side information."},
  {id:"definetti", label:"Feynman–Wigner sign", c:"gap", url:"/papers/definetti-feynman/", note:"The sign of the finite de Finetti measure decides whether per-case coverage adapts or fans; distance covariance is the runnable check."},
  {id:"fan", label:"The conformal fan", c:"fanax", url:"/papers/fan/", note:"Across-calibration dispersion of realized coverage; its width is set by the sign of cross-sample dependence."},
  {id:"snell", label:"Snell–Griffiths 2025", c:"fanax", url:"https://arxiv.org/abs/2502.13228", note:"Conformal prediction as Bayesian quadrature: a Dirichlet posterior over realized risk. The loss-side fan; HPD = report the fan's quantile, not its mean."},
@@ -133,8 +134,10 @@ const LINKS = [
  {source:"welling", target:"herding", type:"mech", label:"balls vs slots"},
  {source:"bach", target:"welling", type:"mech", label:"Frank–Wolfe"},
  {source:"snell", target:"herding", type:"mech", label:"quadrature vs slot transport"},
+ {source:"twoprices", target:"gap", type:"dual", label:"MU identity, X = past"},
+ {source:"twoprices", target:"bp", type:"build", label:"the other price"},
  // GAPS — do not exist yet (dashed red)
- {source:"bp", target:"gap", type:"gapmiss", label:"I(R;past): sharpness cost of dependence — unpriced"},
+ {source:"bp", target:"gap", type:"gapmiss", label:"general I(R;past) accounting, beyond single-shape — open"},
  {source:"fan", target:"kerns", type:"gapmiss", label:"single-level NA contraction — open"},
  {source:"herding", target:"gap", type:"gapmiss", label:"aimed slot steering for conditional balance — open"},
  {source:"aci", target:"gap", type:"gapmiss", label:"per-step statement from a time-average — impossible? unformalized"},

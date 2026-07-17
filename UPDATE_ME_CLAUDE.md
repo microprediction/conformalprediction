@@ -8,7 +8,7 @@ Read this first, then keep the house style.
 
 A balanced, interactive *guide* to conformal prediction at conformalprediction.net, plus a
 reproducible benchmark, a LaTeX paper ("Marginally Useful"), and a tiny `conformalguide`
-PyPI package. It explains what the coverage guarantee does and does not tell you, where the
+PyPI package. It explains what the coverage guarantee actually tells you, where the
 method is the right tool, and how to apply it well. The tone is clear, measured, and
 informative; the guiding principle is *inform, not oversell*.
 

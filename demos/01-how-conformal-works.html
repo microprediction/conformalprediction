@@ -40,7 +40,7 @@
 
   <p>Split conformal prediction is simple and correct. Hold out a calibration set the model never trained on. For each calibration point compute a <em>nonconformity score</em>, here the absolute residual \(s_i = |y_i - \hat\mu(x_i)|\). Take the score&rsquo;s \(\lceil (n+1)(1-\alpha)\rceil\)-th smallest value, call it \(q\), and emit the band
   $$C(x) = [\,\hat\mu(x) - q,\ \hat\mu(x) + q\,].$$
-  On fresh, exchangeable data this band covers the truth at least \(1-\alpha\) of the time. Move the sliders: the empirical coverage tracks the target. Nothing here is wrong. This is the part everyone agrees on.</p>
+  On fresh, exchangeable data this band covers the truth at least \(1-\alpha\) of the time. Move the sliders: the empirical coverage tracks the target.</p>
 
   <div class="demo">
     <div class="canvas-box tall"><canvas id="main"></canvas></div>
