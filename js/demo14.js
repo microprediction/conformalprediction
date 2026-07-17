@@ -194,11 +194,26 @@ function drawAll() {
   drawPool(M); drawBayes(M); drawRanks(M); drawProj(M); drawWealth(M);
 }
 
-const ctrls = document.getElementById("controls");
-slider(ctrls, { label: "heteroscedasticity  (spread depends on x  →  I(R;X))", min: 0, max: 1.2, step: 0.02, value: state.eta, fmt: v => v.toFixed(2) },
-  v => { state.eta = v; drawAll(); });
-slider(ctrls, { label: "residual skew  (→ KL skew penalty, leaves I(R;X) fixed)", min: 0, max: 6, step: 0.1, value: state.skew, fmt: v => v.toFixed(1) },
-  v => { state.skew = v; drawAll(); });
+// One logical pair of knobs, rendered once at the top and once under each panel.
+// Moving any copy updates the state, mirrors the value into every other copy,
+// and redraws all five readings.
+const hosts = [document.getElementById("controls"), ...document.querySelectorAll(".ctlclone")];
+function syncedSlider(params, apply) {
+  const clones = hosts.map(host => slider(host, params, v => {
+    apply(v);
+    for (const c of clones) {
+      if (!c || c.el.valueAsNumber === v) continue;
+      c.el.value = v;
+      const val = c.el.parentElement.querySelector(".val");
+      if (val) val.textContent = params.fmt ? params.fmt(v) : v;
+    }
+    drawAll();
+  }));
+}
+syncedSlider({ label: "heteroscedasticity  (spread depends on x  →  I(R;X))", min: 0, max: 1.2, step: 0.02, value: state.eta, fmt: v => v.toFixed(2) },
+  v => { state.eta = v; });
+syncedSlider({ label: "residual skew  (→ KL skew penalty, leaves I(R;X) fixed)", min: 0, max: 6, step: 0.1, value: state.skew, fmt: v => v.toFixed(1) },
+  v => { state.skew = v; });
 
 autoResize(pool, drawAll); autoResize(bayes, drawAll); autoResize(ranks, drawAll); autoResize(proj, drawAll); autoResize(wealth, drawAll);
 drawAll();

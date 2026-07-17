@@ -17,7 +17,7 @@
   <url><loc>https://conformalprediction.net/demos/02-marginal-vs-conditional.html</loc></url>
   <url><loc>https://conformalprediction.net/demos/03-trivial-validity.html</loc></url>
   <url><loc>https://conformalprediction.net/demos/04-coverage-vs-logscore.html</loc></url>
-  <url><loc>https://conformalprediction.net/demos/05-exchangeability-timeseries.html</loc></url>
+  <url><loc>https://conformalprediction.net/demos/05-drift-timeseries.html</loc></url>
   <url><loc>https://conformalprediction.net/demos/06-conformal-vs-recalibration.html</loc></url>
   <url><loc>https://conformalprediction.net/demos/07-price-of-conditional-coverage.html</loc></url>
   <url><loc>https://conformalprediction.net/demos/08-subgroup-coverage.html</loc></url>
@@ -31,4 +31,5 @@
   <url><loc>https://conformalprediction.net/demos/16-thurstone.html</loc></url>
   <url><loc>https://conformalprediction.net/demos/17-laplace-vs-conformal.html</loc></url>
   <url><loc>https://conformalprediction.net/demos/18-conformal-fan.html</loc></url>
+  <url><loc>https://conformalprediction.net/demos/19-dependence-tax.html</loc></url>
 </urlset>
