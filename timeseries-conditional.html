@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Time series II: conditional coverage and sharpness — Conformal Prediction</title>
+<meta name="description" content="The legitimate attempts at conditional coverage and sharpness for time series: conditioning through the score, reweighting calibration, optimizing width, and measuring the gap that remains." />
+<meta property="og:title" content="Conformal Prediction — time series II: conditional coverage and sharpness" />
+<meta property="og:description" content="What each route to conditional, sharp time-series intervals actually delivers, and the open problem: nobody has priced the sharpness cost of marginal calibration." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/literature.html">Literature</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Time series II</p>
+  <h1>Conditional coverage and sharpness</h1>
+  <p class="subtitle">The <a href="timeseries.html">first page</a> sorted the marginal guarantees &mdash; a
+  question now settled, generously. This page is about what a forecaster actually wants: coverage conditional
+  on the visible past, with intervals near the conditional oracle&rsquo;s width. Here is what each route
+  delivers, and the accounting problem nobody has done.</p>
+
+  <p>Two facts frame every attempt. First, exact distribution-free conditional coverage is impossible in
+  finite samples (Lei &amp; Wasserman 2014; Barber et al. 2021) &mdash; dependence does not soften that, so
+  every route below is an approximation plus, ideally, some honesty about the residual gap. Second, there is
+  no distribution-free width theorem anywhere in this literature, for a structural reason: the interval&rsquo;s
+  width is a quantile of whatever scores you supply, so with no assumption on the model behind the scores there
+  is nothing to prove. Coverage theorems are assumption-free; sharpness theorems are always model-quality
+  theorems in disguise.</p>
+
+  <h2>Route 1: condition through the score</h2>
+  <p>Make the score itself carry the state: volatility-normalized residuals
+  |y &minus; f&#770;(x)| / &sigma;&#770;(past), quantile scores with lagged covariates, SPCI&rsquo;s fitted
+  conditional quantile of recent residuals, HopCPT&rsquo;s attention over similar past regimes, TQA&rsquo;s
+  per-step quantile adjustment. This is the right default in practice, and the <a href="benchmark.html">worked
+  example</a> shows both its power and its ceiling: the conditional quality is exactly the conditional quality
+  of the wrapped model &mdash; raw quantile regression ties conformalized quantile regression on conditional
+  metrics &mdash; while the conformal layer contributes the marginal certificate on top. The certificate never
+  becomes conditional; it just stops being violated so visibly, and by Barber &amp; Pananjady&rsquo;s
+  accounting the marginal certificate survives the dependence for any of these scores.</p>
+
+  <h2>Route 2: reweight calibration toward the present state</h2>
+  <p>Localized conformal prediction (Guan 2023) weights calibration points by similarity to the current one;
+  Hore &amp; Barber (2025) show randomized local weights buy a genuine local guarantee; Gibbs, Cherian &amp;
+  Cand&egrave;s (2025) deliver exact coverage simultaneously over a finite-dimensional class of covariate
+  shifts, chosen in advance. These are the strongest honest conditional statements on offer. The price: the
+  conditioning class is fixed a priori and necessarily coarse &mdash; &ldquo;calm vs stormy&rdquo; you can
+  have; &ldquo;conditional on this exact history&rdquo; you cannot, by the impossibility results. And the
+  time-series versions of these guarantees mostly lack the dependence accounting that the marginal case now
+  enjoys: reweighting toward similar past states while the calibration set is itself serially dependent is
+  largely unpriced territory.</p>
+
+  <h2>Route 3: make width the objective</h2>
+  <p>Bellman conformal inference (Yang, Cand&egrave;s &amp; Lei 2024) treats interval length as the thing to
+  minimize, subject to long-run coverage, and solves the resulting stochastic control problem by dynamic
+  programming over multi-step forecasts. It fixes the known degeneracy of the online game &mdash; adaptive
+  methods can satisfy their guarantee with intervals oscillating between empty and infinite &mdash; and
+  empirically produces much shorter intervals. It is an optimizer, not a theorem: no distributional width
+  guarantee is claimed, and by the structural point above, none could be without model assumptions. The
+  consistency-based width results (EnbPI, SPCI converging to oracle width) live in the same trade: assume the
+  model learns the truth, and sharpness follows from the assumption.</p>
+
+  <h2>Route 4: measure the gap that remains</h2>
+  <p>Whatever route you take, the honest deliverable includes a measurement of what marginality left on the
+  table. The classical tool is the PIT (Diebold, Gunther &amp; Tay 1998); the level-free versions are the
+  distance covariance between the conformal rank and the visible past
+  (<a href="/papers/definetti-feynman/">the Feynman&ndash;Wigner note</a>, runnable via the guardrails on the
+  <a href="/recipes.html">code page</a>), the width of the realized-coverage fan
+  (<a href="/papers/fan/">the fan note</a>), and classify-the-miss diagnostics (ERT). The accounting frame that
+  unifies them: the coverage&ndash;sharpness gap of a marginally calibrated predictor is the mutual information
+  between its conformal rank and the side information ignored
+  (<a href="/papers/marginally-useful/">Marginally Useful</a>) &mdash; and for a time series the ignored side
+  information is the recent past itself.</p>
+
+  <h2>The open problem</h2>
+  <p>Barber &amp; Pananjady priced the <em>coverage</em> cost of dependence: at most
+  min<sub>&tau;</sub> {&tau;/n + 2&beta;(&tau;)}, tight, two-sided. Nobody has priced the <em>sharpness</em>
+  cost of marginality with comparable generality. The two are opposite sides of one coin: temporal dependence
+  is a small coverage tax on split conformal, but it is also an unclaimed sharpness subsidy &mdash; the past
+  carries information about the next score, and a marginal calibration quantile throws that information away.
+  The quantity that should appear in such a theorem is I(R; past), the mutual information between the conformal
+  rank and the recent history: zero exactly when marginal calibration is also past-conditional calibration, and
+  otherwise the rent a past-informed forecaster extracts from the marginal intervals, in the sense of the
+  <a href="/papers/parimutuel/">parimutuel note</a>. A stationary-series bound of the form &ldquo;excess width
+  of marginal split conformal over the past-conditional oracle, in terms of I(R; past) and the mixing
+  profile&rdquo; would complete the accounting that the coverage side now has. As far as we can tell, it does
+  not yet exist.</p>
+
+  <div class="prevnext">
+    <a href="timeseries.html">&larr; Time series I: the coverage games</a>
+    <span class="spacer"></span>
+    <a href="literature.html">Literature &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Conformal Prediction: a practical guide.</span>
+    <span>A curated, opinionated bibliography. Corrections welcome.</span>
+  </div>
+</footer>
+</body>
+</html>

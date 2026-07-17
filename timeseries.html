@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Time series I: the coverage games — Conformal Prediction</title>
+<meta name="description" content="Four different guarantees travel under the name 'conformal prediction for time series'. What each one says, what it averages over, what it assumes, and why the honest accounting converges faster than expected." />
+<meta property="og:title" content="Conformal Prediction — time series I: the coverage games" />
+<meta property="og:description" content="What each time-series conformal guarantee actually says, what it averages over, and why the coverage accounting converges faster than you might expect." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/literature.html">Literature</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Time series I</p>
+  <h1>The coverage games</h1>
+  <p class="subtitle">&ldquo;Does conformal prediction work for time series?&rdquo; is not one question. Four
+  different guarantees travel under that name, and they can only be compared by what they hold fixed, what
+  they average over, and what they assume. This page sorts the games; the attempts to say something
+  <em>conditional</em> &mdash; about your next step, given your recent past &mdash; are on
+  <a href="timeseries-conditional.html">the second page</a>.</p>
+
+  <p>The setting, throughout: one observed path Z<sub>1</sub>,&hellip;,Z<sub>n+1</sub> with
+  Z<sub>i</sub> = (X<sub>i</sub>, Y<sub>i</sub>), and split conformal prediction wrapped around an arbitrary
+  score &mdash; absolute residual, quantile score, anything. Every result below is score-agnostic, so
+  conformalized quantile regression is always the special case, never a separate theory. What varies between
+  the games is the meaning of the probability in
+  &ldquo;P(Y<sub>n+1</sub> is covered) &asymp; 1&minus;&alpha;&rdquo;.</p>
+
+  <h2>Game 1: restore the symmetry</h2>
+  <p><em>Chernozhukov, W&uuml;thrich &amp; Zhu (2018; 2021).</em> Exchangeability of points is dead, so permute
+  <em>blocks</em> instead: if the series is close to block-exchangeable, the permutation logic behind conformal
+  p-values goes through approximately, exactly in the block-exchangeable limit. The guarantee is marginal
+  coverage averaged over paths, degraded by an ergodicity/mixing error term. The cost is a modified method and
+  the approximation error, which you do not observe.</p>
+
+  <h2>Game 2: keep the method, price the deviation</h2>
+  <p><em>Barber, Cand&egrave;s, Ramdas &amp; Tibshirani (2023) &rarr; Oliveira, Orenstein, Ramos &amp; Romano
+  (2024) &rarr; Barber &amp; Pananjady (2026).</em> The cleanest game, and the one with the surprise ending. Run
+  vanilla split conformal, completely unmodified, on a dependent series, and ask: how far below 1&minus;&alpha;
+  can marginal coverage fall?</p>
+  <p>The progression matters. Barber et al. (2023) bound the coverage gap by a total-variation term per swapped
+  calibration point &mdash; the right tool for distribution drift, but the wrong deformation for a time series,
+  where swapping single points can change the joint distribution a lot even under short-range dependence.
+  Oliveira et al. (2024) use blocking and empirical-process concentration to get a loss of order
+  &radic;(t<sub>mix</sub>/n) for &beta;-mixing series &mdash; the first general no-modification guarantee, at
+  the classical square-root rate. Barber &amp; Pananjady (2026) then close the question with a new
+  &ldquo;switch coefficient&rdquo; and get</p>
+  <p style="text-align:center;">coverage &ge; 1 &minus; &alpha; &minus; min<sub>&tau;</sub> { &tau;/n + 2&beta;(&tau;) },</p>
+  <p><strong>linear</strong> in &tau;/n where the blocking argument gave the square root &mdash; the guarantee
+  converges faster than you have any right to expect. The reason is that the proof needs no concentration at
+  all: the (1&minus;&alpha;)-quantile of n scores moves by only about &tau;/n when &tau; entries are deleted
+  (order statistics are insertion/deletion stable), and one total-variation swap then makes the test point look
+  like a calibration point. Read the minimand as a bargain struck at every lag &tau;: pay &tau;/n in quantile
+  slippage to buy a decoupling gap of &tau; steps, costing 2&beta;(&tau;) in dependence. The result is also
+  tight (a stationary construction achieves a constant fraction of the bound) and <em>two-sided</em>: a matching
+  ceiling shows dependence cannot silently buy you 99% when you asked for 90% either. Predictors with memory L
+  cost an extra L/n; a score trained on an initial block needs a second buffer between training and calibration.</p>
+  <p>Scale check, from their moving-average experiments: with nominal 90%, n = 120 calibration points and an
+  MA(t) dependence range of t = 12 (so t/n = 0.1), the worst-case bound permits coverage as low as 80%, while
+  the observed loss is about one percentage point &mdash; roughly &alpha;&middot;t/n. Dependence is a coverage
+  tax, the bound caps the tax at (dependence range)/(calibration size), and in benign cases the bill comes in
+  an order of magnitude under the cap. See the
+  <a href="demos/05-exchangeability-timeseries.html">exchangeability demo</a> for the failure being priced.</p>
+  <p>Averaged over: <em>paths</em>. This is coverage as a property of the ensemble of histories the process
+  could produce &mdash; not of the history you are standing in.</p>
+
+  <h2>Game 3: assume the model learns the truth</h2>
+  <p><em>Xu &amp; Xie (2021; 2023) &mdash; EnbPI, SPCI.</em> Add two assumptions: the errors are strongly
+  mixing, and the wrapped predictor (or conditional-quantile estimator) is consistent. Then you can prove much
+  more &mdash; asymptotic <em>conditional</em> coverage, and interval width converging to the conditional
+  oracle. The honest reading: the guarantee flows from the consistency assumption, not from the conformal
+  wrapper. It is classical asymptotic statistics wearing a conformal coat, and if the black box is not
+  consistent &mdash; the case distribution-free inference exists for &mdash; the theorems are silent. Useful
+  methods; just file the certificate under &ldquo;model quality&rdquo;, not &ldquo;distribution-free&rdquo;.</p>
+
+  <h2>Game 4: drop probability altogether</h2>
+  <p><em>Gibbs &amp; Cand&egrave;s (2021; 2024), Bhatnagar et al. (2023), conformal PID (2023).</em> The online
+  game changes the target: guarantee that the <em>time-average</em> of coverage indicators along your one path
+  tends to 1&minus;&alpha;, for any sequence whatsoever, adversarial included. No distribution, no ensemble
+  &mdash; and therefore no probability statement about any particular time step. The certificate is real but
+  weak in a specific way: it can be satisfied by intervals that oscillate between empty and infinite, and the
+  average conceals when the misses happen. Bellman conformal inference (Yang, Cand&egrave;s &amp; Lei 2024)
+  repairs the degenerate-width problem by making expected length the explicit objective, solved by dynamic
+  programming subject to the long-run constraint &mdash; an optimizer, not a distributional guarantee, but the
+  clear best practice within this game.</p>
+
+  <h2>What all four games refuse to say</h2>
+  <p>At prediction time you can see the recent past. Every certificate above is an average &mdash; over the
+  ensemble of paths (games 1&ndash;3) or over time along one path (game 4). A 90% certificate of either kind is
+  compatible with 99% coverage in calm regimes and 60% in storms, indefinitely, provided storms are rare enough
+  &mdash; and the storm is visible while you are in it. That is the information gap, and it is not a corner
+  case: volatility clustering is the defining feature of most series people care about. The value of the
+  certificate to a decision-maker at time t is precisely the gap between marginal and past-conditional
+  coverage, which is this site&rsquo;s running theme in another costume: the coverage&ndash;sharpness gap as
+  the mutual information between the conformal rank and the side information you hold, here the recent past
+  (<a href="/papers/marginally-useful/">Marginally Useful</a>; the
+  <a href="/papers/fan/">fan note</a> shows the same dependence as the width of the realized-coverage fan, and
+  the <a href="/papers/definetti-feynman/">Feynman&ndash;Wigner note</a> gives the runnable check). The
+  <a href="benchmark.html">worked example</a> makes the practical half of the point: the conditional quality of
+  adaptive conformal methods comes from the conditional model they wrap, not from the conformal layer.</p>
+  <p>So the state of play: the marginal question is settled, generously and two-sidedly &mdash; dependence
+  costs at most (dependence range)/(calibration size) in coverage, a tax so small it explains why nobody
+  noticed it empirically. The conditional question is where the open problems live:
+  <a href="timeseries-conditional.html">continue to page two</a>.</p>
+
+  <div class="prevnext">
+    <a href="literature.html">&larr; Literature</a>
+    <span class="spacer"></span>
+    <a href="timeseries-conditional.html">Time series II: conditional coverage and sharpness &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Conformal Prediction: a practical guide.</span>
+    <span>A curated, opinionated bibliography. Corrections welcome.</span>
+  </div>
+</footer>
+</body>
+</html>
