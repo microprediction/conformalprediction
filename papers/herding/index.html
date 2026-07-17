@@ -31,45 +31,35 @@
 <main>
 <div class="wrap">
   <p class="tag">Technical note</p>
-  <h1>Moving the slots, not the balls</h1>
-  <p class="subtitle">Conformal prediction as the contragredient of herding.</p>
+  <h1>Herding as the contragredient of conformal prediction</h1>
+  <p class="subtitle">Two 1/n mechanisms, one pairing &mdash; and conformal came first.</p>
 
   <p>
     <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="conformal-herding.pdf">Read the PDF</a>
     <a class="card" style="display:inline-block;padding:10px 16px;" href="conformal-herding.tex">LaTeX source</a>
   </p>
 
-  <h2>The idea</h2>
-  <p>Herding (Welling 2009) moves the balls: it steers particles \(x_t\) so their empirical
-  feature averages balance a fixed target, \(\tfrac1n\sum_t \phi(x_t)\approx\mu\), and a bounded
-  weight sequence buys the quasi&ndash;Monte Carlo rate \(O(1/n)\) where i.i.d.\ sampling gets
-  \(O(1/\sqrt n)\). Split conformal's coverage proof is the dual operation: the realized scores
-  are never touched, and what moves is the <em>designation</em> &ldquo;this slot holds the test
-  point.&rdquo; Because the quantile threshold is a symmetric function of the scores, a
-  deterministic counting identity holds &mdash; exactly \(\lceil(1-\alpha)(n+1)\rceil\) of the
-  \(n+1\) placements of that label point at covered scores, for <em>any</em> score vector.
-  Herding holds the roulette wheel fixed and moves the balls; conformal holds the balls fixed and
-  rotates the slot labels under the pointer.</p>
+  <h2>The result</h2>
+  <p>Conformal calibration and herding each earn their \(O(1/n)\) rate from a cumulative
+  discrepancy held bounded by an absolute constant: the quantile choice enforces
+  \(\sum_i(\mathbf 1\{S_i\le q_n\}-p)\in[p,1+p)\), and herding&rsquo;s weight recursion keeps
+  \(\|w_n\|\) bounded. The note gives the two constructions parallel formal treatments and proves
+  they act on opposite sides of the pairing \(\langle h,\nu\rangle=\int h\,d\nu\): herding steers
+  the empirical measure against fixed test functionals; conformal steers the acceptance functional
+  &mdash; and, in the validity proof, transports the evaluation index &mdash; against the fixed
+  empirical measure of scores. The validity step itself is a deterministic counting identity:
+  exactly \(\lceil(1-\alpha)(n+1)\rceil\) of the \(n+1\) placements of the evaluation index are
+  covered, for any scores; exchangeability enters only to say the realized placement is an even
+  draw.</p>
 
-  <h2>The contragredient, and the 1/n ledger</h2>
-  <p>The duality is stated on the permutation pairing: rearrange the data with \(P_\pi\), or hold
-  the data fixed and pull the coordinate functional back, \(e_{n+1}^{*}\mapsto e_{\pi(n+1)}^{*}\)
-  &mdash; the contragredient side. The payoff is a clean reading of the Barber&ndash;Pananjady
-  time-series bound: deleting \(\tau\) slots damages the rank count by at most \(\tau\) (order
-  statistics are insertion/deletion stable), worth \(\tau/n\) of coverage, and the only
-  probabilistic charge is the total-variation failure of rotation invariance,
-  \(\bar\Psi_\tau\le 2\beta(\tau)\). Nothing concentrates, so no square root appears &mdash; the
-  same reason herding beats Monte Carlo. Bounded accumulated error, divided by \(n\): herding's
-  bounded feature discrepancy, conformal's bounded count of damaged ranks.</p>
-
-  <h2>Where the steering sits</h2>
-  <p>Conformal does perform corrective steering &mdash; but in the dual space. Choosing the
-  calibration quantile enforces \(0\le\sum_i(\mathbf 1\{S_i\le q_n\}-p)&lt;1\): a feedback-control
-  identity, the cutoff moving so the accumulated acceptance-rate error stays bounded by one unit,
-  the exact analogue of herding&rsquo;s bounded weight vector. The two mechanisms steer different
-  members of the pairing \(\langle h,\nu\rangle\): herding moves the empirical measure against
-  fixed tests; conformal moves the acceptance test against the fixed empirical measure of scores.
-  What conformal never controls is the generation of the next observation.</p>
+  <h2>Direction, and dependent data</h2>
+  <p>Since the conformal mechanism (late 1990s) predates herding (2009), it is herding that
+  realises the contragredient &mdash; the same ledger, moved to the primal space of generated
+  points. The dual reading also prices dependence: in Barber&ndash;Pananjady&rsquo;s time-series
+  analysis, deleting \(\tau\) slots shifts the quantile level by at most \(\tau/(n+1)\) and the
+  failed transport invariance is charged at total variation, \(\bar\Psi_\tau\le 2\beta(\tau)\).
+  No concentration step appears, hence no square root &mdash; the same reason herding beats Monte
+  Carlo.</p>
 
   <h2>What is and is not claimed</h2>
   <p>The duality is exact at the level of the finite-sample ledger and silent on the statistics:
