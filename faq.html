@@ -43,16 +43,19 @@
   <p class="subtitle">Straight answers to the questions the guide tends to raise.</p>
 
   <h3>So is conformal prediction useless?</h3>
-  <p>Quite the opposite, it is the right tool for every coverage-objective problem in the <a href="/index.html#applications">guide</a> (prediction sets, anomaly detection, retrieval, robotics, language models, risk control), and the only thing that hands you a distribution-free, finite-sample coverage certificate. The single thing it does not do is make a forecast sharper or a density better.</p>
+  <p>Quite the opposite, it is the right tool for every coverage-objective problem in the <a href="/index.html#applications">guide</a> (prediction sets, anomaly detection, retrieval, robotics, language models, risk control), and the only thing that hands you a distribution-free, finite-sample coverage certificate. The single thing it does not do is make a forecast sharper or a density better &mdash; <a href="/map.html">the map</a> shows where the field&rsquo;s effort actually goes.</p>
 
   <h3>Doesn&rsquo;t conformalizing my model improve its uncertainty?</h3>
-  <p>It gives the prediction <em>set</em> a coverage guarantee. It does not change your predictive <em>distribution</em>&rsquo;s sharpness, and a proper score (log-likelihood, CRPS) is unmoved by the conformal step. If the model is overconfident, conformal widens the set to hit coverage, but the density it implies is just your model&rsquo;s residual shape, re-levelled.</p>
+  <p>It gives the prediction <em>set</em> a coverage guarantee. It does not change your predictive <em>distribution</em>&rsquo;s sharpness, and a proper score (log-likelihood, CRPS) is unmoved by the conformal step. If the model is overconfident, conformal widens the set to hit coverage, but the density it implies is just your model&rsquo;s residual shape, re-levelled. Two forecasts with the identical 90% interval can price the same option orders of magnitude apart &mdash; <a href="/demos/20-coverage-vs-price.html">watch</a>.</p>
 
   <h3>But conformal predictive systems and CQR output whole distributions!</h3>
   <p>They do, and they can be excellent. The point is <em>attribution</em>: their sharpness comes from the conditional model they wrap, the quantile regressor, the difficulty estimator, the per-region bins, not from the conformal step, which supplies the coverage certificate. A <a href="/benchmark.html">worked example</a> shows raw quantile regression matching its conformalized version.</p>
 
   <h3>Can I get conditional (per-\(x\)) coverage?</h3>
-  <p>Not exactly, and not for free: distribution-free, finite-sample conditional coverage forces infinite-length intervals (<a href="/demos/07-price-of-conditional-coverage.html">the price of conditional coverage</a>). You can <em>approach</em> it under assumptions, conformalized quantile regression, normalized/Mondrian conformal, recent pivotal-score and optimal-transport methods, all of which condition on \(x\).</p>
+  <p>Not exactly, and not for free: distribution-free, finite-sample conditional coverage forces infinite-length intervals (<a href="/demos/07-price-of-conditional-coverage.html">the price of conditional coverage</a>; the full set of no-go theorems is the wall on <a href="/map.html">the map</a>). You can <em>approach</em> it under assumptions, conformalized quantile regression, normalized/Mondrian conformal, recent pivotal-score and optimal-transport methods, all of which condition on \(x\).</p>
+
+  <h3>Where does the guarantee actually come from?</h3>
+  <p>Counting, not concentration. For any scores whatsoever, exactly \(\lceil(1-\alpha)(n+1)\rceil\) of the \(n+1\) placements of the label &ldquo;test&rdquo; point at covered scores; exchangeability just says your placement is an even draw. <a href="/demos/21-herding-slots.html">Spin the pointer</a>, or read <a href="/papers/herding/">the note</a> on why this makes conformal the mirror image of herding.</p>
 
   <h3>What about option pricing, or financial distributions generally?</h3>
   <p>This is where the coverage objective is most clearly the wrong one. An option price is a tail
