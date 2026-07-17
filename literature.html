@@ -44,6 +44,7 @@
         <span class="drop">
           <a href="/recipes.html">Recipes &amp; audits</a>
           <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
         
         </span>
       </span>
@@ -197,8 +198,7 @@
   </ul>
 
   <h2 id="time-series">Time series and non-exchangeability</h2>
-  <p>A guided tour of this section &mdash; which game each result plays, and what remains open &mdash; is on
-  the time-series pages: <a href="timeseries.html">the coverage games</a> and
+  <p>A guided tour of this section, which game each result plays and what remains open, is on the time-series pages: <a href="timeseries.html">the coverage games</a> and
   <a href="timeseries-conditional.html">conditional coverage and sharpness</a>.</p>
   <p>Two threads run through this literature. One modifies the method to survive
   dependence &mdash; blocks, ensembles, weights, fitted residual quantiles. The other
@@ -208,7 +208,7 @@
   size), linear and tight, with a matching bound against over-coverage. First the
   accounting:</p>
   <ul class="refs">
-    <li>Barber, Cand&egrave;s, Ramdas &amp; Tibshirani (2023). <em>Conformal prediction beyond exchangeability.</em> Annals of Statistics. <a href="https://arxiv.org/abs/2202.13415">arXiv:2202.13415</a> &mdash; the general-purpose robustness result: the coverage gap bounded by a total-variation term per calibration point. But swapping single points is the wrong deformation for a time series &mdash; under short-range dependence the TV term stays large &mdash; which is what the two entries below repair.</li>
+    <li>Barber, Cand&egrave;s, Ramdas &amp; Tibshirani (2023). <em>Conformal prediction beyond exchangeability.</em> Annals of Statistics. <a href="https://arxiv.org/abs/2202.13415">arXiv:2202.13415</a> &mdash; the general-purpose robustness result: the coverage gap bounded by a total-variation term per calibration point. But swapping single points is the wrong deformation for a time series (under short-range dependence the TV term stays large), which is what the two entries below repair.</li>
     <li>Oliveira, Orenstein, Ramos &amp; Romano (2024). <em>Split conformal prediction and non-exchangeable data.</em> JMLR. <a href="https://arxiv.org/abs/2203.15885">arXiv:2203.15885</a> &mdash; blocking plus empirical-process concentration: unmodified split conformal on a &beta;-mixing series loses at most on the order of &radic;(t<sub>mix</sub>/n) of its coverage. The first general no-modification guarantee, at the classical square-root rate.</li>
     <li>Barber &amp; Pananjady (2026). <em>Predictive inference for time series: why is split conformal effective despite temporal dependence?</em> ALT. <a href="https://arxiv.org/abs/2510.02471">arXiv:2510.02471</a> &mdash; the sharp accounting. A &ldquo;switch coefficient&rdquo; (the total variation between the score sequence and a copy with a block of &tau; entries deleted and one point rotated to the end) bounds the coverage loss by min<sub>&tau;</sub> {&tau;/n + 2&beta;(&tau;)} &mdash; linear in &tau;/n where blocking arguments gave the square root, tight over stationary &beta;-mixing processes, and paired with a matching upper bound so the set cannot silently over-cover either. Handles predictors with memory L (an extra L/n) and calibration-trained scores (a second buffer &tau;<sub>&#8727;</sub> after the training block). The trick is quantile stability under insertion and deletion rather than concentration. The best explanation yet of why vanilla split conformal works on time series.</li>
     <li>Chernozhukov, W&uuml;thrich &amp; Zhu (2018). <em>Exact and robust conformal inference for dependent data.</em> COLT. <a href="https://arxiv.org/abs/1802.06300">arXiv:1802.06300</a> &mdash; permute blocks rather than points: approximately valid under ergodicity, exact under block-exchangeability.</li>
@@ -237,7 +237,7 @@
     <li>Zaffran, F&eacute;ron, Goude, Josse &amp; Dieuleveut (2022). <em>Adaptive conformal predictions for time series</em> (AgACI). ICML. <a href="https://arxiv.org/abs/2202.07282">arXiv:2202.07282</a></li>
     <li>Bhatnagar, Wang, Xiong &amp; Bai (2023). <em>Improved online conformal prediction via strongly adaptive online learning.</em> ICML. <a href="https://arxiv.org/abs/2302.07869">arXiv:2302.07869</a></li>
     <li>Angelopoulos, Cand&egrave;s &amp; Tibshirani (2023). <em>Conformal PID control for time series prediction.</em> NeurIPS. <a href="https://arxiv.org/abs/2307.16895">arXiv:2307.16895</a></li>
-    <li>Yang, Cand&egrave;s &amp; Lei (2024). <em>Bellman conformal inference: calibrating prediction intervals for time series.</em> <a href="https://arxiv.org/abs/2402.05203">arXiv:2402.05203</a> &mdash; the rare entry that makes width the objective: minimize average interval length subject to long-run coverage, by dynamic programming over multi-step forecasts. An optimizer, not a guarantee &mdash; there is still no distribution-free width theorem in this thread.</li>
+    <li>Yang, Cand&egrave;s &amp; Lei (2024). <em>Bellman conformal inference: calibrating prediction intervals for time series.</em> <a href="https://arxiv.org/abs/2402.05203">arXiv:2402.05203</a> &mdash; the rare entry that makes width the objective: minimize average interval length subject to long-run coverage, by dynamic programming over multi-step forecasts. It optimizes width; the guarantee remains long-run coverage, and no distribution-free width theorem exists in this thread.</li>
   </ul>
 
   <h2>Conformal predictive distributions and systems</h2>

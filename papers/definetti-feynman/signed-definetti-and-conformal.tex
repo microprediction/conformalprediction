@@ -12,7 +12,7 @@
 \title{A Feynman--Wigner-Style Diagnostic for the Efficacy\\
 of Conformal Prediction via Signed de Finetti Representations}
 \author{Peter Cotton}
-\date{Draft --- companion note}
+\date{June 2026}
 
 \begin{document}
 \maketitle
@@ -21,12 +21,12 @@ of Conformal Prediction via Signed de Finetti Representations}
 Conformal prediction builds prediction sets that cover the truth at a rate you choose,
 finite-sample and distribution-free, assuming only exchangeable data. That
 guarantee is marginal. de Finetti's theorem describes the exchangeability it rests on, and in
-the finite form the mixing measure may be signed \citep{kerns2006}. We present a short lemma that decomposes the
-slope of conformal's calibration-conditional coverage into two terms. One is a non-negative
-threshold term, the classical Beta-law fan. The other carries the sign of the de Finetti
-measure. Positive (extendable) mixtures make conformal conditionally adaptive. The signed
-corner---de-meaned, ranked, or compositional scores---makes it anti-adaptive. The marginal
-guarantee is the same either way. Only what it hides changes.
+the finite form the mixing measure may be signed \citep{kerns2006}. A short lemma decomposes the slope of
+conformal's calibration-conditional coverage into a non-negative threshold term (the classical
+Beta-law fan) and a term carrying the sign of the de Finetti measure. Positive (extendable)
+mixtures make conformal conditionally adaptive; the signed corner of de-meaned, ranked, or
+compositional scores makes it anti-adaptive. The marginal guarantee is the same either way; only
+what it hides changes.
 \end{abstract}
 
 \section{Setup}
@@ -167,8 +167,8 @@ The negative corner arises whenever the nonconformity score is defined relative 
 batch, because a linear constraint forces it. De-meaning ($\sum_i s_i=0$), differencing,
 ranks or percentiles-within-batch, and compositional or budgeted targets all impose such a
 constraint, and the constraint is the negative association \citep{joagdev1983}. For
-these scores conformal remains marginally valid---if the relativisation is symmetric across
-calibration and test, exchangeability is preserved---but its conditional coverage is the
+these scores conformal remains marginally valid (if the relativisation is symmetric across
+calibration and test, exchangeability is preserved), but its conditional coverage is the
 fanning, anti-adaptive kind of Lemma~\ref{lem:slope}.
 
 A caution: if the relativisation treats the test point asymmetrically (de-meaning by a
@@ -183,8 +183,8 @@ The signed corner is the native habitat of contest data. In a Thurstone or Luce 
 field of competitors carries latent values and the observed outcome is a winner or a full
 ranking. The winner indicator is a single multinomial trial, and the rank vector a
 permutation law, both negatively associated \citep{joagdev1983}. Any nonconformity score
-read off such a field---a rank, a within-field relative score, or a market-implied win
-probability---therefore sits in the negatively-associated regime above, where the marginal
+read off such a field (a rank, a within-field relative score, or a market-implied win
+probability) therefore sits in the negatively-associated regime above, where the marginal
 certificate is least informative about conditional reliability. The converse direction is the
 modelling the certificate cannot supply: recovering latent means from observed prices or
 winning probabilities \citep{cotton_horserace} is exactly the de Finetti latent-recovery of

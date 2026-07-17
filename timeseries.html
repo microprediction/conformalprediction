@@ -44,6 +44,7 @@
         <span class="drop">
           <a href="/recipes.html">Recipes &amp; audits</a>
           <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
         
         </span>
       </span>
@@ -96,7 +97,7 @@
   the classical square-root rate. Barber &amp; Pananjady (2026) then close the question with a new
   &ldquo;switch coefficient&rdquo; and get</p>
   <p style="text-align:center;">coverage &ge; 1 &minus; &alpha; &minus; min<sub>&tau;</sub> { &tau;/n + 2&beta;(&tau;) },</p>
-  <p><strong>linear</strong> in &tau;/n where the blocking argument gave the square root &mdash; the guarantee
+  <p>linear in &tau;/n where the blocking argument gave the square root &mdash; the guarantee
   converges faster than you have any right to expect. The reason is that the proof needs no concentration at
   all: the (1&minus;&alpha;)-quantile of n scores moves by only about &tau;/n when &tau; entries are deleted
   (order statistics are insertion/deletion stable), and one total-variation swap then makes the test point look
@@ -120,7 +121,7 @@
   mixing, and the wrapped predictor (or conditional-quantile estimator) is consistent. Then you can prove much
   more &mdash; asymptotic <em>conditional</em> coverage, and interval width converging to the conditional
   oracle. The plain reading: the guarantee flows from the consistency assumption, not from the conformal
-  wrapper. It is classical asymptotic statistics wearing a conformal coat. If the black box is not consistent, the theorems are silent; and the inconsistent black box is the case distribution-free inference exists for. Useful
+  wrapper. It is classical asymptotic statistics presented as conformal prediction. If the black box is not consistent, the theorems are silent; and the inconsistent black box is the case distribution-free inference exists for. Useful
   methods; just file the certificate under &ldquo;model quality&rdquo;, not &ldquo;distribution-free&rdquo;.</p>
 
   <h2>Game 4: drop probability altogether</h2>
@@ -141,7 +142,7 @@
   &mdash; and the storm is visible while you are in it. That is the information gap, and it is not a corner
   case: volatility clustering is the defining feature of most series people care about. The value of the
   certificate to a decision-maker at time t is precisely the gap between marginal and past-conditional
-  coverage, which is this site&rsquo;s running theme in another costume: the coverage&ndash;sharpness gap as
+  coverage, which is this site&rsquo;s running theme again: the coverage&ndash;sharpness gap as
   the mutual information between the conformal rank and the side information you hold, here the recent past
   (<a href="/papers/marginally-useful/">Marginally Useful</a>; the
   <a href="/papers/fan/">fan note</a> shows the same dependence as the width of the realized-coverage fan, and

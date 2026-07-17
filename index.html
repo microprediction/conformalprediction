@@ -48,6 +48,7 @@
         <span class="drop">
           <a href="/recipes.html">Recipes &amp; audits</a>
           <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
         
         </span>
       </span>
@@ -71,7 +72,7 @@
 
   <details style="margin:14px 0 18px;border:1px solid var(--line,#ddd);border-radius:8px;padding:10px 16px;">
     <summary style="cursor:pointer;font-weight:600;">About this site</summary>
-    <p class="lead" style="margin-top:10px;">This site began as an attempt to squeeze ideas out of conformal prediction that might improve the out-of-sample performance of autonomous time-series algorithms, the kind that run unattended at <a href="https://skaters.microprediction.org">skaters.microprediction.org</a>. It grew into a dozen or so interactive demonstrations and a few <a href="/papers/">notes</a>. The difficulty is only marginally calibrated: some of it is elementary, some the field has not yet noticed, and on average it is pitched exactly right.</p>
+    <p class="lead" style="margin-top:10px;">This site began as a hunt for anything in conformal prediction that might improve the out-of-sample performance of autonomous time-series algorithms, the kind that run unattended at <a href="https://skaters.microprediction.org">skaters.microprediction.org</a>. It grew into a dozen or so interactive demonstrations and a few <a href="/papers/">notes</a>. The difficulty is only marginally calibrated: some of it is elementary, some the field has not yet noticed, and on average it is pitched exactly right.</p>
   </details>
 
   <blockquote>
@@ -85,7 +86,7 @@
   <!-- ============================================================ -->
   <a id="demos"></a>
   <h2 id="how">1 &middot; How it works</h2>
-  <p>Hold out a calibration set, score how &ldquo;surprising&rdquo; each point is, and take the empirical quantile of those scores to size a band around new predictions. That is the whole method: model-agnostic, a few lines of code.</p>
+  <p>Hold out a calibration set, score how &ldquo;surprising&rdquo; each point is, and take the empirical quantile of those scores to size a band around new predictions. All of it fits in a few lines of model-agnostic code.</p>
   <div class="cards">
     <a class="card" href="demos/01-how-conformal-works.html">
       <h3>How split conformal works</h3>
@@ -142,8 +143,12 @@
   </div>
 
   <!-- ============================================================ -->
-  <h2 id="gap">4 &middot; The size of the gap</h2>
+  <h2 id="gap">4 &middot; The Information Gap</h2>
   <p>Coverage is orthogonal to quality, so a model can hit its coverage and still forecast poorly. How poorly? The shortfall has a name and a closed form, the residual-information gap. These take it apart: where it sits, and what it equals.</p>
+  <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
+    <summary style="cursor:pointer;font-weight:600;">A note on the name</summary>
+    <p style="margin-top:10px;">&ldquo;Information gap&rdquo; is not (yet) standard terminology. It is a rigorous observation, and the key one that helped the author understand the limitations of conformal prediction in a crisp manner, not to mention sort through the literature (see <a href="/map.html">the map</a>). The identity is proved in <a href="/papers/marginally-useful/">Marginally Useful</a>, and <a href="/demos/13-coverage-score-plane.html">the coverage&ndash;score plane</a> shows it as a height no conformal step can climb.</p>
+  </details>
   <div class="cards">
     <a class="card" href="demos/13-coverage-score-plane.html">
       <h3>The coverage&ndash;score plane</h3>
@@ -175,7 +180,11 @@
 
   <!-- ============================================================ -->
   <h2 id="herding">6 &middot; The mechanism, seen from herding</h2>
-  <p>Where the 1/n comes from. Herding (Welling 2009) steers points so that fixed tests average correctly; a bounded ledger divided by n sets its rate. Conformal calibration is the dual move, and it came first: the scores stay put, the acceptance threshold is steered, and the validity proof rotates the &ldquo;test&rdquo; label through the slots. Exactly k of n+1 placements are covered, for any scores. Exchangeability enters once, to make the realized placement an even draw. <a href="/papers/herding/">The note</a> states the duality and moves proofs across it.</p>
+  <p>Where the 1/n comes from. Herding (Welling 2009) steers points so that fixed tests average correctly; a bounded ledger divided by n sets its rate. Conformal calibration is the dual move: the scores stay put, the acceptance threshold is steered, and the validity proof rotates the &ldquo;test&rdquo; label through the slots. Exactly k of n+1 placements are covered, for any scores. Exchangeability enters once, to make the realized placement an even draw. <a href="/papers/herding/">The note</a> states the duality and moves proofs across it.</p>
+  <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
+    <summary style="cursor:pointer;font-weight:600;">How this section came about</summary>
+    <p style="margin-top:10px;">Thanks to Peter Urbani for pointing me to the result behind <a href="/demos/19-dependence-tax.html">the dependence tax</a>. It was that 1/n rate that made me realize there had to be a contragredient relationship to herding, something I had briefly worked on with Max Welling many years ago.</p>
+  </details>
   <div class="cards">
     <a class="card" href="demos/21-herding-slots.html">
       <h3>Moving the balls, moving the slots</h3>
@@ -221,7 +230,7 @@
   <h2 id="applications">9 &middot; When coverage is the goal: the litmus test</h2>
   <p>Everything so far was about reading the guarantee carefully. The reward for that care is knowing precisely when conformal prediction is not merely valid but <em>exactly</em> the right tool. It comes down to a single question:</p>
   <blockquote><p>Is your loss a function of <em>whether</em> the truth lands in a set, or of <em>where</em> it lands? When the answer is &ldquo;whether,&rdquo; coverage <em>is</em> the objective, the set is the deliverable, and conformal prediction&rsquo;s distribution-free guarantee is hard to beat.</p></blockquote>
-  <p>That &ldquo;whether&rdquo; column is large, and high-stakes, and it is where the certificate pays. The next sections walk through it, four families you can play with right here, and several more covered in depth on the <a href="applications.html">applications page</a>. In all of them the marginal guarantee is not a consolation prize; it is the whole product.</p>
+  <p>That &ldquo;whether&rdquo; column is large, and high-stakes, and it is where the certificate pays. The next sections walk through it, four families you can play with right here, and several more covered in depth on the <a href="applications.html">applications page</a>. In all of them the marginal guarantee is the product.</p>
 
   <!-- ============================================================ -->
   <h2 id="sets">10 &middot; Prediction sets &amp; selective triage</h2>
@@ -236,7 +245,7 @@
 
   <!-- ============================================================ -->
   <h2 id="anomaly">11 &middot; Anomaly &amp; out-of-distribution detection</h2>
-  <p>This is conformal prediction at its cleanest, working as a <em>test</em> rather than a forecaster. A conformal \(p\)-value of a genuine inlier is (super-)uniform, so flagging whenever \(p\le\alpha\) controls the false-alarm rate at <em>exactly</em> \(\alpha\), distribution-free, finite-sample, with no threshold to tune. Type-I error control is coverage, and coverage is what conformal certifies. Detection power is the score&rsquo;s job; the false-alarm budget is guaranteed.</p>
+  <p>This is conformal prediction at its strongest, working as a <em>test</em> rather than a forecaster. A conformal \(p\)-value of a genuine inlier is (super-)uniform, so flagging whenever \(p\le\alpha\) controls the false-alarm rate at <em>exactly</em> \(\alpha\), distribution-free, finite-sample, with no threshold to tune. Type-I error control is coverage, and coverage is what conformal certifies. Detection power is the score&rsquo;s job; the false-alarm budget is guaranteed.</p>
   <div class="cards">
     <a class="card" href="demos/10-anomaly-pvalues.html">
       <div class="num">shines</div>
@@ -247,7 +256,7 @@
 
   <!-- ============================================================ -->
   <h2 id="recall">12 &middot; Retrieval &amp; screening: guaranteed recall</h2>
-  <p>Drug-candidate triage, document retrieval, fraud review: the deliverable is a shortlist, and the thing that must not happen is dropping the real hit. That is a recall guarantee, which is coverage in disguise. One conformal threshold on the model&rsquo;s score, calibrated on known hits, guarantees a new hit survives the cut at least \(1-\alpha\) of the time, with no assumptions about how scores are distributed. A sharper model does not change the guarantee; it shrinks the list you have to read.</p>
+  <p>Drug-candidate triage, document retrieval, fraud review: the deliverable is a shortlist, and the thing that must not happen is dropping the real hit. That is a recall guarantee, which is coverage under another name. One conformal threshold on the model&rsquo;s score, calibrated on known hits, guarantees a new hit survives the cut at least \(1-\alpha\) of the time, with no assumptions about how scores are distributed. A sharper model does not change the guarantee; it shrinks the list you have to read.</p>
   <div class="cards">
     <a class="card" href="demos/11-guaranteed-recall.html">
       <div class="num">shines</div>

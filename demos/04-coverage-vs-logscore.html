@@ -44,6 +44,7 @@
         <span class="drop">
           <a href="/recipes.html">Recipes &amp; audits</a>
           <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
         
         </span>
       </span>
@@ -66,7 +67,7 @@
   <h1>Coverage &perp; log-score</h1>
   <p class="subtitle">You can pin marginal coverage at exactly 90% and slide the forecast&rsquo;s log-likelihood up or down at will.</p>
 
-  <p>Here is the paper&rsquo;s orthogonality proposition, made literal. Draw a large fixed sample of outcomes \(y \sim N(0,1)\). Take the point forecast to be \(\hat\mu \equiv 0\) for everyone, so the nonconformity score is just \(|y|\). The split-conformal band is
+  <p>Here is the paper&rsquo;s orthogonality proposition, in one picture. Draw a large fixed sample of outcomes \(y \sim N(0,1)\). Take the point forecast to be \(\hat\mu \equiv 0\) for everyone, so the nonconformity score is just \(|y|\). The split-conformal band is
   $$C = [\,-q,\ +q\,], \qquad q = \lceil (n+1)(1-\alpha)\rceil\text{-th smallest } |y_i|.$$
   Notice what \(q\) depends on: only the outcomes. Conformal ranks the residuals; the forecaster&rsquo;s claimed <em>spread</em> never enters. So as we slide the claimed predictive density \(N(0,s)\), the conformal set and its marginal coverage are frozen, while the predictive log-score moves strongly, peaking at the truth \(s=1\).</p>
 

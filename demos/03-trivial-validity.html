@@ -44,6 +44,7 @@
         <span class="drop">
           <a href="/recipes.html">Recipes &amp; audits</a>
           <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
         
         </span>
       </span>
@@ -66,11 +67,11 @@
   <h1>The fence is the horizon</h1>
   <p class="subtitle">Marginal validity is cheap. It certifies the fence, not the cattle.</p>
 
-  <p>Split conformal delivers \(1-\alpha\) coverage and asks almost nothing of the predictor \(\hat\mu\). Here we take that generosity to its logical end. Three &ldquo;predictors&rdquo; run side by side, all at the <em>same</em> \(\alpha\) on the <em>same</em> data:</p>
+  <p>Split conformal delivers \(1-\alpha\) coverage and asks almost nothing of the predictor \(\hat\mu\). Here we take that generosity to its logical end. Three &ldquo;predictors&rdquo; run side by side, all at the same \(\alpha\) on the same data:</p>
 
   <ul>
     <li>A, good model + conformal. A degree-3 fit, score \(s_i=|y_i-\hat\mu(x_i)|\), band \(\hat\mu(x)\pm q\). Tight, ~\(1-\alpha\) coverage.</li>
-    <li>B, garbage + conformal. Replace \(\hat\mu\) with a deliberately wrong constant. Same conformal machinery. The band balloons to absorb the error, yet coverage is <em>still</em> ~\(1-\alpha\).</li>
+    <li>B, garbage + conformal. Replace \(\hat\mu\) with a deliberately wrong constant. Same conformal machinery. The band balloons to absorb the error, yet coverage is still ~\(1-\alpha\).</li>
     <li>C, trivial randomized set. Ignore \(x\) entirely. For each test point emit the whole line with probability \(1-\alpha\), else the empty set. Coverage \(\to 1-\alpha\) by construction. The set conveys nothing.</li>
   </ul>
 

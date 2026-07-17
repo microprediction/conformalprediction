@@ -48,6 +48,7 @@
         <span class="drop">
           <a href="/recipes.html">Recipes &amp; audits</a>
           <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
         
         </span>
       </span>
@@ -74,7 +75,7 @@
 
   <!-- ============================================================ -->
   <h2>1 &middot; Selective prediction and human-in-the-loop decisions</h2>
-  <p>The cleanest use. Instead of one answer, return a small set guaranteed to contain the truth (say) 95% of the time, and route the hard cases (the large sets) to a human. The contract is exactly a coverage guarantee: the human is handed the right shortlist with controlled probability, and set size becomes a calibrated &ldquo;how sure are we&rdquo; signal. This is the form behind medical triage, content moderation, and document review.</p>
+  <p>The most direct use. Instead of one answer, return a small set guaranteed to contain the truth (say) 95% of the time, and route the hard cases (the large sets) to a human. The contract is exactly a coverage guarantee: the human is handed the right shortlist with controlled probability, and set size becomes a calibrated &ldquo;how sure are we&rdquo; signal. This is the form behind medical triage, content moderation, and document review.</p>
   <ul class="refs">
     <li>Angelopoulos, Bates, Jordan &amp; Malik (2021). <em>Uncertainty sets for image classifiers using conformal prediction</em> (RAPS). ICLR. <a href="https://arxiv.org/abs/2009.14193">arXiv:2009.14193</a>: small, stable label sets for deep classifiers.</li>
     <li>Straitouri, Wang, Okati &amp; Gomez-Rodriguez (2024). <em>Conformal prediction sets improve human decision making.</em> <a href="https://arxiv.org/abs/2401.13744">arXiv:2401.13744</a>: a pre-registered trial: people decide better with conformal sets than fixed-size sets of equal coverage.</li>

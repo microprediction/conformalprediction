@@ -21,26 +21,16 @@ Dependence and the Variance of Realized Coverage}
 \maketitle
 
 \begin{abstract}
-Fix a split-conformal calibration set and ask how often a fresh, \emph{independent} draw from the
-score marginal falls under the threshold $U_{(k)}$. That realized coverage $c=U_{(k)}$ is a random
-variable; for independent calibration scores it follows the $\mathrm{Beta}(k,n-k+1)$ law, variance
-about $\alpha(1-\alpha)/n$. We call this across-sample spread of realized coverage its
-\emph{dispersion}, and the family of laws the dependence sweeps out the \emph{fan} for short; we study
-how that dependence reshapes it. The organizing identity is that $c$ is a functional of the count process
-alone, so its variance is governed by the count's covariance kernel, and negatively associated scores
-have a less variable count (Lemma~\ref{lem:count}). Three results follow. A leading-order fan
-coefficient: in a Bahadur regime $\operatorname{Var}(c)=n^{-2}\operatorname{Var}(N(1-\alpha))+o(1/n)$,
-so the average pairwise covariance of the sub-threshold indicators sets the leading constant. An exact
-aggregate bound: summed over all levels $k$, negative association never widens the fan, by a
-convex-order contraction of the count against a concave functional and majorization. And, for
-equicorrelated normals, the single level is exact and monotone in the correlation,
-$\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)$, dispersively so via strong log-concavity and Tweedie's
-formula. We keep $c$ (coverage against an independent test draw) distinct from conformal conditional
-coverage with an exchangeable test point: under dependence the \emph{mean} of $c$ is not pinned, and
-the positive-dependence decomposition we give is an exact identity that does not by itself order the
-fan against the independent one. The general single-level negative-association contraction is left as
-a conjecture, supported numerically. The governing sign is the one the companion note attaches to the
-finite de Finetti measure.
+Fix a split-conformal calibration set; the coverage realized against an independent draw from the
+score marginal is $c=U_{(k)}$, distributed $\mathrm{Beta}(k,n-k+1)$ for independent calibration
+scores, with variance about $\alpha(1-\alpha)/n$ --- the fan. We show the fan's width is set by
+the dependence among the calibration scores, through the covariance kernel of the sub-threshold
+count. Three results follow: a leading-order fan coefficient in a Bahadur regime; an exact
+aggregate bound, summed over all levels, showing negative association never widens the fan; and,
+for equicorrelated normals, the exact single-level law
+$\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)$. The general single-level negative-association
+contraction is left as a conjecture, supported numerically. The governing sign is the one the
+companion note attaches to the finite de Finetti measure.
 \end{abstract}
 
 \section{Setup}
@@ -64,7 +54,7 @@ $c\sim\mathrm{Beta}(k,n-k+1)$, with
 \end{equation}
 This across-sample spread of realized coverage is its \emph{dispersion}, the formal object of this
 note; the family of such laws swept out as the calibration dependence varies is the \emph{fan}, for
-short (we use the vivid word freely, but it always means this dispersion). The per-dataset coverage
+short. The per-dataset coverage
 scatters around $1-\alpha$ with variance of order $1/n$ (standard deviation of order $n^{-1/2}$). The
 question of this note is what the dependence among the calibration scores does to it.
 

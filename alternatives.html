@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Alternatives — Conformal Prediction</title>
+<meta name="description" content="If the problem is a distributional time-series forecast, the workhorses are t-GARCH and laplace. Each buys sharpness with assumptions; conformal buys assumption-freeness with marginality. There is no free lunch." />
+<meta property="og:title" content="Conformal Prediction — alternatives" />
+<meta property="og:description" content="t-GARCH and laplace as the distributional workhorses, and what each one costs. There is no free lunch." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/papers/">Papers &amp; notes</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">About &#9662;</span>
+        <span class="drop">
+          <a href="/faq.html">FAQ</a>
+          <a href="/patterns.html">Patterns &amp; anti-patterns</a>
+        </span>
+      </span>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Code</p>
+  <h1>Alternatives</h1>
+  <p class="subtitle">If the problem is a distributional forecast, wrap nothing: model the conditional distribution. There is no free lunch.</p>
+
+  <p>Conformal prediction certifies coverage. If what you need is a sharp conditional
+  distribution, the two workhorses below are where to start. Each buys sharpness with
+  assumptions. Conformal buys assumption-freeness with marginality. Nobody escapes the trade.</p>
+
+  <h2>t-GARCH</h2>
+  <p>The classical econometric route: conditional volatility with Student-t innovations. Strong
+  on price and return series, where volatility clustering is the signal and heavy tails are the
+  rule. The assumption purchased is that the GARCH recursion is roughly right; when it is not,
+  the tails you paid for are the wrong ones.</p>
+
+  <h2>laplace</h2>
+  <p>An online likelihood-weighted ensemble from the
+  <a href="https://github.com/microprediction/skaters">skaters</a> package: one call, zero
+  dependencies, a full predictive distribution per step. Strong on non-price economic series
+  (<a href="https://skaters.microprediction.org">the benchmarks</a>). The assumption purchased is
+  that the recent past is informative enough for the ensemble to track; and it hands you no
+  finite-sample coverage certificate.</p>
+
+  <h2>The trade</h2>
+  <p>Either can be conformalized afterwards for the certificate: estimate first, certify second.
+  <a href="/demos/17-laplace-vs-conformal.html">Demo 17</a> and the
+  <a href="/benchmark.html">worked example</a> run the comparison, and
+  <a href="/papers/two-prices/">the two-prices note</a> prices what ignoring the conditional
+  information costs. There is no free lunch: the conditional models pay in assumptions, conformal
+  pays in sharpness, and the only real decision is which bill your application can afford.</p>
+
+  <div class="prevnext">
+    <a href="/recipes.html">&larr; Recipes &amp; audits</a>
+    <span class="spacer"></span>
+    <a href="/benchmark.html">Worked example &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Conformal Prediction: a practical guide.</span>
+    <span>There is no free lunch.</span>
+  </div>
+</footer>
+</body>
+</html>

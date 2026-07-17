@@ -45,6 +45,7 @@
         <span class="drop">
           <a href="/recipes.html">Recipes &amp; audits</a>
           <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
         
         </span>
       </span>
@@ -67,7 +68,7 @@
   <h1>Same coverage, different price</h1>
   <p class="subtitle">An option price is a tail integral. Coverage is blind to the tail. Two forecasts with an identical 90% interval can price the same out-of-the-money contract orders of magnitude apart.</p>
 
-  <p>The setup. An option struck at \(K\) pays \((Y-K)^+\), so its fair price under a predictive density \(f\) is \(\mathbb E_f[(Y-K)^+]=\int_K^\infty (y-K)\,f(y)\,dy\) &mdash; a functional of the density&rsquo;s shape beyond \(K\). Coverage integrates exactly that shape away: you can move mass around inside the covered region, and inside the tail, without changing coverage at all, while the price moves enormously.</p>
+  <p>An option struck at \(K\) pays \((Y-K)^+\), so its fair price under a predictive density \(f\) is \(\mathbb E_f[(Y-K)^+]=\int_K^\infty (y-K)\,f(y)\,dy\) &mdash; a functional of the density&rsquo;s shape beyond \(K\). Coverage integrates exactly that shape away: you can move mass around inside the covered region, and inside the tail, without changing coverage at all, while the price moves enormously.</p>
 
   <p>Below, two predictive densities are pinned to the <em>same</em> central 90% interval \([-c,c]\) &mdash; both would pass the same conformal audit at \(\alpha=0.10\). Forecast A is a standard Gaussian. Forecast B mixes a narrower core with a heavy tail (weight \(w\), scale \(k\)), rescaled so its 90% interval is still exactly \([-c,c]\). Slide the strike out and watch the price ratio: identical coverage, and the prices separate by one, two, then five orders of magnitude. Everything here is closed-form, no simulation.</p>
 
