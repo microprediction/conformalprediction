@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Same coverage, different price — Conformal Prediction</title>
+<meta name="description" content="Two forecasts share an identical 90% interval, yet price the same out-of-the-money option orders of magnitude apart. Coverage is blind to the tail shape that sets the price." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <a href="/literature.html">Literature</a>
+      <a href="/applications.html">Applications</a>
+      <a href="/recipes.html">Code</a>
+      <a href="/benchmark.html">Example</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/papers/">Papers</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration</p>
+  <h1>Same coverage, different price</h1>
+  <p class="subtitle">An option price is a tail integral. Coverage is blind to the tail. Two forecasts with an identical 90% interval can price the same out-of-the-money contract orders of magnitude apart.</p>
+
+  <p>The setup. An option struck at \(K\) pays \((Y-K)^+\), so its fair price under a predictive density \(f\) is \(\mathbb E_f[(Y-K)^+]=\int_K^\infty (y-K)\,f(y)\,dy\) &mdash; a functional of the density&rsquo;s shape beyond \(K\). Coverage integrates exactly that shape away: you can move mass around inside the covered region, and inside the tail, without changing coverage at all, while the price moves enormously.</p>
+
+  <p>Below, two predictive densities are pinned to the <em>same</em> central 90% interval \([-c,c]\) &mdash; both would pass the same conformal audit at \(\alpha=0.10\). Forecast A is a standard Gaussian. Forecast B mixes a narrower core with a heavy tail (weight \(w\), scale \(k\)), rescaled so its 90% interval is still exactly \([-c,c]\). Slide the strike out and watch the price ratio: identical coverage, and the prices separate by one, two, then five orders of magnitude. Everything here is closed-form, no simulation.</p>
+
+  <div class="demo">
+    <div class="canvas-box tall"><canvas id="dens"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <p>The second panel is the whole story at every strike at once: \(\log_{10}\) of the call price as a function of \(K/c\), for both forecasts. The curves start together near the interval&rsquo;s edge and diverge without bound. Nothing about the 90% certificate constrains this gap; the worst of it lives in the sparse, far-from-the-data states where a marginal guarantee is averaging over precisely the cases the contract is about.</p>
+
+  <div class="canvas-box med demo"><canvas id="price"></canvas></div>
+
+  <div class="takeaway">
+    <p>Takeaway. A conformal interval, or a conformalized density read off one residual shape, is not what prices a contract; the target is the conditional density itself, and the tail shape that sets the price is the model&rsquo;s work, not the wrapper&rsquo;s. Finance has two well-developed routes, neither a coverage test: recover the risk-neutral density from the option surface &mdash; the second derivative of the call price in the strike (Breeden&ndash;Litzenberger 1978), stabilised by nonparametric state-price density estimation (A&iuml;t-Sahalia&ndash;Lo 1998), arbitrage-free smoothing of the implied-volatility surface (Fengler 2009), or shape-constrained fits (Bondarenko 2003; Figlewski 2010) &mdash; or forecast the conditional density directly (stochastic-volatility and GARCH-family models, quantile and expectile regression, mixtures, flows) and grade it with a proper score. Conformal can wrap any of these for a coverage certificate; the price comes from the density. <a href="/papers/parimutuel/">The parimutuel note</a> makes the gap precise as the rent a better-informed bettor extracts.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="04-coverage-vs-logscore.html">&larr; Coverage &perp; log-score</a>
+    <span class="spacer"></span>
+    <a href="../faq.html">Back to the FAQ &rarr;</a>
+  </div>
+
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Conformal Prediction</span><span>Demonstration</span></div></footer>
+
+<script type="module" src="../js/demo20.js"></script>
+</body>
+</html>
