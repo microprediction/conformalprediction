@@ -112,6 +112,17 @@
     stays close to nominal at every prefix, and in this one-dimensional case the note writes the
     ordering down explicitly: the running coverage is within \(1/(2t)\) of \(k/N\) after every
     step \(t\), deterministically (<a href="/demos/24-balanced-placements.html">demo</a>).</p>
+    <p>It helps to see the actual numbers. The population contains only two values: the \(k\)
+    covered placements each contribute \(1-k/N\), and the \(N-k\) uncovered ones each contribute
+    \(-k/N\). Every value has absolute size below 1, and the total is
+    \(k(1-k/N)+(N-k)(-k/N)=0\) exactly. Take \(N=10\) and \(k=8\): eight residuals of \(+0.2\)
+    and two of \(-0.8\). A bad order spends the two \(-0.8\)s early and the running sum lurches;
+    the balanced word \(b_t=\lfloor 0.8t+\tfrac12\rfloor-\lfloor 0.8(t-1)+\tfrac12\rfloor\)
+    spends them at steps 3 and 8, giving the order
+    \(+.2,\,+.2,\,-.8,\,+.2,\,+.2,\,+.2,\,+.2,\,-.8,\,+.2,\,+.2\), whose running sum goes
+    \(.2,\,.4,\,-.4,\,-.2,\,0,\,.2,\,.4,\,-.4,\,-.2,\,0\): never further than \(0.4\) from zero,
+    and back to zero exactly at the end. That bounded ledger, divided by \(t\), is the
+    \(1/(2t)\) coverage statement.</p>
     <p>Herding, where this whole thread started
     (<a href="/demos/21-herding-slots.html">demo</a>), is Welling&rsquo;s greedy algorithm for
     picking points one at a time so that their running averages balance a target. Harvey and
@@ -129,8 +140,10 @@
   balancing: order a zero-sum population so every prefix discrepancy stays bounded. Harvey and
   Samadi posed herding over a finite population as exactly this permutation problem; generic
   herding is the with-replacement generalization. Conformal placements are themselves a scalar
-  Steinitz population, and the note gives an explicit balanced ordering whose running coverage
-  is within \(1/(2t)\) of the orbit level \(k/(n+1)\) at every prefix, exact at the full orbit.
+  Steinitz population: with \(N=n+1\), the \(k\) covered placements contribute \(1-k/N\) each
+  and the \(N-k\) uncovered ones \(-k/N\), sizes below 1, summing to zero exactly. The note
+  gives an explicit balanced ordering whose running coverage is within \(1/(2t)\) of the orbit
+  level \(k/N\) at every prefix, exact at the full orbit.
   On the function&ndash;measure pairing, the measure-side counterpart of calibration is balanced
   sampling and exact cubature (the cube method; Tchakaloff), for which herding is one iterative
   solver. None of this removes exchangeability from one-shot conformal prediction.</p>
