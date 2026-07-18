@@ -84,6 +84,43 @@
     <p>Takeaway. The population is fixed; only the order changes. Balance is a property of the permutation, and a good permutation makes the running average accurate at rate \(1/t\) with no randomness anywhere. This is the primal side of the duality in <a href="/papers/steinitz/">the note</a>: conformal placements are exactly such a zero-sum population, and <a href="24-balanced-placements.html">the next demo</a> orders them.</p>
   </div>
 
+  <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
+    <summary style="cursor:pointer;font-weight:600;">How Steinitz proved it</summary>
+    <p style="margin-top:10px;">The lemma has a lovely origin. Riemann&rsquo;s rearrangement
+    theorem says a conditionally convergent series of real numbers can be reordered to sum to
+    anything. L&eacute;vy and then Steinitz asked what happens for series of vectors, and the
+    answer, the L&eacute;vy&ndash;Steinitz theorem, is that the achievable sums form an affine
+    subspace. The prefix-bounded ordering lemma was Steinitz&rsquo;s workhorse: to steer a
+    rearranged series toward a target you must walk through blocks of vectors without the
+    partial sums escaping, and the lemma is that steering license.</p>
+    <p>The obstacle, visible in this demo, is that greedy cannot see the future: it minimizes
+    the current prefix norm and can walk into a corner where every remaining vector points the
+    wrong way. The proof (in the modern form of Grinberg and Sevastyanov, which gets the
+    constant \(d\) in \(d\) dimensions) makes &ldquo;the future is still fine&rdquo; a
+    maintained invariant. Build the ordering backwards, and at every stage keep a fractional
+    escrow of the remaining walk: for the current set of \(t\) remaining vectors, weights
+    \(\lambda_i\in[0,1]\) with \(\sum\lambda_i=t-d\) and \(\sum\lambda_i z_i=0\). In words:
+    fractionally, all but \(d\) units of the remaining mass can already be arranged to cancel
+    exactly.</p>
+    <p>Two facts finish it. The weights always exist and survive peeling: the feasible
+    \(\lambda\) form a polytope cut out by only \(d+1\) equalities, and a vertex of such a
+    polytope has at most \(d+1\) coordinates strictly between 0 and 1, so one element with
+    small weight can always be removed and the rest re-certified. Peel one element at a time;
+    the peeled order, reversed, is the ordering. And the bound falls out in one line: the
+    actual sum of the \(t\) remaining vectors equals \(\sum(1-\lambda_i)z_i\), since the
+    \(\lambda\)-weighted part cancels, and \(\sum(1-\lambda_i)=t-(t-d)=d\), each vector of norm
+    at most 1, so every prefix sum has norm at most \(d\). The dimension enters exactly once,
+    as the number of coordinates a polytope vertex can leave fractional.</p>
+    <p>The moral: greedy keeps the past small; Steinitz keeps a certificate that the future can
+    still be balanced, and only takes steps that preserve the certificate. That look-ahead is
+    what the scalar conformal case does not need: with two values and one dimension,
+    <a href="24-balanced-placements.html">the balanced word</a> writes the future down
+    explicitly. The sharp constant is still unknown: in the Euclidean plane it is
+    \(\sqrt5/2\), in general dimension the Grinberg&ndash;Sevastyanov \(d\) is essentially the
+    record, and whether \(O(\sqrt d)\) is possible is open, next door to the Koml&oacute;s
+    conjecture in discrepancy theory.</p>
+  </details>
+
   <div class="prevnext">
     <a href="21-herding-slots.html">&larr; Moving the balls, moving the slots</a>
     <span class="spacer"></span>
