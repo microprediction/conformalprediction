@@ -7,10 +7,10 @@
 // rule is a heuristic; the Steinitz lemma guarantees a bounded ordering exists.
 import { mulberry32, randn, fmt } from "./lib/stats.js";
 import { Plot, autoResize } from "./lib/plot.js";
-import { slider, button, readouts } from "./lib/ui.js";
+import { slider, button, checkbox, readouts } from "./lib/ui.js";
 
 const COL = { rand: "#c2410c", bal: "#1f4ed8", adv: "#7d3c98" };
-const state = { N: 120 };
+const state = { N: 120, showAdv: false };
 let seed = 9;
 
 const path = new Plot(document.getElementById("path"), {
@@ -76,25 +76,26 @@ function draw() {
   const O = orders(z, rng);
   const R = prefixes(O.rand, z), B = prefixes(O.bal, z), A = prefixes(O.adv, z);
 
-  const lim = Math.max(4, ...A.ns, ...R.ns) * 1.1;
+  const shown = state.showAdv ? [...A.ns, ...R.ns] : R.ns;
+  const lim = Math.max(4, ...shown) * 1.1;
   path.setLimits([-lim, lim], [-lim, lim]); path.clear("#fff"); path.axes({ grid: true });
-  path.line(A.xs, A.ys, { color: COL.adv, width: 1.4 });
+  if (state.showAdv) path.line(A.xs, A.ys, { color: COL.adv, width: 1.4 });
   path.line(R.xs, R.ys, { color: COL.rand, width: 1.6 });
   path.line(B.xs, B.ys, { color: COL.bal, width: 2 });
   path.points([0], [0], { color: "#111", radius: 4 });
   path.legend([
     { label: "balanced (greedy)", color: COL.bal },
     { label: "random shuffle", color: COL.rand },
-    { label: "adversarial (angle-sorted)", color: COL.adv },
+    ...(state.showAdv ? [{ label: "adversarial (angle-sorted)", color: COL.adv }] : []),
   ], { x: path.X(-lim) + 8, y: path.Y(lim) + 8 });
 
   const ts = Array.from({ length: N + 1 }, (_, t) => t);
-  const nmax = Math.max(...A.ns, ...R.ns, 1) * 1.15;
+  const nmax = Math.max(...shown, 1) * 1.15;
   norm.setLimits([0, N], [0, nmax]); norm.clear("#fff"); norm.axes({ grid: true });
   const sq = ts.map(t => Math.sqrt(t) * 0.55);
   norm.line(ts, sq, { color: "rgba(0,0,0,0.35)", width: 1.2, dash: [5, 4] });
   norm.text(N * 0.98, Math.min(Math.sqrt(N) * 0.55, nmax) , "√t guide ", { color: "rgba(0,0,0,0.5)", align: "right", baseline: "bottom" });
-  norm.line(ts, A.ns, { color: COL.adv, width: 1.4 });
+  if (state.showAdv) norm.line(ts, A.ns, { color: COL.adv, width: 1.4 });
   norm.line(ts, R.ns, { color: COL.rand, width: 1.6 });
   norm.line(ts, B.ns, { color: COL.bal, width: 2 });
 
@@ -108,6 +109,8 @@ function draw() {
 const ctrls = document.getElementById("controls");
 slider(ctrls, { label: "population size N", min: 40, max: 400, step: 20, value: state.N, fmt: v => v.toFixed(0) },
   v => { state.N = v; draw(); });
+checkbox(ctrls, { label: "show the adversarial ordering (its excursion dwarfs the others)", checked: state.showAdv },
+  v => { state.showAdv = v; draw(); });
 button(ctrls, "↻ new population", () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; draw(); });
 
 autoResize(path, draw);
