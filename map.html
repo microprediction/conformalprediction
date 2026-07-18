@@ -161,6 +161,7 @@ const ITEMS = [
 {r:"refine", l:"Bian–Barber 23", u:"https://arxiv.org/abs/2205.03647", n:"Training-conditional coverage: split has it, full and jackknife+ need assumptions."},
 {r:"refine", l:"Liang–Barber 25", u:"https://arxiv.org/abs/2311.04295", n:"Algorithmic stability implies training-conditional coverage."},
 {r:"refine", l:"Kuchibhotla 20", u:"https://arxiv.org/abs/2005.06095", n:"Conformal as a classical rank test."},
+{r:"refine", l:"Universality 26", u:"https://alrw.net/articles/43.pdf", n:"Vovk (ALT 2026): under the randomness assumption, valid prediction essentially must route through conformal — with the companion paper (#44, inductive randomness predictors) marking where 'beyond conformal' begins."},
 {r:"refine", l:"Barber–Tibshirani 25", u:"https://arxiv.org/abs/2504.02292", n:"One frame for standard, weighted, nonexchangeable, and localized conformal."},
 {r:"refine", l:"Snell–Griffiths 25", u:"https://arxiv.org/abs/2502.13228", n:"Bayesian quadrature: a posterior over realized risk. Crosses the fan, not the gap."},
 {r:"refine", l:"RCPS 21", u:"https://arxiv.org/abs/2101.02703", n:"Risk-controlling prediction sets: any bounded loss, high probability."},
@@ -195,6 +196,7 @@ const ITEMS = [
 {r:"wall", l:"I(R;X)", u:"/papers/marginally-useful/", n:"The information gap: for a fixed single-shape system the log-score regret to the oracle is exactly the mutual information between residual and input — untouched by any re-levelling of coverage."},
 
 // ---------- top-right: MEASURE THE GAP ----------
+{r:"measure", l:"Criteria of efficiency 16", u:"https://alrw.net/articles/11.pdf", n:"Vovk, Fedorova, Nouretdinov & Gammerman: of the standard efficiency criteria for conformal predictors, only four are 'proper' — optimized by the true conditional probability; the others reward strategic scores. The grading problem, found inside conformal itself."},
 {r:"measure", l:"Diebold+ 98", u:"https://www.jstor.org/stable/2527342", n:"The PIT: a calibrated forecast gives iid uniform PITs."},
 {r:"measure", l:"Gneiting+ 07", u:"https://doi.org/10.1111/j.1467-9868.2007.00587.x", n:"Maximize sharpness subject to calibration — the frame the gap lives in."},
 {r:"measure", l:"Gneiting–Raftery 07", u:"https://doi.org/10.1198/016214506000001437", n:"Proper scoring rules: the graders that see what coverage cannot."},
@@ -211,6 +213,7 @@ const ITEMS = [
 
 // ---------- bottom-right: CROSS THE GAP ----------
 {r:"cross", l:"The wrapped model", u:"/faq.html", n:"Quantile regression, GARCH-family, mixtures, flows, DeepAR: conditional information comes from modelling the conditional distribution. Not a conformal method — which is the point."},
+{r:"cross", l:"Universal CPD 22", u:"https://alrw.net/articles/18.pdf", n:"Vovk: a conformal predictive system whose CDF converges to the true conditional distribution — the gap crossed in the limit, under iid, at nonparametric rates. Finite-sample sharpness still comes from nowhere else than the data assumptions."},
 {r:"cross", l:"Orthogonal QR 21", u:"https://arxiv.org/abs/2106.00394", n:"Train the quantile model so miscoverage is independent of width — model training aimed at the gap."},
 {r:"open",  l:"I(R;past): general case (open)", u:"/timeseries-conditional.html", n:"The sharpness cost of marginality is priced for the single-shape family in the two-prices note (rent = entropy-rate gap). Open beyond that family, and with estimation costs for the feasible conditional model included."},
 {r:"open",  l:"width vs dependence (open)", u:"/timeseries-conditional.html", n:"A distribution-free-modulo-mixing width statement. Does not exist."},
