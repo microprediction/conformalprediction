@@ -74,10 +74,11 @@
   <h2>The exact identity</h2>
   <p>Conformal validity is an orbit-averaging identity for the permutation representation, stated
   in contragredient form through the Reynolds projector:
-  \(\langle P^{\vee}f, v\rangle = \langle f, Pv\rangle\). Average the evaluation functional
-  over placements, or average the placement vector holding the functional fixed; the counting
-  identity makes the orbit average exactly \(k/(n+1)\), and exchangeability makes the one
-  designated test placement an even draw on the orbit.</p>
+  \(\langle P^{\vee}f, v\rangle = \langle f, Pv\rangle\). The acceptance map is equivariant, so
+  the average can move the evaluation functional or move the induced acceptance vector; the
+  counting identity makes the orbit average exactly \(k/(n+1)\), and a transitive distributional
+  symmetry, exchangeability in the standard setting, makes the designated test placement inherit
+  it.</p>
 
   <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
     <summary style="cursor:pointer;font-weight:600;">WTF?</summary>
@@ -92,11 +93,13 @@
     exactly \(k/N\). The set of all placements is what the note calls the orbit, and the counting
     fact says the average over the orbit is \(k/N\) exactly.</p>
     <p>The word &ldquo;contragredient&rdquo; describes two ways of computing that same average.
-    You can hold the question fixed and shuffle the data past it, or hold the data fixed and
-    shuffle the question past them, the way a clock reads the same whether you turn the hands one
-    way or the dial the other. The displayed identity \(\langle P^{\vee}f, v\rangle = \langle f,
-    Pv\rangle\) says nothing more than that the two computations agree. The payoff is that
-    statements proved on one side transfer to the other for free.</p>
+    You can hold the question fixed and shuffle the coverage verdicts past it, or hold the
+    verdicts fixed and shuffle the question past them, the way a clock reads the same whether
+    you turn the hands one way or the dial the other. (The thing being shuffled is the vector
+    of 0/1 coverage decisions, not the raw scores; averaging the scores themselves would erase
+    the ranks that decide coverage.) The displayed identity \(\langle P^{\vee}f, v\rangle =
+    \langle f, Pv\rangle\) says nothing more than that the two computations agree. The payoff is
+    that statements proved on one side transfer to the other for free.</p>
     <p>Now the other side. Steinitz proved in 1913 that if you have a collection of vectors that
     sum to zero, none of them large, you can always order them so that every partial sum along
     the way stays inside a fixed ball, no matter how many vectors there are. Walk through them in
@@ -122,15 +125,15 @@
   </details>
 
   <h2>Steinitz balancing, and herding as its relaxation</h2>
-  <p>The primal construction under the same permutation action is Steinitz balancing: order a
-  zero-sum population so every prefix discrepancy stays bounded. Harvey and Samadi posed herding
-  over a finite population as exactly this permutation problem; generic herding is the
-  with-replacement relaxation. Conformal placements are themselves a scalar Steinitz population,
-  and the note gives an explicit balanced ordering whose running coverage is within
-  \(1/(2t)\) of nominal at every prefix, exact at the full orbit. On the function&ndash;measure
-  pairing, the literal transpose of calibration is balanced sampling and exact cubature (the
-  cube method; Tchakaloff), for which herding is one iterative solver. None of this removes
-  exchangeability from one-shot conformal prediction.</p>
+  <p>A natural primal discrepancy construction under the same permutation action is Steinitz
+  balancing: order a zero-sum population so every prefix discrepancy stays bounded. Harvey and
+  Samadi posed herding over a finite population as exactly this permutation problem; generic
+  herding is the with-replacement generalization. Conformal placements are themselves a scalar
+  Steinitz population, and the note gives an explicit balanced ordering whose running coverage
+  is within \(1/(2t)\) of the orbit level \(k/(n+1)\) at every prefix, exact at the full orbit.
+  On the function&ndash;measure pairing, the measure-side counterpart of calibration is balanced
+  sampling and exact cubature (the cube method; Tchakaloff), for which herding is one iterative
+  solver. None of this removes exchangeability from one-shot conformal prediction.</p>
 
   <div class="prevnext">
     <a href="/papers/">&larr; All papers &amp; notes</a>
