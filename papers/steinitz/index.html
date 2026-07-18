@@ -71,6 +71,48 @@
   <p class="note"><b>Rough draft &mdash; not for dissemination.</b>
   </p>
 
+  <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
+    <summary style="cursor:pointer;font-weight:600;">WTF?</summary>
+    <p style="margin-top:10px;">Fair. Here is the whole thing in English.</p>
+    <p>Start with what split conformal actually does. You have \(n\) calibration scores and one
+    test score, \(N=n+1\) numbers in all, and the interval is built from the \(k\)-th smallest of
+    them. The guarantee rests on a counting fact: go through the \(N\) values one at a time,
+    pretend each in turn is the test point, and ask whether that placement would be covered.
+    Exactly \(k\) of the \(N\) placements are, no matter what the scores were. No probability has
+    been used yet. Probability enters once, at the end: if the data are exchangeable, the real
+    test point is equally likely to be any of the \(N\) placements, so its chance of coverage is
+    exactly \(k/N\). The set of all placements is what the note calls the orbit, and the counting
+    fact says the average over the orbit is \(k/N\) exactly.</p>
+    <p>The word &ldquo;contragredient&rdquo; describes two ways of computing that same average.
+    You can hold the question fixed and shuffle the data past it, or hold the data fixed and
+    shuffle the question past them, the way a clock reads the same whether you turn the hands one
+    way or the dial the other. The displayed identity \(\langle P^{\vee}f, v\rangle = \langle f,
+    Pv\rangle\) says nothing more than that the two computations agree. The payoff is that
+    statements proved on one side transfer to the other for free.</p>
+    <p>Now the other side. Steinitz proved in 1913 that if you have a collection of vectors that
+    sum to zero, none of them large, you can always order them so that every partial sum along
+    the way stays inside a fixed ball, no matter how many vectors there are. Walk through them in
+    a random order and the partial sums drift like \(\sqrt t\); walk in the right order and they
+    never drift at all (<a href="/demos/23-steinitz-balancing.html">demo</a>). Divide by \(t\)
+    and the running average is within a constant over \(t\) of its target at every single step.</p>
+    <p>The bridge: take each conformal placement, write 1 if it is covered and 0 if not, and
+    subtract \(k/N\). Those \(N\) residuals sum to exactly zero, by the counting fact. They are a
+    Steinitz population. So there must be an ordering of the placements whose running coverage
+    stays close to nominal at every prefix, and in this one-dimensional case the note writes the
+    ordering down explicitly: the running coverage is within \(1/(2t)\) of \(k/N\) after every
+    step \(t\), deterministically (<a href="/demos/24-balanced-placements.html">demo</a>).</p>
+    <p>Herding, where this whole thread started
+    (<a href="/demos/21-herding-slots.html">demo</a>), is Welling&rsquo;s greedy algorithm for
+    picking points one at a time so that their running averages balance a target. Harvey and
+    Samadi showed that herding over a finite population, each point used once, is exactly the
+    Steinitz ordering problem. Ordinary herding, which may reuse points, is the relaxed version.
+    That is why the note treats Steinitz as the precise dual and herding as a remark.</p>
+    <p>What none of this does is remove exchangeability from real prediction. In actual use only
+    one placement is the test point, and only exchangeability makes that placement an even draw
+    on the orbit. The balancing results are about computations and audits over the whole orbit,
+    where no randomness is needed at all.</p>
+  </details>
+
   <h2>The exact identity</h2>
   <p>Conformal validity is an orbit-averaging identity for the permutation representation, stated
   in contragredient form through the Reynolds projector:
