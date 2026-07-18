@@ -265,21 +265,6 @@ for y in stream:
 </code></pre>
   </div>
 
-  <div class="takeaway">
-    <p>Every recipe above is one order statistic of a calibration score. That is the whole
-    method, and it is why it composes with any model. And now, to be frank: you can try to use
-    conformal prediction for time-series prediction, but at some point you realize it is half an
-    idea next to a more fruitful approach in which you successively model distributional
-    residuals. So the real answer is that I wrote this site while trying to squeeze some ideas
-    out of conformal prediction, and stumbled on the information gap as the explanation for its
-    poor performance on <a href="https://skaters.microprediction.org/metrics.html">the metrics
-    that matter to me</a> &mdash; and average coverage is certainly not one of them. My view is
-    blunt: conformal prediction is a collection of overly normative, simple modelling
-    suggestions for residuals, not nearly as good as <code>laplace</code> across a broad
-    spectrum of real-world examples &mdash; and all you need is Claude in a terminal to form
-    your own judgement quickly.</p>
-  </div>
-
   <div class="prevnext">
     <a href="applications.html">&larr; Applications</a>
     <span class="spacer"></span>
