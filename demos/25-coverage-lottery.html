@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>The coverage lottery — Conformal Prediction</title>
+<meta name="description" content="The conformal guarantee averages over calibration sets, and you calibrated once: realized coverage is a Beta draw around the stamped level. How many points until 90% means 90%, and until quoting it concedes no edge to an informed counterparty." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/04-coverage-vs-logscore.html">Coverage &perp; log-score</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/papers/">Papers &amp; notes</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration</p>
+  <h1>The coverage lottery</h1>
+  <p class="subtitle">You calibrate once. The stamp says 90%; a Beta draw decides what you got.</p>
+
+  <p>The marginal guarantee averages over two things at once. <a href="02-marginal-vs-conditional.html">Marginal vs. conditional coverage</a> unpacked the average over inputs. This page unpacks the other one: the average over calibration sets. You calibrate on the \(n\) points you happen to have, and from then on your band&rsquo;s coverage is a fixed number. The theorem does not say that number is \(1-\alpha\). It says the <em>procedure</em> hits \(1-\alpha\) on average across calibration draws you did not get.</p>
+
+  <p>Conditional on your draw, the arithmetic is exact and old: realized coverage is the \(k\)-th order statistic of \(n\) uniforms, \(k=\lceil(n+1)(1-\alpha)\rceil\), so across draws it follows \(\mathrm{Beta}(k,\,n+1-k)\) whatever the score distribution (Vovk, 2012). At \(n=100\) and a stamped 90%, the middle 95% of draws spans roughly 84% to 95%. At \(n=10\), about one calibration set in five delivers less than 85% coverage, a case Kladny et&nbsp;al. (2025) press in medical imaging, where calibration sets that small are realistic and the patient gets one draw, not the average. Pinning realized coverage to within a point of the stamp, with 95% confidence, takes \(n\) in the thousands.</p>
+
+  <p>Each lab below calibrates once on its own \(n\) points. The histogram is what the labs actually got; the curve is the exact Beta law. Note what a bigger <em>test</em> set would buy: nothing. It only measures your fixed draw more precisely. The fixes are a bigger calibration set, or reporting the fan instead of the point.</p>
+
+  <div class="demo">
+    <div class="canvas-box tall"><canvas id="fan"></canvas></div>
+    <div class="readouts" id="readouts-fan"></div>
+  </div>
+
+  <p class="note">The simulation draws each lab&rsquo;s \(n\) scores and takes the \(k\)-th smallest; realized coverage is distribution-free, so uniform scores lose nothing. Push \(n\) down until \(k>n\) and the finite-sample correction demands the infinite band: 100% coverage, by vacuity. <a href="18-conformal-fan.html">The conformal fan</a> shows what dependence between test points does to this same picture.</p>
+
+  <h2>Draw twenty points, then forty</h2>
+
+  <p>The fan describes repeated draws, but a lab lives one path through it. Here eight labs each grow a single calibration set, twenty points, then forty, then eighty, recomputing their quantile at each step; press play to watch. Every path wanders inside the envelope, and the envelope narrows only like \(1/\sqrt{n}\): in the low hundreds the labs still disagree by several points about what their own stamped 90% delivers, and the middle half of draws remains more than a point wide at \(n=1{,}000\). Waiting a little does not settle the lottery; thousands of points do.</p>
+
+  <div class="demo">
+    <div class="canvas-box med"><canvas id="grow"></canvas></div>
+    <div class="controls" id="controls-grow"></div>
+  </div>
+
+  <h2>What the wobble costs: adverse selection</h2>
+
+  <p>Suppose you treat the stamp as exact and quote it. You sell a contract paying \(\$1\) if your next band misses, for a premium of \(\alpha+s\). Averaged over calibration draws you are fine; that is the marginal guarantee restated as money. The trouble is who accepts. A counterparty who knows the residual distribution knows your band&rsquo;s true miss rate \(p\), and trades only when your quantile came up short, \(p>\alpha+s\). The wobble is symmetric; the acceptance is not. Your expected concession per posted quote is \(\mathbb{E}\,(p-\alpha-s)^{+}\), and it shrinks only like \(\sqrt{\alpha(1-\alpha)/n}\): about 1.1 cents per dollar insured at \(n=100\), an 11% markup on the fair ten-cent premium, and it stays above a tenth of a cent until \(n\) passes ten thousand. Charging a spread \(s\) helps, but only by driving the informed flow away.</p>
+
+  <div class="demo">
+    <div class="canvas-box med"><canvas id="cost"></canvas></div>
+    <div class="readouts" id="readouts-cost"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <p class="note">This levy is a different line item from the rent in <a href="/papers/parimutuel/">the parimutuel note</a>. That rent, \(I(R;X)\), is collected by a counterparty who conditions on \(x\), and it does not shrink as \(n\) grows. This one requires no side information beyond the marginal law of the residuals, is charged for the finite calibration set alone, and decays like \(1/\sqrt{n}\). A conformal quote can pay both at once.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. The calibration size appears nowhere in the statement of the guarantee and everywhere in what the statement is worth. A stamped 90% from \(n=100\) is one ticket from a fan eleven points wide, and treating it as exact concedes a measurable edge to anyone who knows better. Before quoting the number, ask what your \(n\) makes of the fan.</p>
+  </div>
+
+  <p class="note">Vovk (2012), <em>Conditional validity of inductive conformal predictors</em>, ACML (<a href="https://arxiv.org/abs/1203.5422">arXiv:1203.5422</a>). Kladny, Sch&ouml;lkopf, Koch, Baumgartner &amp; Muehlebach (2025), <em>A critical perspective on finite sample conformal prediction theory in medical applications</em> (<a href="https://arxiv.org/abs/2512.14727">arXiv:2512.14727</a>).</p>
+
+  <div class="prevnext">
+    <a href="18-conformal-fan.html">&larr; The conformal fan</a>
+    <span class="spacer"></span>
+    <a href="22-timeseries-fan.html">The time-series fan &rarr;</a>
+  </div>
+
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Conformal Prediction</span><span>Demonstration</span></div></footer>
+
+<script type="module" src="../js/demo25.js"></script>
+</body>
+</html>

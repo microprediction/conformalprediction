@@ -72,7 +72,7 @@
   lands under the threshold \(U_{(k)}\), \(k=\lceil(n+1)(1-\alpha)\rceil\). That realized coverage
   \(c=U_{(k)}\) is a random number; for independent scores it follows the
   \(\mathrm{Beta}(k,n-k+1)\) law, the classical fan. The note asks what cross-sample
-  \emph{dependence} does to it. Here the scores are an equicorrelated Gaussian copula at correlation
+  <em>dependence</em> does to it. Here the scores are an equicorrelated Gaussian copula at correlation
   \(\rho\); drag \(\rho\) from the floor \(-1/(n-1)\) up through \(0\) to \(+0.9\).</p>
 
   <div class="demo">
@@ -90,11 +90,11 @@
   (Proposition 2) is checked against simulation.</p>
 
   <div class="canvas-box med demo"><canvas id="perlevel"></canvas></div>
-  <p class="note">The second panel shows the variance of \emph{every} order statistic
+  <p class="note">The second panel shows the variance of <em>every</em> order statistic
   \(\operatorname{Var}(U_{(k)})\) (orange) against the iid Beta variance curve (blue). For \(\rho<0\)
   the orange curve sits entirely under the blue one, a contraction at every level, and its total area
   is the aggregate bound. For \(\rho>0\) it lifts above. Because the marginals are fixed uniform, the
-  whole picture is a property of the \emph{copula} alone: the fan is a copula functional, and the two
+  whole picture is a property of the <em>copula</em> alone: the fan is a copula functional, and the two
   variance bounds depend only on the bivariate copula diagonal at the operating quantile.</p>
 
   <p>The other buttons make that copula viewpoint concrete. Beyond the symmetric Gaussian and the MA(1)
@@ -102,9 +102,9 @@
   marginals, fan of order \(1/n^2\)), there are two Archimedean copulas with one-sided tail dependence:
   Clayton (lower tail) and Gumbel (upper tail), sampled through their de Finetti frailty
   \(W\), the directing variable of Theorem 2. They reveal a surprise. Tail dependence pins the order
-  statistics in its \emph{own} tail and pushes the fan to the \emph{opposite} one: Clayton (small
+  statistics in its <em>own</em> tail and pushes the fan to the <em>opposite</em> one: Clayton (small
   scores cluster) fattens the upper order statistics, Gumbel the lower, both far above iid. The
-  ``tail asymmetry'' readout reports the low-\(k\) and high-\(k\) variance ratios so you can watch
+  &ldquo;tail asymmetry&rdquo; readout reports the low-\(k\) and high-\(k\) variance ratios so you can watch
   them split. Since the conformal \(k\) sits high (small \(\alpha\)), lower-tail dependence inflates
   the conformal fan more than upper-tail dependence, which is the reverse of the naive guess.</p>
 
@@ -122,7 +122,7 @@
   <div class="prevnext">
     <a href="17-laplace-vs-conformal.html">&larr; laplace vs conformal</a>
     <span class="spacer"></span>
-    <a href="../index.html">&uarr; Back to overview</a>
+    <a href="25-coverage-lottery.html">The coverage lottery &rarr;</a>
   </div>
 
 </div>
