@@ -142,7 +142,10 @@
 
   <h2>Steinitz balancing, and herding as its relaxation</h2>
   <p>A natural primal discrepancy construction under the same permutation action is Steinitz
-  balancing: order a zero-sum population so every prefix discrepancy stays bounded. Harvey and
+  balancing: order a zero-sum population so every prefix discrepancy stays bounded. (A
+  <em>prefix</em> is the first \(t\) elements of the ordering; its <em>discrepancy</em> is how
+  far their running sum has strayed from its target, here zero. Bounded prefix discrepancy
+  means the walk through the population never drifts, at any stage.) Harvey and
   Samadi posed herding over a finite population as exactly this permutation problem; generic
   herding is the with-replacement generalization. Conformal placements are themselves a scalar
   Steinitz population: with \(N=n+1\), the \(k\) covered placements contribute \(1-k/N\) each
