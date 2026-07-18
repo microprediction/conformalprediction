@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Moving the slots, not the balls — note</title>
+<link rel="stylesheet" href="../../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/papers/">Papers &amp; notes</a>
+        
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">About &#9662;</span>
+        <span class="drop">
+          <a href="/faq.html">FAQ</a>
+          <a href="/patterns.html">Patterns &amp; anti-patterns</a>
+        
+        </span>
+      </span>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+  <p class="tag">Technical note</p>
+  <h1>A contragredient view of conformal placement and Steinitz balancing</h1>
+  <p class="subtitle">The exact orbit identity, its balanced-permutation primal, and herding as the relaxation. Rough draft, not for dissemination.</p>
+
+  <p>
+    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="conformal-steinitz.pdf">Read the PDF</a>
+    <a class="card" style="display:inline-block;padding:10px 16px;" href="conformal-steinitz.tex">LaTeX source</a>
+  </p>
+  <p class="note"><b>Rough draft &mdash; not for dissemination.</b>
+  </p>
+
+  <h2>The exact identity</h2>
+  <p>Conformal validity is an orbit-averaging identity for the permutation representation, stated
+  in contragredient form through the Reynolds projector:
+  \(\langle P^{\vee}f, v\rangle = \langle f, Pv\rangle\). Average the evaluation functional
+  over placements, or average the placement vector holding the functional fixed; the counting
+  identity makes the orbit average exactly \(k/(n+1)\), and exchangeability makes the one
+  designated test placement an even draw on the orbit.</p>
+
+  <h2>Steinitz balancing, and herding as its relaxation</h2>
+  <p>The primal construction under the same permutation action is Steinitz balancing: order a
+  zero-sum population so every prefix discrepancy stays bounded. Harvey and Samadi posed herding
+  over a finite population as exactly this permutation problem; generic herding is the
+  with-replacement relaxation. Conformal placements are themselves a scalar Steinitz population,
+  and the note gives an explicit balanced ordering whose running coverage is within
+  \(1/(2t)\) of nominal at every prefix, exact at the full orbit. On the function&ndash;measure
+  pairing, the literal transpose of calibration is balanced sampling and exact cubature (the
+  cube method; Tchakaloff), for which herding is one iterative solver. None of this removes
+  exchangeability from one-shot conformal prediction.</p>
+
+  <div class="prevnext">
+    <a href="/papers/">&larr; All papers &amp; notes</a>
+    <span class="spacer"></span>
+    <a href="/demos/21-herding-slots.html">The demo &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Conformal Prediction: a practical guide.</span>
+    <span>Technical note.</span>
+  </div>
+</footer>
+</body>
+</html>

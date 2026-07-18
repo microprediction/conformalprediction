@@ -131,8 +131,9 @@ const NODES = [
  {id:"fan", label:"The conformal fan", c:"fanax", url:"/papers/fan/", note:"Across-calibration dispersion of realized coverage; its width is set by the sign of cross-sample dependence."},
  {id:"snell", label:"Snell–Griffiths 2025", c:"fanax", url:"https://arxiv.org/abs/2502.13228", note:"Conformal prediction as Bayesian quadrature: a Dirichlet posterior over realized risk. The loss-side fan; HPD = report the fan's quantile, not its mean."},
  {id:"kerns", label:"Kerns–Székely 2006", c:"found", url:"https://doi.org/10.1007/s10959-006-0028-z", note:"Finite exchangeable laws admit signed mixing measures — the negative probability the sign note runs on."},
- {id:"herding", label:"Herding dual", c:"mech", url:"/papers/herding/", note:"Herding as the contragredient of conformal prediction: the quantile steers the acceptance boundary, the proof transports the test label; bounded ledger over n."},
+ {id:"herding", label:"Herding dual", c:"mech", url:"/papers/steinitz/", note:"The exact orbit identity behind conformal validity, Steinitz balancing as its permutation-equivariant primal, and herding as the with-replacement relaxation (Harvey & Samadi 2014). Rough draft."},
  {id:"welling", label:"Welling 2009", c:"mech", url:"https://dl.acm.org/doi/10.1145/1553374.1553517", note:"Herding: steer the particles so feature averages balance the target; bounded weights give 1/n."},
+ {id:"bq", label:"Bayesian quadrature", c:"mech", url:"https://arxiv.org/abs/1204.1664", note:"The hub of the quadrature triangle: optimally-weighted herding is Bayesian quadrature (Huszár & Duvenaud 2012), and the conformal computation was recast as Bayesian quadrature (Snell & Griffiths 2025)."},
  {id:"bach", label:"Bach+ 2012", c:"mech", url:"https://arxiv.org/abs/1203.4523", note:"Herding = Frank–Wolfe on the marginal polytope; where the boundedness conditions live."},
  {id:"bp", label:"Barber–Pananjady 2026", c:"ts", url:"https://arxiv.org/abs/2510.02471", note:"The switch coefficient: unmodified split conformal on a mixing series loses at most min τ/n + 2β(τ) — linear, tight, two-sided. The coverage cost of dependence, priced."},
  {id:"oliveira", label:"Oliveira+ 2024", c:"ts", url:"https://arxiv.org/abs/2203.15885", note:"The same question by blocking and concentration: √(t_mix/n). Counting beats concentration."},
@@ -162,7 +163,9 @@ const LINKS = [
  // dual mechanisms (purple dotted)
  {source:"welling", target:"herding", type:"mech", label:"balls vs slots"},
  {source:"bach", target:"welling", type:"mech", label:"Frank–Wolfe"},
- {source:"snell", target:"herding", type:"mech", label:"quadrature vs slot transport"},
+ {source:"welling", target:"bq", type:"mech", label:"weighted herding = BQ (2012)"},
+ {source:"snell", target:"bq", type:"mech", label:"conformal as BQ (2025)"},
+ {source:"herding", target:"bq", type:"mech", label:"the triangle\u2019s third side"},
  {source:"twoprices", target:"gap", type:"dual", label:"MU identity, X = past"},
  {source:"twoprices", target:"bp", type:"build", label:"the other price"},
  // GAPS — do not exist yet (dashed red)

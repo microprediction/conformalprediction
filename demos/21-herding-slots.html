@@ -66,7 +66,7 @@
 
   <p class="tag">Demonstration</p>
   <h1>Moving the balls, moving the slots</h1>
-  <p class="subtitle">Herding steers particles to balance a fixed target and earns \(1/n\). Conformal prediction leaves the scores alone, rotates the label &ldquo;test&rdquo; through the slots, and the balance is already there. The <a href="/papers/herding/">companion note</a> argues these are two sides of one pairing.</p>
+  <p class="subtitle">Herding steers particles to balance a fixed target and earns \(1/n\). Conformal prediction leaves the scores alone, rotates the label &ldquo;test&rdquo; through the slots, and the balance is already there. The exact dual is Steinitz balancing; herding, run below, is its with-replacement relaxation (<a href="/papers/steinitz/">the note</a>).</p>
 
   <h2>Moving the balls: herding vs Monte Carlo</h2>
   <p>Kernel herding (Welling 2009; Chen, Welling &amp; Smola 2010) picks points one at a time to keep the running feature average pinned to a target &mdash; here the mean embedding \(\mu(x)=\mathbb E\,k(x,X)\) of a standard Gaussian under an RBF kernel, everything closed-form. The first panel shows where the points land: herding spaces them like a quasi&ndash;Monte Carlo sequence under the density, while i.i.d.\ draws clump and leave gaps. The second panel is the ledger: the discrepancy (MMD to the target) on log&ndash;log axes, herding tracking the \(1/n\) guide, Monte Carlo the \(1/\sqrt n\) guide. The mechanism: the accumulated feature error stays <em>bounded</em>, and a bounded ledger divided by \(n\) is \(1/n\).</p>
@@ -88,13 +88,13 @@
   </div>
 
   <div class="takeaway">
-    <p>Takeaway. Herding moves the observations to balance the measure; conformal moves the observation <em>labels</em> to expose an already-balanced rank count. Both rates are counting rates: bounded accumulated error over \(n\). That is why herding beats Monte Carlo&rsquo;s \(1/\sqrt n\) and why the switch-coefficient analysis of split conformal on time series beats the \(\sqrt{\tau/n}\) of blocking-and-concentration arguments. What the slot picture does <em>not</em> supply is the statistics: turning &ldquo;\(k\) of \(n+1\) placements&rdquo; into a probability about <em>your</em> test point is exchangeability&rsquo;s job, or its mixing surrogate. The <a href="/papers/herding/">note</a> states the duality precisely &mdash; and its limits.</p>
+    <p>Takeaway. Herding moves the observations to balance the measure; conformal moves the observation <em>labels</em> to expose an already-balanced rank count. Both rates are counting rates: bounded accumulated error over \(n\). That is why herding beats Monte Carlo&rsquo;s \(1/\sqrt n\) and why the switch-coefficient analysis of split conformal on time series beats the \(\sqrt{\tau/n}\) of blocking-and-concentration arguments. What the slot picture does <em>not</em> supply is the statistics: turning &ldquo;\(k\) of \(n+1\) placements&rdquo; into a probability about <em>your</em> test point is exchangeability&rsquo;s job, or its mixing surrogate. The <a href="/papers/steinitz/">note</a> states the duality precisely &mdash; and its limits.</p>
   </div>
 
   <div class="prevnext">
     <a href="19-dependence-tax.html">&larr; The dependence tax</a>
     <span class="spacer"></span>
-    <a href="/papers/herding/">The note &rarr;</a>
+    <a href="23-steinitz-balancing.html">Steinitz balancing &rarr;</a>
   </div>
 
 </div>

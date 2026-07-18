@@ -180,16 +180,24 @@
   </div>
 
   <!-- ============================================================ -->
-  <h2 id="herding">6 &middot; The mechanism, seen from herding</h2>
-  <p>Where the 1/n comes from. Herding (Welling 2009) steers points so that fixed tests average correctly; a bounded ledger divided by n sets its rate. Conformal calibration is the dual move: the scores stay put, the acceptance threshold is steered, and the validity proof rotates the &ldquo;test&rdquo; label through the slots. Exactly k of n+1 placements are covered, for any scores. Exchangeability enters once, to make the realized placement an even draw. <a href="/papers/herding/">The note</a> states the duality and moves proofs across it.</p>
+  <h2 id="herding">6 &middot; The mechanism: balanced placements</h2>
+  <p>Where the 1/n comes from. Conformal validity is a counting statement: rotate the &ldquo;test&rdquo; label through the slots and exactly k of n+1 placements are covered, for any scores; exchangeability enters once, to make the realized placement an even draw. The exact dual construction under the same permutation action is Steinitz balancing, the ordering of a zero-sum population with bounded prefix sums; herding (Welling 2009) is its with-replacement relaxation, and the demo below runs it. <a href="/papers/steinitz/">The note</a> has the exact statements.</p>
   <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
     <summary style="cursor:pointer;font-weight:600;">How this section came about</summary>
-    <p style="margin-top:10px;">Thanks to Peter Urbani for pointing me to the result behind <a href="/demos/19-dependence-tax.html">the dependence tax</a>. It was that 1/n rate that made me realize there had to be a contragredient relationship to herding, something I had briefly worked on with Max Welling many years ago.</p>
+    <p style="margin-top:10px;">Thanks to Peter Urbani for pointing me to the result behind <a href="/demos/19-dependence-tax.html">the dependence tax</a>. It was that 1/n rate that made me realize there had to be a contragredient relationship to herding, something I had briefly worked on with Max Welling many years ago. Steinitz balancing later turned out to be the more precise dual; the note has the exact statement.</p>
   </details>
   <div class="cards">
     <a class="card" href="demos/21-herding-slots.html">
       <h3>Moving the balls, moving the slots</h3>
       <p>Herding steers points to balance a target at rate 1/n. Conformal rotates the &ldquo;test&rdquo; label over fixed scores, and exactly k of n+1 placements are covered, for any scores at all.</p>
+    </a>
+    <a class="card" href="demos/23-steinitz-balancing.html">
+      <h3>Steinitz balancing</h3>
+      <p>Order a zero-sum population so every prefix sum stays inside a fixed ball. A random order wanders like &radic;t; a balanced order does not wander at all.</p>
+    </a>
+    <a class="card" href="demos/24-balanced-placements.html">
+      <h3>Balanced placements</h3>
+      <p>Conformal placements are such a population. The balanced word keeps running coverage within 1/(2t) of nominal at every prefix, for any scores.</p>
     </a>
   </div>
 
