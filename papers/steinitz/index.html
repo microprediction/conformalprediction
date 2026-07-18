@@ -156,8 +156,13 @@
 
   <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
     <summary style="cursor:pointer;font-weight:600;">Why &ldquo;balanced word&rdquo;, and is greedy enough?</summary>
-    <p style="margin-top:10px;">The name comes from combinatorics on words. A binary word is
-    <em>balanced</em> if its letters are spread as evenly as possible: any two windows of the
+    <p style="margin-top:10px;">Both halves of the name are jargon from combinatorics on
+    words, the branch of mathematics that studies sequences of symbols. A <em>word</em> is
+    nothing more than a string: a finite or infinite sequence of letters drawn from some
+    alphabet. Here the alphabet is \(\{0,1\}\) and the word is the sequence
+    \(b_1,b_2,\dots,b_N\) saying &ldquo;covered&rdquo; or &ldquo;uncovered&rdquo; at each step
+    of the traversal. A binary word is <em>balanced</em> if its letters are spread as evenly as
+    possible: any two windows of the
     same length contain counts of 1s differing by at most one, so every prefix of length \(t\)
     holds either \(\lfloor t\theta\rfloor\) or \(\lceil t\theta\rceil\) ones, where \(\theta\)
     is the density. The floor construction
