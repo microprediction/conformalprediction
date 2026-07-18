@@ -234,10 +234,14 @@
   <p>One small, reproducible <a href="benchmark.html">worked example</a>, not a benchmark, just a controlled experiment on synthetic data with a known answer, runs the actual libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods against probabilistic baselines and an oracle, scored by conditional coverage and proper scores (CRPS, interval/Winkler). It isolates one clean point: the adaptive conformal methods <em>do</em> help, but the help comes from the conditional model they wrap, raw quantile regression with no conformal step ties conformalized quantile regression, with the conformal layer adding the marginal certificate on top. <a href="benchmark.html">See the example &rarr;</a></p>
 
   <!-- ============================================================ -->
-  <h2 id="applications">9 &middot; When coverage is the goal: the litmus test</h2>
-  <p>Everything so far was about reading the guarantee carefully. The reward for that care is knowing precisely when conformal prediction is not merely valid but <em>exactly</em> the right tool. It comes down to a single question:</p>
-  <blockquote><p>Is your loss a function of <em>whether</em> the truth lands in a set, or of <em>where</em> it lands? When the answer is &ldquo;whether,&rdquo; coverage <em>is</em> the objective, the set is the deliverable, and conformal prediction&rsquo;s distribution-free guarantee is hard to beat.</p></blockquote>
-  <p>That &ldquo;whether&rdquo; column is large, and high-stakes, and it is where the certificate pays. The next sections walk through it, four families you can play with right here, and several more covered in depth on the <a href="applications.html">applications page</a>. In all of them the marginal guarantee is the product.</p>
+  <h2 id="applications">9 &middot; When coverage is the goal: the litmus test?</h2>
+  <p>Everything so far was about reading the guarantee carefully. One reward is a sense of when conformal prediction is a natural fit, not merely valid. A useful question:</p>
+  <blockquote><p>Is your loss a function of <em>whether</em> the truth lands in a set, or of <em>where</em> it lands? When the answer is &ldquo;whether,&rdquo; coverage <em>is</em> the objective, the set is the deliverable, and a distribution-free guarantee of it is exactly what conformal prediction supplies.</p></blockquote>
+  <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
+    <summary style="cursor:pointer;font-weight:600;">A disclaimer</summary>
+    <p style="margin-top:10px;">In keeping with the comments at the top of this site: applications where coverage is the goal are not the author&rsquo;s specialty at all. The demonstrations that follow are self-education as much as anything, and should be read that way.</p>
+  </details>
+  <p>That &ldquo;whether&rdquo; column is large, and often high-stakes. The next sections walk through four families you can play with right here, with several more covered on the <a href="applications.html">applications page</a>. In each, the marginal guarantee is the product.</p>
 
   <!-- ============================================================ -->
   <h2 id="sets">10 &middot; Prediction sets &amp; selective triage</h2>
@@ -252,7 +256,7 @@
 
   <!-- ============================================================ -->
   <h2 id="anomaly">11 &middot; Anomaly &amp; out-of-distribution detection</h2>
-  <p>This is conformal prediction at its strongest, working as a <em>test</em> rather than a forecaster. A conformal \(p\)-value of a genuine inlier is (super-)uniform, so flagging whenever \(p\le\alpha\) controls the false-alarm rate at <em>exactly</em> \(\alpha\), distribution-free, finite-sample, with no threshold to tune. Type-I error control is coverage, and coverage is what conformal certifies. Detection power is the score&rsquo;s job; the false-alarm budget is guaranteed.</p>
+  <p>This is conformal prediction at its strongest, it would seem, working as a <em>test</em> rather than a forecaster. A conformal \(p\)-value of a genuine inlier is (super-)uniform, so flagging whenever \(p\le\alpha\) controls the false-alarm rate at <em>exactly</em> \(\alpha\), distribution-free, finite-sample, with no threshold to tune. Type-I error control is coverage, and coverage is what conformal certifies. Detection power is the score&rsquo;s job; the false-alarm budget is guaranteed.</p>
   <div class="cards">
     <a class="card" href="demos/10-anomaly-pvalues.html">
       <div class="num">shines</div>
