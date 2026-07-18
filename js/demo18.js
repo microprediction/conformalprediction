@@ -223,7 +223,7 @@ function refresh() {
     b.style.color = on ? "var(--accent)" : "var(--ink)";
     b.style.background = on ? "var(--accent-soft)" : "var(--panel)";
   }
-  if (rhoSlider) rhoSlider.style.opacity = META[state.struct].dep ? "1" : "0.35";
+  if (rhoSlider) rhoSlider.el.parentElement.style.opacity = META[state.struct].dep ? "1" : "0.35";
 }
 for (const kk in META) selBtns[kk] = button(btnRow, META[kk].name, () => { state.struct = kk; refresh(); draw(); });
 
