@@ -122,7 +122,12 @@
     \(+.2,\,+.2,\,-.8,\,+.2,\,+.2,\,+.2,\,+.2,\,-.8,\,+.2,\,+.2\), whose running sum goes
     \(.2,\,.4,\,-.4,\,-.2,\,0,\,.2,\,.4,\,-.4,\,-.2,\,0\): never further than \(0.4\) from zero,
     and back to zero exactly at the end. That bounded ledger, divided by \(t\), is the
-    \(1/(2t)\) coverage statement.</p>
+    \(1/(2t)\) coverage statement. The word itself is classical: it solves
+    <a href="https://doi.org/10.1016/0012-365X(80)90269-1">Tijdeman&rsquo;s chairman assignment
+    problem</a> (1980), which asks for a schedule keeping every party&rsquo;s share of the chair
+    within a fixed distance of its quota at every prefix. The scalar, sharp-constant corner of
+    the Steinitz world was mapped before conformal prediction existed; the observation here is
+    that conformal placements live in it.</p>
     <p>Herding, where this whole thread started
     (<a href="/demos/21-herding-slots.html">demo</a>), is Welling&rsquo;s greedy algorithm for
     picking points one at a time so that their running averages balance a target. Harvey and
@@ -142,8 +147,9 @@
   herding is the with-replacement generalization. Conformal placements are themselves a scalar
   Steinitz population: with \(N=n+1\), the \(k\) covered placements contribute \(1-k/N\) each
   and the \(N-k\) uncovered ones \(-k/N\), sizes below 1, summing to zero exactly. The note
-  gives an explicit balanced ordering whose running coverage is within \(1/(2t)\) of the orbit
-  level \(k/N\) at every prefix, exact at the full orbit.
+  gives an explicit balanced ordering, the balanced word of Tijdeman&rsquo;s chairman assignment
+  problem, whose running coverage is within \(1/(2t)\) of the orbit level \(k/N\) at every
+  prefix, exact at the full orbit.
   On the function&ndash;measure pairing, the measure-side counterpart of calibration is balanced
   sampling and exact cubature (the cube method; Tchakaloff), for which herding is one iterative
   solver. None of this removes exchangeability from one-shot conformal prediction.</p>
