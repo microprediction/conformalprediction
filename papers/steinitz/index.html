@@ -199,6 +199,30 @@
     conformal corner, and exactly what is not enough in the general one.</p>
   </details>
 
+  <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
+    <summary style="cursor:pointer;font-weight:600;">The lineage, Riemann to Vovk</summary>
+    <p style="margin-top:10px;">The thread starts with Riemann, who showed in the 1860s that a
+    conditionally convergent series of real numbers can be reordered to sum to anything: order
+    is not bookkeeping but a degree of freedom. L&eacute;vy and then Steinitz asked the vector
+    version, and Steinitz&rsquo;s 1913 answer, that the achievable sums form an affine
+    subspace, rested on a workhorse lemma about order itself: any finite zero-sum population of
+    bounded vectors can be walked in some order without the running sum ever drifting. The
+    scalar corner of that lemma was mapped separately, as the balanced words of
+    Tijdeman&rsquo;s chairman assignment problem, where the sharp constant is one half; the
+    general case got its clean dimension-linear constant from Grinberg and Sevastyanov in 1980.
+    Welling&rsquo;s herding rediscovered the phenomenon greedily in 2009, picking points one at
+    a time so running averages balance a target, and Harvey and Samadi closed the loop by
+    showing that herding over a finite population, each point used once, is exactly
+    Steinitz&rsquo;s ordering problem. Conformal prediction, built by Vovk, Gammerman and
+    Shafer from rank symmetry, turns out to hold a native instance: rotate the test label
+    through the \(n+1\) slots and exactly \(k\) placements are covered, so the coverage
+    residuals are a zero-sum population of Steinitz&rsquo;s kind, and the balanced word walks
+    them within \(1/(2t)\) of nominal at every step. A century and a half of the same question,
+    what can the order of a fixed population achieve, ending at the running coverage of a
+    prediction interval. The whole chain is drawn on
+    <a href="/connections.html">the connections page</a>.</p>
+  </details>
+
   <div class="prevnext">
     <a href="/papers/">&larr; All papers &amp; notes</a>
     <span class="spacer"></span>
