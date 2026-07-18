@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <title>Alternatives — Conformal Prediction</title>
-<meta name="description" content="If the problem is a distributional time-series forecast, the workhorses are t-GARCH and laplace. Each buys sharpness with assumptions; conformal buys assumption-freeness with marginality. There is no free lunch." />
+<meta name="description" content="If the problem is a distributional time-series forecast, the workhorses are t-GARCH, laplace, and pymc_forecast. Each buys sharpness with assumptions; conformal buys assumption-freeness with marginality. There is no free lunch." />
 <meta property="og:title" content="Conformal Prediction — alternatives" />
-<meta property="og:description" content="t-GARCH and laplace as the distributional workhorses, and what each one costs. There is no free lunch." />
+<meta property="og:description" content="t-GARCH, laplace, and pymc_forecast as the distributional workhorses, and what each one costs. There is no free lunch." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://conformalprediction.net/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -64,7 +64,7 @@
   <p class="subtitle">If the problem is a distributional forecast, wrap nothing: model the conditional distribution. There is no free lunch.</p>
 
   <p>Conformal prediction certifies coverage. If what you need is a sharp conditional
-  distribution, the two workhorses below are where to start. Each buys sharpness with
+  distribution, the workhorses below are where to start. Each buys sharpness with
   assumptions. Conformal buys assumption-freeness with marginality. Nobody escapes the trade.</p>
 
   <h2>t-GARCH</h2>
@@ -81,8 +81,17 @@
   that the recent past is informative enough for the ensemble to track; and it hands you no
   finite-sample coverage certificate.</p>
 
+  <h2>pymc_forecast</h2>
+  <p>The fully Bayesian route:
+  <a href="https://github.com/pymc-labs/pymc_forecast">pymc_forecast</a> (PyMC Labs) has you
+  write the generative model in PyMC and handles the rest — inference, forecasting, and
+  rolling-origin backtesting with CRPS, pinball, and coverage metrics. You get the whole
+  posterior predictive, hierarchies included. The assumption purchased is the model itself,
+  prior and likelihood: the intervals are credible, calibrated exactly to the extent the model
+  is right, with no distribution-free certificate.</p>
+
   <h2>The trade</h2>
-  <p>Either can be conformalized afterwards for the certificate: estimate first, certify second.
+  <p>Any of them can be conformalized afterwards for the certificate: estimate first, certify second.
   <a href="/demos/17-laplace-vs-conformal.html">Demo 17</a> and the
   <a href="/benchmark.html">worked example</a> run the comparison, and
   <a href="/papers/two-prices/">the two-prices note</a> prices what ignoring the conditional
