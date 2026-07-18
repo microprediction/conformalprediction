@@ -231,7 +231,7 @@ lo = lo_m.predict(X_test) - q
 hi = hi_m.predict(X_test) + q                            # adaptive width, exact marginal coverage
 </code></pre>
 
-  <h3>Time series (adaptive conformal inference)</h3>
+  <h3 id="ts">Time series (adaptive conformal inference)</h3>
   <p>Exchangeability fails under drift, so the fixed quantile is replaced by an online one. ACI
   recovers long-run coverage, not per-step conditional coverage
   (<a href="demos/05-drift-timeseries.html">exchangeability &amp; time series</a>).</p>
