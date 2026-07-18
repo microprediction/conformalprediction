@@ -4,10 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<title>Conformal Prediction — a practical guide</title>
-<meta name="description" content="A practical, interactive guide to conformal prediction: how it works, what its guarantee really means, where coverage is exactly the right goal, and the one thing it does not do." />
-<meta property="og:title" content="Conformal Prediction — a practical guide" />
-<meta property="og:description" content="How conformal prediction works, what its guarantee really means, the applications where coverage is the goal, and the one thing it doesn't do. Interactive demos, a worked example, and a paper." />
+<title>Conformal Prediction Demonstrations</title>
+<meta name="description" content="Interactive demonstrations of the principles of conformal prediction — the guarantee, its fine print, the information gap, exchangeability, time series, and the applications where coverage is the goal — and its connections to other areas of mathematics." />
+<meta property="og:title" content="Conformal Prediction Demonstrations" />
+<meta property="og:description" content="Interactive demonstrations of the principles of conformal prediction and its connections to other areas of mathematics: Steinitz balancing, herding, de Finetti, parimutuel rent." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://conformalprediction.net/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -68,12 +68,12 @@
 <main>
 <div class="wrap">
 
-  <h1>Conformal Prediction</h1>
-  <p class="subtitle">A practical, interactive guide, built on one premise: to wield conformal prediction well, you have to understand what it isn&rsquo;t.</p>
+  <h1>Conformal Prediction Demonstrations</h1>
+  <p class="subtitle">Demonstrations of some principles of conformal prediction and its connection to other areas of mathematics</p>
 
   <details style="margin:14px 0 18px;border:1px solid var(--line,#ddd);border-radius:8px;padding:10px 16px;">
     <summary style="cursor:pointer;font-weight:600;">About this site</summary>
-    <p style="margin-top:10px;">This site began as a hunt for anything in conformal prediction that might improve the out-of-sample performance of autonomous time-series algorithms, the kind that run unattended at <a href="https://skaters.microprediction.org">skaters</a>. It grew into a dozen or so interactive demonstrations and a few <a href="/papers/">notes</a>. The topic is extremely interesting mathematically, with surprising connections to things like Steinitz balancing, herding, Riemann rearrangement, parimutuel rent, the Kerns&ndash;Sz&eacute;kely representation of finite exchangeable collections, and that&rsquo;s just a shortlist of things the community might not have noticed yet &mdash; <a href="/literature.html">there is plenty they have</a>. I strongly encourage the mathematically minded person to invest some time in conformal prediction.</p>
+    <p style="margin-top:10px;">This site began as a hunt for anything in conformal prediction that might improve the out-of-sample performance of autonomous time-series algorithms, the kind that run unattended at <a href="https://skaters.microprediction.org">skaters</a>, and the ways in which work under the general &ldquo;conformal&rdquo; banner have helped are documented there. It grew into a dozen or so interactive demonstrations and a few <a href="/papers/">notes</a>. The topic is extremely interesting mathematically, with surprising connections to things like Steinitz balancing, herding, Riemann rearrangement, parimutuel rent, the Kerns&ndash;Sz&eacute;kely representation of finite exchangeable collections, and that&rsquo;s just a shortlist of things the community might not have noticed yet &mdash; <a href="/literature.html">there is plenty they have</a>. I strongly encourage the mathematically minded person to invest some time in conformal prediction.</p>
     <p>Admittedly this site has a minor identity crisis. It is a mix of elementary demonstrations and common-sense, well-meaning advice for those in the time-series prediction community (which does not seem to be the exact sweet spot for conformal prediction due to the &ldquo;<a href="#gap">information gap</a>&rdquo;), but also novel insights into conformal prediction that may hopefully find use in applications outside the <a href="https://www.linkedin.com/in/petercotton/">author</a>&rsquo;s wheelhouse. You might say that, in the spirit of conformal prediction itself, the treatment here is highly uneven, both in rigor and in sophistication. Some arguments are tight. Others loose. You have no way of knowing whether the next statement to arrive should be one or the other. What you can do is file an issue or a PR against anything you object to, which will probably help everyone (including the author) by improving the sharpness.</p>
   </details>
 
@@ -119,21 +119,13 @@
   </div>
 
   <!-- ============================================================ -->
-  <h2 id="wont">3 &middot; The one thing it likely won&rsquo;t do: improve your forecast</h2>
-  <p>The most common hope is that conformalizing a model makes its uncertainty <em>better</em>. It doesn&rsquo;t, and seeing exactly why is worth a few minutes. The coverage certificate is independent of forecast quality: the same 90% attaches to a brilliant model and a useless one, and you can hold coverage fixed while the predictive log-likelihood does anything at all. Sharpness comes from the model; conformal supplies the certificate on top.</p>
+  <h2 id="wont">3 &middot; A tougher challenge</h2>
+  <p>The most common hope is that conformalizing a model makes its uncertainty <em>better</em>. That can lead to disappointment, and seeing exactly why is worth a few minutes. The coverage certificate is independent of forecast quality: the same 90% attaches to a brilliant model and an uninformative one, and you can hold coverage fixed while the predictive log-likelihood does anything at all. Sharpness comes from the model; conformal supplies the certificate on top.</p>
 
-  <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
-    <summary style="cursor:pointer;font-weight:600;">Provisional advice</summary>
-    <p style="margin-top:10px;">The author is new to conformal prediction, so take this as provisional. It is the kind of pushback you might get, or want to make yourself, and it is worth being able to answer:</p>
-    <blockquote>
-      <p>If the model is miscalibrated, fix the model. If the probabilities are miscalibrated, calibrate the probabilities. If the quantiles are wrong, estimate the quantiles better. Why should I be impressed that someone looked at held-out residuals and widened intervals until empirical coverage matches a target?</p>
-    </blockquote>
-    <p>The fair answer: you shouldn&rsquo;t be impressed by the widening as a <em>forecast</em>, but it does buy one thing nothing else does, a finite-sample, distribution-free guarantee that the band covers, under almost no assumptions. That certificate is the product. The sharper forecast underneath is still the model&rsquo;s job.</p>
-  </details>
   <div class="cards">
     <a class="card" href="demos/03-trivial-validity.html">
       <h3>The fence is the horizon</h3>
-      <p>A deliberately useless predictor still reaches exactly 90% coverage. Validity is not evidence of a good model.</p>
+      <p>A deliberately uninformative predictor still reaches exactly 90% coverage. Validity, by itself, is not evidence about the model.</p>
     </a>
     <a class="card" href="demos/04-coverage-vs-logscore.html">
       <h3>Coverage &perp; log-score</h3>
@@ -209,7 +201,7 @@
 
   <!-- ============================================================ -->
   <h2 id="ts">7 &middot; Time series &amp; distribution shift</h2>
-  <p>Time series break <em>exchangeability</em>, but that turns out to be the least of it: plain split
+  <p>Time series break <em>exchangeability</em>, but that actually isn&rsquo;t such a big deal for coverage: plain split
   conformal degrades gracefully, with a coverage loss provably bounded by
   (dependence&nbsp;range)&thinsp;/&thinsp;(calibration&nbsp;size) for stationary series whose dependence dies
   out with lag (Barber &amp; Pananjady 2026). The real question is which assumption replaces
@@ -302,7 +294,7 @@
 
   <!-- ============================================================ -->
   <h2 id="faq">16 &middot; Objections &amp; FAQ</h2>
-  <p>Is it useless? Does conformalizing improve my model? Can I get conditional coverage? Does it work for time series? The common objections, and straight answers, live on the <a href="faq.html">FAQ page</a>.</p>
+  <p>Does conformalizing improve my model? Can I get conditional coverage? Does it work for time series? The common objections, and straight answers, live on the <a href="faq.html">FAQ page</a>.</p>
 
   <!-- ============================================================ -->
   <h2>The one-sentence version</h2>
@@ -322,7 +314,7 @@
   </ul>
   <p class="note">The full bibliography is in <a href="/papers/marginally-useful/references.bib"><code>paper/references.bib</code></a>.</p>
 
-  <p style="text-align:center;font-size:0.8em;color:#888;margin-top:36px;">There is nothing for sale on this site, and nor will there ever be.</p>
+  <p style="text-align:center;font-size:0.8em;color:#888;margin-top:36px;">All errors are the <a href="https://home.microprediction.org/">author</a>&rsquo;s.</p>
 
 </div>
   <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
