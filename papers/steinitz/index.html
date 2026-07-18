@@ -154,6 +154,43 @@
   sampling and exact cubature (the cube method; Tchakaloff), for which herding is one iterative
   solver. None of this removes exchangeability from one-shot conformal prediction.</p>
 
+  <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
+    <summary style="cursor:pointer;font-weight:600;">Why &ldquo;balanced word&rdquo;, and is greedy enough?</summary>
+    <p style="margin-top:10px;">The name comes from combinatorics on words. A binary word is
+    <em>balanced</em> if its letters are spread as evenly as possible: any two windows of the
+    same length contain counts of 1s differing by at most one, so every prefix of length \(t\)
+    holds either \(\lfloor t\theta\rfloor\) or \(\lceil t\theta\rceil\) ones, where \(\theta\)
+    is the density. The floor construction
+    \(b_t=\lfloor t\theta+\tfrac12\rfloor-\lfloor (t-1)\theta+\tfrac12\rfloor\), ours with
+    \(\theta=k/N\), is the canonical way to build one; words of this form are also called
+    mechanical or Sturmian-type, the same objects that describe evenly spaced points on a
+    circle and, in the periodic case, leap-year rules. &ldquo;Balanced&rdquo; is the standing
+    term for exactly the property the corollary needs: prefix counts within \(\tfrac12\) of the
+    quota \(t\theta\).</p>
+    <p>Whether greedy is enough depends on the dimension, and the split is clean. In the
+    scalar two-valued case, our case, yes: the rule &ldquo;emit whichever symbol keeps the
+    running count closest to its quota&rdquo; reproduces the balanced word and achieves the
+    sharp \(\tfrac12\). This is
+    <a href="https://doi.org/10.1016/0012-365X(80)90269-1">Tijdeman&rsquo;s</a> territory, and
+    with more than two parties the quota-tracking rule is still optimal, the constant degrading
+    gracefully toward 1. In <a href="/demos/24-balanced-placements.html">demo 24</a> the
+    explicit word and greedy achieve the same thing; the word is just nicer to state.</p>
+    <p>In the vector-valued case, no, not as far as anyone has proved. The dimension-only
+    constant in Steinitz&rsquo;s theorem does not come from a greedy argument: the proofs that
+    give a clean bound, Steinitz&rsquo;s original and the Grinberg&ndash;Sevastyanov algorithm
+    that achieves a bound linear in the dimension in polynomial time, maintain a fractional
+    certificate over the remaining vectors and round it, a look-ahead structure a myopic rule
+    lacks. Plain greedy, append the remaining vector that minimizes the new prefix norm, has no
+    known \(N\)-independent guarantee and can paint itself into a corner where every remaining
+    vector points the wrong way; <a href="/demos/23-steinitz-balancing.html">demo 23</a> labels
+    its greedy ordering a heuristic for this reason.</p>
+    <p>Herding is the greedy algorithm, in the with-replacement setting: pick the next point to
+    best balance the running average. Its \(O(1/n)\) rate is conditional, the Frank&ndash;Wolfe
+    interiority conditions of Bach et al.; when those fail, greedy herding falls back to the
+    \(O(1/\sqrt n)\) a random order already gives. Greedy is exactly enough in the scalar
+    conformal corner, and exactly what is not enough in the general one.</p>
+  </details>
+
   <div class="prevnext">
     <a href="/papers/">&larr; All papers &amp; notes</a>
     <span class="spacer"></span>
