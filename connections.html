@@ -124,7 +124,7 @@
 const CLUSTERS = {
   gap:     { label: "The information gap (this site)", color: "#111111" },
   fanax:   { label: "The fan axis (calibration-conditional)", color: "#b45309" },
-  mech:    { label: "Mechanism (slots, herding, quadrature)", color: "#7d3c98" },
+  mech:    { label: "Mechanism (slots, balancing, quadrature)", color: "#7d3c98" },
   ts:      { label: "Time series / dependence", color: "#2563eb" },
   found:   { label: "Foundations & no-gos", color: "#5d6d7e" },
 };
@@ -137,7 +137,8 @@ const NODES = [
  {id:"fan", label:"The conformal fan", c:"fanax", url:"/papers/fan/", note:"Across-calibration dispersion of realized coverage; its width is set by the sign of cross-sample dependence."},
  {id:"snell", label:"Snell–Griffiths 2025", c:"fanax", url:"https://arxiv.org/abs/2502.13228", note:"Conformal prediction as Bayesian quadrature: a Dirichlet posterior over realized risk. The loss-side fan; HPD = report the fan's quantile, not its mean."},
  {id:"kerns", label:"Kerns–Székely 2006", c:"found", url:"https://doi.org/10.1007/s10959-006-0028-z", note:"Finite exchangeable laws admit signed mixing measures — the negative probability the sign note runs on."},
- {id:"herding", label:"Herding dual", c:"mech", url:"/papers/steinitz/", note:"The exact orbit identity behind conformal validity, Steinitz balancing as its permutation-equivariant primal, and herding as the with-replacement relaxation (Harvey & Samadi 2014). Rough draft."},
+ {id:"herding", label:"Steinitz dual", c:"mech", url:"/papers/steinitz/", note:"The exact orbit identity behind conformal validity, Steinitz balancing as its permutation-equivariant primal, and herding as the with-replacement relaxation (Harvey & Samadi 2014). Rough draft."},
+ {id:"steinitz1913", label:"Steinitz 1913", c:"mech", url:"https://doi.org/10.1515/crll.1913.143.128", note:"A zero-sum, unit-bounded population always admits an ordering whose every prefix sum is bounded independent of N. The balancing lemma the dual runs on."},
  {id:"welling", label:"Welling 2009", c:"mech", url:"https://dl.acm.org/doi/10.1145/1553374.1553517", note:"Herding: steer the particles so feature averages balance the target; bounded weights give 1/n."},
  {id:"bq", label:"Bayesian quadrature", c:"mech", url:"https://arxiv.org/abs/1204.1664", note:"The hub of the quadrature triangle: optimally-weighted herding is Bayesian quadrature (Huszár & Duvenaud 2012), and the conformal computation was recast as Bayesian quadrature (Snell & Griffiths 2025)."},
  {id:"bach", label:"Bach+ 2012", c:"mech", url:"https://arxiv.org/abs/1203.4523", note:"Herding = Frank–Wolfe on the marginal polytope; where the boundedness conditions live."},
@@ -168,6 +169,8 @@ const LINKS = [
  {source:"aci", target:"bci", type:"build", label:"width added as objective"},
  // dual mechanisms (purple dotted)
  {source:"welling", target:"herding", type:"mech", label:"balls vs slots"},
+ {source:"steinitz1913", target:"herding", type:"build", label:"the permutation primal"},
+ {source:"steinitz1913", target:"welling", type:"build", label:"herding = with-replacement relaxation (Harvey–Samadi 2014)"},
  {source:"bach", target:"welling", type:"mech", label:"Frank–Wolfe"},
  {source:"welling", target:"bq", type:"mech", label:"weighted herding = BQ (2012)"},
  {source:"snell", target:"bq", type:"mech", label:"conformal as BQ (2025)"},
