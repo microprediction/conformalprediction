@@ -230,7 +230,7 @@
   </div>
 
   <!-- ============================================================ -->
-  <h2 id="practice">8 &middot; Does it help in practice?</h2>
+  <h2 id="practice">8 &middot; A minimalist example of using conformal wrappers</h2>
   <p>One small, reproducible <a href="benchmark.html">worked example</a>, not a benchmark, just a controlled experiment on synthetic data with a known answer, runs the actual libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods against probabilistic baselines and an oracle, scored by conditional coverage and proper scores (CRPS, interval/Winkler). It isolates one clean point: the adaptive conformal methods <em>do</em> help, but the help comes from the conditional model they wrap, raw quantile regression with no conformal step ties conformalized quantile regression, with the conformal layer adding the marginal certificate on top. <a href="benchmark.html">See the example &rarr;</a></p>
 
   <!-- ============================================================ -->
@@ -322,7 +322,7 @@
 
 <footer class="site">
   <div class="wrap">
-    <span>Conformal Prediction: a practical guide. <span style="font-style:italic">Marginally Useful.</span></span>
+    <span>Conformal Prediction: an exploration. <span style="font-style:italic">Marginally Useful.</span></span>
     <span><a href="/papers/marginally-useful/">Paper</a> &middot; <a href="benchmark.html">Example</a></span>
   </div>
 </footer>
