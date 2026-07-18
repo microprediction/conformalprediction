@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <title>Alternatives — Conformal Prediction</title>
-<meta name="description" content="If the problem is a distributional time-series forecast, the workhorses are t-GARCH, laplace, and pymc_forecast. Each buys sharpness with assumptions; conformal buys assumption-freeness with marginality. There is no free lunch." />
+<meta name="description" content="If the problem is a distributional time-series forecast, the workhorses are t-GARCH, auto-ARIMA, laplace, pymc_forecast, and NNS. Each buys sharpness with assumptions; conformal buys assumption-freeness with marginality. There is no free lunch." />
 <meta property="og:title" content="Conformal Prediction — alternatives" />
-<meta property="og:description" content="t-GARCH, laplace, and pymc_forecast as the distributional workhorses, and what each one costs. There is no free lunch." />
+<meta property="og:description" content="t-GARCH, auto-ARIMA, laplace, pymc_forecast, and NNS as the distributional workhorses, and what each one costs. There is no free lunch." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://conformalprediction.net/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -72,11 +72,34 @@
   distribution, the workhorses below are where to start. Each buys sharpness with
   assumptions. Conformal buys assumption-freeness with marginality. Nobody escapes the trade.</p>
 
+  <details style="margin:14px 0 18px;border:1px solid var(--line,#ddd);border-radius:8px;padding:10px 16px;">
+    <summary style="cursor:pointer;font-weight:600;">Caveat: these recommendations go stale</summary>
+    <p style="margin-top:10px;">These recommendations are likely to be stale before long. This site is
+    intended primarily as a list of mathematical insights; benchmarking is fluid, ongoing, and best
+    found elsewhere. Open efforts worth checking:
+    <a href="https://skaters.microprediction.org">skaters.microprediction.org</a> (autonomous,
+    continuously running, distributional), the
+    <a href="https://forecastingdata.org">Monash forecasting repository</a>, the
+    <a href="https://github.com/Mcompetitions">M competitions</a> (data and results are open), and
+    <a href="https://github.com/SalesforceAIResearch/gift-eval">GIFT-Eval</a> for the zero-shot
+    foundation models.</p>
+  </details>
+
   <h2>t-GARCH</h2>
   <p>The classical econometric route: conditional volatility with Student-t innovations. Strong
   on price and return series, where volatility clustering is the signal and heavy tails are the
   rule. The assumption purchased is that the GARCH recursion is roughly right; when it is not,
   the tails you paid for are the wrong ones.</p>
+
+  <h2>auto-ARIMA</h2>
+  <p>The workhorse baseline: search the ARIMA orders, fit by maximum likelihood, forecast with
+  Gaussian innovations. Of the implementations,
+  <a href="https://github.com/Nixtla/statsforecast">statsforecast</a>&rsquo;s AutoARIMA is the one
+  that has held up in the skaters studies: fast enough to run everywhere and rarely far wrong,
+  which is much of what an autonomous baseline is for. The assumption purchased is linearity with
+  a fixed innovation shape: the point forecast is often serviceable while the interval inherits a
+  constant-shape residual, so on heteroscedastic series it makes the same trade as the conformal
+  wrapper, a level without a shape.</p>
 
   <h2>laplace</h2>
   <p>An online likelihood-weighted ensemble from the
@@ -95,6 +118,19 @@
   prior and likelihood: the intervals are credible, calibrated exactly to the extent the model
   is right, with no distribution-free certificate.</p>
 
+  <h2>NNS</h2>
+  <p><a href="https://github.com/OVVO-Financial/NNS">NNS</a> (nonlinear nonparametric statistics,
+  Viole) takes a different door out of the time-series problem: notice when the series is repeated
+  sampling in disguise. Electricity load is the standard case, the 7am pattern recurs every day,
+  so the right reference class for this morning&rsquo;s 7am is the other 7am&rsquo;s, not the last
+  few hours, and NNS forecasts by resampling those matched periods. The same observation is
+  finding its way into the conformal literature: seasonal slices of such a series are close to
+  exchangeable, which is exactly the symmetry the guarantee runs on, and a training-free
+  seasonal-pool forecaster built on it is already a strong baseline
+  (<a href="https://arxiv.org/abs/2605.03789">Manokhin, 2026</a>). The assumption purchased is the
+  periodicity itself: on waveform-like series it is most of the signal; on economic series it is
+  mostly absent.</p>
+
   <h2>The trade</h2>
   <p>Any of them can be conformalized afterwards for the certificate: estimate first, certify second.
   <a href="/demos/17-laplace-vs-conformal.html">Demo 17</a> and the
@@ -102,6 +138,14 @@
   <a href="/papers/two-prices/">the two-prices note</a> prices what ignoring the conditional
   information costs. There is no free lunch: the conditional models pay in assumptions, conformal
   pays in sharpness, and the only real decision is which bill your application can afford.</p>
+
+  <p>NNS and the seasonal-pool idea both run live on
+  <a href="https://skaters.microprediction.org">the skaters benchmarks</a>, part of an ongoing
+  effort to learn whether one general-purpose autonomous forecaster can mostly match the
+  specialists on waveform-like series without paying a steep price on economic ones. That
+  question is this site&rsquo;s core message in different clothes: modeling is not automatic in
+  general, and residual analysis, however much we would like it to be, is not automatic
+  either.</p>
 
   <div class="prevnext">
     <a href="/recipes.html">&larr; Recipes &amp; audits</a>
