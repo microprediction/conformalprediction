@@ -133,6 +133,7 @@ const NODES = [
  {id:"welling", label:"Welling 2009", c:"mech", url:"https://dl.acm.org/doi/10.1145/1553374.1553517", note:"Herding: steer the particles so feature averages balance the target; bounded weights give 1/n."},
  {id:"bq", label:"Bayesian quadrature", c:"mech", url:"https://arxiv.org/abs/1204.1664", note:"The hub of the quadrature triangle: optimally-weighted herding is Bayesian quadrature (Huszár & Duvenaud 2012), and the conformal computation was recast as Bayesian quadrature (Snell & Griffiths 2025)."},
  {id:"bach", label:"Bach+ 2012", c:"mech", url:"https://arxiv.org/abs/1203.4523", note:"Herding = Frank–Wolfe on the marginal polytope; where the boundedness conditions live."},
+ {id:"hmm", label:"Nettasinghe+ 2023", c:"ts", url:"https://arxiv.org/abs/2210.02271", note:"Conformal for hidden Markov models made exactly valid via de Finetti's theorem for Markov chains: block exchangeability inside a temporal model — the de Finetti thread crossing into time series."},
  {id:"bp", label:"Barber–Pananjady 2026", c:"ts", url:"https://arxiv.org/abs/2510.02471", note:"The switch coefficient: unmodified split conformal on a mixing series loses at most min τ/n + 2β(τ) — linear, tight, two-sided. The coverage cost of dependence, priced."},
  {id:"oliveira", label:"Oliveira+ 2024", c:"ts", url:"https://arxiv.org/abs/2203.15885", note:"The same question by blocking and concentration: √(t_mix/n). Counting beats concentration."},
  {id:"aci", label:"ACI / online", c:"ts", url:"https://arxiv.org/abs/2106.00170", note:"Long-run time-average coverage for any sequence; no distribution, no per-step statement."},
@@ -157,6 +158,8 @@ const LINKS = [
  {source:"vovk", target:"fan", type:"build", label:"Beta law"},
  {source:"bp", target:"herding", type:"build", label:"the τ/n ledger, read as slots"},
  {source:"oliveira", target:"bp", type:"build", label:"same question, weaker rate"},
+ {source:"hmm", target:"definetti", type:"build", label:"de Finetti, Markov form"},
+ {source:"hmm", target:"bp", type:"build", label:"restore the symmetry vs price its absence"},
  {source:"aci", target:"bci", type:"build", label:"width added as objective"},
  // dual mechanisms (purple dotted)
  {source:"welling", target:"herding", type:"mech", label:"balls vs slots"},
