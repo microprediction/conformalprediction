@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Conformal prediction as Bayesian quadrature — Conformal Prediction</title>
+<meta name="description" content="Snell &amp; Griffiths 2025 in one picture: the calibration scores induce a Dirichlet posterior over realized coverage, exactly Beta(k, n+1−k). The conformal guarantee is its mean; reporting a quantile is more informative." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/04-coverage-vs-logscore.html">Coverage &perp; log-score</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/papers/">Papers &amp; notes</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration</p>
+  <h1>Conformal prediction as Bayesian quadrature</h1>
+  <p class="subtitle">The calibration scores induce a posterior over your realized coverage, exactly \(\mathrm{Beta}(k,\,n+1-k)\). The conformal guarantee is the mean of that distribution; you could report a quantile of it instead.</p>
+
+  <p><a href="https://arxiv.org/abs/2502.13228">Snell &amp; Griffiths (2025)</a> recast the conformal computation as quadrature. Sort the \(n\) calibration scores; they cut the line into \(n+1\) gaps, and by exchangeability the test score is equally likely to land in any of them: each gap carries expected probability \(1/(n+1)\), and jointly the gap masses are \(\mathrm{Dirichlet}(1,\dots,1)\). Any question of the form &ldquo;how much mass sits below the threshold \(q_n=S_{(k)}\)?&rdquo; is then an integral against random weights: the realized coverage of your interval is the sum of the first \(k\) gap masses, which is \(\mathrm{Beta}(k,\,n+1-k)\) exactly, whatever the score distribution. The familiar guarantee, coverage \(\ge 1-\alpha\) on average, is nothing but the mean of this posterior, \(k/(n+1)\).</p>
+
+  <p>The first panel shows the quadrature picture: the sorted scores, the gap masses, and the threshold. The second panel shows the \(\mathrm{Beta}(k,\,n+1-k)\) posterior over realized coverage, with a Monte Carlo histogram of actual realized coverage across many fresh calibration draws laid over it; they agree for any score distribution, which is the distribution-free point. The mean is marked, and so is the lower quantile you select: &ldquo;with 90% probability over calibration draws, my coverage exceeds this&rdquo; is a calibration-conditional statement the mean alone cannot make. Small \(n\) makes the posterior wide; that width is <a href="18-conformal-fan.html">the conformal fan</a> seen from the loss side.</p>
+
+  <div class="demo">
+    <div class="canvas-box med"><canvas id="quad"></canvas></div>
+    <div class="canvas-box tall"><canvas id="post"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <div class="takeaway">
+    <p>Takeaway. Conformal prediction quietly computes a full posterior over its own realized coverage and then reports only the mean. Snell &amp; Griffiths make the posterior explicit: report its lower quantile (or highest-density region, for general losses) and the same calibration data yields a strictly more informative statement. What the posterior cannot say is anything about <em>which</em> inputs are covered; it sharpens the calibration-conditional statement, and the <a href="/demos/04-coverage-vs-logscore.html">information gap</a> stands where it stood.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="18-conformal-fan.html">&larr; The conformal fan</a>
+    <span class="spacer"></span>
+    <a href="19-dependence-tax.html">The dependence tax &rarr;</a>
+  </div>
+
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Conformal Prediction</span><span>Demonstration</span></div></footer>
+
+<script type="module" src="../js/demo25.js"></script>
+</body>
+</html>
