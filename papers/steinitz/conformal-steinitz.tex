@@ -38,8 +38,8 @@ acceptance map is equivariant for the permutation action, and the Reynolds ident
 $\langle P^{\vee}f,v\rangle=\langle f,Pv\rangle$ reads its orbit average either as moving the
 evaluation functional or as averaging the induced acceptance vector over placements. A natural
 primal discrepancy construction under the same action is Steinitz balancing: ordering a
-zero-sum population so that every prefix sum stays bounded. Conformal placements form such a
-population, and an explicit ordering keeps running coverage within $1/(2t)$ of the orbit level
+zero-sum population so that every prefix sum stays bounded. The centered conformal placement
+residuals form such a population, and an explicit ordering keeps running coverage within $1/(2t)$ of the orbit level
 $k/N$, exact once all $N$ candidate test placements have been traversed; the vector-valued
 lemma balances several coverage levels along
 one traversal. On the function--measure pairing, the measure-side counterpart
@@ -56,8 +56,8 @@ construction that lives beside it under the same group action. The identity behi
 validity is a contragredient statement for the permutation action on slots
 (Section~\ref{sec:contra}). A natural primal discrepancy construction under that action is
 \emph{Steinitz balancing}: ordering a finite zero-sum population so that every prefix sum stays
-uniformly bounded \citep{steinitz1913}. Conformal placements are themselves a scalar Steinitz
-population (Section~\ref{sec:balanced}), and admit a sharper balanced ordering than the general
+uniformly bounded \citep{steinitz1913}. The centered conformal placement residuals are
+themselves a scalar Steinitz population (Section~\ref{sec:balanced}), and admit a sharper balanced ordering than the general
 lemma provides. On the function--measure pairing, the measure-side counterpart of calibration
 is balanced sampling and exact cubature (Section~\ref{sec:cubature}). Section~\ref{sec:bp}
 records how the same two-ingredient structure appears in the dependent-data floor of
@@ -143,7 +143,7 @@ projector and $P^{\vee}=\frac1{N!}\sum_{\pi}\rho^{\vee}(\pi)$ its dual, so that
 \qquad\text{for all } f\in V^{*},\ v\in V .
 \end{equation}
 For the permutation representation, $Pv=\bar v\,\mathbf 1$ and
-$P^{\vee}e^{*}_{N}=\frac1N\mathbf 1^{*}$.
+$P^{\vee}e^{*}_{N}=\frac1N\mathbf 1^{*}$, where $\mathbf 1^{*}=\sum_{i=1}^{N}e^{*}_{i}$.
 
 The object the projector acts on is not the score vector but the acceptance vector. Write
 $\R^{N}_{\ne}$ for the score vectors with distinct entries and
@@ -331,19 +331,26 @@ the selection problem
 \[
 Az=b,\qquad z\in\{0,1\}^{N}.
 \]
-Horvitz--Thompson balancing is the case $a_i=1/\pi_i$ with population totals in $b$; with
-prescribed inclusion probabilities and auxiliary-total constraints this is the
-balanced-sampling problem addressed (exactly when geometry and integrality permit,
-approximately otherwise) by the cube method \citep{devilletille2004}. Sample-dependent weights
-such as $1/\sum_iz_i$ leave this linear form unless a fixed sample size is imposed separately. When arbitrary positive
-weights are allowed the problem changes and convex geometry answers it exactly. Let $P$ be a
-probability measure on $\mathcal X$, let $h_1,\dots,h_d:\mathcal X\to\R$ be measurable and
-$P$-integrable, and set $\tilde\phi=(1,h_1,\dots,h_d)$. By the generalized
-Tchakaloff--Richter theorem for measurable integrable maps
-\citep{tchakaloff1957,bayerteichmann2006} there are $m\le d+1$ points $x_1,\dots,x_m$ in a
-$P$-full set and weights $w_r>0$ with
-$\int\tilde\phi\,dP=\sum_{r=1}^{m}w_r\tilde\phi(x_r)$: the first coordinate gives
-$\sum_rw_r=1$ and the rest give $\int h_j\,dP=\sum_rw_rh_j(x_r)$ for every $j$. In this formulation, balanced sampling and exact
+Horvitz--Thompson balancing is the case $a_i=1/\pi_i$ with population totals in $b$.
+Equation $Az=b$ is the balancing constraint on a \emph{realized} sample; a balanced sampling
+design is a distribution on $z\in\{0,1\}^N$ with $\E z_i=\pi_i$ satisfying that constraint
+exactly when feasible and approximately otherwise, which is what the cube method delivers
+\citep{devilletille2004}. Normalized equal weights $1/\sum_iz_i$ do not fit the fixed-weight
+representation above, but for a nonempty selection the normalized constraints homogenize,
+\[
+\frac{\sum_iz_ih_j(x_i)}{\sum_iz_i}=m_j
+\quad\Longleftrightarrow\quad
+\sum_i z_i\bigl(h_j(x_i)-m_j\bigr)=0,
+\]
+still linear in $z$; at fixed sample size $M$ this is $\sum_iz_ih_j(x_i)=Mm_j$. When arbitrary positive
+weights are allowed the problem changes and convex geometry answers it exactly. Let $Q$ be a
+probability measure on $\mathcal X$ (the letter $P$ is reserved for the Reynolds projector),
+let $h_1,\dots,h_d:\mathcal X\to\R$ be measurable and $Q$-integrable, and set
+$\tilde\phi=(1,h_1,\dots,h_d)$. By the generalized Tchakaloff theorem for measurable
+integrable maps \citep{tchakaloff1957,bayerteichmann2006} there are $m\le d+1$ points
+$x_1,\dots,x_m$ in a $Q$-full set and weights $w_r>0$ with
+$\int\tilde\phi\,dQ=\sum_{r=1}^{m}w_r\tilde\phi(x_r)$: the first coordinate gives
+$\sum_rw_r=1$ and the rest give $\int h_j\,dQ=\sum_rw_rh_j(x_r)$ for every $j$. In this formulation, balanced sampling and exact
 cubature are the measure-side counterpart of threshold calibration.
 
 A designed calibration set sits inside this frame. If designed scores $S_1,\dots,S_n$, taken
@@ -435,7 +442,7 @@ fast rate needs interiority-type conditions, with \citet{chen2010} treating the 
 \citet{harvey2014} introduce a Permutation Problem, the Euclidean finite-population instance
 of the balancing problem of Section~\ref{sec:steinitz}, and show that periodically repeating a
 good permutation yields a solution to their with-replacement Sampling Problem; generic herding
-runs with replacement, typically on nonfinite domains \citep{welling2009,chen2010}, and on the
+runs with repeated selection \citep{welling2009,chen2010}, and on the
 pairing of
 Section~\ref{sec:cubature} it is an iterative with-replacement method for approximate moment
 matching, or equal-weight cubature; this is related to, but not identical with, balanced
@@ -450,9 +457,10 @@ quantile function.
 The passage from orbit identity to one-shot coverage is exchangeability's, or its mixing
 surrogate's in Section~\ref{sec:bp}; no bookkeeping supplies it. Nor does control of thresholds
 and labels create information: it re-levels coverage while conditional sharpness remains a
-property of the scores \citep{cotton_marginally}. Whether placement balancing can be aimed
-conditionally, selecting or reweighting calibration slots to balance the rank count given the
-input, is open; localized and weighted conformal methods are the nearest existing steps.
+property of the scores \citep{cotton_marginally}. We do not know whether this particular placement-balancing
+construction can be localized conditionally, selecting or reweighting calibration slots to
+balance the rank count given the input; localized, weighted, Mondrian and multivalid conformal
+methods address the conditional target by other means.
 \end{remark}
 
 \bibliographystyle{plainnat}
