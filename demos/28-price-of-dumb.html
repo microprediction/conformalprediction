@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>The price of a dumb model — Conformal Prediction</title>
+<meta name="description" content="On the real motorcycle-crash data, a crude regressogram and a smooth kernel density estimate are both conformalized to the same coverage. Both hit 90%; the regressogram pays for it in interval width and CRPS, and no cell width reaches the smooth estimator's floor. The price of being steered to a dumb model for a coverage guarantee." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/papers/">Papers &amp; notes</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration</p>
+  <h1>The price of a dumb model</h1>
+  <p class="subtitle">Same coverage certificate, real data, two estimators. One of them costs you.</p>
+
+  <p>The <a href="27-universal-cpd.html">previous demo</a> made a point in principle: the universally consistent construction is a regressogram, a deliberately crude estimator, and its crudeness is what lets the validity proof go through. This page puts a number on what that crudeness costs, on real data. The <a href="https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/master/csv/MASS/mcycle.csv">motorcycle-crash dataset</a> (\(n=133\)) records head acceleration against time since impact, and its conditional spread swings from near-zero in the quiet approach to enormous through the crash: the canonical heteroscedastic testbed.</p>
+
+  <p>Two conditional-distribution estimators run on it. The <span style="color:#b45309;font-weight:600;">regressogram</span> bins time and uses the within-cell empirical distribution of acceleration, exactly the object from the previous page. The <span style="color:#1f4ed8;font-weight:600;">kernel-density estimate</span> is the sensible alternative: a Nadaraya&ndash;Watson local mean and local scale, a smooth heteroscedastic fit. Both are then wrapped in the same conformal step (CQR-style), so <em>both</em> carry the exact distribution-free coverage certificate. That is the crux: the guarantee never required the crude model. Choosing it is a choice you pay for and did not have to make.</p>
+
+  <div class="demo">
+    <div class="canvas-box tall"><canvas id="scatter"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <p class="note">Grey are training points, black are held-out test points; the two bands are the conformalized 90% intervals. Read the coverage line first: both sit near the target, as the certificate promises. Then read the width line. The regressogram&rsquo;s band is blocky and, in the tails where its cells starve and fall back to the global shape, far too wide; the kernel band breathes with the data. Scores are averaged over 40 random calibration/test splits, so the numbers are stable; the picture shows one split.</p>
+
+  <p>How much of this is just a badly chosen cell width? The second panel sweeps it. The regressogram&rsquo;s held-out CRPS traces a shallow U &mdash; too fine and the cells are noisy, too coarse and they blur the crash &mdash; and the smooth estimator&rsquo;s CRPS is the dashed line beneath. No cell width reaches it.</p>
+
+  <div class="canvas-box med demo"><canvas id="price"></canvas></div>
+  <p class="note">CRPS is a proper score, so this is a fair comparison of the whole predictive distribution, not just the interval. The gap between the regressogram&rsquo;s best point and the smooth floor is the price, in the units the score is measured in: roughly a quarter more error at the best cell width, and the intervals a quarter wider, for the identical guarantee.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. Coverage is orthogonal to sharpness, which cuts both ways: the certificate attaches to a good model and a crude one alike (<a href="03-trivial-validity.html">the fence is the horizon</a>), and precisely because of that, conformalizing does not oblige you to use the crude model. Here two estimators hold the same 90% guarantee and the regressogram is worse on every proper measure, at every cell width. If someone reaches for the deliberately dumb construction <em>in order to</em> get the guarantee, this is the bill: they could have conformalized the sensible model and kept the certificate for free. Estimate first, certify second.</p>
+  </div>
+
+  <p class="note">Data: Silverman&rsquo;s motorcycle dataset, via the <code>MASS</code> R package (Venables &amp; Ripley). The smooth comparator is a Nadaraya&ndash;Watson conditional mean and scale; the regressogram is the histogram construction of <a href="27-universal-cpd.html">demo 27</a>. Both are wrapped with conformalized quantile regression (Romano, Patterson &amp; Cand&egrave;s, 2019).</p>
+
+  <div class="prevnext">
+    <a href="27-universal-cpd.html">&larr; Crossing the gap, in the limit</a>
+    <span class="spacer"></span>
+    <a href="15-de-finetti.html">de Finetti, and where it goes negative &rarr;</a>
+  </div>
+
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+
+<script type="module" src="../js/demo28.js"></script>
+</body>
+</html>
