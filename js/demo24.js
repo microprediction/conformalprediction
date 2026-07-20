@@ -4,7 +4,7 @@
 // k covered placements (rank <= k), then traverse the placements in two
 // orders: a uniform shuffle and the balanced word
 // b_t = floor(tk/N + 1/2) - floor((t-1)k/N + 1/2). The panel shows the running
-// coverage deviation (1/t) sum chi - k/N with the deterministic +/- 1/(2t)
+// placement-acceptance average deviation (1/t) sum chi - k/N, with the +/- 1/(2t)
 // envelope. The balanced traversal stays inside it at every prefix; at t = N
 // both orders land exactly on zero.
 import { mulberry32, randn, fmt, pct } from "./lib/stats.js";
@@ -17,7 +17,7 @@ const state = { n: 79, alpha: 0.1, dist: "iid" };
 let seed = 13;
 
 const dev = new Plot(document.getElementById("dev"), {
-  xlim: [1, 80], ylim: [-0.2, 0.2], xlabel: "prefix length  t", ylabel: "running coverage − k/N",
+  xlim: [1, 80], ylim: [-0.2, 0.2], xlabel: "prefix length  t", ylabel: "acceptance average − k/N",
   margin: { l: 62, r: 16, t: 14, b: 42 },
 });
 const setRO = readouts(document.getElementById("readouts"),

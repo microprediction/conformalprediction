@@ -83,7 +83,7 @@
 
   <p>The experiment runs the real libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods (ACI, AgACI, conformal&nbsp;PID, NexCP/weighted, EnbPI) in their intended modes, against plain probabilistic baselines and, since the data are synthetic with a known law, a true oracle. Everyone is scored on conditional coverage, interval efficiency, and proper scores (interval/Winkler, CRPS), not marginal coverage alone.</p>
 
-  <p class="note">Code and full numbers: <a href="benchmark/README.md"><code>benchmark/</code></a>. Means over 5 seeds, target coverage 0.90; compare within each table, not across.</p>
+  <p class="note">Code and full numbers: <a href="benchmark/README.md"><code>benchmark/</code></a>. Means over 5 seeds, target coverage 0.90; compare within each table, not across. This is one synthetic experiment making one point, not a benchmark; for live time-series benchmarking see <a href="https://skaters.microprediction.org">skaters.microprediction.org</a>.</p>
 
   <h2>Time series under drift</h2>
   <figure>
@@ -134,7 +134,7 @@
   <h2>What this one example shows</h2>
   <ol>
     <li>Adaptive wrappers behave well here. CQR and crepes normalized/CPS reach near-oracle interval score and good conditional coverage; ACI and conformal PID recover coverage under drift where fixed split collapses. None of these is a straw man.</li>
-    <li>But the adaptivity comes from the conditional model, not the conformal step. The sharpest tell: raw quantile-GBR with <em>no conformal at all</em> (6.52) ties conformalized quantile regression (6.51). Vanilla split conformal is identical to a static Gaussian. The conformal layer supplies the finite-sample marginal certificate; the sharpness comes from the model it wraps.</li>
+    <li>But the adaptivity comes from the conditional model, not the conformal step. The sharpest tell: raw quantile-GBR with <em>no conformal at all</em> (6.52) ties conformalized quantile regression (6.51). Vanilla split conformal matches a static Gaussian (the static-Gaussian rows are in the <a href="benchmark/README.md">README</a> tables). The conformal layer supplies the finite-sample marginal certificate; the sharpness comes from the model it wraps.</li>
     <li>A plain probabilistic model keeps pace on the proper score and returns a full distribution. An EWMA-vol Gaussian matches the conformal repairs on interval score (6.92 vs ~7.0); crepes CPS gets competitive CRPS because it is doing conditional distribution estimation.</li>
     <li>The author&rsquo;s own forecaster behaves no differently. <code>thinking_fast_and_slow</code>, a <a href="https://github.com/microprediction/timemachines">timemachines</a> skater that blends two EMAs into an adaptive predictive mean and standard deviation, lands at near-oracle CRPS (0.86) and the best non-oracle interval score (6.57). Conformalizing it changes nothing for the better: a fair adaptive (normalized) wrap re-levels coverage to 90% at an identical score (6.58), while a naive split-conformal wrap on the drifting series collapses to 60%. The value was already in the density it estimates, not in the conformal step.</li>
     <li>None achieves per-step conditional coverage, even the oracle&rsquo;s worst window is ~0.82. The repairs deliver long-run/marginal coverage, never coverage <em>now</em>, consistent with the <a href="index.html#finePrint">no-go results</a>.</li>

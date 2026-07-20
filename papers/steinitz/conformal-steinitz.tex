@@ -38,9 +38,12 @@ acceptance map is equivariant for the permutation action, and the Reynolds ident
 $\langle P^{\vee}f,v\rangle=\langle f,Pv\rangle$ reads its orbit average either as moving the
 evaluation functional or as averaging the induced acceptance vector over placements. A natural
 primal discrepancy construction under the same action is Steinitz balancing: ordering a
-zero-sum population so that every prefix sum stays bounded. Conformal placements form such a
-population, and an explicit ordering keeps running coverage within $1/(2t)$ of the orbit level
-$k/N$, exact on the full orbit. On the function--measure pairing, the measure-side counterpart
+zero-sum population so that every prefix sum stays bounded. The centered conformal placement
+residuals form such a population, and an explicit ordering keeps the running
+placement-acceptance average within $1/(2t)$ of the orbit level
+$k/N$, exact once all $N$ candidate test placements have been traversed; the vector-valued
+lemma balances several coverage levels along
+one traversal. On the function--measure pairing, the measure-side counterpart
 of calibration is balanced sampling and exact cubature. A transitive distributional symmetry,
 exchangeability in the standard setting, turns the deterministic orbit average into the
 coverage probability of the designated test placement.
@@ -54,8 +57,8 @@ construction that lives beside it under the same group action. The identity behi
 validity is a contragredient statement for the permutation action on slots
 (Section~\ref{sec:contra}). A natural primal discrepancy construction under that action is
 \emph{Steinitz balancing}: ordering a finite zero-sum population so that every prefix sum stays
-uniformly bounded \citep{steinitz1913}. Conformal placements are themselves a scalar Steinitz
-population (Section~\ref{sec:balanced}), and admit a sharper balanced ordering than the general
+uniformly bounded \citep{steinitz1913}. The centered conformal placement residuals are
+themselves a scalar Steinitz population (Section~\ref{sec:balanced}), and admit a sharper balanced ordering than the general
 lemma provides. On the function--measure pairing, the measure-side counterpart of calibration
 is balanced sampling and exact cubature (Section~\ref{sec:cubature}). Section~\ref{sec:bp}
 records how the same two-ingredient structure appears in the dependent-data floor of
@@ -63,18 +66,23 @@ records how the same two-ingredient structure appears in the dependent-data floo
 algebra can blur. The group-symmetry view of predictive inference is itself established:
 \citet{dobriban2025symmpi} build predictive inference on general distributional group
 symmetries, of which exchangeability is the permutation case. What we believe is new here is
-narrower: the identification of the placement acceptance vector as a Steinitz population, and
-the balanced traversal it admits. Herding \citep{welling2009}, whose $O(1/n)$ bookkeeping
-resembles the constructions here, can be viewed as a with-replacement generalization of the
-finite balanced-permutation problem, typically on nonfinite domains \citep{harvey2014}; it
-appears only in Remark~\ref{rmk:herding}.
+narrower: the identification of the centered placement-residual vector as a Steinitz
+population, and
+the balanced traversals it admits, at one level and at several simultaneously. Herding \citep{welling2009}, whose $O(1/n)$ bookkeeping
+resembles the constructions here, can be viewed as a with-replacement relaxation of the
+finite balanced-permutation problem \citep{harvey2014}; it is confined to
+Remark~\ref{rmk:herding} and a kernel question in Section~\ref{sec:cubature}.
 
 \section{Conformal calibration and placement}\label{sec:conformal}
 
 Fix $\alpha\in(0,1)$, write $p=1-\alpha$, let $S_1,\dots,S_n$ be calibration scores and
-$S_{n+1}$ a test score, almost surely distinct, and let $k=\lceil p\,(n+1)\rceil\le n$. Write
-$N=n+1$. Split conformal declares coverage when $S_{n+1}\le q_n$, with $q_n=S_{(k)}$ the $k$-th
-smallest calibration score.
+$S_{n+1}$ a test score, almost surely distinct, and set $k=\lceil p\,(n+1)\rceil$ and $N=n+1$.
+Assume throughout that $\alpha\ge 1/N$, equivalently $k\le n$, so that the $k$-th order
+statistic of the calibration scores exists; for $\alpha<1/N$ the usual convention
+$q_n=+\infty$ applies and coverage is trivial. Split conformal declares coverage when
+$S_{n+1}\le q_n$, with $q_n=S_{(k)}$ the $k$-th smallest calibration score. The scores are
+taken exchangeable, as they are in split conformal conditionally on an independent proper
+training sample once the fitted score rule is held fixed.
 
 \begin{lemma}[Steering identity]\label{lem:steer}
 With $q_n=S_{(k)}$, $h_q(s)=\ind{s\le q}$, and the scores distinct,
@@ -115,7 +123,8 @@ The control-theoretic reading of the calibration step is established in the onli
 the level update of adaptive conformal inference \citep{gibbscandes2021} is integral feedback on
 realized miscoverage, and \citet{angelopoulos2023pid} name the identification. There the
 controlled quantity is a time average along a sequence; Lemma~\ref{lem:steer} is the batch
-counterpart, a single dead-beat correction.
+counterpart, a one-shot quantized correction: the rank count is exactly $k$, while the level
+error $k/n-p$ is quantized at $O(1/n)$.
 
 \section{The contragredient identity}\label{sec:contra}
 
@@ -136,7 +145,7 @@ projector and $P^{\vee}=\frac1{N!}\sum_{\pi}\rho^{\vee}(\pi)$ its dual, so that
 \qquad\text{for all } f\in V^{*},\ v\in V .
 \end{equation}
 For the permutation representation, $Pv=\bar v\,\mathbf 1$ and
-$P^{\vee}e^{*}_{N}=\frac1N\mathbf 1^{*}$.
+$P^{\vee}e^{*}_{N}=\frac1N\mathbf 1^{*}$, where $\mathbf 1^{*}=\sum_{i=1}^{N}e^{*}_{i}$.
 
 The object the projector acts on is not the score vector but the acceptance vector. Write
 $\R^{N}_{\ne}$ for the score vectors with distinct entries and
@@ -147,9 +156,10 @@ entries of $s$, the map is equivariant:
 \chi\bigl(\rho(\pi)s\bigr)\;=\;\rho(\pi)\,\chi(s)
 \qquad\text{for all }\pi\in\mathfrak S_{N},\ s\in\R^{N}_{\ne}.
 \end{equation}
-The distinction matters because $\chi$ is nonlinear: $Ps=\bar s\,\mathbf 1$ destroys the rank
-information, and $\chi(Ps)\ne P\chi(s)$ in general. What is averaged along the orbit is the
-acceptance vector the scores induce, not the scores themselves.
+The distinction matters because $\chi$ is nonlinear and is defined here only on score vectors
+with distinct entries. The averaged score vector $Ps=\bar s\,\mathbf 1$ leaves that domain and
+erases all rank information. One must therefore average the induced acceptance vectors
+$\chi(\rho(\pi)s)$, rather than apply $\chi$ after averaging the scores.
 
 \begin{theorem}[Orbit--contragredient form of conformal validity]\label{thm:orbit}
 For every $s\in\R^{N}_{\ne}$,
@@ -168,8 +178,9 @@ has coverage probability exactly $k/N$.
 \begin{proof}
 The first equality is \eqref{eq:equivariant} and linearity of $e^{*}_{N}$; the second is
 \eqref{eq:reynolds}; the third is $P^{\vee}e^{*}_{N}=\frac1N\mathbf 1^{*}$; the fourth is
-Proposition~\ref{prop:count}. Under a transitive invariance the indicators
-$\chi_i(S)$ share one expectation, which the orbit average then pins to $k/N$.
+Proposition~\ref{prop:count}. For a transitive subgroup $H\le\mathfrak S_N$, set $P_H=\frac1{|H|}\sum_{h\in H}\rho(h)$;
+transitivity gives $P_Hv=\bar v\,\mathbf 1$, so the same Reynolds calculation runs verbatim
+with $P_H$ in place of $P$ and pins each $\E\chi_i(S)$ to $k/N$.
 \end{proof}
 
 Define also the centered placement residual vector $r(s)=(\chi_i(s)-k/N)_{i\le N}$;
@@ -188,7 +199,8 @@ distributional group symmetries is due to \citet{dobriban2025symmpi}.
 \section{Steinitz balancing}\label{sec:steinitz}
 
 A natural primal discrepancy construction under the same $\mathfrak S_{N}$ action is the
-ordering of a finite zero-sum population. Let $E$ be a $d$-dimensional normed vector space;
+ordering of a finite zero-sum population. Let $E$ be a real $d$-dimensional normed vector
+space;
 finite dimensionality is essential, as no constant independent of $N$ is available in general
 otherwise. If $z_1,\dots,z_{N}\in E$ satisfy $\sum_i z_i=0$ and $\|z_i\|\le 1$, the Steinitz
 lemma \citep{steinitz1913} supplies a permutation $\pi$ with every prefix bounded,
@@ -200,7 +212,7 @@ obtained by an element of the same permutation group that Section~\ref{sec:contr
 Two precisions. First, the vector-valued setting scalarizes cleanly: on $W=E^{N}$ define, for
 each $\lambda\in E^{*}$, the functional $L_{t,\lambda}(z)=\lambda(\sum_{j\le t}z_j)\in W^{*}$;
 then \eqref{eq:contra} holds verbatim for $L_{t,\lambda}$, and
-$\|\sum_{j\le t}z_{\pi(j)}\|=\sup_{\|\lambda\|_{*}\le 1}L_{t,\lambda}(\rho(\pi^{-1})z)$
+$\|\sum_{j\le t}z_{\pi(j)}\|=\sup_{\|\lambda\|_{*}\le 1}\bigl|L_{t,\lambda}(\rho(\pi^{-1})z)\bigr|$
 recovers the norm bound. Second, Steinitz balancing is not itself the contragredient of
 conformal averaging. Every permutation, balanced or not, satisfies the transport identity
 \eqref{eq:contra}; the Reynolds average gives the exact orbit identity of
@@ -211,8 +223,8 @@ For the relation to herding, see Remark~\ref{rmk:herding}.
 
 \section{Balanced conformal placements}\label{sec:balanced}
 
-Conformal placements are themselves a scalar Steinitz population: by
-Proposition~\ref{prop:count} the residuals $r_i(s)=\chi_i(s)-k/N$ satisfy $\sum_i r_i(s)=0$ and
+The centered conformal placement residuals form a scalar Steinitz population: by
+Proposition~\ref{prop:count}, $r_i(s)=\chi_i(s)-k/N$ satisfies $\sum_i r_i(s)=0$ and
 $|r_i(s)|\le 1$. Because they take only two values, the ordering can be made sharper than the
 general lemma provides. The balancing step is a statement about binary vectors, so we state it
 that way; the conformal content is that Proposition~\ref{prop:count} produces such a vector.
@@ -253,7 +265,11 @@ back to the chairman assignment problem \citep{tijdeman1980}, and no specificall
 structure enters once the count $\sum_i\chi_i(s)=k$ is known. The contribution is the
 identification: the conformal placement vector is an object to which balanced-word machinery
 applies, and the traversal it yields tracks the orbit level $k/N$, not the nominal $p$, exactly
-at the full orbit and within $1/(2t)$ before it. In the notation of Section~\ref{sec:contra}
+once all $N$ candidate test placements have been traversed, and within $1/(2t)$ before that.
+The traversal orders the $N$ coordinates $\chi_1(s),\dots,\chi_N(s)$, that is the $N$-element
+coordinate orbit $\mathfrak S_N/\mathrm{Stab}(N)$ (a coset space, $\mathrm{Stab}(N)$ not being normal), not the $N!$-element score orbit; the
+group average of Theorem~\ref{thm:orbit} reduces to this $N$-placement average because each
+candidate test coordinate occurs equally often. In the notation of Section~\ref{sec:contra}
 the two readings of the traversal are literal:
 $\langle L_t,\rho(\pi^{-1})r(s)\rangle=\langle\rho^{\vee}(\pi)L_t,r(s)\rangle$ --- move the
 residual vector through the permutation holding the prefix test fixed, or hold the residuals
@@ -263,7 +279,43 @@ The ordering is post hoc: constructing it requires knowing which placements are 
 the full score vector or its ranks. It is a deterministic traversal for orbit computations and
 repeated-placement audits, not an online algorithm, and it does not replace exchangeability in
 one-shot conformal prediction, where a single placement is designated as the test; only the
-distributional symmetry makes that placement uniform on the orbit.
+distributional symmetry makes the designated coordinate inherit the orbit-average coverage
+probability.
+
+Several coverage levels can be balanced at once, and here the vector-valued lemma of
+Section~\ref{sec:steinitz} is what does the work. The sharp one-dimensional $\tfrac12$ bound
+does not in general survive at two levels simultaneously: with $N=3$ and levels $k_1=1$,
+$k_2=2$, the $t=1$ constraints force the first traversed rank to be $2$, and then either
+completion violates $\tfrac12$ at $t=2$, so no ordering of the three placements meets the
+scalar bound at both levels, though each level alone admits two.
+
+\begin{proposition}[Simultaneously balanced levels]\label{prop:multilevel}
+Fix levels $k_1,\dots,k_d\in\{1,\dots,N\}$ and set
+$z_i(s)=\bigl(\ind{\mathrm{rank}(s_i)\le k_\ell}-k_\ell/N\bigr)_{\ell\le d}\in\R^{d}$. Then
+$\sum_i z_i(s)=0$ and $\|z_i(s)\|_\infty\le 1$, so the Steinitz lemma supplies one permutation
+$\pi$ with
+\[
+\max_{\ell\le d}\;\Bigl|\frac1t\sum_{j=1}^{t}\ind{\mathrm{rank}(s_{\pi(j)})\le k_\ell}
+-\frac{k_\ell}{N}\Bigr|\;\le\;\frac{C_d}{t}
+\qquad\text{for every } t=1,\dots,N,
+\]
+with $C_d$ the Steinitz constant of $(\R^d,\|\cdot\|_\infty)$, independent of $N$.
+\end{proposition}
+
+\begin{proof}
+Each coordinate of $z_i(s)$ lies in $[-1,1]$. Ranks are a permutation of $\{1,\dots,N\}$, so
+$\sum_i\ind{\mathrm{rank}(s_i)\le k_\ell}=k_\ell$ directly, for every
+$k_\ell\in\{1,\dots,N\}$, and summing coordinate $\ell$ over $i$ gives $k_\ell-N\cdot
+k_\ell/N=0$. Apply the Steinitz lemma in $(\R^d,\|\cdot\|_\infty)$ and divide the prefix bound
+by $t$.
+\end{proof}
+
+For $k_\ell\le N-1$ the level is the placement-acceptance count of
+Proposition~\ref{prop:count}; $k_\ell=N$ is the trivial always-accepted rank level, whose
+reading as a conformal threshold needs the $+\infty$ endpoint convention.
+
+A single traversal is therefore balanced against every selected orbit level simultaneously, at
+the price of the dimensional constant in place of the sharp $\tfrac12$.
 
 \section{Balanced sampling: the measure-side counterpart}\label{sec:cubature}
 
@@ -273,27 +325,52 @@ the two arguments. Calibration holds the empirical score measure $\nu_n$ fixed a
 test: find a threshold $h_q$ with $\langle h_q,\nu_n\rangle=k/n$. The role-reversed problem
 holds tests $h_1,\dots,h_d$ and targets $m_1,\dots,m_d$ fixed and chooses a measure: find $\nu$
 with $\langle h_j,\nu\rangle=m_j$. (This is an inverse moment problem under the pairing, not
-the adjoint of an operator: the adjoint of the moment map
+the transpose of an operator: the transpose under the pairing of the moment map
 $T(\nu)=(\langle h_j,\nu\rangle)_{j\le d}$ is $T^{*}a=\sum_j a_jh_j$, which lives on the
-function side.) Over a finite candidate population with $A_{ji}=h_j(x_i)$ the measure-side
-problem is the selection problem $Az=b$, $z\in\{0,1\}^N$, which is precisely the
-balanced-sampling problem solved (exactly when geometry and integrality permit, approximately
-otherwise) by the cube method \citep{devilletille2004}. When arbitrary positive weights are
-allowed the problem changes and convex geometry answers it exactly: $\mu=\int\phi\,dP$ lies in
-the convex hull of $\phi(\mathcal X)$, so Carath\'eodory supplies at most $d+1$ weighted points
-matching all $d$ moments, the Tchakaloff side of exact cubature \citep{tchakaloff1957}. In this
-formulation, balanced sampling and exact cubature are the measure-side counterpart of threshold
-calibration.
+function side.) Over a finite candidate population, fix weights $a_i>0$ and set
+$A_{ji}=a_ih_j(x_i)$, $b=(m_1,\dots,m_d)$, and
+$\nu_z=\sum_{i=1}^{N}a_iz_i\delta_{x_i}$. Then $T(\nu_z)=Az$, so the measure-side problem is
+the selection problem
+\[
+Az=b,\qquad z\in\{0,1\}^{N}.
+\]
+Horvitz--Thompson balancing is the case $a_i=1/\pi_i$ with population totals in $b$.
+Equation $Az=b$ is the balancing constraint on a \emph{realized} sample; a balanced sampling
+design is a distribution on $z\in\{0,1\}^N$ with $\E z_i=\pi_i$ satisfying that constraint
+exactly when feasible and approximately otherwise, which is what the cube method delivers
+\citep{devilletille2004}. Normalized equal weights $1/\sum_iz_i$ do not fit the fixed-weight
+representation above, but for a nonempty selection the normalized constraints homogenize,
+\[
+\frac{\sum_iz_ih_j(x_i)}{\sum_iz_i}=m_j
+\quad\Longleftrightarrow\quad
+\sum_i z_i\bigl(h_j(x_i)-m_j\bigr)=0,
+\]
+still linear in $z$; at fixed sample size $M$ this is $\sum_iz_ih_j(x_i)=Mm_j$. When arbitrary positive
+weights are allowed the problem changes and convex geometry answers it exactly. Let $Q$ be a
+probability measure on $\mathcal X$ (the letter $P$ is reserved for the Reynolds projector),
+let $h_1,\dots,h_d:\mathcal X\to\R$ be measurable and $Q$-integrable, and set
+$\tilde\phi=(1,h_1,\dots,h_d)$. By the generalized Tchakaloff theorem for measurable
+integrable maps \citep{tchakaloff1957,bayerteichmann2006} there are $m\le d+1$ points
+$x_1,\dots,x_m$ in any specified measurable $Q$-full set and weights $w_r>0$ with
+$\int\tilde\phi\,dQ=\sum_{r=1}^{m}w_r\tilde\phi(x_r)$: the first coordinate gives
+$\sum_rw_r=1$ and the rest give $\int h_j\,dQ=\sum_rw_rh_j(x_r)$ for every $j$. In this formulation, balanced sampling and exact
+cubature are the measure-side counterpart of threshold calibration.
 
-A designed calibration set sits inside this frame. If designed scores $S_1,\dots,S_n$ have
-empirical distribution function within Kolmogorov distance $D$ of a continuous reference law
-$\bar F$, and the test score is drawn from $\bar F$ independently of the design, then
-$|\bar F(S_{(k)})-k/(n+1)|\le D+1/(n+1)$ and $|\bar F(S_{(k)})-p|<D+(1+p)/n$, deterministically
-in the design (the proof is $\hat F_n(S_{(k)})=k/n$ plus Lemma~\ref{lem:steer}). A quantile
-grid achieves $D\le 1/(2n)$. This is design-based rather than distribution-free: it suppresses
-the $n^{-1/2}$ fluctuation of conditional coverage at the price of assuming the target law, and
-whether reproducing-kernel guarantees of kernel herding or kernel thinning
-\citep{chen2010,dwivedi2021} control the Kolmogorov discrepancy required here is left open.
+A designed calibration set sits inside this frame. If designed scores $S_1,\dots,S_n$, taken
+distinct, have empirical distribution function within Kolmogorov distance $D$ of a continuous
+reference law $\bar F$, and the test score is drawn from $\bar F$ independently of the design,
+then $|\bar F(S_{(k)})-k/(n+1)|\le D+1/(n+1)$ and $|\bar F(S_{(k)})-p|<D+(1+p)/n$,
+deterministically in the design (the proof is $\hat F_n(S_{(k)})=k/n$ plus
+Lemma~\ref{lem:steer}). The midpoint quantile grid $S_i=\bar F^{-1}\bigl((i-\tfrac12)/n\bigr)$, $i=1,\dots,n$, with
+$\bar F^{-1}(u)=\inf\{x:\bar F(x)\ge u\}$,
+achieves $D\le 1/(2n)$ for continuous $\bar F$. This is design-based rather
+than distribution-free: it suppresses the $n^{-1/2}$ fluctuation of calibration-conditional
+coverage at the price of assuming the target law. Two limitations should be stated. The
+formulation treats the score values as design variables; realizing such a design through
+selectable observations, whose scores are outputs of a predictor and unknown responses, is a
+separate problem. And no implication from the reproducing-kernel discrepancy guarantees of
+kernel herding or kernel thinning \citep{chen2010,dwivedi2021} to the Kolmogorov discrepancy
+required here is established.
 
 \section{The Barber--Pananjady floor}\label{sec:bp}
 
@@ -305,17 +382,22 @@ $\tau$ entries while keeping $S_{N}$ (respectively rotating $S_k$) in the final 
 \Psi_{k,\tau}(S)=d_{\mathrm{TV}}\bigl(\mathcal L(\Delta^{0}_{k,\tau}(S)),
 \mathcal L(\Delta^{1}_{k,\tau}(S))\bigr),
 \qquad
-\bar\Psi_\tau=\frac1{N}\sum_{k=1}^{N}\Psi_{k,\tau}(S),
+\bar\Psi_\tau(S)=\frac1{N}\sum_{k=1}^{N}\Psi_{k,\tau}(S),
 \]
 with $d_{\mathrm{TV}}(P,Q)=\sup_A|P(A)-Q(A)|$. Their Theorem~5 gives, for a pretrained
 memoryless score,
 \[
 \Prob\{S_{N}\le q_n\}\;\ge\;1-\alpha-\min_{0\le\tau\le n}
-\Bigl\{\tfrac{\tau}{N}+\bar\Psi_\tau\Bigr\},
+\Bigl\{\tfrac{\tau}{N}+\bar\Psi_\tau(S)\Bigr\},
 \]
-their Corollary~6 bounds $\bar\Psi_\tau\le 2\beta(\tau)$ under stationary $\beta$-mixing, their
-Theorem~8 supplies a matching ceiling, and their Theorem~7 shows tightness up to the factor
-$(1-\alpha)/4$.
+their Proposition~3 bounds the individual switch coefficients by $2\beta(\tau)$ for stationary
+$\beta$-mixing data, and, after data processing and averaging, their Corollary~6 inserts this
+control into the coverage bound. Their Theorem~8 is a corresponding upper bound with the same
+switch-coefficient structure, under almost surely distinct scores; their Theorem~7 shows
+tightness up to the factor $(1-\alpha)/4$ when $(1-\alpha)N$ is integral and the data space is
+infinite, a finite space carrying an additional cardinality
+remainder.\footnote{Result numbering follows the ALT 2026 (PMLR volume 313) version of
+\citet{barberpananjady2026}; the arXiv versions number the same results differently.}
 
 The argument separates into an exact insertion--deletion stability statement for empirical
 quantile \emph{levels} (deleting $\tau$ entries moves the rank of a fixed threshold by at most
@@ -323,8 +405,10 @@ $\tau$, so the level shifts by at most $\tau/N$: order-statistic geometry, contr
 rather than values, since empirical quantile values are not stable under small total-variation
 perturbations) and a total-variation comparison between switched laws, which is the definition
 of the switch coefficient. Both ingredients are linear in their perturbation sizes and no
-concentration step appears; a blocking argument \citep{oliveira2024} bounds the same quantity
-through a maximal inequality and pays $\sqrt{\tau/n}$.
+concentration step appears; by comparison the blocking and empirical-process bound of
+\citet{oliveira2024} has square-root dependence on the corresponding block-and-mixing
+expression, up to logarithmic factors. This decomposition is thematically parallel to the
+discrepancy constructions above, but it is not derived from the contragredient identity.
 
 \section{Three rates}\label{sec:rates}
 
@@ -357,23 +441,33 @@ scores: calibration's exact optimization dual, though not itself a point-generat
 \begin{remark}[Herding]\label{rmk:herding}
 Herding \citep{welling2009} generates points by the recursion $w_t=w_{t-1}+\mu-\phi(x_t)$,
 $x_t=\arg\max_x\langle w_{t-1},\phi(x)\rangle$, and attains $O(1/n)$ feature-mean discrepancy
-conditional on bounded weights; the identification with Frank--Wolfe \citep{bach2012} shows the
-fast rate needs interiority-type conditions, with \citet{chen2010} treating the kernel case.
-\citet{harvey2014} pose herding over a finite population as exactly the balanced-permutation
-problem of Section~\ref{sec:steinitz}; generic herding can then be viewed as a with-replacement
-generalization, typically on nonfinite domains, and on the pairing of
-Section~\ref{sec:cubature} it is one iterative approximate solver for balanced sampling. The quadrature triangle is older on that side: optimally-weighted
+conditional on bounded weights; the identification with Frank--Wolfe \citep{bach2012} shows
+that the standard fast-rate guarantee follows under interiority-type conditions, with
+\citet{chen2010} treating the kernel case.
+\citet{harvey2014} introduce a Permutation Problem, the Euclidean finite-population instance
+of the balancing problem of Section~\ref{sec:steinitz}, and show that periodically repeating a
+good permutation yields a solution to their with-replacement Sampling Problem; generic herding
+runs with repeated selection \citep{welling2009,chen2010}, and on the
+pairing of
+Section~\ref{sec:cubature} it is an iterative with-replacement method for approximate moment
+matching, or equal-weight cubature; this is related to, but not identical with, balanced
+sampling in the Deville--Till\'e sense, which fixes inclusion probabilities and keeps the
+$0$--$1$ without-replacement structure. The quadrature triangle is older on that side: optimally-weighted
 herding is Bayesian quadrature \citep{huszar2012}, and \citet{snellgriffiths2025} recently
-recast the conformal computation as Bayesian quadrature over the calibration scores.
+recast conformal risk and threshold calculations through Bayesian quadrature of the loss
+quantile function.
 \end{remark}
 
 \begin{remark}[Limits]
-The passage from orbit identity to one-shot coverage is exchangeability's, or its mixing
-surrogate's in Section~\ref{sec:bp}; no bookkeeping supplies it. Nor does control of thresholds
+The passage from the exact orbit identity to exact one-shot coverage is supplied by transitive
+invariance of the law, exchangeability in the standard case. Under dependence,
+Section~\ref{sec:bp} instead uses approximate switched-law symmetry and pays an explicit
+coverage penalty; no deterministic bookkeeping supplies either conclusion. Nor does control of thresholds
 and labels create information: it re-levels coverage while conditional sharpness remains a
-property of the scores \citep{cotton_marginally}. Whether placement balancing can be aimed
-conditionally, selecting or reweighting calibration slots to balance the rank count given the
-input, is open; localized and weighted conformal methods are the nearest existing steps.
+property of the scores \citep{cotton_marginally}. We do not know whether this particular placement-balancing
+construction can be localized conditionally, selecting or reweighting calibration slots to
+balance the rank count given the input; localized, weighted, Mondrian and multivalid conformal
+methods address the conditional target by other means.
 \end{remark}
 
 \bibliographystyle{plainnat}

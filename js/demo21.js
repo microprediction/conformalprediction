@@ -2,7 +2,7 @@
 //
 // Top: kernel herding vs Monte Carlo on a standard Gaussian target, RBF kernel,
 // everything closed-form. Herding greedily picks x_{t+1} = argmax_x [ mu(x) -
-// (1/(t+1)) sum_s k(x, x_s) ] over a grid (Chen, Welling & Smola 2010); the
+// (1/t) sum_s k(x, x_s) ] over a grid (Chen, Welling & Smola 2010); the
 // discrepancy readout is the exact MMD to the target embedding. Log-log error
 // panel carries 1/n and 1/sqrt(n) guides.
 //

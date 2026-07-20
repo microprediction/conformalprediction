@@ -76,14 +76,15 @@
   &ldquo;fan,&rdquo; with variance about \(\alpha(1-\alpha)/n\). This note shows the width of that
   fan is set by the sign of the cross-sample dependence. The mean moves with the dependence too
   (under independence it is the nominal \(k/(n+1)\); comonotone scores push it to \(\tfrac12\)), but
-  the sharp story is the variance: to leading order it is the average pairwise covariance of the
-  sub-threshold indicators at the operating quantile, times the independent fan.</p>
+  the sharp story is the variance: to leading order it is the independent fan inflated by the
+  factor \(1+(n-1)\bar c/(p(1-p))\), with \(\bar c\) the average pairwise covariance of the
+  sub-threshold indicators at the operating quantile.</p>
 
   <h2>What the sign does</h2>
-  <p>Positive (extendable) dependence adds a between-dataset term and widens the fan &mdash; proved
-  exactly through de Finetti and the law of total variance. Negative dependence narrows it, to
-  exactly zero at the maximally negatively associated contest floor \(\rho=-1/(n-1)\), where the
-  realized coverage equals the nominal level on every draw. It is the same sign the
+  <p>Positive (extendable) dependence adds a non-negative between-dataset term, exact through de
+  Finetti and the law of total variance; the observed net effect is a wider fan. Negative
+  dependence narrows it, to exactly zero at the maximally negatively associated contest floor
+  \(\rho=-1/(n-1)\), where the realized coverage equals \(k/(n+1)\) on every draw. It is the same sign the
   <a href="/papers/definetti-feynman/">companion note</a> reads off the finite de Finetti measure:
   a genuine prior widens the fan, the signed corner collapses it.</p>
 
@@ -108,8 +109,8 @@
   &mdash; which, an LP shows, the diagonal constraints alone do not force, pinning the difficulty on
   the off-diagonal negative-orthant structure. The stronger dispersive ordering is deliberately not
   claimed; it can fail at fixed marginals. All checks are reproduced by <code>check_fan.py</code>; a
-  constructive corollary is that a balanced, transductively symmetric calibration set tightens
-  coverage without disturbing the marginal guarantee.</p>
+  constructive corollary is that a pre-specified, exchangeability-preserving randomized design
+  reduces the run-to-run dispersion of realized coverage without disturbing validity.</p>
 
   <h2>The time-series fan</h2>
   <p>When the calibration scores are a stationary segment of a series, the moments of realized

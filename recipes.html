@@ -100,10 +100,11 @@ p, info = coverage_dependence_test(resid, X_cal)
   <p><strong>MAPIE.</strong> Wrap the regressor and it warns after <code>fit</code>, then
   delegates everything else, so it disappears into a pipeline.</p>
 <pre><code>from conformalguide import CoverageAudited
-from mapie.regression import MapieRegressor
-model = CoverageAudited(MapieRegressor(estimator=base, cv="split"), alpha=0.05).fit(X, y)
+from mapie.regression import SplitConformalRegressor   # MAPIE &gt;= 1.0
+scr = SplitConformalRegressor(base, confidence_level=0.95, prefit=True)
+model = CoverageAudited(scr, alpha=0.05).fit(X_cal, y_cal)   # base already fit on train
 # UserWarning if the 95% level is uneven across x; model.predict(...) unchanged
-# manual route: resid = y_cal - model.estimator_.predict(X_cal)
+# manual route: resid = y_cal - base.predict(X_cal)
 </code></pre>
 
   <p><strong>crepes.</strong> The point model is kept on <code>.learner</code>.</p>
@@ -152,7 +153,7 @@ cross_validate(est, X, y, scoring={"cov_uniformity": coverage_dependence_scorer}
 # probs_cal: (n, K) softmax on a calibration fold; y_cal: integer labels
 s = 1 - probs_cal[np.arange(len(y_cal)), y_cal]          # 1 - p(true class)
 n = len(s); k = int(np.ceil((n + 1) * (1 - alpha)))
-qhat = np.sort(s)[k - 1]
+qhat = np.inf if k &gt; n else np.sort(s)[k - 1]             # k &gt; n: keep every label
 sets = [np.where(p &gt;= 1 - qhat)[0] for p in probs_test]   # labels confident enough to keep
 # P(true label in set) &gt;= 1 - alpha; route |set| != 1 to review
 </code></pre>
@@ -240,11 +241,13 @@ hi = hi_m.predict(X_test) + q                            # adaptive width, exact
 from collections import deque
 alpha_t, gamma, W = alpha, 0.01, deque(maxlen=200)       # trailing |residual| window
 for x_t, y_t, pred_t in stream:
-    q = np.quantile(W, min(max(1 - alpha_t, 0.0), 1.0)) if W else np.inf
+    if alpha_t &lt;= 0:   q = np.inf                        # the theorem needs these escapes
+    elif alpha_t &gt;= 1: q = 0.0
+    else:              q = np.quantile(W, 1 - alpha_t) if W else np.inf
     covered = pred_t - q &lt;= y_t &lt;= pred_t + q
     alpha_t += gamma * (alpha - (0.0 if covered else 1.0))   # online level update
     W.append(abs(y_t - pred_t))
-# empirical coverage -&gt; 1 - alpha over time, even under drift
+# time-average coverage -&gt; 1 - alpha (windowed quantile makes this approximate)
 </code></pre>
 
   <div class="takeaway">

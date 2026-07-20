@@ -80,11 +80,10 @@
   <p>The most direct use. Instead of one answer, return a small set guaranteed to contain the truth (say) 95% of the time, and route the hard cases (the large sets) to a human. The contract is exactly a coverage guarantee: the human is handed the right shortlist with controlled probability, and set size becomes a calibrated &ldquo;how sure are we&rdquo; signal. This is the form behind medical triage, content moderation, and document review.</p>
   <ul class="refs">
     <li>Angelopoulos, Bates, Jordan &amp; Malik (2021). <em>Uncertainty sets for image classifiers using conformal prediction</em> (RAPS). ICLR. <a href="https://arxiv.org/abs/2009.14193">arXiv:2009.14193</a>: small, stable label sets for deep classifiers.</li>
-    <li>Straitouri, Wang, Okati &amp; Gomez-Rodriguez (2024). <em>Conformal prediction sets improve human decision making.</em> <a href="https://arxiv.org/abs/2401.13744">arXiv:2401.13744</a>: a pre-registered trial: people decide better with conformal sets than fixed-size sets of equal coverage.</li>
-    <li><em>Improving expert predictions with conformal prediction</em> (2022). <a href="https://arxiv.org/abs/2201.12006">arXiv:2201.12006</a>: the set as decision support, with a calibrated coverage/size trade-off.</li>
-    <li><em>Clinically useful conformal prediction for inherited retinal disease</em> (2024): sets at a stated confidence, flagging cases for a second opinion.</li>
+    <li>Cresswell, Sui, Kumar &amp; Vouitsis (2024). <em>Conformal prediction sets improve human decision making.</em> <a href="https://arxiv.org/abs/2401.13744">arXiv:2401.13744</a>: a pre-registered trial: people decide better with conformal sets than fixed-size sets of equal coverage.</li>
+    <li>Straitouri, Wang, Okati &amp; Gomez-Rodriguez (2022). <em>Improving expert predictions with conformal prediction.</em> <a href="https://arxiv.org/abs/2201.12006">arXiv:2201.12006</a>: the set as decision support, with a calibrated coverage/size trade-off.</li>
+    <li><em>Making deep learning models clinically useful: improving diagnostic confidence in inherited retinal disease with conformal prediction</em> (MICCAI UNSURE workshop, 2024). <a href="https://doi.org/10.1007/978-3-031-73158-7_5">doi:10.1007/978-3-031-73158-7_5</a>: LAPS/APS/RAPS sets over the Eye2Gene classifier, flagging cases for a second opinion.</li>
     <li>Hullman, Wu, Xie, Guo &amp; Gelman (2025). <em>Conformal prediction and human decision making.</em> <a href="https://arxiv.org/abs/2503.11709">arXiv:2503.11709</a>: the decision-theoretic audit of this section&rsquo;s premise &mdash; when calibrated sets actually help a person decide, and when they do not.</li>
-    <li>Berk &amp; Kuchibhotla (2020). <em>Improving fairness in criminal justice algorithmic risk assessments using conformal prediction sets.</em> <a href="https://arxiv.org/abs/2008.11664">arXiv:2008.11664</a>: per-group validity in a setting where the miss lands on a person.</li>
     <li>Sadinle, Lei &amp; Wasserman (2019). <em>Least ambiguous set-valued classifiers with bounded error levels.</em> JASA. <a href="https://arxiv.org/abs/1609.00451">arXiv:1609.00451</a>: the smallest-ambiguity prediction sets at a target coverage; the method behind the <a href="demos/09-prediction-sets.html">adaptive prediction sets</a> demo.</li>
     <li>Romano, Sesia &amp; Cand&egrave;s (2020). <em>Classification with valid and adaptive coverage</em> (APS). NeurIPS. <a href="https://arxiv.org/abs/2006.02544">arXiv:2006.02544</a>: adaptive label sets with markedly better coverage across inputs.</li>
   </ul>
@@ -93,7 +92,7 @@
   <h2>2 &middot; Anomaly, novelty, and out-of-distribution detection</h2>
   <p>Here conformal prediction is not a forecaster at all but a <em>distribution-free hypothesis test</em>: the conformal \(p\)-value asks &ldquo;is this new point exchangeable with what I have seen?&rdquo; and coverage becomes exact Type-I error control. This is conformal prediction on its firmest ground, and it powers fraud detection, fault monitoring, and covariate-shift alarms.</p>
   <ul class="refs">
-    <li>Laxhammar &amp; Falkman (2014). <em>Conformal anomaly detection of trajectories</em> via kernel density nonconformity. <a href="https://link.springer.com/chapter/10.1007/978-3-662-44722-2_29">Springer</a>: distribution-free anomaly \(p\)-values for sequences.</li>
+    <li>Smith, Nouretdinov, Craddock, Offer &amp; Gammerman (2014). <em>Anomaly detection of trajectories with kernel density estimation by conformal prediction.</em> <a href="https://link.springer.com/chapter/10.1007/978-3-662-44722-2_29">Springer</a>: distribution-free anomaly \(p\)-values for sequences.</li>
     <li>Hu &amp; Lei (2020). <em>A distribution-free test of covariate shift using conformal prediction.</em> <a href="https://arxiv.org/abs/2010.07147">arXiv:2010.07147</a>: valid Type-I control for detecting shift, no model assumptions.</li>
     <li>Bates, Cand&egrave;s, Lei, Romano &amp; Sesia (2023). <em>Testing for outliers with conformal p-values.</em> <a href="https://arxiv.org/abs/2104.08279">arXiv:2104.08279</a>: the formal treatment of conformal outlier testing.</li>
   </ul>
@@ -123,7 +122,7 @@
   <p>This is the richest seam of correct use. The question is <em>containment</em>: will the true state, trajectory, or obstacle lie inside a region with a chosen probability? That is conformal prediction&rsquo;s native object. Prediction regions on other agents&rsquo; motion become provably safe controllers; conformal reachable sets certify a planner; runtime monitors flag failures with formal confidence.</p>
   <ul class="refs">
     <li>Lindemann, Cleaveland, Shim &amp; Pappas (2023). <em>Safe planning in dynamic environments using conformal prediction.</em> IEEE RA-L. <a href="https://arxiv.org/abs/2210.10254">arXiv:2210.10254</a>: prediction regions on pedestrian trajectories give a provably safe MPC.</li>
-    <li>Muthali, Leung, &hellip; Pavone &amp; Yang (2023). <em>Multi-agent reachability calibration with conformal prediction.</em> <a href="https://arxiv.org/abs/2304.00432">arXiv:2304.00432</a>: probabilistically safe, feasible prediction sets for planning.</li>
+    <li>Muthali, Shen, Deglurkar, Lim, Roelofs, Faust &amp; Tomlin (2023). <em>Multi-agent reachability calibration with conformal prediction.</em> <a href="https://arxiv.org/abs/2304.00432">arXiv:2304.00432</a>: probabilistically safe, feasible prediction sets for planning.</li>
     <li>Lin &amp; Bansal (2023). <em>Verification of neural reachable tubes via conformal prediction.</em> <a href="https://arxiv.org/abs/2312.08604">arXiv:2312.08604</a>: probabilistic safety guarantees, equivalent to scenario optimization.</li>
     <li>Lindemann et&nbsp;al. (2023). <em>Conformal prediction for STL runtime verification.</em> <a href="https://arxiv.org/abs/2211.01539">arXiv:2211.01539</a>: formal guarantees for predictive runtime monitoring.</li>
     <li>Bay-area safety from sparse feedback (2025). <em>Learning robot safety from sparse human feedback.</em> <a href="https://arxiv.org/abs/2501.04823">arXiv:2501.04823</a>: a warning region with a guaranteed miss rate.</li>
@@ -135,7 +134,7 @@
   <ul class="refs">
     <li>Bates, Angelopoulos, Lei, Malik &amp; Jordan (2021). <em>Distribution-free, risk-controlling prediction sets</em> (RCPS). JACM. <a href="https://arxiv.org/abs/2101.02703">arXiv:2101.02703</a>: the foundation of risk control.</li>
     <li>Online conformal risk control for distributed/remote inference (2024). <a href="https://arxiv.org/abs/2409.07902">arXiv:2409.07902</a>: worst-case FNR guarantees under communication limits.</li>
-    <li>Snell, Bates, &hellip; (2022). <em>Quantile risk control.</em> <a href="https://arxiv.org/abs/2212.13629">arXiv:2212.13629</a>: control quantiles of a loss, not just the mean.</li>
+    <li>Snell, Zollo, Deng, Pitassi &amp; Zemel (2022). <em>Quantile risk control.</em> <a href="https://arxiv.org/abs/2212.13629">arXiv:2212.13629</a>: control quantiles of a loss, not just the mean.</li>
     <li>Angelopoulos, Bates, Cand&egrave;s, Jordan &amp; Lei (2021). <em>Learn then test: calibrating predictive algorithms to achieve risk control.</em> <a href="https://arxiv.org/abs/2110.01052">arXiv:2110.01052</a>: turn any (even non-monotone) risk target into finite-sample control via multiple testing.</li>
   </ul>
 
@@ -161,7 +160,7 @@
   <p>Time-to-event data are censored, but a guaranteed <em>lower bound</em> on survival time is exactly a one-sided coverage statement, and that is what a clinician or a reliability engineer actually acts on. Conformal methods deliver it distribution-free even when follow-up is incomplete, turning a calibrated prognosis into a statement you can stand behind.</p>
   <ul class="refs">
     <li>Cand&egrave;s, Lei &amp; Ren (2023). <em>Conformalized survival analysis.</em> JRSS-B. <a href="https://arxiv.org/abs/2103.09763">arXiv:2103.09763</a>: calibrated lower predictive bounds on survival time under censoring.</li>
-    <li>Gui, Barber &amp; Ma (2024). <em>Conformalized survival analysis with adaptive cut-offs.</em> Biometrika. <a href="https://arxiv.org/abs/2211.01227">arXiv:2211.01227</a>: tighter bounds via covariate-adaptive calibration.</li>
+    <li>Gui, Hore, Ren &amp; Barber (2024). <em>Conformalized survival analysis with adaptive cut-offs.</em> Biometrika. <a href="https://arxiv.org/abs/2211.01227">arXiv:2211.01227</a>: tighter bounds via covariate-adaptive calibration.</li>
   </ul>
 
   <!-- ============================================================ -->

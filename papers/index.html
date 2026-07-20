@@ -113,9 +113,10 @@
     <p class="note" style="margin-top:2px;">dependence and the variance of realized coverage</p>
     <p>Fix the calibration set and the coverage you realize is a random number around
     1&minus;&alpha; &mdash; the Beta &ldquo;fan.&rdquo; Its width is set by the sign of the
-    cross-sample dependence: positive dependence widens it (proved via de Finetti and the law of
-    total variance), negative dependence narrows it, to exactly zero at the contest floor where the
-    realized coverage equals the nominal level every time. The same sign the signed-de-Finetti note
+    cross-sample dependence: positive dependence adds a non-negative between-dataset term (exact,
+    via de Finetti and the law of total variance) and empirically widens it; negative dependence
+    narrows it (proved in aggregate, conjectured per level), to exactly zero at the contest floor,
+    where the realized coverage equals k/(n+1) every time. The same sign the signed-de-Finetti note
     attaches to within-dataset adaptivity, now governing across-dataset spread.</p>
     <p style="margin-bottom:0;">
       <a href="/papers/fan/">Read more &rarr;</a>
@@ -130,9 +131,9 @@
     <p>Conformal validity stated as an exact orbit-averaging identity for the permutation
     action, in contragredient form through the Reynolds projector. The primal construction under
     the same action is Steinitz balancing; conformal placements are themselves a zero-sum
-    population, and an explicit balanced ordering keeps running coverage within 1/(2t) of
-    nominal, exact on the full orbit. The literal transpose of calibration on the
-    function&ndash;measure pairing is balanced sampling and exact cubature. Herding is the
+    population, and an explicit balanced ordering keeps the running placement-acceptance average within 1/(2t) of the
+    orbit level k/(n+1), exact on the full orbit. The measure-side counterpart of calibration on
+    the function&ndash;measure pairing is balanced sampling and exact cubature. Herding is the
     with-replacement relaxation, confined to a remark.</p>
     <p style="margin-bottom:0;">
       <a href="/papers/steinitz/">Read more &rarr;</a>

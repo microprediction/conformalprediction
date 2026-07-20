@@ -67,11 +67,14 @@
 
   <p class="tag">Code</p>
   <h1>Alternatives</h1>
-  <p class="subtitle">If the problem is a distributional forecast, wrap nothing: model the conditional distribution. There is no free lunch.</p>
+  <p class="subtitle">If the problem is a distributional forecast, wrap nothing: model the conditional distribution.</p>
 
   <p>Conformal prediction certifies coverage. If what you need is a sharp conditional
   distribution, the workhorses below are where to start. Each buys sharpness with
-  assumptions. Conformal buys assumption-freeness with marginality. Nobody escapes the trade.</p>
+  assumptions. Conformal buys assumption-freeness with marginality. Nobody escapes the trade.
+  On the question of which method actually wins on which series, this page defers to the live
+  <a href="https://skaters.microprediction.org">skaters benchmarks</a>; treat the notes below as
+  orientation, not a ranking.</p>
 
   <details style="margin:14px 0 18px;border:1px solid var(--line,#ddd);border-radius:8px;padding:10px 16px;">
     <summary style="cursor:pointer;font-weight:600;">Caveat: these recommendations go stale</summary>
@@ -87,10 +90,10 @@
   </details>
 
   <h2>t-GARCH</h2>
-  <p>The classical econometric route: conditional volatility with Student-t innovations. Strong
-  on price and return series, where volatility clustering is the signal and heavy tails are the
-  rule. The assumption purchased is that the GARCH recursion is roughly right; when it is not,
-  the tails you paid for are the wrong ones.</p>
+  <p>The classical econometric route: conditional volatility with Student-t innovations. The
+  standard choice for price and return series, where volatility clustering is the signal and
+  heavy tails are the rule. The assumption purchased is that the GARCH recursion is roughly
+  right; when it is not, the tails you paid for are the wrong ones.</p>
 
   <h2>auto-ARIMA</h2>
   <p>The workhorse baseline: search the ARIMA orders, fit by maximum likelihood, forecast with
@@ -105,8 +108,9 @@
   <h2>laplace</h2>
   <p>An online likelihood-weighted ensemble from the
   <a href="https://github.com/microprediction/skaters">skaters</a> package: one call, zero
-  dependencies, a full predictive distribution per step. Strong on non-price economic series
-  (<a href="https://skaters.microprediction.org">the benchmarks</a>). The assumption purchased is
+  dependencies, a full predictive distribution per step. It has done well on non-price economic
+  series in <a href="https://skaters.microprediction.org">the skaters benchmarks</a>, where the
+  current standings live. The assumption purchased is
   that the recent past is informative enough for the ensemble to track; and it hands you no
   finite-sample coverage certificate.</p>
 
@@ -114,23 +118,22 @@
   <p>The fully Bayesian route:
   <a href="https://github.com/pymc-labs/pymc_forecast">pymc_forecast</a> (PyMC Labs) has you
   write the generative model in PyMC and handles the rest — inference, forecasting, and
-  rolling-origin backtesting with CRPS, pinball, and coverage metrics. You get the whole
+  rolling-origin backtesting with CRPS and coverage metrics. You get the whole
   posterior predictive, hierarchies included. The assumption purchased is the model itself,
   prior and likelihood: the intervals are credible, calibrated exactly to the extent the model
   is right, with no distribution-free certificate.</p>
 
-  <h2>NNS</h2>
-  <p><a href="https://github.com/OVVO-Financial/NNS">NNS</a> (nonlinear nonparametric statistics,
-  Viole) takes a different door out of the time-series problem: notice when the series is repeated
-  sampling in disguise. Electricity load is the standard case, the 7am pattern recurs every day,
-  so the right reference class for this morning&rsquo;s 7am is the other 7am&rsquo;s, not the last
-  few hours, and NNS forecasts by resampling those matched periods. The same observation is
-  finding its way into the conformal literature: seasonal slices of such a series are close to
-  exchangeable, which is exactly the symmetry the guarantee runs on, and a training-free
-  seasonal-pool forecaster built on it is already a strong baseline
-  (<a href="https://arxiv.org/abs/2605.03789">Manokhin, 2026</a>). The assumption purchased is the
-  periodicity itself: on waveform-like series it is most of the signal; on economic series it is
-  mostly absent.</p>
+  <h2>Waveform methods</h2>
+  <p>Some series are repeated sampling in disguise: daily electricity load, where the right
+  reference class for this morning&rsquo;s 7am is the other 7am&rsquo;s.
+  <a href="https://github.com/OVVO-Financial/NNS">NNS</a> (Viole) forecasts by resampling those
+  matched periods, and a training-free seasonal-pool conformal forecaster built on the same
+  observation is already a strong baseline (<a href="https://arxiv.org/abs/2605.03789">Manokhin,
+  2026</a>). Not the author&rsquo;s specialty; the financial uses are somewhat niche. The wider
+  point is the one to take: state-of-the-art prediction or anomaly detection in your domain
+  comes from common sense about the structure of your series, not from a recipe. Matrix
+  profiles, for instance, are a natural fit for medical time-series, where the event of interest
+  is a repeated motif or its absence.</p>
 
   <h2>The trade</h2>
   <p>Any of them can be conformalized afterwards for the certificate: estimate first, certify second.
