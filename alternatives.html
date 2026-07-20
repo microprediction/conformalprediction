@@ -119,18 +119,17 @@
   prior and likelihood: the intervals are credible, calibrated exactly to the extent the model
   is right, with no distribution-free certificate.</p>
 
-  <h2>NNS</h2>
-  <p><a href="https://github.com/OVVO-Financial/NNS">NNS</a> (nonlinear nonparametric statistics,
-  Viole) takes a different door out of the time-series problem: notice when the series is repeated
-  sampling in disguise. Electricity load is the standard case, the 7am pattern recurs every day,
-  so the right reference class for this morning&rsquo;s 7am is the other 7am&rsquo;s, not the last
-  few hours, and NNS forecasts by resampling those matched periods. The same observation is
-  finding its way into the conformal literature: seasonal slices of such a series are close to
-  exchangeable, which is exactly the symmetry the guarantee runs on, and a training-free
-  seasonal-pool forecaster built on it is already a strong baseline
-  (<a href="https://arxiv.org/abs/2605.03789">Manokhin, 2026</a>). The assumption purchased is the
-  periodicity itself: on waveform-like series it is most of the signal; on economic series it is
-  mostly absent.</p>
+  <h2>Waveform methods</h2>
+  <p>Some series are repeated sampling in disguise: daily electricity load, where the right
+  reference class for this morning&rsquo;s 7am is the other 7am&rsquo;s.
+  <a href="https://github.com/OVVO-Financial/NNS">NNS</a> (Viole) forecasts by resampling those
+  matched periods, and a training-free seasonal-pool conformal forecaster built on the same
+  observation is already a strong baseline (<a href="https://arxiv.org/abs/2605.03789">Manokhin,
+  2026</a>). Not the author&rsquo;s specialty; the financial uses are somewhat niche. The wider
+  point is the one to take: state-of-the-art prediction or anomaly detection in your domain
+  comes from common sense about the structure of your series, not from a recipe. Matrix
+  profiles, for instance, are a natural fit for medical time-series, where the event of interest
+  is a repeated motif or its absence.</p>
 
   <h2>The trade</h2>
   <p>Any of them can be conformalized afterwards for the certificate: estimate first, certify second.
