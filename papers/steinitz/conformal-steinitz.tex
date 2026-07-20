@@ -441,8 +441,9 @@ scores: calibration's exact optimization dual, though not itself a point-generat
 \begin{remark}[Herding]\label{rmk:herding}
 Herding \citep{welling2009} generates points by the recursion $w_t=w_{t-1}+\mu-\phi(x_t)$,
 $x_t=\arg\max_x\langle w_{t-1},\phi(x)\rangle$, and attains $O(1/n)$ feature-mean discrepancy
-conditional on bounded weights; the identification with Frank--Wolfe \citep{bach2012} shows the
-fast rate needs interiority-type conditions, with \citet{chen2010} treating the kernel case.
+conditional on bounded weights; the identification with Frank--Wolfe \citep{bach2012} shows
+that the standard fast-rate guarantee follows under interiority-type conditions, with
+\citet{chen2010} treating the kernel case.
 \citet{harvey2014} introduce a Permutation Problem, the Euclidean finite-population instance
 of the balancing problem of Section~\ref{sec:steinitz}, and show that periodically repeating a
 good permutation yields a solution to their with-replacement Sampling Problem; generic herding
