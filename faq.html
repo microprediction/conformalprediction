@@ -73,8 +73,14 @@
   <h1>Objections &amp; FAQ</h1>
   <p class="subtitle">Straight answers to the questions the site tends to raise.</p>
 
-  <h3>So is conformal prediction useless?</h3>
-  <p>Quite the opposite, it is the right tool for every coverage-objective problem <a href="/index.html#applications">demonstrated here</a> (prediction sets, anomaly detection, retrieval, robotics, language models, risk control), and the only thing that hands you a distribution-free, finite-sample coverage certificate. The single thing it does not do is make a forecast sharper or a density better &mdash; <a href="/map.html">the map</a> shows where the field&rsquo;s effort actually goes.</p>
+  <h3>What is conformal prediction best for?</h3>
+  <p>That is for others to opine on, and largely outside the author&rsquo;s expertise. Some effort
+  has gone into collecting examples where coverage is genuinely the objective &mdash; prediction
+  sets, anomaly detection, retrieval, robotics, language models, risk control &mdash; on
+  <a href="/applications.html">the applications page</a>, with the papers that do each well.
+  Corrections and additions are welcome:
+  <a href="https://github.com/microprediction/conformalprediction">pull requests</a> gratefully
+  received, especially nominations from practitioners who have shipped it.</p>
 
   <h3>Doesn&rsquo;t conformalizing my model improve its uncertainty?</h3>
   <p>It gives the prediction <em>set</em> a coverage guarantee. It does not change your predictive <em>distribution</em>&rsquo;s sharpness, and a proper score (log-likelihood, CRPS) is unmoved by the conformal step. If the model is overconfident, conformal widens the set to hit coverage, but the density it implies is just your model&rsquo;s residual shape, re-levelled.</p>
