@@ -39,7 +39,8 @@ $\langle P^{\vee}f,v\rangle=\langle f,Pv\rangle$ reads its orbit average either 
 evaluation functional or as averaging the induced acceptance vector over placements. A natural
 primal discrepancy construction under the same action is Steinitz balancing: ordering a
 zero-sum population so that every prefix sum stays bounded. The centered conformal placement
-residuals form such a population, and an explicit ordering keeps running coverage within $1/(2t)$ of the orbit level
+residuals form such a population, and an explicit ordering keeps the running
+placement-acceptance average within $1/(2t)$ of the orbit level
 $k/N$, exact once all $N$ candidate test placements have been traversed; the vector-valued
 lemma balances several coverage levels along
 one traversal. On the function--measure pairing, the measure-side counterpart
@@ -65,7 +66,8 @@ records how the same two-ingredient structure appears in the dependent-data floo
 algebra can blur. The group-symmetry view of predictive inference is itself established:
 \citet{dobriban2025symmpi} build predictive inference on general distributional group
 symmetries, of which exchangeability is the permutation case. What we believe is new here is
-narrower: the identification of the placement acceptance vector as a Steinitz population, and
+narrower: the identification of the centered placement-residual vector as a Steinitz
+population, and
 the balanced traversals it admits, at one level and at several simultaneously. Herding \citep{welling2009}, whose $O(1/n)$ bookkeeping
 resembles the constructions here, can be viewed as a with-replacement relaxation of the
 finite balanced-permutation problem \citep{harvey2014}; it is confined to
@@ -197,7 +199,8 @@ distributional group symmetries is due to \citet{dobriban2025symmpi}.
 \section{Steinitz balancing}\label{sec:steinitz}
 
 A natural primal discrepancy construction under the same $\mathfrak S_{N}$ action is the
-ordering of a finite zero-sum population. Let $E$ be a $d$-dimensional normed vector space;
+ordering of a finite zero-sum population. Let $E$ be a real $d$-dimensional normed vector
+space;
 finite dimensionality is essential, as no constant independent of $N$ is available in general
 otherwise. If $z_1,\dots,z_{N}\in E$ satisfy $\sum_i z_i=0$ and $\|z_i\|\le 1$, the Steinitz
 lemma \citep{steinitz1913} supplies a permutation $\pi$ with every prefix bounded,
@@ -209,7 +212,7 @@ obtained by an element of the same permutation group that Section~\ref{sec:contr
 Two precisions. First, the vector-valued setting scalarizes cleanly: on $W=E^{N}$ define, for
 each $\lambda\in E^{*}$, the functional $L_{t,\lambda}(z)=\lambda(\sum_{j\le t}z_j)\in W^{*}$;
 then \eqref{eq:contra} holds verbatim for $L_{t,\lambda}$, and
-$\|\sum_{j\le t}z_{\pi(j)}\|=\sup_{\|\lambda\|_{*}\le 1}L_{t,\lambda}(\rho(\pi^{-1})z)$
+$\|\sum_{j\le t}z_{\pi(j)}\|=\sup_{\|\lambda\|_{*}\le 1}\bigl|L_{t,\lambda}(\rho(\pi^{-1})z)\bigr|$
 recovers the norm bound. Second, Steinitz balancing is not itself the contragredient of
 conformal averaging. Every permutation, balanced or not, satisfies the transport identity
 \eqref{eq:contra}; the Reynolds average gives the exact orbit identity of
@@ -220,8 +223,8 @@ For the relation to herding, see Remark~\ref{rmk:herding}.
 
 \section{Balanced conformal placements}\label{sec:balanced}
 
-Conformal placements are themselves a scalar Steinitz population: by
-Proposition~\ref{prop:count} the residuals $r_i(s)=\chi_i(s)-k/N$ satisfy $\sum_i r_i(s)=0$ and
+The centered conformal placement residuals form a scalar Steinitz population: by
+Proposition~\ref{prop:count}, $r_i(s)=\chi_i(s)-k/N$ satisfies $\sum_i r_i(s)=0$ and
 $|r_i(s)|\le 1$. Because they take only two values, the ordering can be made sharper than the
 general lemma provides. The balancing step is a statement about binary vectors, so we state it
 that way; the conformal content is that Proposition~\ref{prop:count} produces such a vector.
@@ -311,8 +314,8 @@ For $k_\ell\le N-1$ the level is the placement-acceptance count of
 Proposition~\ref{prop:count}; $k_\ell=N$ is the trivial always-accepted rank level, whose
 reading as a conformal threshold needs the $+\infty$ endpoint convention.
 
-A single traversal is therefore calibrated at every selected confidence level at once, at the
-price of the dimensional constant in place of the sharp $\tfrac12$.
+A single traversal is therefore balanced against every selected orbit level simultaneously, at
+the price of the dimensional constant in place of the sharp $\tfrac12$.
 
 \section{Balanced sampling: the measure-side counterpart}\label{sec:cubature}
 
@@ -348,7 +351,7 @@ probability measure on $\mathcal X$ (the letter $P$ is reserved for the Reynolds
 let $h_1,\dots,h_d:\mathcal X\to\R$ be measurable and $Q$-integrable, and set
 $\tilde\phi=(1,h_1,\dots,h_d)$. By the generalized Tchakaloff theorem for measurable
 integrable maps \citep{tchakaloff1957,bayerteichmann2006} there are $m\le d+1$ points
-$x_1,\dots,x_m$ in a $Q$-full set and weights $w_r>0$ with
+$x_1,\dots,x_m$ in any specified measurable $Q$-full set and weights $w_r>0$ with
 $\int\tilde\phi\,dQ=\sum_{r=1}^{m}w_r\tilde\phi(x_r)$: the first coordinate gives
 $\sum_rw_r=1$ and the rest give $\int h_j\,dQ=\sum_rw_rh_j(x_r)$ for every $j$. In this formulation, balanced sampling and exact
 cubature are the measure-side counterpart of threshold calibration.
@@ -358,7 +361,8 @@ distinct, have empirical distribution function within Kolmogorov distance $D$ of
 reference law $\bar F$, and the test score is drawn from $\bar F$ independently of the design,
 then $|\bar F(S_{(k)})-k/(n+1)|\le D+1/(n+1)$ and $|\bar F(S_{(k)})-p|<D+(1+p)/n$,
 deterministically in the design (the proof is $\hat F_n(S_{(k)})=k/n$ plus
-Lemma~\ref{lem:steer}). The midpoint quantile grid $S_i=\bar F^{-1}\bigl((i-\tfrac12)/n\bigr)$, $i=1,\dots,n$,
+Lemma~\ref{lem:steer}). The midpoint quantile grid $S_i=\bar F^{-1}\bigl((i-\tfrac12)/n\bigr)$, $i=1,\dots,n$, with
+$\bar F^{-1}(u)=\inf\{x:\bar F(x)\ge u\}$,
 achieves $D\le 1/(2n)$ for continuous $\bar F$. This is design-based rather
 than distribution-free: it suppresses the $n^{-1/2}$ fluctuation of calibration-conditional
 coverage at the price of assuming the target law. Two limitations should be stated. The
@@ -454,8 +458,10 @@ quantile function.
 \end{remark}
 
 \begin{remark}[Limits]
-The passage from orbit identity to one-shot coverage is exchangeability's, or its mixing
-surrogate's in Section~\ref{sec:bp}; no bookkeeping supplies it. Nor does control of thresholds
+The passage from the exact orbit identity to exact one-shot coverage is supplied by transitive
+invariance of the law, exchangeability in the standard case. Under dependence,
+Section~\ref{sec:bp} instead uses approximate switched-law symmetry and pays an explicit
+coverage penalty; no deterministic bookkeeping supplies either conclusion. Nor does control of thresholds
 and labels create information: it re-levels coverage while conditional sharpness remains a
 property of the scores \citep{cotton_marginally}. We do not know whether this particular placement-balancing
 construction can be localized conditionally, selecting or reweighting calibration slots to
