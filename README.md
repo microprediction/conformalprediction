@@ -1,17 +1,17 @@
 # Conformal Prediction
 
-A practical, interactive guide to conformal prediction: how it works, what its guarantee
-really means, where it is exactly the right tool, and the one thing it does not do. Live at
-[conformalprediction.net](https://conformalprediction.net).
+Demonstrations of some principles of conformal prediction and its connections to other
+areas of mathematics. Live at [conformalprediction.net](https://conformalprediction.net).
 
-The premise is simple: to wield conformal prediction well, you have to understand what it
-isn't. So the guide takes its time — it builds the method, reads the guarantee carefully,
-shows where coverage is genuinely the goal, and is precise about what the guarantee does
-not give you. The intent is to inform, not to oversell.
+A demonstration site, not a thesis: it builds the method, reads the guarantee carefully,
+shows where coverage is genuinely the goal, is precise about what the guarantee does and
+does not give, and follows the connections outward — Steinitz balancing, herding,
+de Finetti, parimutuel rent. Each issue is taken on its own terms. The intent is to
+inform, not to oversell.
 
-> Conformal prediction certifies the coverage of a set; it does not estimate a
-> distribution. Use it whenever you need a coverage guarantee — just don't expect the
-> certificate to make the forecast underneath it any sharper.
+> Conformal prediction certifies the coverage of a set; it does not typically estimate a
+> sharp conditional distribution and nor can it because you are not supplying the
+> requisite information. Use it, happily, whenever you need a coverage guarantee.
 
 ## The package
 
