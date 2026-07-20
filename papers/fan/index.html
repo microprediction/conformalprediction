@@ -98,19 +98,24 @@
   <p>The proof uses the convex-order contraction of the sub-threshold count against a <em>concave</em>
   functional, \(\min(j,\,n-N(u))\), the top-\(j\) sum: convex order reverses for concave maps, so the
   expected-order-statistic profile majorizes the independent one, and Schur-convexity finishes it.
-  What stays open is the single-level statement (for one fixed \(k\)), and the obstruction is exactly
-  why: the step behind one \(\operatorname{Var}(U_{(k)})\) is neither concave nor convex, so the same
-  order cannot sign it; no counterexample appears in a wide numerical hunt, the order-statistic
-  CDFs cross the independent ones exactly once, and on the Gaussian scale the single-level statement
-  is exact and monotone in the correlation (\(\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)\) for
-  equicorrelated normals). The top level \(k=n\) is exactly tractable for <em>any</em> negative
-  association: the maximum's law is the copula diagonal \(\delta(u)=C(u,\dots,u)\le u^n\), and the
-  conjecture there reduces to a single centroid inequality on the diagonal deficit \(u^n-\delta(u)\)
-  &mdash; which, an LP shows, the diagonal constraints alone do not force, pinning the difficulty on
-  the off-diagonal negative-orthant structure. The stronger dispersive ordering is deliberately not
-  claimed; it can fail at fixed marginals. All checks are reproduced by <code>check_fan.py</code>; a
-  constructive corollary is that a pre-specified, exchangeability-preserving randomized design
-  reduces the run-to-run dispersion of realized coverage without disturbing validity.</p>
+  What about a single fixed \(k\)? The step behind one \(\operatorname{Var}(U_{(k)})\) is neither
+  concave nor convex, so the same order cannot sign it, and the single-level bound turns out to be
+  <em>false at \(n=2\)</em>: there is an explicit negatively associated pair with uniform marginals
+  &mdash; two calibration points that are never both large &mdash; whose maximum is strictly
+  over-dispersed (\(\operatorname{Var}(U_{(2)})=\tfrac1{18}+\tfrac{a^2(1-6a-2a^2)}{18}\), ratio
+  \(1.0038\) at \(a=\tfrac1{10}\)). It realizes exactly the centroid-violating diagonal an LP predicts,
+  which the note had hoped no genuine law reaches. Why only \(n=2\): there the variance depends on the
+  copula diagonal alone and negative association collapses to the single constraint \(\delta(u)\le u^2\),
+  leaving room to push the deficit toward \(u=1\); for \(n\ge3\) the fuller off-diagonal orthant
+  constraints appear to forbid it, padding the counterexample with an independent coordinate already
+  drops the ratio below one, and an extensive search over \(3\le n\le10\) finds no violation. So the
+  conjecture is re-posed for \(n\ge3\), where it is open and unbroken, and settled on the
+  Farlie&ndash;Gumbel&ndash;Morgenstern, without-replacement, and Gaussian-copula subclasses. On the
+  Gaussian scale the single-level statement is exact and monotone in the correlation
+  (\(\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)\) for equicorrelated normals). All checks are
+  reproduced by <code>check_fan_conjecture.py</code>; a constructive corollary is that a pre-specified,
+  exchangeability-preserving randomized design reduces the run-to-run dispersion of realized coverage
+  without disturbing validity.</p>
 
   <h2>The time-series fan</h2>
   <p>When the calibration scores are a stationary segment of a series, the moments of realized

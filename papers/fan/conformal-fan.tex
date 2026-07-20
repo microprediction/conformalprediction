@@ -28,9 +28,10 @@ the dependence among the calibration scores, through the covariance kernel of th
 count. Three results follow: a leading-order fan coefficient in a Bahadur regime; an exact
 aggregate bound, summed over all levels, showing negative association never widens the fan; and,
 for equicorrelated normals, the exact single-level law
-$\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)$. The general single-level negative-association
-contraction is left as a conjecture, supported numerically. The governing sign is the one the
-companion note attaches to the finite de Finetti measure.
+$\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)$. The general single-level contraction turns out to
+fail at $n=2$: we exhibit an explicit negatively associated pair, uniform marginals, whose
+extreme order statistic is strictly over-dispersed. For $n\ge3$ it is open and unbroken across an
+extensive search, and holds on the Gaussian-copula, FGM, and without-replacement subclasses.
 \end{abstract}
 
 \section{Setup}
@@ -77,16 +78,32 @@ is open.
 A third point fixes what kind of dependence is in scope, since it has to square with an independent
 test. What the analysis requires is only that the test draw be independent of the calibration scores;
 the calibration dependence is then necessarily \emph{design-induced} --- a property of how the
-calibration set is assembled, not of a data stream the test belongs to. Antithetic pairs
-$(V,1-V)$, stratified and Latin-hypercube designs, or balanced subsampling from a pool all make
-$(U_1,\dots,U_n)$ negatively associated while keeping each $U_i$ marginally uniform, and a deployed test
-point is exogenous, hence independent. Dependence inherited from a source the test shares --- the next
-step of a time series, or the unsampled remainder of a without-replacement draw --- instead couples the
-test to the calibration, so that $c\ne U_{(k)}$ and a different analysis applies; that case is out of
+calibration set is assembled, not of a data stream the test belongs to. This is the standard
+split-conformal test assumption (a fresh, independent future point); the only non-standard ingredient
+is letting the \emph{calibration} set carry an engineered dependence. That ingredient is not exotic ---
+it is what you get whenever the calibration set is \emph{constructed or curated} rather than taken as an
+i.i.d.\ draw, and the fan is then a statement about a design choice.
+
+Three concrete settings. \emph{Space-filling calibration.} When the calibration inputs can be chosen
+--- active or pool-based calibration, or any pipeline that selects which points to label --- one spreads
+them evenly, on a stratified, Latin-hypercube, or low-discrepancy (quasi-Monte-Carlo) grid, to avoid
+clumping. Even coverage of the input space makes the resulting scores negatively associated with uniform
+marginals, and the fan says this engineering can only tighten the run-to-run variability of realized
+coverage, never loosen it. \emph{Balanced subsampling from a pool.} Labeled data is often subsampled to
+a fixed calibration budget; drawing without replacement, or balancing on a stratifying covariate, or
+antithetically pairing, all induce negative association among the retained scores while the deployed test
+point remains exogenous. \emph{Deduplication and diversity filtering.} Removing near-duplicates or
+enforcing diversity in a calibration set --- routine when data are scraped or redundant --- is again a
+negative-dependence-inducing design, and again a fan-narrowing one. In each case the practical payoff is
+the same: a calibration design that is more evenly spread buys a more reliable realized coverage from one
+deployment to the next, at no cost to the marginal guarantee, which the rank symmetry of the independent
+test point still delivers.
+
+The contrast is the case where the test shares its source with the calibration --- the next step of a
+time series, or the unsampled remainder of a without-replacement draw used as the test --- which couples
+the test to the calibration, so that $c\ne U_{(k)}$ and a different analysis applies; that case is out of
 scope here. The maximally negatively associated floor is read the same way: a deterministic grid laid
-down by design, not a draw whose leftover is the test. This is the standard split-conformal test
-assumption (a fresh, independent future point); the only non-standard ingredient is letting the
-\emph{calibration} set carry an engineered dependence.
+down by design, not a draw whose leftover is the test.
 
 The whole problem passes through the count process $N(u)=\sum_{i=1}^n\mathbf 1\{U_i\le u\}$, because
 $U_{(k)}=\int_0^1\mathbf 1\{N(u)<k\}\,\mathrm du$, so
@@ -260,22 +277,73 @@ $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$, not exchangeability as such. Equality 
 independence; that equality \emph{forces} independence is not established here and would need a
 separate tightness lemma.
 
-\section{The single level: partial progress and a conjecture}
+\section{The single level: a counterexample at $n=2$, and a conjecture for $n\ge3$}
 
 Everything above is proved for general negative association. The single conformal level, the operationally relevant one, is not, and the obstruction is exactly why the aggregate succeeds: the
 step $\mathbf 1\{N(u)<k\}$ behind a single $\operatorname{Var}(U_{(k)})$ is neither concave nor convex,
 so the convex order does not sign it, whereas the smooth aggregate functional $\min(j,n-N)$ is concave
-and it does. We collect here what \emph{is} established at this level --- exactly on the Gaussian scale,
-and reduced to a copula-diagonal inequality at the extreme $k=n$ --- and state the general claim as a
-conjecture.
+and it does. That gap is not merely technical. At $n=2$ the single-level bound is \emph{false}.
 
-\begin{conjecture}[Per-level contraction]\label{conj:disp}
-If the calibration scores are negatively associated then $\operatorname{Var}(c)$ is at most the
-independent value \eqref{eq:betavar} for each $k$ individually.
+\begin{proposition}[Counterexample at $n=2$]\label{prop:counter}
+For each $a\in\bigl(0,\tfrac{\sqrt{11}-3}{2}\bigr)$ there is a negatively associated pair with uniform
+marginals whose extreme order statistic is strictly over-dispersed:
+$\operatorname{Var}(U_{(2)})=\tfrac1{18}+\tfrac{a^2(1-6a-2a^2)}{18}>\tfrac1{18}
+=\operatorname{Var}^{\mathrm{iid}}(U_{(2)})$.
+\end{proposition}
+
+\begin{proof}
+Split $[0,1]$ into a bottom bin $B=[0,1-a]$ and a top bin $T=[1-a,1]$. Draw the cell of $(U_1,U_2)$
+with $\mathbb P(B,T)=\mathbb P(T,B)=a$, $\mathbb P(B,B)=1-2a$, $\mathbb P(T,T)=0$, and, given the cell,
+make the coordinates independent uniforms on their bins: the two points are \emph{never both large}.
+Each marginal is uniform (mass $a$ spread uniformly on $T$, mass $1-a$ on $B$). For a pair, negative
+association is equivalent to negative quadrant dependence $C(u,v)\le uv$ \citep{joagdev1983,lehmann1966};
+here $uv-C(u,v)=a^2\,(g_B(u)-g_T(u))(g_B(v)-g_T(v))\ge0$ with $g_B(x)=\min(x/(1-a),1)$,
+$g_T(x)=\max(0,(x-(1-a))/a)$ and $g_B\ge g_T$ pointwise, so the law is genuinely NA. Its diagonal is
+$\delta(u)=\mathbb P(U_{(2)}\le u)=(1-2a)u^2/(1-a)^2$ on $[0,1-a]$ and $2u-1$ on $[1-a,1]$; with
+$\mathbb E[U_{(2)}^m]=1-m\int_0^1 u^{m-1}\delta(u)\,du$ this gives the stated variance, positive on the
+displayed range of $a$.
+\end{proof}
+
+The excess is small but exact: at $a=\tfrac1{10}$, $\operatorname{Var}(U_{(2)})=\tfrac{1673}{30000}$, a
+ratio $1.0038$ to the independent fan; optimising the diagonal (a Bertino copula) reaches about
+$1.034$. By the negation symmetry $U\mapsto 1-U$, which preserves NA and uniform marginals, the mirror
+law (never both \emph{small}) over-disperses the minimum by the same amount, so the bound fails at both
+extreme levels. This is exactly the diagonal the linear program of \eqref{eq:centroid} below produces:
+the note's hope there --- that no genuine NA law realises a centroid-violating diagonal --- is false at
+$n=2$. The mechanism is that uniform marginals and exchangeability pin only the \emph{sum} of the
+order-statistic means (to $n/2$), never an individual $\mathbb E[U_{(k)}]$, so a mean-decreasing spread
+is available: the counterexample lowers $\mathbb E[U_{(2)}]$ while widening it, and the aggregate bound
+survives because the other level over-contracts to compensate
+($\operatorname{Var}(U_{(1)})+\operatorname{Var}(U_{(2)})\approx0.104<\tfrac2{18}$).
+
+\begin{remark}[Why $n=2$ is special]
+At $n=2$ the order-statistic variance is a functional of the copula diagonal $\delta(u)=C(u,u)$
+\emph{alone}, and negative association collapses to the single diagonal constraint $\delta(u)\le u^2$
+--- for a pair, NA, NQD, and negative correlation of monotone functions all coincide. That one-dimensional
+constraint leaves room to push the deficit $u^2-\delta$ toward $u=1$, which is precisely the
+over-dispersion. For $n\ge3$ the single-level variance depends on the off-diagonal negative-orthant
+probabilities across thresholds (the content \eqref{eq:centroid} isolates), and NA is genuinely
+higher-order there --- the same reason pairwise negative dependence is strictly weaker than NA for
+$n\ge3$, and the reason the exchangeable correlation floor $-1/(n-1)$ tightens away from the
+countermonotone $-1$ available only at $n=2$. The counterexample does not survive that tightening: padding
+it with an independent uniform (NA by closure, \citealp{joagdev1983}) already drops the ratio below one,
+$0.9995$ at $n=3$, and further below for $n=4,5,6$; the independent coordinate dilutes the effect. An
+extensive search over exchangeable, moving-average, block, without-replacement, and non-exchangeable
+negatively-correlated Gaussian-copula laws at $3\le n\le10$ and every $k$ finds no violation
+(\texttt{check\_fan\_conjecture.py}).
+\end{remark}
+
+\begin{conjecture}[Per-level contraction, $n\ge3$]\label{conj:disp}
+For $n\ge3$, if the calibration scores are negatively associated then $\operatorname{Var}(c)$ is at
+most the independent value \eqref{eq:betavar} for each $k$ individually.
 \end{conjecture}
 
-In the canonical continuous family the per-level statement is exact, and more, it is monotone in the
-correlation.
+Two subclasses settle it outright. The Farlie--Gumbel--Morgenstern copula at negative parameter has
+$\operatorname{Var}(U_{(k)})$ a concave quadratic in the parameter with positive slope at
+independence, hence below the independent value throughout the NA range; sampling without replacement
+reduces, via the same diagonal functional, to a finite centroid inequality that the hypergeometric
+single-crossing settles. And in the canonical continuous family the per-level statement is exact, and
+more, it is monotone in the correlation.
 
 \begin{proposition}[Exact per-level law for equicorrelated normals]\label{prop:gauss}
 Let $(Z_1,\dots,Z_n)$ be equicorrelated standard normal with correlation
@@ -404,8 +472,10 @@ bound $\delta\le u^n$ returns a diagonal that violates \eqref{eq:centroid} (\tex
 The single level is therefore irreducibly a property of the off-diagonal negative-orthant probabilities
 across thresholds, not of the diagonal that determines $U_{(n)}$'s law: exactly the content the
 aggregate convex-order bound uses in bulk and that a one-level statement cannot read off. It is the same
-obstruction that blocks localizing Theorem~\ref{thm:agg} to a single $k$, now in closed form, and every
-negatively associated structure tested satisfies \eqref{eq:centroid} with margin.
+obstruction that blocks localizing Theorem~\ref{thm:agg} to a single $k$, now in closed form. At $n=2$
+the LP-violating diagonal is realised by the genuine NA law of Proposition~\ref{prop:counter}, so
+\eqref{eq:centroid} fails there; for $n\ge3$ the off-diagonal constraints appear to rule such diagonals
+out, and every negatively associated structure tested satisfies \eqref{eq:centroid} with margin.
 
 The same convex-order contraction $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$ that drives the aggregate
 bound is available per level, but turning it into the single-$k$ statement needs the tail
@@ -483,11 +553,12 @@ at the boundary), and such curves are excluded only because they are not realiza
 sample. The content is therefore an extremal statement about the realizable curves, not their
 marginals:
 \begin{quote}
-\emph{Open lemma.} Among all $g(u)=\mathbb P(N(u)\ge k)$ realizable by a negatively associated uniform
-sample, the independent (binomial) curve maximizes $\operatorname{Var}(c)$.
+\emph{Open lemma ($n\ge3$).} Among all $g(u)=\mathbb P(N(u)\ge k)$ realizable by a negatively associated
+uniform sample of size $n\ge3$, the independent (binomial) curve maximizes $\operatorname{Var}(c)$.
 \end{quote}
-This is what a total-positivity or coupling argument would have to deliver. Proposition~\ref{prop:path}
-and the contest endpoint are the cases settled by hand.
+The restriction to $n\ge3$ is necessary: Proposition~\ref{prop:counter} realizes an over-dispersing curve
+at $n=2$. This is what a total-positivity or coupling argument would have to deliver.
+Proposition~\ref{prop:path} and the contest endpoint are the cases settled by hand.
 \end{remark}
 
 \begin{remark}[The signed measure as a negative between-term]
