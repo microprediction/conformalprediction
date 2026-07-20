@@ -34,7 +34,10 @@ function population(N, rng) {
   let mx = 0, my = 0;
   for (const [x, y] of z) { mx += x; my += y; }
   mx /= N; my /= N;
-  return z.map(([x, y]) => [x - mx, y - my]);
+  // centering preserves the zero sum but can push norms past 1; rescale so ||z_i|| <= 1 holds
+  const c = z.map(([x, y]) => [x - mx, y - my]);
+  const m = Math.max(1, ...c.map(([x, y]) => Math.hypot(x, y)));
+  return c.map(([x, y]) => [x / m, y / m]);
 }
 
 function prefixes(order, z) {

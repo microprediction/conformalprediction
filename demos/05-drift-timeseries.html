@@ -76,7 +76,7 @@
   <ul>
     <li>fixed split (CP), constant half-width \(q\) from the calibration residuals. The straw man, kept for contrast.</li>
     <li>ACI (Gibbs &amp; Candès, 2021), online \(\alpha_t\), width from the \((1-\alpha_t)\) quantile of a trailing window of \(|y-\hat y|\), updated by \(\alpha_{t+1}=\operatorname{clip}\!\big(\alpha_t+\gamma(\alpha-\mathrm{err}_t)\big)\).</li>
-    <li>conformal PID (after Angelopoulos, Candès &amp; Tibshirani, 2024), trailing-quantile base radius plus an integral correction on the running coverage error.</li>
+    <li>conformal PID (after Angelopoulos, Candès &amp; Tibshirani, 2023), trailing-quantile base radius plus an integral correction on the running coverage error.</li>
     <li>NexCP (weighted) (Barber et&nbsp;al., 2023), a recency-weighted quantile of trailing residuals, weights \(\rho^{\,\text{age}}\).</li>
     <li>EWMA-vol Gaussian, the yardstick: estimate the conditional sd by RiskMetrics EWMA of squared residuals (\(\lambda=0.94\)) and emit \(\hat y_t \pm z\,\sigma_t\). This models the spread directly, so it also returns a full predictive distribution.</li>
   </ul>

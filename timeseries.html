@@ -95,10 +95,10 @@
   calibration point &mdash; the right tool for distribution drift, but the wrong deformation for a time series,
   where swapping single points can change the joint distribution a lot even under short-range dependence.
   Oliveira et al. (2024) use blocking and empirical-process concentration to get a loss of order
-  &radic;(t<sub>mix</sub>/n) for &beta;-mixing series &mdash; the first general no-modification guarantee, at
-  the classical square-root rate. Barber &amp; Pananjady (2026) then close the question with a new
-  &ldquo;switch coefficient&rdquo; and get</p>
-  <p style="text-align:center;">coverage &ge; 1 &minus; &alpha; &minus; min<sub>&tau;</sub> { &tau;/n + 2&beta;(&tau;) },</p>
+  &radic;(t<sub>mix</sub>/n) for &beta;-mixing series &mdash; the first no-modification guarantee with rates
+  meaningful for mixing series, at the classical square-root rate. Barber &amp; Pananjady (2026) then close the
+  question with a new &ldquo;switch coefficient&rdquo; and get, for a pretrained score on a stationary series,</p>
+  <p style="text-align:center;">coverage &ge; 1 &minus; &alpha; &minus; min<sub>&tau;</sub> { &tau;/(n+1) + 2&beta;(&tau;) },</p>
   <p>linear in &tau;/n where the blocking argument gave the square root &mdash; the guarantee
   converges faster than you have any right to expect. The reason is that the proof needs no concentration at
   all: the (1&minus;&alpha;)-quantile of n scores moves by only about &tau;/n when &tau; entries are deleted
@@ -106,7 +106,7 @@
   like a calibration point. Read the minimand as a bargain struck at every lag &tau;: pay &tau;/n in quantile
   slippage to buy a decoupling gap of &tau; steps, costing 2&beta;(&tau;) in dependence. The result is also
   tight (a stationary construction achieves a constant fraction of the bound) and <em>two-sided</em>: a matching
-  ceiling shows dependence cannot silently buy you 99% when you asked for 90% either. Predictors with memory L
+  ceiling shows dependence cannot silently buy you 99% when you asked for 90% either (for continuous scores). Predictors with memory L
   cost an extra L/n; a score trained on an initial block needs a second buffer between training and calibration.</p>
   <p>Scale check, from their moving-average experiments: with nominal 90%, n = 120 calibration points and an
   MA(t) dependence range of t = 12 (so t/n = 0.1), the worst-case bound permits coverage as low as 80%, while
@@ -129,7 +129,7 @@
   <h2>Game 4: drop probability altogether</h2>
   <p><em>Gibbs &amp; Cand&egrave;s (2021; 2024), Bhatnagar et al. (2023), conformal PID (2023).</em> The online
   game changes the target: guarantee that the <em>time-average</em> of coverage indicators along your one path
-  tends to 1&minus;&alpha;, for any sequence whatsoever, adversarial included. No distribution, no ensemble
+  tends to 1&minus;&alpha;, for any sequence, adversarial included (conformal PID assumes bounded scores). No distribution, no ensemble
   &mdash; and therefore no probability statement about any particular time step. The certificate is real but
   weak in a specific way: it can be satisfied by intervals that oscillate between empty and infinite, and the
   average conceals when the misses happen. Bellman conformal inference (Yang, Cand&egrave;s &amp; Lei 2024)

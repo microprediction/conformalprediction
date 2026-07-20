@@ -1,4 +1,4 @@
-// Demo 25 — Conformal prediction as Bayesian quadrature (Snell & Griffiths 2025).
+// Demo 26 — Conformal prediction as Bayesian quadrature (Snell & Griffiths 2025).
 //
 // Panel 1: n sorted calibration scores cut the line into n+1 gaps; each gap
 // carries Dirichlet(1,...,1) mass with mean 1/(n+1); the threshold q = S_(k)

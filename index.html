@@ -87,7 +87,7 @@
     $$\mathbb{P}\big(Y_{n+1}\in C(X_{n+1})\big)\;\ge\;1-\alpha.$$
     A real and remarkable guarantee. The art is in reading it: the probability averages over the input \(X_{n+1}\), so it describes the <em>average</em> case, not necessarily the one in front of you.</p>
   </blockquote>
-  <p>The guarantee is due to <a href="https://doi.org/10.1007/3-540-36755-1_29">Papadopoulos, Proedrou, Vovk &amp; Gammerman (2002)</a>, in the tradition of <a href="https://link.springer.com/book/10.1007/978-3-031-06649-8">Vovk, Gammerman &amp; Shafer (2005)</a>.</p>
+  <p>The guarantee is due to <a href="https://doi.org/10.1007/3-540-36755-1_29">Papadopoulos, Proedrou, Vovk &amp; Gammerman (2002)</a>, in the tradition of <a href="https://doi.org/10.1007/b106715">Vovk, Gammerman &amp; Shafer (2005)</a>.</p>
   <div class="cards">
     <a class="card" href="demos/01-how-conformal-works.html">
       <h3>How split conformal works</h3>
@@ -184,7 +184,7 @@
 
   <!-- ============================================================ -->
   <h2 id="herding">6 &middot; The mechanism: balanced placements</h2>
-  <p>Where the 1/n comes from. Conformal validity is a counting statement: rotate the &ldquo;test&rdquo; label through the slots and exactly k of n+1 placements are covered, for any scores; exchangeability enters once, to make the realized placement an even draw. The exact dual construction under the same permutation action is Steinitz balancing, the ordering of a zero-sum population with bounded prefix sums; herding (Welling 2009) is its with-replacement relaxation, and the demo below runs it. <a href="/papers/steinitz/">The note</a> has the exact statements.</p>
+  <p>Where the 1/n comes from. Conformal validity is a counting statement: rotate the &ldquo;test&rdquo; label through the slots and exactly k of n+1 placements are covered, for any distinct scores; exchangeability enters once, to make the realized placement an even draw. The exact dual construction under the same permutation action is Steinitz balancing, the ordering of a zero-sum population with bounded prefix sums; herding (Welling 2009) is its with-replacement relaxation, and the demo below runs it. <a href="/papers/steinitz/">The note</a> has the exact statements.</p>
   <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
     <summary style="cursor:pointer;font-weight:600;">How this section came about</summary>
     <p style="margin-top:10px;">Thanks to Peter Urbani for pointing me to the result behind <a href="/demos/19-dependence-tax.html">the dependence tax</a>. It was that 1/n rate that made me realize there had to be a contragredient relationship to herding, something I had briefly worked on with Max Welling many years ago. Steinitz balancing later turned out to be the more precise dual; the note has the exact statement.</p>
@@ -192,7 +192,7 @@
   <div class="cards">
     <a class="card" href="demos/21-herding-slots.html">
       <h3>Moving the balls, moving the slots</h3>
-      <p>Herding steers points to balance a target at rate 1/n. Conformal rotates the &ldquo;test&rdquo; label over fixed scores, and exactly k of n+1 placements are covered, for any scores at all.</p>
+      <p>Herding steers points to balance a target at rate 1/n. Conformal rotates the &ldquo;test&rdquo; label over fixed scores, and exactly k of n+1 placements are covered, for any distinct scores.</p>
     </a>
     <a class="card" href="demos/23-steinitz-balancing.html">
       <h3>Steinitz balancing</h3>
@@ -200,7 +200,7 @@
     </a>
     <a class="card" href="demos/24-balanced-placements.html">
       <h3>Balanced placements</h3>
-      <p>Conformal placements are such a population. The balanced word keeps running coverage within 1/(2t) of nominal at every prefix, for any scores.</p>
+      <p>Conformal placements are such a population. The balanced word keeps running coverage within 1/(2t) of the orbit level k/(n+1) at every prefix, for any scores.</p>
     </a>
   </div>
 
@@ -208,8 +208,8 @@
   <h2 id="ts">7 &middot; Time series &amp; distribution shift</h2>
   <p>Time series break <em>exchangeability</em>, but that actually isn&rsquo;t such a big deal for coverage: plain split
   conformal degrades gracefully, with a coverage loss provably bounded by
-  (dependence&nbsp;range)&thinsp;/&thinsp;(calibration&nbsp;size) for stationary series whose dependence dies
-  out with lag (Barber &amp; Pananjady 2026). The real question is which assumption replaces
+  (dependence&nbsp;range)&thinsp;/&thinsp;(calibration&nbsp;size) for stationary series whose dependence
+  vanishes beyond a finite lag, plus a mixing term when it merely fades (Barber &amp; Pananjady 2026). The real question is which assumption replaces
   exchangeability, and what the resulting 90% averages over: stationarity plus mixing, block structure
   (permute blocks, not points), a consistent wrapped model (EnbPI, SPCI), or nothing at all for the online
   variants (ACI, conformal PID), which certify a long-run average along your one path. Each is an average, over paths or over time, not coverage for the step in front of you;
@@ -218,7 +218,7 @@
   <div class="cards">
     <a class="card" href="demos/19-dependence-tax.html">
       <h3>The dependence tax</h3>
-      <p>Barber &amp; Pananjady&rsquo;s Figure 1, live: split conformal on MA(t) noise loses coverage linearly in t/n &mdash; curves for n, 2n, 3n collapse onto one shallow line, an order of magnitude under the worst-case floor.</p>
+      <p>Barber &amp; Pananjady&rsquo;s Figure 1, live: split conformal on MA(t) noise loses coverage linearly in t/n &mdash; curves for n, 2n, 3n collapse onto one shallow line, an order of magnitude more gently than the worst case allows.</p>
     </a>
     <a class="card" href="demos/22-timeseries-fan.html">
       <h3>The time-series fan</h3>
@@ -261,7 +261,7 @@
 
   <!-- ============================================================ -->
   <h2 id="anomaly">11 &middot; Anomaly &amp; out-of-distribution detection</h2>
-  <p>This is conformal prediction at its strongest, it would seem, working as a <em>test</em> rather than a forecaster. A conformal \(p\)-value of a genuine inlier is (super-)uniform, so flagging whenever \(p\le\alpha\) controls the false-alarm rate at <em>exactly</em> \(\alpha\), distribution-free, finite-sample, with no threshold to tune. Type-I error control is coverage, and coverage is what conformal certifies. Detection power is the score&rsquo;s job; the false-alarm budget is guaranteed.</p>
+  <p>This is conformal prediction at its strongest, it would seem, working as a <em>test</em> rather than a forecaster. A conformal \(p\)-value of a genuine inlier is (super-)uniform, so flagging whenever \(p\le\alpha\) controls the false-alarm rate at <em>at most</em> \(\alpha\) (exactly \(\lfloor\alpha(n+1)\rfloor/(n+1)\) for continuous scores), distribution-free, finite-sample, with no threshold to tune. Type-I error control is coverage, and coverage is what conformal certifies. Detection power is the score&rsquo;s job; the false-alarm budget is guaranteed.</p>
   <div class="cards">
     <a class="card" href="demos/10-anomaly-pvalues.html">
       <div class="num">shines</div>
@@ -321,7 +321,7 @@
     <li>Angelopoulos, Bates, Fisch, Lei &amp; Schuster (2024). Conformal risk control. <em>ICLR.</em></li>
     <li>Gneiting, Balabdaoui &amp; Raftery (2007). Probabilistic forecasts, calibration and sharpness. <em>JRSS-B</em> 69(2).</li>
   </ul>
-  <p class="note">The full bibliography is in <a href="/papers/marginally-useful/references.bib"><code>paper/references.bib</code></a>.</p>
+  <p class="note">The full bibliography is in <a href="/papers/marginally-useful/references.bib"><code>papers/marginally-useful/references.bib</code></a>.</p>
 
 </div>
   <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>

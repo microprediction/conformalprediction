@@ -83,8 +83,8 @@
   </div>
 
   <p>The top panel is the distribution of \(c\) (orange) against the iid fan (blue). At the floor the
-  fan collapses to a spike on \(1-\alpha\); near \(\rho=0\) it is the Beta fan; at large \(\rho\) it
-  blows up. The readouts track the two inequalities the note proves on the negative side: the
+  fan contracts, here to roughly half the iid variance; near \(\rho=0\) it is the Beta fan; at large \(\rho\) it
+  blows up. The readouts track the two quantities the note studies on the negative side: the
   per-level ratio \(\operatorname{Var}(c)/\text{fan}\le 1\), and the aggregate
   \(\sum_k\operatorname{Var}(U_{(k)})/\text{iid}\le 1\) (Theorem 4, proved for negative association).
   On the Gaussian scale the exact affine law \(\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)\)
@@ -112,7 +112,7 @@
   <div class="takeaway">
     <p>Takeaway. The dependence does not, as one might guess, just bias the coverage; it reshapes its
     whole distribution, and the cleanest summary is the variance. Negative association narrows the fan,
-    to zero at the floor; positive widens it. The note proves this exactly in aggregate and, for these
+    to zero at the discrete contest/grid floor, where realized coverage is k/(n+1) on every draw; positive widens it. The note proves this exactly in aggregate and, for these
     equicorrelated normals, exactly per level via the affine law you can read off the panel. The
     per-level contraction for general negative association is still a conjecture, but every structure
     here keeps the orange curve under the blue. It is the same sign the

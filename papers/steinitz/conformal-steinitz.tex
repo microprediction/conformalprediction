@@ -65,9 +65,9 @@ algebra can blur. The group-symmetry view of predictive inference is itself esta
 symmetries, of which exchangeability is the permutation case. What we believe is new here is
 narrower: the identification of the placement acceptance vector as a Steinitz population, and
 the balanced traversal it admits. Herding \citep{welling2009}, whose $O(1/n)$ bookkeeping
-resembles the constructions here, can be viewed as a with-replacement generalization of the
-finite balanced-permutation problem, typically on nonfinite domains \citep{harvey2014}; it
-appears only in Remark~\ref{rmk:herding}.
+resembles the constructions here, can be viewed as a with-replacement relaxation of the
+finite balanced-permutation problem \citep{harvey2014}; it is confined to
+Remark~\ref{rmk:herding} and a kernel question in Section~\ref{sec:cubature}.
 
 \section{Conformal calibration and placement}\label{sec:conformal}
 
@@ -313,9 +313,11 @@ memoryless score,
 \Prob\{S_{N}\le q_n\}\;\ge\;1-\alpha-\min_{0\le\tau\le n}
 \Bigl\{\tfrac{\tau}{N}+\bar\Psi_\tau\Bigr\},
 \]
-their Corollary~6 bounds $\bar\Psi_\tau\le 2\beta(\tau)$ under stationary $\beta$-mixing, their
-Theorem~8 supplies a matching ceiling, and their Theorem~7 shows tightness up to the factor
-$(1-\alpha)/4$.
+their Proposition~3, carried to memoryless scores by their Proposition~4, bounds
+$\bar\Psi_\tau\le 2\beta(\tau)$ under stationary $\beta$-mixing, their Theorem~8 supplies a
+matching ceiling, and their Theorem~7 shows tightness up to the factor
+$(1-\alpha)/4$.\footnote{Result numbering follows the ALT 2026 (PMLR volume 313) version of
+\citet{barberpananjady2026}; the arXiv versions number the same results differently.}
 
 The argument separates into an exact insertion--deletion stability statement for empirical
 quantile \emph{levels} (deleting $\tau$ entries moves the rank of a fixed threshold by at most
@@ -359,9 +361,10 @@ Herding \citep{welling2009} generates points by the recursion $w_t=w_{t-1}+\mu-\
 $x_t=\arg\max_x\langle w_{t-1},\phi(x)\rangle$, and attains $O(1/n)$ feature-mean discrepancy
 conditional on bounded weights; the identification with Frank--Wolfe \citep{bach2012} shows the
 fast rate needs interiority-type conditions, with \citet{chen2010} treating the kernel case.
-\citet{harvey2014} pose herding over a finite population as exactly the balanced-permutation
-problem of Section~\ref{sec:steinitz}; generic herding can then be viewed as a with-replacement
-generalization, typically on nonfinite domains, and on the pairing of
+\citet{harvey2014} introduce a Permutation Problem, each point used once, that is exactly the
+balanced-permutation problem of Section~\ref{sec:steinitz}, and show that solving it solves
+herding over the finite population; generic herding runs with replacement, typically on
+nonfinite domains \citep{welling2009,chen2010}, and on the pairing of
 Section~\ref{sec:cubature} it is one iterative approximate solver for balanced sampling. The quadrature triangle is older on that side: optimally-weighted
 herding is Bayesian quadrature \citep{huszar2012}, and \citet{snellgriffiths2025} recently
 recast the conformal computation as Bayesian quadrature over the calibration scores.

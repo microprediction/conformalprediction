@@ -67,14 +67,14 @@
 
   <p class="tag">Where it shines</p>
   <h1>Calibrated anomaly detection</h1>
-  <p class="subtitle">A conformal \(p\)-value is a distribution-free hypothesis test, so you can fix the false-alarm rate exactly.</p>
+  <p class="subtitle">A conformal \(p\)-value is a distribution-free hypothesis test, so you can cap the false-alarm rate.</p>
 
   <p>This is conformal prediction at its strongest, working as a <em>test</em> rather than a
   forecaster. Score each point by how unusual it is against a clean reference set, then form
   the conformal \(p\)-value
   $$p(x) = \frac{1 + \#\{\,i : s_i \ge s(x)\,\}}{n+1}.$$
   For a genuine inlier this \(p\)-value is (super-)uniform, so flagging whenever
-  \(p \le \alpha\) controls the false-alarm rate at <em>exactly</em> \(\alpha\), no matter
+  \(p \le \alpha\) controls the false-alarm rate at <em>at most</em> \(\alpha\) (exactly \(\lfloor\alpha(n+1)\rfloor/(n+1)\) for continuous scores), no matter
   what the inlier distribution is, with a finite calibration set, no training of a threshold.
   Below, each test point is plotted at its \(p\)-value; everything under the dashed line is
   flagged. The inliers&rsquo; \(p\)-values fill out the uniform histogram, and the false-alarm
@@ -88,9 +88,10 @@
   </div>
 
   <div class="canvas-box med demo"><canvas id="hist"></canvas></div>
-  <p class="note">The conformal \(p\)-values of the true inliers, which are uniform on
+  <p class="note">The conformal \(p\)-values of the true inliers, which are (super-)uniform on
   \([0,1]\) (dashed line). That uniformity is the whole guarantee: the fraction landing below
-  \(\alpha\) is \(\alpha\), so the false-alarm budget is honoured by construction.</p>
+  \(\alpha\) is at most \(\alpha\), and nearly \(\alpha\), so the false-alarm budget is
+  honoured by construction.</p>
 
   <div class="takeaway">
     <p>Takeaway. Type-I error control <em>is</em> coverage, and coverage is

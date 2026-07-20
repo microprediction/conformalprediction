@@ -88,8 +88,8 @@
     test score, \(N=n+1\) numbers in all, and the interval is built from the \(k\)-th smallest of
     them. The guarantee rests on a counting fact: go through the \(N\) values one at a time,
     pretend each in turn is the test point, and ask whether that placement would be covered.
-    Exactly \(k\) of the \(N\) placements are, no matter what the scores were. No probability has
-    been used yet. Probability enters once, at the end: if the data are exchangeable, the real
+    Exactly \(k\) of the \(N\) placements are, whatever the scores were (ties are assumed away;
+    the note takes the scores distinct). No probability has been used yet. Probability enters once, at the end: if the data are exchangeable, the real
     test point is equally likely to be any of the \(N\) placements, so its chance of coverage is
     exactly \(k/N\). The set of all placements is what the note calls the orbit, and the counting
     fact says the average over the orbit is \(k/N\) exactly.</p>
@@ -123,7 +123,7 @@
     \(+.2,\,+.2,\,-.8,\,+.2,\,+.2,\,+.2,\,+.2,\,-.8,\,+.2,\,+.2\), whose running sum goes
     \(.2,\,.4,\,-.4,\,-.2,\,0,\,.2,\,.4,\,-.4,\,-.2,\,0\): never further than \(0.4\) from zero,
     and back to zero exactly at the end. That bounded ledger, divided by \(t\), is the
-    \(1/(2t)\) coverage statement. The word itself is classical: it solves
+    \(1/(2t)\) coverage statement. The word itself is classical: it solves the two-party case of
     <a href="https://doi.org/10.1016/0012-365X(80)90269-1">Tijdeman&rsquo;s chairman assignment
     problem</a> (1980), which asks for a schedule keeping every party&rsquo;s share of the chair
     within a fixed distance of its quota at every prefix. The scalar, sharp-constant corner of
@@ -132,9 +132,10 @@
     <p>Herding, where this whole thread started
     (<a href="/demos/21-herding-slots.html">demo</a>), is Welling&rsquo;s greedy algorithm for
     picking points one at a time so that their running averages balance a target. Harvey and
-    Samadi showed that herding over a finite population, each point used once, is exactly the
-    Steinitz ordering problem. Ordinary herding, which may reuse points, is the relaxed version.
-    That is why the note treats Steinitz as the precise dual and herding as a remark.</p>
+    Samadi posed a stricter cousin, each point used once, which is exactly the Steinitz ordering
+    problem, and showed that solving it solves herding over the finite population. Ordinary
+    herding, which may reuse points, is the relaxed version. That is why the note treats
+    Steinitz balancing as the exact finite-population construction and herding as a remark.</p>
     <p>None of this removes exchangeability from real prediction. In actual use only one
     placement is the test point, and only exchangeability makes that placement an even draw on
     the orbit. The balancing results are about computations and audits over the whole orbit,
@@ -147,8 +148,9 @@
   <em>prefix</em> is the first \(t\) elements of the ordering; its <em>discrepancy</em> is how
   far their running sum has strayed from its target, here zero. Bounded prefix discrepancy
   means the walk through the population never drifts, at any stage.) Harvey and
-  Samadi posed herding over a finite population as exactly this permutation problem; generic
-  herding is the with-replacement generalization. Conformal placements are themselves a scalar
+  Samadi&rsquo;s stricter Permutation Problem, each point used once, is exactly this ordering
+  problem, and solving it solves herding over the finite population; generic herding runs with
+  replacement. Conformal placements are themselves a scalar
   Steinitz population: with \(N=n+1\), the \(k\) covered placements contribute \(1-k/N\) each
   and the \(N-k\) uncovered ones \(-k/N\), sizes below 1, summing to zero exactly. The note
   gives an explicit balanced ordering, the balanced word of Tijdeman&rsquo;s chairman assignment
@@ -174,8 +176,8 @@
     \(\theta=k/N\), is the canonical way to build one; words of this form are also called
     mechanical or Sturmian-type, the same objects that describe evenly spaced points on a
     circle and, in the periodic case, leap-year rules. &ldquo;Balanced&rdquo; is the standing
-    term for exactly the property the corollary needs: prefix counts within \(\tfrac12\) of the
-    quota \(t\theta\).</p>
+    term for the evenness the corollary needs; the sharp \(\tfrac12\) prefix bound comes from
+    the centered (\(+\tfrac12\) phase) word in particular.</p>
     <p>Whether greedy is enough depends on the dimension, and the split is clean. In the
     scalar two-valued case, our case, yes: the rule &ldquo;emit whichever symbol keeps the
     running count closest to its quota&rdquo; reproduces the balanced word and achieves the
