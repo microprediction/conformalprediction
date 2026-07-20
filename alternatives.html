@@ -71,7 +71,10 @@
 
   <p>Conformal prediction certifies coverage. If what you need is a sharp conditional
   distribution, the workhorses below are where to start. Each buys sharpness with
-  assumptions. Conformal buys assumption-freeness with marginality. Nobody escapes the trade.</p>
+  assumptions. Conformal buys assumption-freeness with marginality. Nobody escapes the trade.
+  On the question of which method actually wins on which series, this page defers to the live
+  <a href="https://skaters.microprediction.org">skaters benchmarks</a>; treat the notes below as
+  orientation, not a ranking.</p>
 
   <details style="margin:14px 0 18px;border:1px solid var(--line,#ddd);border-radius:8px;padding:10px 16px;">
     <summary style="cursor:pointer;font-weight:600;">Caveat: these recommendations go stale</summary>
@@ -87,10 +90,10 @@
   </details>
 
   <h2>t-GARCH</h2>
-  <p>The classical econometric route: conditional volatility with Student-t innovations. Strong
-  on price and return series, where volatility clustering is the signal and heavy tails are the
-  rule. The assumption purchased is that the GARCH recursion is roughly right; when it is not,
-  the tails you paid for are the wrong ones.</p>
+  <p>The classical econometric route: conditional volatility with Student-t innovations. The
+  standard choice for price and return series, where volatility clustering is the signal and
+  heavy tails are the rule. The assumption purchased is that the GARCH recursion is roughly
+  right; when it is not, the tails you paid for are the wrong ones.</p>
 
   <h2>auto-ARIMA</h2>
   <p>The workhorse baseline: search the ARIMA orders, fit by maximum likelihood, forecast with
@@ -105,8 +108,9 @@
   <h2>laplace</h2>
   <p>An online likelihood-weighted ensemble from the
   <a href="https://github.com/microprediction/skaters">skaters</a> package: one call, zero
-  dependencies, a full predictive distribution per step. Strong on non-price economic series
-  (<a href="https://skaters.microprediction.org">the benchmarks</a>). The assumption purchased is
+  dependencies, a full predictive distribution per step. It has done well on non-price economic
+  series in <a href="https://skaters.microprediction.org">the skaters benchmarks</a>, where the
+  current standings live. The assumption purchased is
   that the recent past is informative enough for the ensemble to track; and it hands you no
   finite-sample coverage certificate.</p>
 
