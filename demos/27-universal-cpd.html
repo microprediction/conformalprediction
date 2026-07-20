@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Crossing the gap, in the limit — Conformal Prediction</title>
+<meta name="description" content="Vovk's universally consistent conformal predictive system, live: a histogram predictive distribution whose shape adapts as cells shrink, converging weakly to the true conditional law — the information gap crossed in the limit, while a single-shape system plateaus. Valid at every n, sharp only asymptotically." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/papers/">Papers &amp; notes</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration</p>
+  <h1>Crossing the gap, in the limit</h1>
+  <p class="subtitle">Vovk&rsquo;s universally consistent conformal predictive system: valid at every \(n\), sharp in the limit.</p>
+
+  <p>The information gap is a finite-sample statement about a family: a <em>single</em> residual shape, re-levelled to any coverage you like, concedes \(I(R;X)\) on the log score, and no amount of data changes that. This page runs the strongest counterpoint in the literature. Vovk&rsquo;s universally consistent conformal predictive system (ALRW working paper&nbsp;18) produces predictive distributions that converge weakly to the true conditional law for <em>any</em> iid data-generating distribution. The shape is made adaptive in the bluntest way possible: partition \(x\) into cells of width \(h_n\), a power of two, with \(h_n\to 0\) and \(n\,h_n\to\infty\), and let the predictive CDF at \(x\) be the within-cell empirical distribution of the labels, conformally calibrated. L&eacute;vy&rsquo;s martingale convergence handles the shrinking cells; the law of large numbers fills them.</p>
+
+  <p>The first panel shows the predictive CDFs at a test point \(x^{*}\), against the true conditional law: the single-shape conformal CPD (one pooled residual shape around a fitted mean, the family the gap prices), the histogram system, and a two-stage parametric fit. Drag \(n\) upward and watch whose shape bends toward the truth.</p>
+
+  <div class="demo">
+    <div class="canvas-box tall"><canvas id="cdfs"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <p>The second panel is the race. Universal consistency is <em>weak</em> convergence, so each system is graded by its Wasserstein-1 distance to the true conditional law, averaged over \(x\); \(W_1\) metrizes weak convergence here and is well-defined for the step CDFs the histogram system outputs, so nothing needs to be smoothed into a density. The single-shape system plateaus at a positive level, the \(W_1\) shadow of the information gap. The histogram system descends, at roughly the rate its shrinking cells suggest. The parametric fit descends fast and then stops at its own bias floor: its cubic mean cannot represent the sine exactly, and the histogram system, which has no family to be wrong about, eventually passes it.</p>
+
+  <div class="canvas-box med demo"><canvas id="race"></canvas></div>
+
+  <p class="note">What runs here is the histogram form of the paper&rsquo;s construction (Definitions 27&ndash;33); the fully conformal version of Theorem&nbsp;31 differs in its randomized tie-handling and carries a stronger small-sample validity property. Note the coverage readout: throughout the race, at every \(n\), the histogram system&rsquo;s 90% band covers at 90%. Validity never waited on consistency; sharpness is what arrives slowly. The cell-width multiplier shows the bind: wider cells fill faster but adapt less, narrower cells adapt faster but sit empty.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. The gap is a statement about a family, not a prohibition for all time. Make the shape adaptive and it can be crossed &mdash; in the limit, under iid, at nonparametric rates, with a bandwidth that must shrink and fill at once. At any finite \(n\) the question is only ever which estimator of the conditional law you are running &mdash; a plateau, a fast fit with a floor, or a slow one without &mdash; and the certificate is silent on that either way. The site&rsquo;s claim lives where it always did: at your \(n\), with your shape.</p>
+  </div>
+
+  <p class="note">Vovk (2022). <em>Universally consistent conformal predictive distributions.</em> Pattern Recognition 126:108536; ALRW working paper 18 (<a href="https://arxiv.org/abs/1708.01902">arXiv:1708.01902</a>, <a href="https://alrw.net/articles/18.pdf">pdf</a>). On <a href="/map.html">the map</a> it sits in the Cross region. Suggested in <a href="https://github.com/microprediction/conformalprediction/issues/120">issue&nbsp;#120</a>.</p>
+
+  <div class="prevnext">
+    <a href="14-four-readings.html">&larr; One number, five pictures</a>
+    <span class="spacer"></span>
+    <a href="15-de-finetti.html">de Finetti, and where it goes negative &rarr;</a>
+  </div>
+
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+
+<script type="module" src="../js/demo27.js"></script>
+</body>
+</html>
