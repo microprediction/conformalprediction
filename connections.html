@@ -124,6 +124,7 @@ const NODES = [
  {id:"twoprices", label:"Two prices", c:"gap", url:"/papers/two-prices/", note:"The coverage tax of dependence vanishes with n; the sharpness rent ΔH = I(S₀; past) never does — the information-gap identity applied to the past."},
  {id:"definetti", label:"Feynman–Wigner sign", c:"gap", url:"/papers/definetti-feynman/", note:"The sign of the finite de Finetti measure decides whether per-case coverage adapts or fans; distance covariance is the runnable check."},
  {id:"fan", label:"The conformal fan", c:"fanax", url:"/papers/fan/", note:"Across-calibration dispersion of realized coverage; its width is set by the sign of cross-sample dependence."},
+ {id:"ucpd", label:"Universal CPD (Vovk)", c:"found", url:"/demos/27-universal-cpd.html", note:"Universally consistent conformal predictive systems (ALRW WP 18): histogram cells shrink, the predictive law converges weakly to the true conditional law. The gap crossed in the limit — demo 27 runs it."},
  {id:"snell", label:"Snell–Griffiths 2025", c:"fanax", url:"https://arxiv.org/abs/2502.13228", note:"Conformal prediction as Bayesian quadrature: a Dirichlet posterior over realized risk. The loss-side fan; HPD = report the fan's quantile, not its mean."},
  {id:"kerns", label:"Kerns–Székely 2006", c:"found", url:"https://doi.org/10.1007/s10959-006-0028-z", note:"Finite exchangeable laws admit signed mixing measures — the negative probability the sign note runs on."},
  {id:"herding", label:"Steinitz dual", c:"mech", url:"/papers/steinitz/", note:"The exact orbit identity behind conformal validity, Steinitz balancing as its permutation-equivariant primal, and herding as the with-replacement relaxation (Harvey & Samadi 2014). Rough draft."},
@@ -151,6 +152,7 @@ const LINKS = [
  {source:"definetti", target:"fan", type:"dual", label:"same sign, two axes"},
  // builds on / prices (grey)
  {source:"vovk", target:"gap", type:"build", label:"the certificate the gap is priced against"},
+ {source:"ucpd", target:"gap", type:"build", label:"crossed in the limit, under iid"},
  {source:"kerns", target:"definetti", type:"build", label:"signed measure"},
  {source:"gneiting", target:"gap", type:"build", label:"the frame"},
  {source:"lw", target:"gap", type:"build", label:"brick"},
