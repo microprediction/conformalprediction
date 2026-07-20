@@ -109,9 +109,9 @@
     and the running average is within a constant over \(t\) of its target at every single step.</p>
     <p>The bridge: take each conformal placement, write 1 if it is covered and 0 if not, and
     subtract \(k/N\). Those \(N\) residuals sum to exactly zero, by the counting fact. They are a
-    Steinitz population. So there must be an ordering of the placements whose running coverage
-    stays close to nominal at every prefix, and in this one-dimensional case the note writes the
-    ordering down explicitly: the running coverage is within \(1/(2t)\) of \(k/N\) after every
+    Steinitz population. So there must be an ordering of the placements whose running acceptance average
+    stays close to \(k/N\) at every prefix, and in this one-dimensional case the note writes the
+    ordering down explicitly: that average is within \(1/(2t)\) of \(k/N\) after every
     step \(t\), deterministically (<a href="/demos/24-balanced-placements.html">demo</a>).</p>
     <p>It helps to see the actual numbers. The population contains only two values: the \(k\)
     covered placements each contribute \(1-k/N\), and the \(N-k\) uncovered ones each contribute
@@ -154,7 +154,7 @@
   Steinitz population: with \(N=n+1\), the \(k\) covered placements contribute \(1-k/N\) each
   and the \(N-k\) uncovered ones \(-k/N\), sizes below 1, summing to zero exactly. The note
   gives an explicit balanced ordering, the balanced word of Tijdeman&rsquo;s chairman assignment
-  problem, whose running coverage is within \(1/(2t)\) of the orbit level \(k/N\) at every
+  problem, whose running placement-acceptance average is within \(1/(2t)\) of the orbit level \(k/N\) at every
   prefix, exact at the full orbit.
   On the function&ndash;measure pairing, the measure-side counterpart of calibration is balanced
   sampling and exact cubature (the cube method; Tchakaloff), for which herding is one iterative

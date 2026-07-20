@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <title>Balanced placements — Conformal Prediction</title>
-<meta name="description" content="Conformal placements are a zero-sum population: exactly k of n+1 are covered. Order them with the balanced word and the running coverage stays within 1/(2t) of the orbit level k/(n+1) at every prefix, for any scores." />
+<meta name="description" content="Conformal placements are a zero-sum population: exactly k of n+1 are covered. Order them with the balanced word and the running placement-acceptance average stays within 1/(2t) of the orbit level k/(n+1) at every prefix, for any scores." />
 <meta property="og:image" content="https://conformalprediction.net/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content="https://conformalprediction.net/og.png" />
@@ -68,11 +68,11 @@
 
   <p class="tag">Demonstration</p>
   <h1>Balanced placements</h1>
-  <p class="subtitle">Conformal placements are a zero-sum population. Order them with the balanced word and the running coverage stays within \(1/(2t)\) of the orbit level \(k/(n+1)\) at every prefix, for any scores.</p>
+  <p class="subtitle">Conformal placements are a zero-sum population. Order them with the balanced word and the running acceptance average stays within \(1/(2t)\) of the orbit level \(k/(n+1)\) at every prefix, for any scores.</p>
 
-  <p>Draw \(N=n+1\) scores from whichever distribution you like; the choice changes nothing here. Rotating the &ldquo;test&rdquo; label through the slots covers exactly \(k=\lceil(1-\alpha)N\rceil\) of the \(N\) placements, so the centered residuals \(\chi_i - k/N\) sum to zero: a scalar <a href="23-steinitz-balancing.html">Steinitz population</a>. The question is the order in which a traversal visits the placements. A random order lets the running coverage wander on the \(1/\sqrt t\) scale before the endpoint forces it home. The balanced word \(b_t=\lfloor tk/N+\tfrac12\rfloor-\lfloor(t-1)k/N+\tfrac12\rfloor\) pins every prefix within \(\tfrac12\) of \(tk/N\), so the running coverage sits inside the \(\pm 1/(2t)\) envelope at every step and lands exactly on \(k/N\) at \(t=N\).</p>
+  <p>Draw \(N=n+1\) scores from whichever distribution you like; the choice changes nothing here. Rotating the &ldquo;test&rdquo; label through the slots covers exactly \(k=\lceil(1-\alpha)N\rceil\) of the \(N\) placements, so the centered residuals \(\chi_i - k/N\) sum to zero: a scalar <a href="23-steinitz-balancing.html">Steinitz population</a>. The question is the order in which a traversal visits the placements. What the traversal controls is the running <em>placement-acceptance average</em>, the fraction of placements visited so far that are covered; it is a deterministic quantity, not a sequential coverage rate. A random order lets it wander on the \(1/\sqrt t\) scale before the endpoint forces it home. The balanced word \(b_t=\lfloor tk/N+\tfrac12\rfloor-\lfloor(t-1)k/N+\tfrac12\rfloor\) pins every prefix within \(\tfrac12\) of \(tk/N\), so the average sits inside the \(\pm 1/(2t)\) envelope at every step and lands exactly on \(k/N\) at \(t=N\).</p>
 
-  <p>The panel plots the running coverage deviation \(\frac1t\sum_{j\le t}\chi_{\pi(j)} - k/N\) for both orders, with the deterministic envelope drawn. Switch the score distribution to adversarial and nothing moves: the balance is a property of the ranks, not the values. This is the duality of <a href="/papers/steinitz/">the note</a> in one picture: move the residuals through a permutation, or hold them fixed and move the prefix functionals; either way the ledger never exceeds half a unit.</p>
+  <p>The panel plots the deviation of that average, \(\frac1t\sum_{j\le t}\chi_{\pi(j)} - k/N\) for both orders, with the deterministic envelope drawn. Switch the score distribution to adversarial and nothing moves: the balance is a property of the ranks, not the values. This is the duality of <a href="/papers/steinitz/">the note</a> in one picture: move the residuals through a permutation, or hold them fixed and move the prefix functionals; either way the ledger never exceeds half a unit.</p>
 
   <div class="demo">
     <div class="canvas-box tall"><canvas id="dev"></canvas></div>
@@ -81,7 +81,7 @@
   </div>
 
   <div class="takeaway">
-    <p>Takeaway. The balanced traversal calibrates the orbit: every prefix of placements has running coverage within \(1/(2t)\) of the orbit level \(k/N\), deterministically. It does not replace exchangeability in one-shot conformal prediction, where a single placement is designated as the test; only exchangeability makes that placement an even draw on the orbit. The traversal is for orbit computations and repeated-placement audits, and it is the conformal face of <a href="23-steinitz-balancing.html">Steinitz balancing</a>.</p>
+    <p>Takeaway. The balanced traversal calibrates the orbit: every prefix of placements has acceptance average within \(1/(2t)\) of the orbit level \(k/N\), deterministically. That is an exact statement about the orbit, not a claim about sequential coverage. It does not replace exchangeability in one-shot conformal prediction, where a single placement is designated as the test; only exchangeability makes that placement an even draw on the orbit. The traversal is for orbit computations and repeated-placement audits, and it is the conformal face of <a href="23-steinitz-balancing.html">Steinitz balancing</a>.</p>
   </div>
 
   <div class="prevnext">
