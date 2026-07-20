@@ -40,7 +40,8 @@ evaluation functional or as averaging the induced acceptance vector over placeme
 primal discrepancy construction under the same action is Steinitz balancing: ordering a
 zero-sum population so that every prefix sum stays bounded. Conformal placements form such a
 population, and an explicit ordering keeps running coverage within $1/(2t)$ of the orbit level
-$k/N$, exact on the full orbit; the vector-valued lemma balances several coverage levels along
+$k/N$, exact once all $N$ candidate test placements have been traversed; the vector-valued
+lemma balances several coverage levels along
 one traversal. On the function--measure pairing, the measure-side counterpart
 of calibration is balanced sampling and exact cubature. A transitive distributional symmetry,
 exchangeability in the standard setting, turns the deterministic orbit average into the
@@ -73,9 +74,13 @@ Remark~\ref{rmk:herding} and a kernel question in Section~\ref{sec:cubature}.
 \section{Conformal calibration and placement}\label{sec:conformal}
 
 Fix $\alpha\in(0,1)$, write $p=1-\alpha$, let $S_1,\dots,S_n$ be calibration scores and
-$S_{n+1}$ a test score, almost surely distinct, and let $k=\lceil p\,(n+1)\rceil\le n$. Write
-$N=n+1$. Split conformal declares coverage when $S_{n+1}\le q_n$, with $q_n=S_{(k)}$ the $k$-th
-smallest calibration score.
+$S_{n+1}$ a test score, almost surely distinct, and set $k=\lceil p\,(n+1)\rceil$ and $N=n+1$.
+Assume throughout that $\alpha\ge 1/N$, equivalently $k\le n$, so that the $k$-th order
+statistic of the calibration scores exists; for $\alpha<1/N$ the usual convention
+$q_n=+\infty$ applies and coverage is trivial. Split conformal declares coverage when
+$S_{n+1}\le q_n$, with $q_n=S_{(k)}$ the $k$-th smallest calibration score. The scores are
+taken exchangeable, as they are in split conformal conditionally on an independent proper
+training sample once the fitted score rule is held fixed.
 
 \begin{lemma}[Steering identity]\label{lem:steer}
 With $q_n=S_{(k)}$, $h_q(s)=\ind{s\le q}$, and the scores distinct,
@@ -171,8 +176,9 @@ has coverage probability exactly $k/N$.
 \begin{proof}
 The first equality is \eqref{eq:equivariant} and linearity of $e^{*}_{N}$; the second is
 \eqref{eq:reynolds}; the third is $P^{\vee}e^{*}_{N}=\frac1N\mathbf 1^{*}$; the fourth is
-Proposition~\ref{prop:count}. Under a transitive invariance the indicators
-$\chi_i(S)$ share one expectation, which the orbit average then pins to $k/N$.
+Proposition~\ref{prop:count}. For a transitive subgroup $H\le\mathfrak S_N$, set $P_H=\frac1{|H|}\sum_{h\in H}\rho(h)$;
+transitivity gives $P_Hv=\bar v\,\mathbf 1$, so the same Reynolds calculation runs verbatim
+with $P_H$ in place of $P$ and pins each $\E\chi_i(S)$ to $k/N$.
 \end{proof}
 
 Define also the centered placement residual vector $r(s)=(\chi_i(s)-k/N)_{i\le N}$;
@@ -256,7 +262,11 @@ back to the chairman assignment problem \citep{tijdeman1980}, and no specificall
 structure enters once the count $\sum_i\chi_i(s)=k$ is known. The contribution is the
 identification: the conformal placement vector is an object to which balanced-word machinery
 applies, and the traversal it yields tracks the orbit level $k/N$, not the nominal $p$, exactly
-at the full orbit and within $1/(2t)$ before it. In the notation of Section~\ref{sec:contra}
+once all $N$ candidate test placements have been traversed, and within $1/(2t)$ before that.
+The traversal orders the $N$ coordinates $\chi_1(s),\dots,\chi_N(s)$, that is the $N$-element
+coordinate orbit $\mathfrak S_N/\mathfrak S_{N-1}$, not the $N!$-element score orbit; the
+group average of Theorem~\ref{thm:orbit} reduces to this $N$-placement average because each
+candidate test coordinate occurs equally often. In the notation of Section~\ref{sec:contra}
 the two readings of the traversal are literal:
 $\langle L_t,\rho(\pi^{-1})r(s)\rangle=\langle\rho^{\vee}(\pi)L_t,r(s)\rangle$ --- move the
 residual vector through the permutation holding the prefix test fixed, or hold the residuals
@@ -270,8 +280,11 @@ distributional symmetry makes the designated coordinate inherit the orbit-averag
 probability.
 
 Several coverage levels can be balanced at once, and here the vector-valued lemma of
-Section~\ref{sec:steinitz} is what does the work: no binary word orders a population for two
-levels simultaneously.
+Section~\ref{sec:steinitz} is what does the work. The sharp one-dimensional $\tfrac12$ bound
+does not in general survive at two levels simultaneously: with $N=3$ and levels $k_1=1$,
+$k_2=2$, the $t=1$ constraints force the first traversed rank to be $2$, and then either
+completion violates $\tfrac12$ at $t=2$, so no ordering of the three placements meets the
+scalar bound at both levels, though each level alone admits two.
 
 \begin{proposition}[Simultaneously balanced levels]\label{prop:multilevel}
 Fix levels $k_1,\dots,k_d\in\{1,\dots,N\}$ and set
@@ -287,10 +300,16 @@ with $C_d$ the Steinitz constant of $(\R^d,\|\cdot\|_\infty)$, independent of $N
 \end{proposition}
 
 \begin{proof}
-Each coordinate of $z_i(s)$ lies in $[-1,1]$, and summing coordinate $\ell$ over $i$ gives
-$k_\ell-N\cdot k_\ell/N=0$ by Proposition~\ref{prop:count} applied at level $k_\ell$. Apply the
-Steinitz lemma in $(\R^d,\|\cdot\|_\infty)$ and divide the prefix bound by $t$.
+Each coordinate of $z_i(s)$ lies in $[-1,1]$. Ranks are a permutation of $\{1,\dots,N\}$, so
+$\sum_i\ind{\mathrm{rank}(s_i)\le k_\ell}=k_\ell$ directly, for every
+$k_\ell\in\{1,\dots,N\}$, and summing coordinate $\ell$ over $i$ gives $k_\ell-N\cdot
+k_\ell/N=0$. Apply the Steinitz lemma in $(\R^d,\|\cdot\|_\infty)$ and divide the prefix bound
+by $t$.
 \end{proof}
+
+For $k_\ell\le N-1$ the level is the placement-acceptance count of
+Proposition~\ref{prop:count}; $k_\ell=N$ is the trivial always-accepted rank level, whose
+reading as a conformal threshold needs the $+\infty$ endpoint convention.
 
 A single traversal is therefore calibrated at every selected confidence level at once, at the
 price of the dimensional constant in place of the sharp $\tfrac12$.
@@ -303,17 +322,22 @@ the two arguments. Calibration holds the empirical score measure $\nu_n$ fixed a
 test: find a threshold $h_q$ with $\langle h_q,\nu_n\rangle=k/n$. The role-reversed problem
 holds tests $h_1,\dots,h_d$ and targets $m_1,\dots,m_d$ fixed and chooses a measure: find $\nu$
 with $\langle h_j,\nu\rangle=m_j$. (This is an inverse moment problem under the pairing, not
-the adjoint of an operator: the adjoint of the moment map
+the transpose of an operator: the transpose under the pairing of the moment map
 $T(\nu)=(\langle h_j,\nu\rangle)_{j\le d}$ is $T^{*}a=\sum_j a_jh_j$, which lives on the
 function side.) Over a finite candidate population with $A_{ji}=h_j(x_i)$ the measure-side
-problem is the selection problem $Az=b$, $z\in\{0,1\}^N$. Once prescribed inclusion
+problem is the selection problem $Az=b$, $z\in\{0,1\}^N$, the selected measure being
+$\nu_z=\sum_{i\le N}a_iz_i\delta_{x_i}$ with $a_i$ the normalizing or Horvitz--Thompson
+weights. Once prescribed inclusion
 probabilities and Horvitz--Thompson auxiliary-total constraints are encoded, this becomes the
 balanced-sampling problem addressed (exactly when geometry and integrality permit,
 approximately otherwise) by the cube method \citep{devilletille2004}. When arbitrary positive
-weights are allowed the problem changes and convex geometry answers it exactly:
-$\mu=\int\phi\,dP$ lies in the convex hull of $\phi(\mathcal X)$, so Carath\'eodory applied to
-the moment map supplies at most $d+1$ weighted points matching all $d$ moments, the exact-cubature
-side of the picture \citep{tchakaloff1957}. In this formulation, balanced sampling and exact
+weights are allowed the problem changes and convex geometry answers it exactly. Let $P$ be a
+probability measure on $\mathcal X$ and $\phi=(h_1,\dots,h_d):\mathcal X\to\R^d$ measurable
+with $\int\|\phi\|\,dP<\infty$. The barycenter $\mu=\int\phi\,dP$ then lies in the convex
+hull of $\phi$ on a $P$-full set, so Carath\'eodory applied to the moment map supplies
+$m\le d+1$ points $x_1,\dots,x_m$ and weights $w_r>0$ with $\sum_r w_r=1$ and
+$\mu=\sum_r w_r\phi(x_r)$: adjoining the constant $1$ to $\phi$ is what preserves total mass
+and gives the $d+1$ bound \citep{tchakaloff1957}. In this formulation, balanced sampling and exact
 cubature are the measure-side counterpart of threshold calibration.
 
 A designed calibration set sits inside this frame. If designed scores $S_1,\dots,S_n$, taken
@@ -321,7 +345,8 @@ distinct, have empirical distribution function within Kolmogorov distance $D$ of
 reference law $\bar F$, and the test score is drawn from $\bar F$ independently of the design,
 then $|\bar F(S_{(k)})-k/(n+1)|\le D+1/(n+1)$ and $|\bar F(S_{(k)})-p|<D+(1+p)/n$,
 deterministically in the design (the proof is $\hat F_n(S_{(k)})=k/n$ plus
-Lemma~\ref{lem:steer}). A quantile grid achieves $D\le 1/(2n)$. This is design-based rather
+Lemma~\ref{lem:steer}). The midpoint quantile grid $S_i=\bar F^{-1}\bigl((i-\tfrac12)/n\bigr)$, $i=1,\dots,n$,
+achieves $D\le 1/(2n)$ for continuous $\bar F$. This is design-based rather
 than distribution-free: it suppresses the $n^{-1/2}$ fluctuation of calibration-conditional
 coverage at the price of assuming the target law. Two limitations should be stated. The
 formulation treats the score values as design variables; realizing such a design through
@@ -405,9 +430,13 @@ fast rate needs interiority-type conditions, with \citet{chen2010} treating the 
 balanced-permutation problem of Section~\ref{sec:steinitz}, and show that solving it solves
 herding over the finite population; generic herding runs with replacement, typically on
 nonfinite domains \citep{welling2009,chen2010}, and on the pairing of
-Section~\ref{sec:cubature} it is one iterative approximate solver for balanced sampling. The quadrature triangle is older on that side: optimally-weighted
+Section~\ref{sec:cubature} it is an iterative with-replacement method for approximate moment
+matching, or equal-weight cubature; this is related to, but not identical with, balanced
+sampling in the Deville--Till\'e sense, which fixes inclusion probabilities and keeps the
+$0$--$1$ without-replacement structure. The quadrature triangle is older on that side: optimally-weighted
 herding is Bayesian quadrature \citep{huszar2012}, and \citet{snellgriffiths2025} recently
-recast the conformal computation as Bayesian quadrature over the calibration scores.
+recast conformal risk and threshold calculations through Bayesian quadrature of the loss
+quantile function.
 \end{remark}
 
 \begin{remark}[Limits]
