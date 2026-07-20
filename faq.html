@@ -107,6 +107,14 @@
   <h3>Then what should I use to make forecasts better?</h3>
   <p>Model the conditional distribution (heteroscedastic models, quantile regression, mixture or flow densities) and recalibrate against a proper score. <em>Then</em> conformalize, if you also need a distribution-free coverage certificate. The order matters: estimate first, certify second.</p>
 
+  <h3>What is your overall recommendation?</h3>
+  <p>Use conformal prediction whenever your loss depends on <em>whether</em> the truth lands in a
+  set: it certifies coverage, distribution-free and finite-sample, and nothing else does that.
+  When you need sharpness, model the conditional distribution and score it properly; no
+  re-levelling of coverage crosses the information gap. In cartoon form:</p>
+  <img src="/img/coverage-gap-cartoon.jpeg" style="max-width:100%;border-radius:8px;margin:6px 0 14px;"
+    alt="Cartoon: a crowded, easy plateau labelled Conformal Prediction (easy path) with Coverage Guaranteed signs and a Free Lunch banner, separated from a mountain labelled Sharp Conditional Prediction by a chasm labelled The Chasm: The Information Gap, no path across, bearing the signed CPS and absolute-interval identities. A rickety rope bridge labelled Volk regressogram leads onto a frustrating path, and a few climbers ascend past unknown parameters, data distortion, Yeo-Johnson, fractional differencing, bursty volatility, and unbounded domains." />
+
   <h3>Who is the author?</h3>
   <p><a href="https://www.linkedin.com/in/petercotton/">Peter Cotton</a>, who runs the <a href="https://skaters.microprediction.org">skaters</a> benchmarks and the <a href="https://github.com/microprediction">microprediction</a> projects, and is newer to conformal prediction than to time series; weigh the advice here accordingly.</p>
 
