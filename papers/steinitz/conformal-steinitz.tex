@@ -40,7 +40,8 @@ evaluation functional or as averaging the induced acceptance vector over placeme
 primal discrepancy construction under the same action is Steinitz balancing: ordering a
 zero-sum population so that every prefix sum stays bounded. Conformal placements form such a
 population, and an explicit ordering keeps running coverage within $1/(2t)$ of the orbit level
-$k/N$, exact on the full orbit. On the function--measure pairing, the measure-side counterpart
+$k/N$, exact on the full orbit; the vector-valued lemma balances several coverage levels along
+one traversal. On the function--measure pairing, the measure-side counterpart
 of calibration is balanced sampling and exact cubature. A transitive distributional symmetry,
 exchangeability in the standard setting, turns the deterministic orbit average into the
 coverage probability of the designated test placement.
@@ -64,7 +65,7 @@ algebra can blur. The group-symmetry view of predictive inference is itself esta
 \citet{dobriban2025symmpi} build predictive inference on general distributional group
 symmetries, of which exchangeability is the permutation case. What we believe is new here is
 narrower: the identification of the placement acceptance vector as a Steinitz population, and
-the balanced traversal it admits. Herding \citep{welling2009}, whose $O(1/n)$ bookkeeping
+the balanced traversals it admits, at one level and at several simultaneously. Herding \citep{welling2009}, whose $O(1/n)$ bookkeeping
 resembles the constructions here, can be viewed as a with-replacement relaxation of the
 finite balanced-permutation problem \citep{harvey2014}; it is confined to
 Remark~\ref{rmk:herding} and a kernel question in Section~\ref{sec:cubature}.
@@ -115,7 +116,8 @@ The control-theoretic reading of the calibration step is established in the onli
 the level update of adaptive conformal inference \citep{gibbscandes2021} is integral feedback on
 realized miscoverage, and \citet{angelopoulos2023pid} name the identification. There the
 controlled quantity is a time average along a sequence; Lemma~\ref{lem:steer} is the batch
-counterpart, a single dead-beat correction.
+counterpart, a one-shot quantized correction: the rank count is exactly $k$, while the level
+error $k/n-p$ is quantized at $O(1/n)$.
 
 \section{The contragredient identity}\label{sec:contra}
 
@@ -147,9 +149,10 @@ entries of $s$, the map is equivariant:
 \chi\bigl(\rho(\pi)s\bigr)\;=\;\rho(\pi)\,\chi(s)
 \qquad\text{for all }\pi\in\mathfrak S_{N},\ s\in\R^{N}_{\ne}.
 \end{equation}
-The distinction matters because $\chi$ is nonlinear: $Ps=\bar s\,\mathbf 1$ destroys the rank
-information, and $\chi(Ps)\ne P\chi(s)$ in general. What is averaged along the orbit is the
-acceptance vector the scores induce, not the scores themselves.
+The distinction matters because $\chi$ is nonlinear and is defined here only on score vectors
+with distinct entries. The averaged score vector $Ps=\bar s\,\mathbf 1$ leaves that domain and
+erases all rank information. One must therefore average the induced acceptance vectors
+$\chi(\rho(\pi)s)$, rather than apply $\chi$ after averaging the scores.
 
 \begin{theorem}[Orbit--contragredient form of conformal validity]\label{thm:orbit}
 For every $s\in\R^{N}_{\ne}$,
@@ -263,7 +266,34 @@ The ordering is post hoc: constructing it requires knowing which placements are 
 the full score vector or its ranks. It is a deterministic traversal for orbit computations and
 repeated-placement audits, not an online algorithm, and it does not replace exchangeability in
 one-shot conformal prediction, where a single placement is designated as the test; only the
-distributional symmetry makes that placement uniform on the orbit.
+distributional symmetry makes the designated coordinate inherit the orbit-average coverage
+probability.
+
+Several coverage levels can be balanced at once, and here the vector-valued lemma of
+Section~\ref{sec:steinitz} is what does the work: no binary word orders a population for two
+levels simultaneously.
+
+\begin{proposition}[Simultaneously balanced levels]\label{prop:multilevel}
+Fix levels $k_1,\dots,k_d\in\{1,\dots,N\}$ and set
+$z_i(s)=\bigl(\ind{\mathrm{rank}(s_i)\le k_\ell}-k_\ell/N\bigr)_{\ell\le d}\in\R^{d}$. Then
+$\sum_i z_i(s)=0$ and $\|z_i(s)\|_\infty\le 1$, so the Steinitz lemma supplies one permutation
+$\pi$ with
+\[
+\max_{\ell\le d}\;\Bigl|\frac1t\sum_{j=1}^{t}\ind{\mathrm{rank}(s_{\pi(j)})\le k_\ell}
+-\frac{k_\ell}{N}\Bigr|\;\le\;\frac{C_d}{t}
+\qquad\text{for every } t=1,\dots,N,
+\]
+with $C_d$ the Steinitz constant of $(\R^d,\|\cdot\|_\infty)$, independent of $N$.
+\end{proposition}
+
+\begin{proof}
+Each coordinate of $z_i(s)$ lies in $[-1,1]$, and summing coordinate $\ell$ over $i$ gives
+$k_\ell-N\cdot k_\ell/N=0$ by Proposition~\ref{prop:count} applied at level $k_\ell$. Apply the
+Steinitz lemma in $(\R^d,\|\cdot\|_\infty)$ and divide the prefix bound by $t$.
+\end{proof}
+
+A single traversal is therefore calibrated at every selected confidence level at once, at the
+price of the dimensional constant in place of the sharp $\tfrac12$.
 
 \section{Balanced sampling: the measure-side counterpart}\label{sec:cubature}
 
@@ -276,24 +306,29 @@ with $\langle h_j,\nu\rangle=m_j$. (This is an inverse moment problem under the 
 the adjoint of an operator: the adjoint of the moment map
 $T(\nu)=(\langle h_j,\nu\rangle)_{j\le d}$ is $T^{*}a=\sum_j a_jh_j$, which lives on the
 function side.) Over a finite candidate population with $A_{ji}=h_j(x_i)$ the measure-side
-problem is the selection problem $Az=b$, $z\in\{0,1\}^N$, which is precisely the
-balanced-sampling problem solved (exactly when geometry and integrality permit, approximately
-otherwise) by the cube method \citep{devilletille2004}. When arbitrary positive weights are
-allowed the problem changes and convex geometry answers it exactly: $\mu=\int\phi\,dP$ lies in
-the convex hull of $\phi(\mathcal X)$, so Carath\'eodory supplies at most $d+1$ weighted points
-matching all $d$ moments, the Tchakaloff side of exact cubature \citep{tchakaloff1957}. In this
-formulation, balanced sampling and exact cubature are the measure-side counterpart of threshold
-calibration.
+problem is the selection problem $Az=b$, $z\in\{0,1\}^N$. Once prescribed inclusion
+probabilities and Horvitz--Thompson auxiliary-total constraints are encoded, this becomes the
+balanced-sampling problem addressed (exactly when geometry and integrality permit,
+approximately otherwise) by the cube method \citep{devilletille2004}. When arbitrary positive
+weights are allowed the problem changes and convex geometry answers it exactly:
+$\mu=\int\phi\,dP$ lies in the convex hull of $\phi(\mathcal X)$, so Carath\'eodory applied to
+the moment map supplies at most $d+1$ weighted points matching all $d$ moments, the exact-cubature
+side of the picture \citep{tchakaloff1957}. In this formulation, balanced sampling and exact
+cubature are the measure-side counterpart of threshold calibration.
 
-A designed calibration set sits inside this frame. If designed scores $S_1,\dots,S_n$ have
-empirical distribution function within Kolmogorov distance $D$ of a continuous reference law
-$\bar F$, and the test score is drawn from $\bar F$ independently of the design, then
-$|\bar F(S_{(k)})-k/(n+1)|\le D+1/(n+1)$ and $|\bar F(S_{(k)})-p|<D+(1+p)/n$, deterministically
-in the design (the proof is $\hat F_n(S_{(k)})=k/n$ plus Lemma~\ref{lem:steer}). A quantile
-grid achieves $D\le 1/(2n)$. This is design-based rather than distribution-free: it suppresses
-the $n^{-1/2}$ fluctuation of conditional coverage at the price of assuming the target law, and
-whether reproducing-kernel guarantees of kernel herding or kernel thinning
-\citep{chen2010,dwivedi2021} control the Kolmogorov discrepancy required here is left open.
+A designed calibration set sits inside this frame. If designed scores $S_1,\dots,S_n$, taken
+distinct, have empirical distribution function within Kolmogorov distance $D$ of a continuous
+reference law $\bar F$, and the test score is drawn from $\bar F$ independently of the design,
+then $|\bar F(S_{(k)})-k/(n+1)|\le D+1/(n+1)$ and $|\bar F(S_{(k)})-p|<D+(1+p)/n$,
+deterministically in the design (the proof is $\hat F_n(S_{(k)})=k/n$ plus
+Lemma~\ref{lem:steer}). A quantile grid achieves $D\le 1/(2n)$. This is design-based rather
+than distribution-free: it suppresses the $n^{-1/2}$ fluctuation of calibration-conditional
+coverage at the price of assuming the target law. Two limitations should be stated. The
+formulation treats the score values as design variables; realizing such a design through
+selectable observations, whose scores are outputs of a predictor and unknown responses, is a
+separate problem. And no implication from the reproducing-kernel discrepancy guarantees of
+kernel herding or kernel thinning \citep{chen2010,dwivedi2021} to the Kolmogorov discrepancy
+required here is established.
 
 \section{The Barber--Pananjady floor}\label{sec:bp}
 
@@ -313,10 +348,13 @@ memoryless score,
 \Prob\{S_{N}\le q_n\}\;\ge\;1-\alpha-\min_{0\le\tau\le n}
 \Bigl\{\tfrac{\tau}{N}+\bar\Psi_\tau\Bigr\},
 \]
-their Proposition~3, carried to memoryless scores by their Proposition~4, bounds
-$\bar\Psi_\tau\le 2\beta(\tau)$ under stationary $\beta$-mixing, their Theorem~8 supplies a
-matching ceiling, and their Theorem~7 shows tightness up to the factor
-$(1-\alpha)/4$.\footnote{Result numbering follows the ALT 2026 (PMLR volume 313) version of
+their Proposition~3 bounds the individual switch coefficients by $2\beta(\tau)$ for stationary
+$\beta$-mixing data, and, after data processing and averaging, their Corollary~6 inserts this
+control into the coverage bound. Their Theorem~8 is a corresponding upper bound with the same
+switch-coefficient structure, under almost surely distinct scores; their Theorem~7 shows
+tightness up to the factor $(1-\alpha)/4$ when $(1-\alpha)N$ is integral and the data space is
+infinite, a finite space carrying an additional cardinality
+remainder.\footnote{Result numbering follows the ALT 2026 (PMLR volume 313) version of
 \citet{barberpananjady2026}; the arXiv versions number the same results differently.}
 
 The argument separates into an exact insertion--deletion stability statement for empirical
@@ -325,8 +363,10 @@ $\tau$, so the level shifts by at most $\tau/N$: order-statistic geometry, contr
 rather than values, since empirical quantile values are not stable under small total-variation
 perturbations) and a total-variation comparison between switched laws, which is the definition
 of the switch coefficient. Both ingredients are linear in their perturbation sizes and no
-concentration step appears; a blocking argument \citep{oliveira2024} bounds the same quantity
-through a maximal inequality and pays $\sqrt{\tau/n}$.
+concentration step appears; by comparison the blocking and empirical-process bound of
+\citet{oliveira2024} has square-root dependence on the corresponding block-and-mixing
+expression, up to logarithmic factors. This decomposition is thematically parallel to the
+discrepancy constructions above, but it is not derived from the contragredient identity.
 
 \section{Three rates}\label{sec:rates}
 
