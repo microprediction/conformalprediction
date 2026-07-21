@@ -100,20 +100,22 @@
   expected-order-statistic profile majorizes the independent one, and Schur-convexity finishes it.
   What about a single fixed \(k\)? The step behind one \(\operatorname{Var}(U_{(k)})\) is neither
   concave nor convex, so the same order cannot sign it, and the single-level bound turns out to be
-  <em>false at \(n=2\)</em>: there is an explicit negatively associated pair with uniform marginals
-  &mdash; two calibration points that are never both large &mdash; whose maximum is strictly
-  over-dispersed (\(\operatorname{Var}(U_{(2)})=\tfrac1{18}+\tfrac{a^2(1-6a-2a^2)}{18}\), ratio
-  \(1.0038\) at \(a=\tfrac1{10}\)). It realizes exactly the centroid-violating diagonal an LP predicts,
-  which the note had hoped no genuine law reaches. Why only \(n=2\): there the variance depends on the
-  copula diagonal alone and negative association collapses to the single constraint \(\delta(u)\le u^2\),
-  leaving room to push the deficit toward \(u=1\); for \(n\ge3\) the fuller off-diagonal orthant
-  constraints appear to forbid it, padding the counterexample with an independent coordinate already
-  drops the ratio below one, and an extensive search over \(3\le n\le10\) finds no violation. So the
-  conjecture is re-posed for \(n\ge3\), where it is open and unbroken, and settled on the
-  Farlie&ndash;Gumbel&ndash;Morgenstern, without-replacement, and Gaussian-copula subclasses. On the
-  Gaussian scale the single-level statement is exact and monotone in the correlation
-  (\(\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)\) for equicorrelated normals). All checks are
-  reproduced by <code>check_fan_conjecture.py</code>; a constructive corollary is that a pre-specified,
+  <em>false for general negative association, at every \(n\)</em>. An explicit NA law with uniform
+  marginals &mdash; &ldquo;at most one large&rdquo;: at most one calibration score falls in a top bin
+  of width \(a\), the rest below &mdash; over-disperses its extreme order statistic,
+  \(\operatorname{Var}(U_{(n)})-\operatorname{Var}^{\mathrm{iid}}=c_n a^2+O(a^3)\) with \(c_n>0\) for
+  all \(n\) (\(c_2=\tfrac1{18}\), \(c_3=\tfrac3{40}\), \(\dots\); ratio \(1.0022\) at \(n=3\),
+  \(a=\tfrac1{20}\)). It is genuinely NA (single-trial multinomial cell structure), and it realizes
+  exactly the centroid-violating diagonal an LP predicts, which the note had hoped no genuine law
+  reaches. The reason a single level escapes: the aggregate is controlled by the one-time law of the
+  count \(N(u)\), which negative association signs; a single level needs the two-time concordance of
+  \((N(u),N(v))\), which it does not. So per-level fan contraction is not a theorem of negative
+  association. It <em>is</em> a theorem on the structured families a calibration design produces, which
+  we prove: the Farlie&ndash;Gumbel&ndash;Morgenstern copula
+  (\(\operatorname{Var}_\theta(U_{(k)})\) a downward parabola capped at the benchmark), sampling without
+  replacement, and on the Gaussian scale the exact monotone law
+  \(\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)\). All checks are reproduced by
+  <code>check_fan_conjecture.py</code>; a constructive corollary is that a pre-specified,
   exchangeability-preserving randomized design reduces the run-to-run dispersion of realized coverage
   without disturbing validity.</p>
 
