@@ -327,13 +327,23 @@ lowers $\mathbb E[U_{(n)}]$ while widening it, and the aggregate bound survives 
 over-contract. The excess is necessarily small: negative association \emph{under}-disperses the count
 $N(u)$ (Lemma~\ref{lem:count}), whereas a large order-statistic variance wants it over-dispersed, and
 the two pressures oppose --- a law whose count is over-dispersed enough to inflate the fan substantially
-is positively associated, not NA. The one hypothesis a reader might tighten is full support: the density vanishes wherever
-two coordinates are large, so the question reopens if one restricts to strictly-positive-density NA laws
-or to a fixed copula family --- which is where the positive results below live.
+is positively associated, not NA.
 
-So the fan does not contract at every level for \emph{arbitrary} negative association. It does contract
-on the structured families a calibration design actually produces, and there the statement is exact or
-provable.
+One hypothesis the counterexample uses is degeneracy: its density vanishes wherever two coordinates are
+large, and it sits exactly on the boundary of negative association (its defining covariances are zero,
+not strictly negative). Every full-support NA family we can analyse --- Gaussian copula, FGM --- instead
+\emph{satisfies} the level bound. This suggests the degeneracy is essential, and leaves the natural
+restricted question open.
+
+\begin{conjecture}[Full-support per-level contraction]\label{conj:fullsupp}
+If the calibration scores have a negatively associated law with a strictly positive continuous density
+on $[0,1]^n$ (and uniform marginals), then $\operatorname{Var}(c)\le$ the independent value
+\eqref{eq:betavar} for each $k$.
+\end{conjecture}
+
+So the fan does not contract at every level for \emph{arbitrary} negative association --- but the
+violators are boundary, vanishing-density laws, and on the structured families a calibration design
+actually produces the statement is exact or provable.
 
 Three structured families make the point, two of them by outright proof. The
 Farlie--Gumbel--Morgenstern copula is the cleanest.
