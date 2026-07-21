@@ -29,10 +29,11 @@ count. Three results follow: a leading-order fan coefficient in a Bahadur regime
 aggregate bound, summed over all levels, showing negative association never widens the fan; and,
 for equicorrelated normals, the exact single-level law
 $\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)$. The general single-level contraction turns out to
-fail at $n=2$: we exhibit an explicit negatively associated pair, uniform marginals, whose
-extreme order statistic is strictly over-dispersed, at every $n$. The bound does hold on the
-structured subclasses a calibration design produces --- Gaussian-copula, FGM, and
-without-replacement --- which we prove.
+be false: an explicit negatively associated law, uniform marginals, over-disperses an order
+statistic at every $n$, and full support does not rescue it (a strictly-positive-density,
+strictly-interior-NA law violates too, certified exactly). The bound does hold on the structured
+subclasses a calibration design produces --- Gaussian-copula, FGM, and without-replacement ---
+which we prove.
 \end{abstract}
 
 \section{Setup}
@@ -329,21 +330,22 @@ $N(u)$ (Lemma~\ref{lem:count}), whereas a large order-statistic variance wants i
 the two pressures oppose --- a law whose count is over-dispersed enough to inflate the fan substantially
 is positively associated, not NA.
 
-One hypothesis the counterexample uses is degeneracy: its density vanishes wherever two coordinates are
-large, and it sits exactly on the boundary of negative association (its defining covariances are zero,
-not strictly negative). Every full-support NA family we can analyse --- Gaussian copula, FGM --- instead
-\emph{satisfies} the level bound. This suggests the degeneracy is essential, and leaves the natural
-restricted question open.
+Degeneracy is not the escape either. One might hope the failure needs the counterexample's vanishing
+density (it is zero wherever two coordinates are large) or its boundary position in the NA cone (its
+binding covariances are exactly zero). It does not: a constrained search produces a law with a
+\emph{strictly positive} density (bounded below by $\tfrac15$ of uniform), exactly uniform marginals, and
+lying \emph{strictly inside} the NA cone --- every non-trivial disjoint-monotone covariance is
+$\le -9.8\times10^{-5}<0$ --- whose smeared continuous form has
+$\operatorname{Var}(U_{(3)})=0.037857>\tfrac3{80}$, a ratio $1.0095$. Both facts are certified in exact
+rational arithmetic: NA by the complete up-set decision procedure (NA $\iff$
+$\operatorname{Cov}(\mathbf 1_S(U_A),\mathbf 1_W(U_B))\le0$ over all disjoint $A,B$ and all up-sets
+$S,W$), and the variance by exact integration of the piecewise-uniform smearing (the same routine returns
+$\tfrac3{80}$ on the independent law). So full support does not rescue the bound; a positivity floor only
+shrinks the achievable excess.
 
-\begin{conjecture}[Full-support per-level contraction]\label{conj:fullsupp}
-If the calibration scores have a negatively associated law with a strictly positive continuous density
-on $[0,1]^n$ (and uniform marginals), then $\operatorname{Var}(c)\le$ the independent value
-\eqref{eq:betavar} for each $k$.
-\end{conjecture}
-
-So the fan does not contract at every level for \emph{arbitrary} negative association --- but the
-violators are boundary, vanishing-density laws, and on the structured families a calibration design
-actually produces the statement is exact or provable.
+The per-level contraction is therefore simply not a property of negative association --- not for general
+NA, not at the extremes, not with a strictly positive density. It \emph{is} a property of the structured
+families a calibration design actually produces, and there it is exact or provable.
 
 Three structured families make the point, two of them by outright proof. The
 Farlie--Gumbel--Morgenstern copula is the cleanest.
