@@ -10,7 +10,7 @@ double-blind review at The American Statistician; this paper cites it as
 
 ## 1. arXiv (optional, packet ready)
 
-**Upload** the contents of `paper/frontier/arxiv/`: `frontier.tex`, `frontier.bbl`,
+**Upload** the contents of `papers/frontier/arxiv/`: `frontier.tex`, `frontier.bbl`,
 `fig_ladder.pdf`, `fig_sharpness_gap.pdf`. (Do not upload `references.bib` or
 `frontier.pdf`; arXiv compiles from source and uses the `.bbl`.) The directory builds
 standalone with zero errors and zero overfull boxes.
@@ -56,7 +56,7 @@ First-time submitters to stat.ME may need endorsement; the request screen tells 
 
 ## 2. SSRN (primary preprint route)
 
-Upload `paper/frontier/arxiv/frontier.pdf` (32 pp, title page already carries author,
+Upload `papers/frontier/arxiv/frontier.pdf` (32 pp, title page already carries author,
 email, and date).
 
 **Keywords**
@@ -110,7 +110,7 @@ evidence, and the letter discloses the relationship.
 
 Upload the skaters paper (`skaters/papers/skaters-jss.pdf`, "Transforms All the Way Down",
 24 pp) to SSRN before this one. Once it has an SSRN number, update the `cotton_skaters`
-entry in `paper/references.bib` to cite the paper with its SSRN URL (repo link stays as a
+entry in `papers/frontier/references.bib` to cite the paper with its SSRN URL (repo link stays as a
 secondary URL), rebuild, and this paper then cites a stable dated document rather than a
 bare repository. Then upload this paper.
 
