@@ -12,7 +12,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-FIG = os.path.join(os.path.dirname(__file__), "figures")
+FIG = os.path.dirname(os.path.abspath(__file__))
 CSV = os.path.expanduser("~/github/skaters/benchmarks/ladder_ablation.csv")
 NS = os.path.expanduser("~/github/skaters/benchmarks/r5_nosticky_dev.csv")
 plt.rcParams.update({
