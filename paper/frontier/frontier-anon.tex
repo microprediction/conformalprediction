@@ -1,0 +1,9 @@
+% Anonymous (double-blind) build wrapper for the IJF submission.
+% Build:
+%   pdflatex frontier-anon && bibtex frontier-anon && pdflatex frontier-anon (x2)
+% It sets the anonymous flag and then reads the single source of truth (frontier.tex),
+% which strips the author block, the companion self-citation, and the code URLs
+% under \ifanon. The skaters library citation remains in third person, which
+% double-blind convention permits for public software.
+\def\anonymous{}
+\input{frontier.tex}
