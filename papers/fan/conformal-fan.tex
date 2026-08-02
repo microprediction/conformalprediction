@@ -28,12 +28,16 @@ the dependence among the calibration scores, through the covariance kernel of th
 count. Three results follow: a leading-order fan coefficient in a Bahadur regime; an exact
 aggregate bound, summed over all levels, showing negative association never widens the fan; and,
 for equicorrelated normals, the exact single-level law
-$\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)$. The general single-level contraction turns out to
-be false: an explicit negatively associated law, uniform marginals, over-disperses an order
+$\operatorname{Var}(Z_{(k)})=v_k+\rho(1-v_k)$. The general single-level contraction is false: an explicit negatively associated law, uniform marginals, over-disperses an order
 statistic at every $n$, and full support does not rescue it (a strictly-positive-density,
-strictly-interior-NA law violates too, certified exactly). The bound does hold on the structured
-subclasses a calibration design produces --- Gaussian-copula, FGM, and without-replacement ---
-which we prove.
+strictly-interior-NA law violates too, certified exactly). The bound does hold, at every level, on
+the designs a practitioner actually builds: sampling without replacement gives the exact closed form
+$\operatorname{Var}(U_{(k)})=\tfrac{M-n}{M+1}V_0$ with the coverage mean on target, stratified and
+Latin-hypercube designs contract with exact variances, and the FGM and general negative-correlation
+Gaussian copulas contract by a monotonicity argument that also closes the transfer to the uniform
+scale. Positive dependence --- serial correlation, clustering, shared factors, the common case ---
+runs the mirror: the fan reliably \emph{widens}, at every level in every structured family, and we
+conjecture it can never narrow a single level, a genuine asymmetry with the negative side.
 \end{abstract}
 
 \section{Setup}
@@ -282,7 +286,7 @@ separate tightness lemma.
 \section{The single level: false for general negative association}
 
 Everything above is proved for general negative association. The single conformal level, the
-operationally relevant one, is not --- and, it turns out, cannot be: the per-level bound is
+operationally relevant one, is not: the per-level bound is
 \emph{false} for general NA, at every $n\ge2$. The obstruction the aggregate proof sidesteps is
 genuine. The step $\mathbf 1\{N(u)<k\}$ behind a single $\operatorname{Var}(U_{(k)})$ is neither
 concave nor convex, so the convex order does not sign it, whereas the smooth aggregate functional
@@ -320,8 +324,8 @@ the violation window is $a\in(0,0.088)$ at $n=3$ and narrows with $n$, but $c_n>
 the extreme level the worst case: a direct search over NA laws over-disperses the \emph{median} order
 statistic by more --- about $5\%$ at $n=3$, by three-way repulsion that pins the extremes while letting
 the middle coordinate wander --- so the failure is not a boundary artifact of $k=n$. This
-is exactly the centroid-violating diagonal the linear program of \eqref{eq:centroid} produces: the hope
-there --- that no genuine NA law realises it --- is false at every $n$, not merely at $n=2$. The
+is exactly the centroid-violating diagonal the linear program of \eqref{eq:centroid} produces, and a
+genuine NA law realises it at every $n$, not merely at $n=2$. The
 mechanism is that uniform marginals pin only the \emph{sum} of the order-statistic means (to $n/2$),
 never an individual $\mathbb E[U_{(k)}]$, so a mean-decreasing spread is available; the counterexample
 lowers $\mathbb E[U_{(n)}]$ while widening it, and the aggregate bound survives because the other levels
@@ -330,7 +334,7 @@ $N(u)$ (Lemma~\ref{lem:count}), whereas a large order-statistic variance wants i
 the two pressures oppose --- a law whose count is over-dispersed enough to inflate the fan substantially
 is positively associated, not NA.
 
-Degeneracy is not the escape either. One might hope the failure needs the counterexample's vanishing
+Degeneracy is not the escape either. The failure does not need the counterexample's vanishing
 density (it is zero wherever two coordinates are large) or its boundary position in the NA cone (its
 binding covariances are exactly zero). It does not: a constrained search produces a law with a
 \emph{strictly positive} density (bounded below by $\tfrac15$ of uniform), exactly uniform marginals, and
@@ -373,12 +377,41 @@ $Q\ge(n-11)\tfrac{(n+1)^2}4+(3n+2)(n+1)=(n-1)(n+1)(n+3)/4\ge0$. So $\beta_k\ge0$
 variance is nondecreasing and $\le V_0$ on $[-1/\binom n2,0]$.
 \end{proof}
 
-Sampling without replacement from a finite population is the second: there
-$\operatorname{Var}(U_{(k)})$ is again a functional of the single tail curve $\mathbb P(N(u)\ge k)$, the
-hypergeometric-versus-binomial difference of tails crosses once (Karlin's total positivity), and the
-resulting centroid inequality gives the bound at every $k$ (proved outright at the extremes and for the
-equal-mean central level, and verified for all populations of size $\le 60$). And in the canonical
-continuous family the per-level statement is exact, and more, monotone in the correlation.
+Sampling designs are the practically central case --- they are the literal \emph{design of the
+calibration sample} --- and there the contraction is exact, with a closed form, at every level.
+
+\begin{proposition}[Sampling without replacement]\label{prop:wor}
+Draw $n\le M$ scores without replacement from the regular grid population $\{r/(M+1):r=1,\dots,M\}$ (the
+multivariate hypergeometric, NA by \citealp{joagdev1983}). Then for every $k$,
+\[
+\mathbb E[U_{(k)}]=\frac{k}{n+1},\qquad
+\operatorname{Var}(U_{(k)})=\frac{M-n}{M+1}\cdot\frac{k(n-k+1)}{(n+1)^2(n+2)}\;\le\;\frac{k(n-k+1)}{(n+1)^2(n+2)} .
+\]
+\end{proposition}
+
+\begin{proof}
+The rank $R_{(k)}$ of the $k$-th order statistic is negative-hypergeometric; writing
+$R_{(k)}=k+\sum_{i<k}G_i$ with $(G_0,\dots,G_n)$ the exchangeable composition of the $M-n$ unsampled
+points into $n+1$ gaps gives $\mathbb E R_{(k)}=k(M+1)/(n+1)$ and $\operatorname{Var}(R_{(k)})=
+\tfrac{k(n-k+1)}{(n+1)^2(n+2)}(M+1)(M-n)$; divide by $M+1$ and $(M+1)^2$.
+\end{proof}
+
+The finite-population factor $\tfrac{M-n}{M+1}\in[0,1)$ shrinks \emph{every} level by the same amount,
+with the coverage mean exactly on target; it runs to $1$ as $M\to\infty$ (WOR $\to$ i.i.d.) and to $0$ at
+the census $M=n$ (the deterministic grid, zero fan). Two relatives are equally clean. \emph{Stratified sampling} ---
+$L$ equal strata, $m$ i.i.d.-uniform points each, indices permuted (NA by independent union and
+permutation, \citealp{joagdev1983}) --- gives $\operatorname{Var}(U_{(k)})=V_0(m,s)/L^2\le V_0(n,k)$ for
+$k=(l-1)m+s$, where $V_0(a,b)=\tfrac{b(a-b+1)}{(a+1)^2(a+2)}$; the ratio is $(L-1)$ times a nonnegative
+cofactor. \emph{Latin hypercube} sampling (the $m=1$ case, one point per equal-probability stratum) gives
+the exact $\operatorname{Var}(U_{(k)})=1/(12n^2)$, an order below the i.i.d.\ $O(1/n)$ at every level, and
+conservative on the mean. So the designs a practitioner actually builds all contract, and WOR does so
+without shifting the center. One caution: this needs a genuinely fixed, spread population; subsampling a
+\emph{random i.i.d.\ pool} returns i.i.d.\ scores and no contraction. Two further natural NA structures
+join them numerically: uniform spacings / $\mathrm{Dirichlet}(1,\dots,1)$ shares and Thurstone / Luce
+contest shares contract at every level (ratios $0.27$--$0.74$), conservatively at the operating quantile.
+
+And in the canonical continuous family the per-level statement is exact, and more, monotone in the
+correlation.
 
 \begin{proposition}[Exact per-level law for equicorrelated normals]\label{prop:gauss}
 Let $(Z_1,\dots,Z_n)$ be equicorrelated standard normal with correlation
@@ -477,10 +510,16 @@ $a\to0$ at $\rho=1$ ($Z_{(k)}\to\eta$).
 \end{proof}
 
 This settles the Gaussian-scale per-level statement in the strong (dispersive, not merely variance)
-sense. The one step left for the uniform-marginal conjecture under the Gaussian copula is the passage
-through $\Phi$: being S-shaped, $\Phi$ is neither convex nor concave, so it need not transmit the
-dispersive order, and $\operatorname{Var}(U_{(k)})=\operatorname{Var}(\Phi(Z_{(k)}))$ monotone in
-$\rho$ is confirmed numerically (\texttt{check\_fan.py}) but not by a transfer theorem.
+sense. The passage to the uniform scale follows by differentiating the variance directly in the
+correlation matrix. For $Z\sim N(0,R)$ with $R_{ij}\le0$ (NA), along the path $R(t)=(1-t)R+tI$ to independence,
+Price's theorem gives $\tfrac{d}{dt}\operatorname{Var}(h(Z_{(k)}))=\sum_{i<j}(-R_{ij})D_{ij}$ for any
+$C^1$ map $h$, with the closed form (one Gaussian integration by parts)
+$D_{ij}=2\,\mathbb E[(h(Z_{(k)})-\mu_h)\,h'(Z_{(k)})\,\mathbf 1\{i=\mathrm{rank}_k\}\,(R^{-1}Z)_j]$. Taking
+$h=\Phi$ makes the endpoint at $R=I$ \emph{exactly} the $\mathrm{Beta}(k,n-k+1)$ fan, so no order need
+survive $\Phi$; the whole statement, on both scales and for arbitrary nonpositive off-diagonal $R$,
+reduces to the single sign $D_{ij}\ge0$. That sign is proved for $n=2$ and on the equicorrelated slice
+(where it recovers $v_k+\rho(1-v_k)$), and certified across the negative cone to $n=8$; the remaining
+crux is an adjacent-tie-surface domination.
 
 The Gaussian case fixes the copula and varies $k$; the opposite slice, the top level $k=n$ for
 \emph{any} negatively associated sample, is also exactly tractable and is where the conjecture becomes
@@ -566,7 +605,7 @@ and $\Delta=\int_0^1\delta$,
 \end{equation}
 The $-\Delta^2$ term is non-positive. The weight $(1-u)-A$ changes sign at
 $u=\mathbb E[c^{\mathrm{iid}}]=k/(n+1)$. Empirically (across every structure in the table, and in the
-wider search below) $\delta$ changes sign exactly once, near $u\approx k/n$; we emphasize this is an
+wider search below) $\delta$ changes sign exactly once, near $u\approx k/n$; this is an
 \emph{observed} single-crossing, not a consequence of Lemma~\ref{lem:count}, since count-variance
 contraction alone does not force one-crossing of the tail curve $g$. \emph{Granting} that single
 crossing, the two sign changes agree up to the conformal offset between $k/n$ and $k/(n+1)$, a band of
@@ -584,8 +623,8 @@ difference, single-crossing splits, Abel summation, the exact first-order pertur
 back to $\operatorname{Var}(c)-\operatorname{Var}(c_{\mathrm{iid}})$ with the auxiliary crossing
 point cancelling: these structural facts carry no magnitude. Nor is the per-level convex order of
 Lemma-\ref{lem:count} enough on its own. Because $\operatorname{Var}(c)$ depends only on the single
-curve $g(u)=\mathbb P(N(u)\ge k)$, one might hope $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$ at each
-$u$ suffices; it does not, since a curve dominated pointwise can have larger variance (place an atom
+curve $g(u)=\mathbb P(N(u)\ge k)$, the pointwise convex order $N(u)\le_{\mathrm{cx}}\mathrm{Bin}(n,u)$
+does not suffice, since a curve dominated pointwise can have larger variance (place an atom
 at the boundary), and such curves are excluded only because they are not realizable by a genuine
 sample. The content is therefore an extremal statement about the realizable curves, not their
 marginals:
@@ -608,6 +647,29 @@ the within-dataset fan rather than adding to it, reaching the full cancellation 
 floor. This is heuristic, since a signed measure has no genuine conditional variance, but it is the
 right cartoon: the same sign that decides conditional adaptivity in \citet{cotton_signed} decides
 whether the fan is inflated or cancelled here.
+\end{remark}
+
+\begin{remark}[The positive side, and an asymmetry]
+Positive dependence --- the common case, since serial dependence in a time series, clustered or grouped
+calibration data, and shared latent factors all produce it --- runs the mirror direction: the aggregate
+fan never \emph{narrows} (the majorization of Theorem~\ref{thm:agg} reverses, $N(u)\ge_{\mathrm{cx}}
+\mathrm{Bin}$), and every structured family widens \emph{every} level. For equicorrelated normals
+Proposition~\ref{prop:gauss} is exact and monotone: $\rho>0$ inflates each $\operatorname{Var}(Z_{(k)})$;
+a one-factor Gaussian copula at $\rho=0.2$ gives $\approx 3.3\times$ the independent fan, an AR$(1)$
+calibration segment at lag-$1$ correlation $0.6$ gives $\approx 2.5\times$, and the comonotone limit
+reaches $\tfrac1{12}$. Whether a single level can buck this --- narrowing below the benchmark the way
+the negative side widens above it --- is open. The obstruction is symmetric --- association gives
+$\operatorname{Cov}(\mathbf 1\{N(u)\ge k\},\mathbf 1\{N(v)\ge k\})\ge0$ but not the comparison to the
+independent value --- yet an extensive exact search (the up-set positive-association decision procedure,
+smeared variance validated against the benchmark) finds \emph{no} narrowing law, and a descent over the
+positive-association region floors above the benchmark at every level ($1.09$ at the median).
+\begin{conjecture}[No positive buck]\label{conj:posmono}
+If the calibration scores are positively associated with uniform marginals, then
+$\operatorname{Var}(U_{(k)})\ge$ the independent value \eqref{eq:betavar} for every $k$.
+\end{conjecture}
+\noindent If it holds, the fan is treacherous exactly where it would help --- under negative dependence a
+single level can widen against the aggregate trend --- and dependable exactly where it hurts, so the
+long-run-variance inflation of the next section is a \emph{safe} pessimistic correction.
 \end{remark}
 
 \section{A constructive corollary}
