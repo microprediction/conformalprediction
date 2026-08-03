@@ -12,7 +12,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 DUELS = [
-    ("refit through vs stop\n(E vs D)",              +0.0530, 4.02, 75, 71),
+    ("serial refit vs unconditional leaf\n(E vs D)",              +0.0530, 4.02, 75, 71),
     ("refit through vs no operator\n(E vs F)",        -0.1083, 1.00,  8, 65),
     ("pool with vs pool without\n(G vs H)",           +0.0121, 0.35, 31, 35),
     ("pool vs fixed raw pattern\n(G vs C)",           +0.2493, 4.58, 95, 77),
