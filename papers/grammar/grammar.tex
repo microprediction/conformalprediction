@@ -10,6 +10,7 @@
 
 \newtheorem{proposition}{Proposition}
 \newtheorem{lemma}[proposition]{Lemma}
+\newtheorem{corollary}[proposition]{Corollary}
 \theoremstyle{remark}
 \newtheorem{remark}[proposition]{Remark}
 
@@ -25,15 +26,14 @@
 \maketitle
 
 \begin{abstract}
-The conformal literature treats rank recalibration as a distinct predictive methodology.
-We treat it as a univariate transform. Interpolated, the fence-post rank map becomes
-an invertible operator, exact at its retained levels for distinct exchangeable input
-and within one knot cell everywhere. In a
-grammar of composable transforms its special status becomes local: it can be used
-internally, followed by further modeling, pooled, or overruled by the scoring rule. On
-economic series, adding a serial model after the operator beats an unconditional
-terminal model on three quarters of the series. An exact Bayes pool admits it at bounded cumulative log-loss cost, and
-a tempered pool at negligible empirical cost.
+The conformal literature treats rank recalibration as a distinct methodology. We treat
+it as a univariate transform. Interpolated, the fence-post rank map becomes an
+invertible operator, exact at its retained levels on distinct exchangeable input,
+within one knot cell everywhere. In a grammar of transforms its special status becomes
+local: it can be used internally, pooled, or overruled by the scoring rule. On economic
+series, a serial model added after the operator beats an unconditional terminal model
+on three quarters of series. An exact Bayes pool admits it at bounded total log-loss
+cost, a tempered pool at negligible empirical cost.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -99,9 +99,9 @@ the Gaussianized stream, transform again, and continue, exactly as one does with
 member of the transform library. Conformal calibration stops at the transform. The grammar
 keeps going.
 
-Two testable claims follow. The first is that the operator has interior value: refitting on
-the Gaussianized stream can beat stopping at it when exploitable residual structure
-remains. The
+Two testable claims follow. The first is that the operator has interior value: a serial model fitted on the
+Gaussianized stream can beat an unconditional terminal fit when exploitable residual
+structure remains. The
 second is that nesting is cheap: a pool over chains that includes the
 conformal pattern should not pay materially for admitting it, because the pool
 reallocates weight away from the pattern on series where it is a bad choice. We confirm both on 701
@@ -753,7 +753,8 @@ Conformal prediction is one production rule in a grammar of composable transform
 residual, fence-post empirical map, inverse. Interpolated, the fence-post map is an ordinary
 invertible online transform, and the rule's distinguishing stop, quoting the empirical law
 where it stands, becomes a choice the scoring rule can overrule. On 701 economic series,
-continuing through the operator beats stopping at it on three quarters of the series, a
+a serial model added after the operator beats an unconditional terminal model on
+three quarters of the series, a
 pool that admits the pattern trims its worst cases, at a price bounded for the exact
 Bayes pool and negligible empirically for the tempered one, and the operator's
 remaining cost under the log score is unexplained by the tested smoothing and points
