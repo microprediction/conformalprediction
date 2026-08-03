@@ -9,6 +9,7 @@
 \usepackage{microtype}
 
 \newtheorem{proposition}{Proposition}
+\newtheorem{lemma}[proposition]{Lemma}
 \theoremstyle{remark}
 \newtheorem{remark}[proposition]{Remark}
 
@@ -16,7 +17,7 @@
 \newcommand{\I}{\mathrm{I}}
 \newcommand{\given}{\,|\,}
 
-\title{A Grammar of Transforms for Probabilistic Forecasting,\\ Nesting Split Conformal Prediction}
+\title{Conformal Prediction as a Transform\\ within a Grammar for Probabilistic Forecasting}
 \author{Peter Cotton\\\texttt{peter.cotton@microprediction.com}}
 \date{August 2026}
 
@@ -24,17 +25,22 @@
 \maketitle
 
 \begin{abstract}
-The conformal literature organizes itself around prediction-set constructions. We organize
-around transform grammars instead. The fence-post empirical distribution function, smoothed
-and composed with the probit, is an invertible online transform, so conformal prediction
-becomes one production rule in a grammar of chained transforms. On 701 economic series,
-refitting on the transformed stream beats stopping at it on three quarters of the series,
-and a likelihood-weighted pool that admits the conformal pattern pays nothing for admitting
-it while trimming its worst cases. Which guarantees survive composition depends on position
-in the chain, and the operator's value depends on the scoring rule.
+The conformal literature treats rank recalibration as a distinct predictive methodology.
+We treat it as a univariate transform. Interpolated, the fence-post rank map becomes an
+invertible operator, exact at its calibration levels, within one cell everywhere. In a
+grammar of composable transforms its special status becomes local: it can be used
+internally, followed by further modeling, pooled, or overruled by the scoring rule. On
+economic series, refitting through the operator beats stopping at it on three quarters
+of the series. An exact Bayes pool admits it at bounded cumulative log-loss cost, and
+an adaptive tempered pool at negligible empirical cost.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
+
+In the canonical residual-pooling pattern, a forecaster fits a conditional model and
+then quotes uncertainty by ranking its past errors with every state pooled. The ranking is honest on average and silent about
+tonight. That tension, conditional effort upstream and unconditional treatment at the
+end, is the subject of this paper.
 
 Split conformal prediction can be written as a chain. Fit a model, take residuals, apply
 the fence-post empirical transform
@@ -44,8 +50,15 @@ E_n(r) \;=\; \frac{1 + \#\{i \le n : R_i \le r\}}{n+1},
 and map the resulting rank back through the model to a prediction set
 \citep{vovk2005algorithmic,lei2018distribution}. The value of \eqref{eq:fencepost} at a
 new point is a conformal p-value, and the map itself is the unrandomized conformal
-predictive distribution of \citet{vovk2019nonparametric}. We call it the fence-post
-transform, after the two $+1$ corrections. The literature treats this chain as a
+predictive distribution of \citet{vovk2019nonparametric}.
+
+We call it the fence-post
+transform, after the two $+1$ corrections: $n$ points cut the line into $n+1$ cells, and
+the guarantee rides on the count of cells, not of points. The knot probabilities
+$i/(n+1)$ are Weibull's plotting positions, the means of uniform order statistics, so the
+object is classical.
+
+The literature treats this chain as a
 construction to be studied whole, and its many variants, normalized, Mondrian, quantile,
 distributional, and temporal
 \citep{bostrom2021mondrian,romano2019conformalized,chernozhukov2021distributional,gibbs2021adaptive,auer2023hopcpt},
@@ -54,7 +67,30 @@ one operator. The chain is one production rule in a grammar of composable transf
 interesting question is then not which conformal method to choose but which sequence of
 transforms minimizes the forecaster's scoring rule.
 
-This reorganization has content because the fence-post operator composes. Once smoothed,
+Stated plainly, conformal prediction is not, in general, an alternative to statistical
+modeling. It is a particular rank-based transform of a model's output. Its finite-sample
+property distinguishes it from fitted recalibrators at the point where it is applied. It
+does not privilege stopping there, it does not remove the modeling that follows, and it
+does not determine predictive quality under a proper scoring rule.
+
+The standard pattern also carries a conditionality tension. The model predicts
+conditionally. Its residuals are then pooled across covariate states, and the pooling is
+justified exactly to the extent that the model has made the residual law conditionally
+invariant. The certificate does not establish that adequacy. It certifies ranks under
+exchangeability, so stopping at the pooled law is a modeling decision rather than a
+consequence of the guarantee. Pooling the observable itself, the limiting case of an
+inadequate model, would frequently be ludicrous.
+
+In univariate probabilistic forecasting, Platt scaling,
+isotonic and quantile recalibration, temperature scaling, conformal predictive systems,
+and distributional conformal prediction can all be represented as monotone recalibration
+operators on a scalar predictive, score, or probability coordinate, differing in what
+they fit and what they guarantee
+(Section~\ref{sec:family}). The fence-post transform is the member with a certificate,
+and the certificate is a property annotation, a reason to admit the operator to the
+grammar, and nothing more.
+
+This reorganization has content because the fence-post operator composes. Once interpolated,
 $E_n$ is an invertible change of variables with a density, and its probit composition
 $z = \Phi^{-1}(E_n(r))$ maps exchangeable residuals to approximately standard Gaussian
 coordinates. Nothing obliges a forecaster to stop there. One can fit further structure on
@@ -63,7 +99,8 @@ member of the transform library. Conformal calibration stops at the transform. T
 keeps going.
 
 Two testable claims follow. The first is that the operator has interior value: refitting on
-the Gaussianized stream should beat stopping at it whenever residual structure remains. The
+the Gaussianized stream can beat stopping at it when exploitable residual structure
+remains. The
 second is that nesting protects: a likelihood-weighted pool over chains that includes the
 conformal pattern should never pay materially for admitting it, because the pool reallocates
 weight away from the pattern on series where it is a bad choice. We confirm both on 701
@@ -91,9 +128,21 @@ the current observation, so predictive densities push back exactly, Jacobians in
 The raw fence-post map \eqref{eq:fencepost} is a step function. It has no density and no
 inverse, so it is not a transform in this sense. The minimal repair is interpolation. Let
 $y_{(1)} \le \dots \le y_{(n)}$ be the past observations, place knots at a bounded number of
-order statistics with fence-post probabilities $p_{(i)} = (i+1)/(n+1)$, set
+order statistics with fence-post probabilities $p_{(i)} = i/(n+1)$ for
+$i = 1, \dots, n$, set
 $z_{(i)} = \Phi^{-1}(p_{(i)})$, and interpolate the pairs $(y_{(i)}, z_{(i)})$ piecewise
-linearly. We call the resulting operator \emph{gaussianize}. Beyond the edge knots the map
+linearly. We call the resulting operator \emph{gaussianize}. The knot values are the
+left limits of the right-continuous map \eqref{eq:fencepost} at the calibration points,
+and this convention is what makes the certificate exact at the knots
+(Proposition~\ref{prop:grid}).
+
+The interpolation changes
+the object, and Section~\ref{sec:typing} states exactly what survives the change: the
+discrete map's output is a function of ranks alone, while the interpolated map's output
+depends on spacings as well, so the two are different operators with different
+certificates.
+
+Beyond the edge knots the map
 extends linearly in $(y, z)$ coordinates, and linearity in the probit coordinate is a
 Gaussian tail in the observable, with scale set by the spacing of the extreme quantiles.
 Tail mass is unobservable, so any usable version of the operator carries a tail assumption,
@@ -103,19 +152,68 @@ bandwidth, represented by a monotone $C^1$ cubic through the same knots, and we 
 Section~\ref{sec:smooth} to test whether smoothness matters.
 
 Two guards complete the definition, and both were forced by data rather than taste. First,
-every knot-segment slope is capped at twenty times the interquartile slope. An upstream
+every knot segment's inverse slope $dy/dz$ is capped at twenty times the
+interquartile inverse slope, so the forward slope is bounded below. An upstream
 variance collapse can plant a many-sigma outlier as an edge knot, and an uncapped edge
 segment then hands the inverse map an explosive extrapolation slope. The cap is an explicit
-assumption: tail scale at most a fixed multiple of the central scale. Second, the forward
-output is clamped to $|z| \le 8$. No fence-post rank exceeds probability $n/(n+1)$, and
-$\Phi^{-1}(n/(n+1)) < 8$ for any feasible $n$, so the clamp only removes values the
-empirical map itself could never produce. It exists because downstream learners have
-expanding memory. In one series in our corpus a degenerate warmup emitted a single
+assumption: tail scale at most a fixed multiple of the central scale.
+
+Second, the value handed downstream is clamped to $|z| \le 8$. The clamp applies
+only to the coordinate supplied to downstream state updates and is not part of the
+invertible map used to construct or pull back predictive densities, so the
+change-of-variables identity is intact. When it binds, the downstream learner is updated
+with a bounded surrogate rather than the literal transformed observation, and that
+alteration can persist through the learner's state. In the type system the two objects
+are distinct: gaussianize is invertible and density-carrying, and the bounded update
+channel is a winsorized learner input, not a transform.
+
+Within the knot range the clamp cannot bind, since no
+fence-post rank exceeds probability $n/(n+1)$ and $\Phi^{-1}(n/(n+1)) < 8$ for any
+feasible $n$. It can bind on the extended tail and on degenerate warmup emissions, and
+the latter is why it exists, because downstream learners have expanding memory. In one series in our corpus a degenerate warmup emitted a single
 transformed value near $8000$, and the downstream Welford variance and recursive
 least-squares state never forgot it, inflating that series' loss by four orders of
 magnitude. Composability is not free. An operator that is harmless as a terminal step can
 poison downstream learners through one bad emission, and the operator's definition has to
 prevent this, not the caller.
+
+The guards are better read as declared budgets than as patches. Invertibility alone is
+too weak a property for a chain. The pullback quantile $y_\alpha = m^{-1}(q(\alpha))$
+inherits the steepness of the inverse map $m^{-1}$, and beyond the edge knots the inverse
+is an assumption rather than an estimate, because tail mass is unobservable at any $n$.
+The slope cap makes the assumption finite. It declares that $m^{-1}$ is Lipschitz, with
+constant $L$ equal to twenty times the central inverse slope, and the declaration buys a
+guarantee.
+
+\begin{lemma}[Pullback quantiles are budgeted]\label{lem:budget}
+Let $m$ be a monotone forward map whose inverse is $L$-Lipschitz on all of $\mathbb{R}$,
+extrapolation included, and let $q$ be the quantile function of the predictive in
+transformed coordinates. Then the pulled-back predictive has quantiles
+$y_\alpha = m^{-1}(q(\alpha))$ and
+\[
+  |y_\alpha - y_{1/2}| \;\le\; L\,\big|q(\alpha) - q(\tfrac12)\big|
+  \qquad \text{for every } \alpha \in (0,1).
+\]
+For a chain of such maps the same bound holds with $L$ the product of the rungs'
+constants.
+\end{lemma}
+
+\begin{proof}
+Monotone maps transport quantiles, so $y_\alpha = m^{-1}(q(\alpha))$. The Lipschitz bound
+applied to the pair $q(\alpha), q(\tfrac12)$ gives the display. A composition of
+Lipschitz maps is Lipschitz with the product constant.
+\end{proof}
+
+With a Gaussian leaf of scale $\sigma$ the right side is
+$L\sigma\,|\Phi^{-1}(\alpha)|$, so no realization of the data can make a quoted quantile
+explode. The naive empirical map declares $L = \infty$ and buys nothing. The clamp is
+the same discipline in the forward direction: the codomain bound $|z| \le 8$ is
+intrinsic to the fence-post ranks, and a downstream learner with expanding memory is
+safe against exactly the emissions the bound excludes. Any finite multiplier yields the
+lemma, so the value twenty is the one remaining choice of taste, a tail-conservatism
+dial. Fitting the tail where the sample reaches, generalized-Pareto by censored maximum
+likelihood as the leaf already does, with the budget kept as a prior bound, is the
+refinement we leave open.
 
 Before enough observations accumulate, the operator standardizes by expanding moments,
 which is the $n \to 0$ limit of the empirical map. After the warmup the knots are rebuilt
@@ -125,14 +223,16 @@ series.
 \section{What composition preserves}\label{sec:typing}
 
 Each operator in a grammar carries properties. It may be monotone, invertible,
-density-carrying, exchangeability-preserving, or finite-sample calibrated. Composition preserves some and
-destroys others, and the pattern is positional. We record the three facts that organize our
+density-carrying, bi-Lipschitz with a declared budget, exchangeability-preserving, or
+finite-sample calibrated. Composition preserves some and
+destroys others, and the pattern is positional. We record the four facts that organize our
 experiments.
 
 \begin{proposition}[Fence-post uniformity]\label{prop:uniform}
 Let $R_1, \dots, R_{n+1}$ be exchangeable and almost surely distinct. Then
-$E_n(R_{n+1})$ is uniform on $\{1/(n+1), \dots, (n+1)/(n+1)\}$. In particular,
-$\Pr\{E_n(R_{n+1}) \le k/(n+1)\} = k/(n+1)$ for $k = 1, \dots, n+1$.
+$E_n(R_{n+1})$ is uniform on $\{1/(n+1), \dots, (n+1)/(n+1)\}$. In
+particular, $\Pr\{E_n(R_{n+1}) \le k/(n+1)\} = k/(n+1)$ for
+$k = 1, \dots, n+1$.
 \end{proposition}
 
 \begin{proof}
@@ -143,9 +243,74 @@ divided by $n+1$.
 \end{proof}
 
 This is the standard conformal fact \citep{vovk2005algorithmic} stated as a property of the
-operator's output. It is what makes the operator worth admitting to a grammar at all: it
-converts exchangeable inputs into finite-sample calibrated pseudo-uniforms, and after the
-probit, into pseudo-Gaussians.
+operator's output. It certifies the discrete map \eqref{eq:fencepost}, and the discrete
+map is what the experiments do not run. The interpolated operator of
+Section~\ref{sec:operator} uses spacings as well as ranks, and its output between knots
+is not distribution-free. What survives interpolation is the grid.
+
+\begin{proposition}[Grid calibration survives interpolation]\label{prop:grid}
+Let $Y_1, \dots, Y_{n+1}$ be exchangeable and almost surely distinct. Let $m$ be any
+strictly increasing map, interpolation and tails arbitrary, that passes through the
+knots: $m(y_{(i)}) = z_{(i)}$ at the order statistics
+$y_{(1)} < \dots < y_{(n)}$ of $Y_1, \dots, Y_n$. Then
+\[
+  \Pr\{\, m(Y_{n+1}) \le z_{(i)} \,\} \;=\; \frac{i}{n+1},
+  \qquad i = 1, \dots, n.
+\]
+\end{proposition}
+
+\begin{proof}
+Monotonicity gives $\{m(Y_{n+1}) \le z_{(i)}\} = \{Y_{n+1} \le y_{(i)}\}$. By
+exchangeability and distinctness the rank of $Y_{n+1}$ among all $n+1$ values is uniform
+on $\{1, \dots, n+1\}$, and $Y_{n+1} \le y_{(i)}$ holds for exactly the $i$ lowest
+ranks.
+\end{proof}
+
+There is no need to insist on exactness off the grid, because the relaxation is
+uniformly small and assumption-free. Call an operator \emph{$\delta$-conformal} if,
+on exchangeable almost surely distinct input, its output $U$ satisfies
+$\sup_{u} |\Pr\{U \le u\} - u| \le \delta$.
+
+\begin{proposition}[Interpolation is $1/(n+1)$-conformal]\label{prop:delta}
+In the setting of Proposition~\ref{prop:grid}, write $U = \Phi(m(Y_{n+1}))$ for the
+probability-scale output of any interpolated map through the knots. Then
+\[
+  \sup_{u \in (0,1)} \big|\Pr\{U \le u\} - u\big| \;\le\; \frac{1}{n+1},
+\]
+whatever the interpolation, the tails, and the continuous input law. Equivalently,
+$m(Y_{n+1})$ is within Kolmogorov distance $1/(n+1)$ of standard Gaussian.
+\end{proposition}
+
+\begin{proof}
+For $u$ between consecutive grid levels $i/(n+1)$ and $(i+1)/(n+1)$, monotonicity of the
+distribution function and Proposition~\ref{prop:grid} trap $\Pr\{U \le u\}$ in
+$[\,i/(n+1),\, (i+1)/(n+1)\,]$, the same cell that contains $u$. Two points of one cell
+differ by at most $1/(n+1)$. The edge cells are the same argument with endpoints $0$
+and $1$.
+\end{proof}
+
+The discrete map earns the same $\delta$: its output is supported on the grid, so as a
+distribution on $[0,1]$ it too sits within Kolmogorov distance $1/(n+1)$ of uniform. At
+the resolution the sample can support, the two operators are equally conformal, and the
+interpolated one is invertible.
+
+What separates them is the exact statement. The discrete map is deterministic,
+exactly calibrated at every grid level, noninvertible, and $1/(n+1)$-calibrated between
+grid levels. Randomized smoothing, which spreads each output uniformly over its rank
+cell, is exactly calibrated at every level and is a stochastic kernel rather than a
+deterministic transform \citep{vovk2005algorithmic}. The interpolated map is
+deterministic and invertible, stays exact on the grid, and incurs at most one cell of
+calibration error elsewhere. The grammar uses the deterministic, invertible version and quantifies its one-cell calibration relaxation.
+
+The exact conformal object is a rank certificate, and a rank certificate is not a
+predictive density. Turning it into one requires interpolation, smoothing, tail
+assumptions, and model selection, the same choices met everywhere else in probabilistic
+forecasting, and exchangeability supplies none of them.
+
+The log score will still notice: it
+integrates the predictive density between grid points and in the tails, exactly where
+the certificate is $\delta$-relaxed and assumption-laden, and
+Section~\ref{sec:smooth} measures what that costs.
 
 The second fact is that this guarantee is positional. Proposition~\ref{prop:uniform}
 concerns the operator's immediate output. If a downstream model is fitted on
@@ -158,9 +323,96 @@ representation, model-form, and estimation cost \citep{cotton2026gap}. But it me
 grammar has a typing discipline: an operator's guarantee names the position at which it
 holds, and claims about the composed system need their own arguments.
 
-The third fact prices the choice of coordinates. The companion paper's transform-pooling
-theorem states that pooling residuals after an invertible state-dependent change of
-coordinates $\phi_X$ has irreducible log-score gap $\I(\phi_X(R); X)$: the Jacobians of the
+The third fact concerns schedules, and it explains what the conformal literature's data
+splitting is for and how an online chain does without it. Call a chain \emph{previsible}
+if the map applied to each observation is measurable with respect to information strictly
+prior to that observation. Dual use, the defect the splitting exists to avoid, is exactly
+a previsibility violation: an observation flowing through a map whose state already
+contains it.
+
+Split conformal enforces previsibility with a coarse clock. Interior
+operators learn on a fitting block and freeze, the terminal fence-post learns on a
+disjoint calibration block and freezes, and test points meet only frozen maps.
+
+The chains
+of this paper enforce the same rule with the finest clock. Every operator emits before it
+absorbs, so the map applied at time $t$ is built from $y_1, \dots, y_{t-1}$ alone, and
+the past is a calibration set that never contains the present. Batching is one scheduler
+for one rule, and updating after emission is another.
+
+On the exchangeable hypothesis the fine clock does not merely match the batch guarantee.
+It strengthens it.
+
+\begin{proposition}[Sequential fence-post outputs are independent]\label{prop:sequential}
+Let $Y_1, \dots, Y_T$ be exchangeable and almost surely distinct, and let
+$U_t = E_{t-1}(Y_t)$ be the fence-post transform of $Y_t$ through the map built from
+$Y_1, \dots, Y_{t-1}$, as in \eqref{eq:fencepost} with $n = t - 1$. Then
+$U_1, \dots, U_T$ are independent, and $U_t$ is uniform on $\{1/t, \dots, t/t\}$.
+\end{proposition}
+
+\begin{proof}
+Let $K_t \in \{1, \dots, t\}$ be the rank of $Y_t$ among $Y_1, \dots, Y_t$. From
+\eqref{eq:fencepost} with $n = t-1$,
+$U_t = \big(1 + \#\{i < t : Y_i \le Y_t\}\big)/t = K_t / t$. The full ranking of
+$Y_1, \dots, Y_T$ is a permutation $\pi$ of $\{1, \dots, T\}$, and the map
+$\pi \mapsto (K_1, \dots, K_T)$ is a bijection onto
+$\{1\} \times \{1,2\} \times \dots \times \{1, \dots, T\}$: given the sequential ranks,
+the permutation is reconstructed by inserting each element at its stated position, and
+both sets have cardinality $T!$. Exchangeability with almost-sure distinctness makes
+$\pi$ uniform over the $T!$ orderings, so $(K_1, \dots, K_T)$ is uniform over the product
+set. Uniformity over a product set is independence of the coordinates, each uniform on
+its factor.
+\end{proof}
+
+The independence of sequential ranks is classical \citep{renyi1962} and powers online
+exchangeability testing \citep{vovk2003testing}. Here it separates the schedules. Split
+conformal's p-values share one calibration set and are dependent. The prequential
+outputs are independent, and the price is early resolution: the map at time $t$ has
+granularity $1/t$, hence the warmup of Section~\ref{sec:operator}.
+
+The certificate survives any further fixed monotone map, the probit included, because
+monotone maps preserve ranks. It dies at the first downstream fit, by the second fact,
+and a chain that wants a terminal certificate ends with one more fence-post step on the
+final residuals. Full conformal is a third schedule, symmetrizing the whole chain over
+the data at the cost of refitting per candidate value \citep{vovk2005algorithmic}. We do
+not use it. An operator's annotation is therefore a position and a clock.
+
+For the economic series of Section~\ref{sec:experiments} the exchangeable hypothesis of
+Proposition~\ref{prop:sequential} is false, as it is throughout time-series conformal
+prediction, so the uniformity claims are conditional on model adequacy. Previsibility is
+not. It holds by construction, and every score in this paper is out-of-sample even where
+the guarantee hypothesis fails. The contracts so far assemble into the beginning of the
+type table the conclusion asks for:
+
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lllll}
+\toprule
+operator & previsible & exch.-preserving & invertible & certificate \\
+\midrule
+fence-post, discrete & yes & independent sequential ranks & no &
+  exact at grid levels \\
+gaussianize & yes & not claimed & yes &
+  exact on grid, $\delta_n$ off it \\
+fixed monotone link & yes & yes & yes & transparent \\
+EMA location, EWMA scale & yes & no & given state & none \\
+frozen split-fitted model & yes, coarse clock & cal/test pairs & varies & none \\
+refit on the stream & yes & no & given state & none; blocks pass-through \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The middle column is the working hypothesis of every chain in
+Section~\ref{sec:experiments}: location and scale do not preserve exchangeability, so the
+fence-post rung downstream of them operates under an idealization, which the contracts
+state rather than hide.
+
+The fourth fact prices the choice of coordinates. The companion paper's transform-pooling
+theorem states that pooling residuals $R$ after an invertible state-dependent change of
+coordinates $\phi_X$ has irreducible log-score gap $\I(\phi_X(R); X)$, the mutual
+information between the transformed residual and the state $X$ on which its true
+conditional law depends: the Jacobians of the
 transform cancel, and only the coordinates' ability to remove conditional heterogeneity
 matters \citep{cotton2026gap}. The gaussianize operator is a data-dependent monotone map,
 measurable with respect to its own past state, and piecewise $C^1$, so conditional on the
@@ -168,13 +420,43 @@ state the theorem's hypotheses hold. The grammar view adds only this: since oper
 compose, the coordinates in which one pools are themselves a product of the chain, and the
 gap is a property of the whole chain up to the pooling point.
 
-The classical antecedent of the chain view is the Rosenblatt transformation
-\citep{rosenblatt1952remarks}, which Gaussianizes by composing conditional distribution
-functions. Normalizing flows are its learned, offline descendants: compositions of
-invertible maps trained by log score \citep{papamakarios2021normalizing}. The grammar
-studied here is the online, exchangeability-aware member of the family, and the fence-post
-operator is what distinguishes it: a rank-based link whose output carries a finite-sample
-guarantee at its position.
+The operator's ancestry is long. The
+branches are not one idea. They transform different objects for different reasons, and
+what they share is the trunk: push an observation through a distribution function and
+work on the flat scale.
+
+The
+empirical distribution function is Galton's ogive \citep{galton1875}. Plotting positions
+place ordered observations at probabilities of the form $i/(n+1)$ \citep{hazen1914}, and
+the probability integral transformation received its name and first systematic treatment
+from \citet{pearson1938}. Normal scores, the replacement of ranks by standard-normal
+quantiles, are the gaussianize map's direct ancestor \citep{vanderwaerden1952}. That
+estimation spoils the transform's exactness has been known since
+\citet{davidjohnson1948}, and the positional fact above is its descendant.
+
+Rosenblatt's
+chaining through conditional distributions whitens any process
+\citep{rosenblatt1952remarks}, and normalizing flows are its learned, offline
+descendants \citep{tabak2010,papamakarios2021normalizing}. Parametric monotone
+Gaussianizers run from \citet{boxcox1964} to \citet{yeojohnson2000}, quantile mapping
+in the geosciences is the same move under another name \citep{panofskybrier1968},
+transformed residuals as model criticism begin with \citet{coxsnell1968}, the PIT as a
+forecast-evaluation instrument with \citet{diebold1998evaluating}, and the prequential
+stance that all of this paper's scoring obeys is
+\citet{dawid1984present}.\footnote{A fuller annotated timeline is maintained at
+\url{https://skaters.microprediction.org/heritage.html}.}
+
+The transform also ran as a market before it ran here as an operator. The
+microprediction platform's z-streams solicited competitive real-time predictions of
+PIT-transformed residual streams \citep{cotton2022microprediction}, chaining
+solicitations so that one crowd predicted the residuals of another's forecasts. That is
+interior composition as a mechanism, and the algebra of such mechanisms is developed in
+\citet{cotton2026algebra} and \citet{cotton2026multistage}. The grammar of this paper
+is the single-forecaster form of the same design.
+
+Against this ancestry the
+fence-post operator's distinction is narrow and real: at its position, on exchangeable
+input, its ranks carry a finite-sample certificate.
 
 \section{Measurements}\label{sec:experiments}
 
@@ -206,7 +488,7 @@ D & location $\to$ scale $\to$ gaussianize $\to$ leaf \quad (normalized pattern)
 E & location $\to$ scale $\to$ gaussianize $\to$ AR(1) $\to$ leaf \quad (refit through) \\
 F & location $\to$ scale $\to$ AR(1) $\to$ leaf \quad (same refit, no gaussianize) \\
 G & likelihood-weighted pool over $\{$leaf, A, B, C, D, E, F$\}$ \\
-H & the same pool without the gaussianize chains \\
+H & likelihood-weighted pool over $\{$leaf, A, B, F$\}$ \quad (G minus the gaussianize chains) \\
 I & the pool of G with kernel-smoothed gaussianize \\
 \bottomrule
 \end{tabular}
@@ -229,10 +511,25 @@ per-series.}\label{fig:duels}
 
 \subsection{The operator has interior value}\label{sec:interior}
 
-Refitting on the Gaussianized stream beats stopping at it. Config E improves on config D by
+In conformal practice the empirical map is terminal. One fits a model, ranks the
+residuals, and quotes the ranked law as the predictive. The fence-post step is where
+inference ends, and the design assumes the residuals arrive exchangeable, with nothing
+left in them worth modeling. Config D is that pattern written as a chain. Config E reads
+the same operator differently: its output is a coordinate system, and whatever structure
+the model missed is easier to fit in those coordinates. The two readings are testable
+against each other. For the exact sequential ranks, exchangeable input leaves no serial
+rank signal for a refit to find, by Proposition~\ref{prop:sequential}. The interpolated
+coordinates carry spacing information besides, and an estimated AR(1) brings estimation
+noise of its own, so the comparison is informative rather than clean.
+
+On this corpus the second reading wins. Config E improves on config D by
 $0.053$ nats per observation, winning on $75$ percent of series, and by $4.0$ percent of
-baseline CRPS, winning on $71$ percent. The conformal pattern's stopping point is not where
-the predictive value stops.
+baseline CRPS, winning on $71$ percent. Under the log score the oracle version of this
+margin is the predictive mutual information remaining in the transformed stream, the
+quantity the companion paper's ledger prices \citep{cotton2026gap}. The measured margin
+is the part of it an AR(1) captures, net of estimation cost. It is evidence that serial
+structure survives the transform on most of the corpus, and it says the conformal
+pattern's stopping point is not where the predictive value stops.
 
 A synthetic experiment shows the mechanism in isolation. Let $z_t = 0.8 z_{t-1} +
 \varepsilon_t$ and observe $y_t = \mathrm{sign}(z_t) |z_t|^{1.5}$, a monotone warp of an
@@ -242,7 +539,7 @@ and $0.41$, beating both the stop and the same AR chain without the operator ($-
 $0.42$). When structure lives in the empirical map's coordinates, the operator is the only
 way to reach it, and it must be passed through, not stopped at.
 
-On the real corpus the comparison with config F is sharper and score-dependent. Under CRPS
+On the real corpus the comparison with config F, the same refit without the operator, is sharper and score-dependent. Under CRPS
 the operator helps: E beats F on $65$ percent of series, and E is the best single chain in
 the study at $0.911$ of baseline. Under the log score the operator costs $0.108$ nats
 against F and wins only $8$ percent of series. We return to this in
@@ -253,18 +550,57 @@ is to blame, turns out to be wrong.
 
 The raw conformal pattern C is a reasonable forecaster on this corpus, better than the
 location baseline on average under both scores. It is also, on a minority of series, a bad
-choice. The pool G that admits the conformal chains beats the fixed pattern C on $95$
-percent of series by log score, by $0.249$ nats on average. On the twenty series where C is
-worst, with relative CRPS $1.020$, the pool sits at $0.843$ on the same series. The pool
-walks away from the production rule where it underperforms.
+choice. Config G, the likelihood-weighted pool over all seven chains, gaussianize chains
+included, beats the fixed pattern C on $95$ percent of series by log score, by $0.249$
+nats on average. On the twenty series where C is worst, with relative CRPS $1.020$, the
+pool sits at $0.843$ on the same series. The pool walks away from the production rule
+where it underperforms.
 
-Admitting the pattern costs nothing. The pools with and without the gaussianize chains
-differ by $0.012$ nats and $0.4$ percent of baseline CRPS, with the nesting pool ahead on
-both means. This is the practical content of the grammar view. A fixed conformal method is
+Admitting the pattern is approximately free on average. The average hides the shape. Config H, the same pool with the gaussianize chains removed, differs
+from config G by $0.012$ nats and $0.4$ percent of baseline CRPS, with the nesting pool
+G ahead on both means. Per series the picture is lopsided: G wins under a third of
+series under either score, its median difference from H is zero to four decimals, its
+fifth-percentile loss is under a thousandth of a nat, and its ninety-fifth-percentile
+gain is twenty times larger. Frequent negligible losses buy occasional real gains. Under
+the log score this shape is not luck, and a theorem sits nearby.
+
+\begin{proposition}[Nesting is cheap under the log score]\label{prop:nesting}
+Let the pool predictive be the Bayes mixture over chains with prior $\pi$, and let
+$q_t$ be the predictive of the renormalized sub-mixture over any subset $Q$ of chains,
+with prior mass $\pi_Q$. Then for every realization $y_1, \dots, y_T$,
+\[
+  -\sum_{t=1}^T \log p_t(y_t) \;\le\; -\sum_{t=1}^T \log q_t(y_t)
+  \;+\; \log\frac{1}{\pi_Q}.
+\]
+\end{proposition}
+
+\begin{proof}
+For a Bayes mixture the cumulative predictive likelihood telescopes to the prior-weighted
+sum of the chains' likelihoods,
+$\prod_t p_t(y_t) = \sum_c \pi_c \prod_t p_{t,c}(y_t)$. Dropping the chains outside $Q$
+and renormalizing,
+$\prod_t p_t(y_t) \ge \pi_Q \sum_{c \in Q} (\pi_c/\pi_Q) \prod_t p_{t,c}(y_t)
+= \pi_Q \prod_t q_t(y_t)$. Take logarithms.
+\end{proof}
+
+The total price of admitting the gaussianize chains is at most $\log(1/\pi_Q)$ nats,
+however the data falls, and the per-observation price vanishes. The proposition applies
+to the untempered Bayes pool with the depth prior applied once. The implemented pool
+tempers the likelihood update at rate $0.8$ and applies its depth penalty per step, for
+adaptivity under regime change, so the measured G-versus-H comparison is empirical and
+does not inherit the exact bound. A runner for the untempered pool ships alongside the
+benchmark. The measured $0.012$
+nats in G's favor says this corpus more than repays the admission. No such bound is available to us
+under CRPS, and there the claim stays empirical. The
+weights update by likelihood, so the log score does the choosing and CRPS only evaluates
+the chosen blend. A CRPS-updated pool is the matching experiment, and we leave it open.
+
+This is the practical content of the grammar view. A fixed conformal method is
 a commitment, and the companion paper prices what the commitment can cost. A grammar that
 contains the method as one rule converts the commitment into a weighted vote, and the vote
 is revised online by the scoring rule. Nesting does not avert disasters on this corpus,
-because the guarded operator does not produce disasters. It trims the bad tail, for free.
+because the guarded operator does not produce disasters. An exact Bayes pool trims the bad tail at a bounded cumulative price, vanishing per
+observation. The tempered pool used here exhibits the same behavior empirically.
 
 \subsection{Smoothness is not the tax}\label{sec:smooth}
 
@@ -302,12 +638,31 @@ The grammar view collapses a scattered vocabulary. Platt scaling
 \citep{platt1999probabilistic}, isotonic calibration \citep{zadrozny2002transforming},
 temperature scaling \citep{guo2017calibration}, quantile recalibration
 \citep{kuleshov2018accurate}, conformal predictive systems \citep{vovk2019nonparametric},
-and distributional conformal prediction \citep{chernozhukov2021distributional} are all
-monotone maps applied to a model's output coordinate, differing in what they fit, what they
-guarantee, and where in the chain they sit. The forecasting literature's
+and distributional conformal prediction \citep{chernozhukov2021distributional} can all,
+in univariate probabilistic forecasting, be represented as monotone recalibration
+operators on a scalar predictive, score, or probability coordinate, differing in what
+they fit, what they guarantee, and where in the chain they sit. The forecasting literature's
 calibration-sharpness tradition \citep{gneiting2007probabilistic,gneiting2007strictly}
 supplies the objective that orders them. In the grammar they are not competing philosophies.
 They are operators with types, and a pool over chains can hold several at once.
+
+A probabilistic lifting of the same geometry appears in
+\citet{snell2025quadrature}. If $T_{(i)} = F(Y_{(i)})$ are the latent probability
+levels of the ordered observations, the spacings of the $T_{(i)}$ are
+Dirichlet$(1, \dots, 1)$, and the plotting positions $i/(n+1)$ used here are their
+means. The present operator fixes the mean positions and obtains a deterministic
+coordinate transform. Snell and Griffiths retain the full spacing distribution and push
+a loss integral through it, and standard conformal risk control is recovered by
+replacing the random spacings with their expectations. In grammar terms theirs is a
+measure-valued operator on the loss coordinate, emitting a distribution over risk
+bounds rather than a transformed observation, and it is complementary to the
+observation-coordinate transforms studied here. The two demotions agree: conformal
+prediction is what remains of an empirical rank geometry after one functional of it is
+retained and the rest discarded.\footnote{One typing caution. The Dirichlet law is a
+sampling statement about the latent spacings, and reading it as a data-conditional
+posterior requires an argument about the prior over $F$ that the sampling statement
+does not supply. Sampling-law, posterior-law, and prequential certificates are
+different types, and the table should keep them apart.}
 
 Conformal prediction keeps a distinguished place in this family. The fence-post operator is the member whose output carries a
 finite-sample, distribution-free guarantee at its position in the chain
@@ -318,17 +673,49 @@ forecaster to keep transforming afterward.
 \section{Conclusion}\label{sec:conclusion}
 
 Conformal prediction is one production rule in a grammar of composable transforms: model,
-residual, fence-post empirical map, inverse. Smoothed, the fence-post map is an ordinary
+residual, fence-post empirical map, inverse. Interpolated, the fence-post map is an ordinary
 invertible online transform, and the rule's distinguishing stop, quoting the empirical law
 where it stands, becomes a choice the scoring rule can overrule. On 701 economic series,
 continuing through the operator beats stopping at it on three quarters of the series, a
-pool that admits the pattern pays nothing and trims its worst cases, and the operator's
+pool that admits the pattern trims its worst cases, at a price bounded for the exact
+Bayes pool and negligible empirically for the tempered one, and the operator's
 remaining cost under the log score is structural, the resolution and tail price of any
 empirical map, not a smoothness artifact.
 
-The typing question is the theory this view opens. An operator's guarantee attaches to a position in a chain. Which properties survive
-composition is a discipline we have only begun here, with one operator and three facts,
-and the rest of the table is open.
+The operator is exceptional as a certificate and ordinary as an architecture. The
+typing question is the theory this view opens. An operator's guarantee attaches to a position in a chain. Which properties survive
+composition is a discipline we have only begun here, with one operator, a few
+propositions, and the first rows of a table, and the rest of the table is open.
+
+\appendix
+\section{Reproducibility}\label{app:repro}
+
+Every number in Section~\ref{sec:experiments} is produced by
+\texttt{benchmarks/gaussianize\_chain.py} in the \texttt{skaters} repository, and the
+per-series results are frozen in \texttt{benchmarks/gaussianize\_chain.csv}. The
+configuration is as follows. The location operator is an EMA transform with rate $0.1$.
+The scale operator is an EWMA standardization with rate $0.05$. The AR(1) operator
+estimates its coefficient by recursive least squares with forgetting factor $0.99$ and
+ridge $1.0$. The gaussianize operator uses at most $39$ knots from a bounded quantile
+sketch, a warmup of $30$ observations with expanding-moment standardization before it,
+and a $9$-particle equal-probability approximation for the inverse. The kernel-smoothed
+variant uses a Gaussian-kernel distribution function at Silverman bandwidth,
+represented by a monotone $C^1$ cubic with Fritsch--Butland tangents and inverted by
+Newton's method. The guards are the inverse-slope cap at twenty times the interquartile
+inverse slope and the downstream-update clamp $|z| \le 8$.
+
+The pools are tempered likelihood mixtures over the candidate chains of the design
+table, with tempering rate $0.8$, a complexity penalty of $0.005$ per unit of chain
+depth applied to the online weights, and at most $20$ mixture components. Scoring
+starts after a burn-in of $300$ observations. The log score mixes each predictive with
+weight $0.01$ toward an expanding-window Gaussian reference and is otherwise exact.
+CRPS is computed in closed form from the Gaussian-mixture predictive and normalized per
+series by config A. The corpus is $701$ FRED change series with at least $600$
+observations and repeat fraction below five percent, listed in the frozen results file.
+The runner does not log guard activations separately. The one recorded activation
+episode is the warmup event described in Section~\ref{sec:operator}. Sensitivity of the
+corpus results to the two guard constants has not been measured systematically. The
+certified propositions do not depend on them, and a sensitivity sweep is future work.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
