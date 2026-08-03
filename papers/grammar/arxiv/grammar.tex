@@ -661,8 +661,11 @@ however the data falls, and the per-observation price vanishes. The proposition 
 to the untempered Bayes pool with the depth prior applied once. The implemented pool
 tempers the likelihood update at rate $0.8$ and applies its depth penalty per step, for
 adaptivity under regime change, so the measured G-versus-H comparison is empirical and
-does not inherit the exact bound. A runner for the untempered pool ships alongside the
-benchmark. The measured $0.012$
+does not inherit the exact bound. Rerunning both pools as exact Bayes mixtures, with the
+runner that ships alongside the benchmark, reproduces the comparison on a fresh data
+vintage: G ahead of H by $0.011$ nats on average over $572$ qualifying series, the same
+lopsided shape, win rate under a third, median difference zero. Nothing in the reported
+comparison hinges on the tempering. The measured $0.012$
 nats in G's favor says this corpus more than repays the admission. No such bound is available to us
 under CRPS, and there the claim stays empirical. The
 weights update by likelihood, so the log score does the choosing and CRPS only evaluates
