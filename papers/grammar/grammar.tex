@@ -26,12 +26,13 @@
 
 \begin{abstract}
 The conformal literature treats rank recalibration as a distinct predictive methodology.
-We treat it as a univariate transform. Interpolated, the fence-post rank map becomes an
-invertible operator, exact at its retained levels, within one knot cell everywhere. In a
+We treat it as a univariate transform. Interpolated, the fence-post rank map becomes
+an invertible operator, exact at its retained levels for distinct exchangeable input
+and within one knot cell everywhere. In a
 grammar of composable transforms its special status becomes local: it can be used
 internally, followed by further modeling, pooled, or overruled by the scoring rule. On
-economic series, refitting through the operator beats stopping at it on three quarters
-of the series. An exact Bayes pool admits it at bounded cumulative log-loss cost, and
+economic series, adding a serial model after the operator beats an unconditional
+terminal model on three quarters of the series. An exact Bayes pool admits it at bounded cumulative log-loss cost, and
 a tempered pool at negligible empirical cost.
 \end{abstract}
 
@@ -309,7 +310,9 @@ satisfies
   \Delta_n := \max_{0 \le j \le K} \frac{r_{j+1} - r_j}{n+1}.
 \]
 If each retained knot's value sits within $e$ stream ranks of its nominal rank, the
-bound degrades to $\Delta_n + e/(n+1)$.
+bound degrades to $\Delta_n + e/(n+1)$. The hypothesis of
+Proposition~\ref{prop:grid}, exchangeable and almost surely distinct input, is in
+force.
 \end{proposition}
 
 \begin{proof}
@@ -323,26 +326,47 @@ cell width.
 The full map is the case $\Delta_n = 1/(n+1)$. The implemented operator retains at
 most $39$ knots at exact order statistics, so $e = 0$ and after warmup its certificate
 is roughly one part in forty everywhere, exact at the retained levels. The $e$ term is
-the price a future bounded-memory compaction would pay. A dropped tie widens the retained
-cell that absorbs it, so tie mass enters through $\Delta_n$, and randomizing within tie
-blocks would restore exactness at the price of determinism. The corpus of
-Section~\ref{sec:experiments} filters to repeat fraction below five percent rather than
-zero, so the tie term is small and not vanishing. The statement worth keeping is that
-the certificate is a function of knot resolution, sketch error, and tie mass: the
-guarantee is priced in the operator's computational budget.
+the price a future bounded-memory compaction would pay. Ties need their own statement.
 
-The discrete map earns the same $\delta$: its output is supported on the grid, so as a
-distribution on $[0,1]$ it too sits within Kolmogorov distance $1/(n+1)$ of uniform. At
-the resolution the sample can support, the two operators are equally conformal, and the
-interpolated one is invertible.
+\begin{corollary}[Tie handling]\label{cor:ties}
+Drop the distinctness assumption. With randomized tie-breaking, ordering tied
+observations uniformly at random, the conclusions of
+Proposition~\ref{prop:sparse} hold unchanged for the randomized ranks. With the
+deterministic convention of the implementation, which keeps one knot per distinct
+retained value, the global bound becomes $\Delta_n + \beta_n$, where $\beta_n$ is
+the largest probability mass of a tie block among the $n+1$ values, and exactness at
+retained levels is lost.
+\end{corollary}
+
+\begin{proof}
+Randomized ranks of exchangeable observations are uniform whatever the tie structure,
+which is the only property the proposition's proof uses. For the deterministic
+convention, condition on the multiset of the $n+1$ values. Given the multiset, the
+position of $Y_{n+1}$ is uniform over the $n+1$ slots, and
+$\Pr\{Y_{n+1} \le y_{(r_j)}\}$ differs from $r_j/(n+1)$ by at most the number of
+pooled values tied with $y_{(r_j)}$, less one, over $n+1$, which is at most
+$\beta_n$. The sandwich argument then traps every level within a cell widened by
+$\beta_n$.
+\end{proof}
+
+The corpus of Section~\ref{sec:experiments} filters to repeat fraction below five
+percent rather than zero, so $\beta_n$ is small and not vanishing there. The statement
+worth keeping is that the certificate is a function of knot resolution, sketch error,
+and tie mass: the guarantee is priced in the operator's computational budget.
+
+The discrete fence-post map and gaussianize-full both have global error at most
+$1/(n+1)$: the discrete map's output is supported on the grid, so as a distribution on
+$[0,1]$ it too sits within Kolmogorov distance $1/(n+1)$ of uniform, and only the full
+map is invertible. The implemented retained-knot map has global error at most
+$\Delta_n$, exact at retained levels under distinctness.
 
 What separates them is the exact statement. The discrete map is deterministic,
 exactly calibrated at every grid level, noninvertible, and $1/(n+1)$-calibrated between
 grid levels. Randomized smoothing, which spreads each output uniformly over its rank
 cell, is exactly calibrated at every level and is a stochastic kernel rather than a
 deterministic transform \citep{vovk2005algorithmic}. The interpolated map is
-deterministic and invertible, stays exact on the grid, and incurs at most one cell of
-calibration error elsewhere. The grammar uses the deterministic, invertible version and quantifies its one-cell calibration relaxation.
+deterministic and invertible, stays exact on the grid, and incurs at most one full-grid
+cell of calibration error elsewhere. The grammar uses the deterministic, invertible version and quantifies its one-cell calibration relaxation.
 
 The exact conformal object is a rank certificate, and a rank certificate is not a
 predictive density. Turning it into one requires interpolation, smoothing, tail
@@ -436,9 +460,9 @@ operator & previsible & exch.-preserving & invertible & certificate \\
 fence-post, discrete & yes & independent sequential ranks & no &
   exact at grid levels \\
 gaussianize, full grid & yes & not claimed & yes &
-  exact at every level, $1/(n{+}1)$ off \\
+  exact on all $n$ rank levels; $1/(n{+}1)$ globally \\
 gaussianize, implemented & yes & not claimed & yes &
-  exact at $39$ retained levels, $\Delta_n$ off \\
+  exact on retained levels (distinct input); $\Delta_n$ globally \\
 fixed monotone link & yes & yes & yes & transparent \\
 EMA location, EWMA scale & yes & no & given state & none \\
 frozen split-fitted model & yes, coarse clock & cal/test pairs & varies & none \\
