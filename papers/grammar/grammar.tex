@@ -244,9 +244,10 @@ universal constant. Within that reading, no realization amplifies a quoted quant
 past its budget. The global $L$ is also purchased with the knot displacement of
 Remark~\ref{rem:guard}: the Lipschitz budget and retained-level exactness are
 competing constraints, and no operator holds both exactly on arbitrary data. The naive empirical map declares $L = \infty$ and buys nothing. The clamp is
-the same discipline in the forward direction: the codomain bound $|z| \le 8$ is
-intrinsic to the fence-post ranks, and a downstream learner with expanding memory is
-safe against exactly the emissions the bound excludes. Any finite multiplier yields the
+the same discipline in the forward direction. The retained knot coordinates lie
+within $(-8, 8)$ for every practical history length, so the clamp controls only
+extrapolated and warmup emissions, and a downstream learner with expanding memory is
+safe against exactly the emissions it excludes. Any finite multiplier yields the
 lemma, so the value twenty is the one remaining choice of taste, a tail-conservatism
 dial. Fitting the tail where the sample reaches, generalized-Pareto by censored maximum
 likelihood as the leaf already does, with the budget kept as a prior bound, is the
@@ -297,8 +298,8 @@ transform is a tuple: a forward emission, an inverse pullback, a state update, a
 input and output types, and declared properties. The forward map consumes an
 observation and the operator's state and emits a coordinate. The pullback carries
 predictive laws backward. The clock says when the state may absorb data. The properties
-are judgments, monotone, invertible, density-carrying, bi-Lipschitz with a declared
-budget, exchangeability-preserving, previsible, or $\delta$-calibrated at a position.
+are judgments, monotone, invertible, density-carrying, inverse-Lipschitz with a
+declared budget, exchangeability-preserving, previsible, or $\delta$-calibrated at a position.
 
 Composition obeys checkable rules. Invertible composed with invertible is invertible,
 and Lipschitz budgets multiply (Lemma~\ref{lem:budget}). A fixed strictly increasing link
@@ -408,9 +409,48 @@ exact order statistics, $e = 0$, and after warmup the certificate is roughly one
 in forty everywhere, exact at the retained levels. When the guard binds it lowers the
 offending knots, the map no longer passes through the displaced order statistics, and
 the displacement enters $e$ through the bracketing contract. The displacement need
-not be small, as the next remark shows, so the guarded operator is not
+not be small, as Remark~\ref{rem:guard} shows, so the guarded operator is not
 $\Delta_n$-conformal unconditionally. The $e$ term is also the price a future
-bounded-memory compaction would pay. Ties need their own statement.
+bounded-memory compaction would pay.
+
+There is a subtlety the guards force into the open.
+Proposition~\ref{prop:sparse} needs a budget $e$ declared for every possible sample.
+A guard that inspects the realized sample and reports the smallest feasible
+displacement has produced a data-dependent quantity, selected by the same data that
+built the map, and it cannot be substituted into the unconditional bound. Two repairs
+work. Declare fixed budgets $e_0$ and $\Delta_0$ in advance, with a declared
+fallback when the slope budget is not achievable within them, and the deterministic
+certificate $\Delta_0 + e_0/(n+1)$ stands. Or condition on the multiset and take
+worst cases over the held-out slot. The second repair is the next statement, and it
+covers ties as well.
+
+\begin{proposition}[Leave-one-out certificate]\label{prop:loo}
+Let $Y_1, \dots, Y_N$ be exchangeable, $N = n + 1$, and condition on the multiset
+$M$ of their values. For each slot $s$, build the operator from the other $n$ values,
+and suppose its retained knots satisfy the bracketing contract with rank displacement
+at most $e_s$ and retained-cell width at most $\Delta_s$. Let $\Delta^*$ and $e^*$
+be the maxima over slots, and let $\beta^* = (b^* - 1)/N$, where $b^*$ is the
+largest tie-block size of $M$. Then, conditionally on $M$ and hence unconditionally,
+\[
+  \sup_u \big| \Pr\{U \le u\} - u \big| \;\le\;
+  \Delta^* + \frac{e^* + 1}{N} + \beta^*.
+\]
+\end{proposition}
+
+\begin{proof}
+Conditionally on $M$ the slot of the held-out value is uniform, by exchangeability.
+Fix a retained nominal rank $r$ and a slot $s$, and write $\bar y^{(s)}$ for the
+corresponding knot. Removing one value moves order statistics by at most one
+position, $Y_{(k)} \le y^{(s)}_{(k)} \le Y_{(k+1)}$, so the contract traps
+$\bar y^{(s)}$ between $Y_{(r - e^*)}$ and $Y_{(r + e^* + 1)}$. At least $r - e^*$
+of the $N$ values are at most $Y_{(r - e^*)}$, and at most $r + e^* + 1 + (b^* - 1)$
+are at most $Y_{(r + e^* + 1)}$. The count of slots whose held-out value falls at or
+below that slot's own knot therefore differs from $r$ by at most
+$e^* + 1 + (b^* - 1)$, which bounds the knot-level error by
+$(e^* + 1)/N + \beta^*$. Between retained levels the sandwich of
+Proposition~\ref{prop:sparse} runs with cell width at most $\Delta^*$. Averaging
+over $M$ gives the unconditional bound.
+\end{proof}
 
 \begin{corollary}[Tie handling]\label{cor:ties}
 Drop the distinctness assumption. For the discrete rank, randomization restores
@@ -418,56 +458,54 @@ exactness: ordering tied observations uniformly at random makes the rank of $Y_{
 uniform on $\{1, \dots, n+1\}$ whatever the tie structure, so
 Proposition~\ref{prop:uniform} survives ties unchanged. Interpolation admits no such
 fix, because tied values are numerically equal and reordering them does not change the
-map. For the interpolated operator with one knot per distinct retained value, let
-$\beta_n$ be the largest tie-block mass and let $\Delta_n$ be the largest
-retained-cell width, maximized over which slot of the multiset the new observation
-occupies. Then $\sup_u |\Pr\{U \le u\} - u| \le \Delta_n + \beta_n$,
-conditionally on the multiset of the $n+1$ values and hence unconditionally, and
-exactness at retained levels is lost.
+map. For the interpolated operator with one knot per distinct retained value,
+Proposition~\ref{prop:loo} applies as stated: its tie term $\beta^*$ is the price,
+and exactness at retained levels is lost. The corollary is the tied case of the
+proposition, and needs no separate proof.
 \end{corollary}
 
-\begin{proof}
-Given the multiset, the slot of $Y_{n+1}$ among the $n+1$ values is uniform, by
-exchangeability. The knots are built from the remaining $n$ values, so they vary with
-the slot, which is why $\Delta_n$ is maximized over slots: so defined it is a function
-of the multiset alone. For a retained knot at the value $y$ with level $\ell$,
-$\Pr\{Y_{n+1} \le y \mid \text{multiset}\}$ is the mass of tie blocks starting at
-or below $y$, and it differs from $\ell$ by at most the mass of the block at $y$
-together with the one-slot shift of the level itself, in total at most $\beta_n$. The
-sandwich argument of Proposition~\ref{prop:sparse} then runs conditionally with every
-cell widened by $\beta_n$, and averaging over the multiset gives the unconditional
-bound.
-\end{proof}
-
 \begin{remark}[The guard is a third price]\label{rem:guard}
-Take $n = 78$ calibration values, seventy-one at $0, 1, \dots, 70$ and eight near
-$10^9$, all distinct, in exchangeable order. With $39$ retained knots the top knot is
-the seventy-eighth order statistic and $\Delta_n = 2/79$. The slope cap, at twenty
-times the central inverse slope, drags that knot from the high cluster down to roughly
-$671$, between the clusters. At the retained level $78/79$ the probability that a new
-exchangeable draw falls below the displaced knot is $71/79$, an error of $7/79$,
-exceeding $\Delta_n$. Retained resolution and tie mass are therefore not the whole
-price of the certificate. Guard displacement is a third term, zero exactly while the
-guard sleeps. Two honest guards are implemented as options. Deleting offending knots restores
-exact order statistics at an enlarged $\Delta_n$. Searching for the smallest rank
-displacement the budget admits, and projecting the knots into that corridor, pays
-exactly $\Delta_n + e/(n+1)$, the least possible. On this counterexample $e = 6$,
-thirty-five of the thirty-nine knots are untouched, and the worst segment sits
-exactly at the cap. On the campaign corpus both are indistinguishable from the moving cap,
-identical on ninety-seven percent of series with mean differences under $0.0003$
-nats, so the unconditional certificate costs nothing measurable.
+Take an exchangeable vector of $N = 79$ distinct values, seventy-one at
+$0, 1, \dots, 70$ and eight near $10^9$, and hold one out. With $39$ retained knots
+the top knot of the calibration map sits at the seventy-eighth calibration order
+statistic and $\Delta_n = 2/79$. The moving cap, at twenty times the central inverse
+slope, drags that knot from the high cluster down to roughly $671$, between the
+clusters. At the retained level $78/79$ the probability that the held-out value falls
+below the displaced knot is $71/79$, an error of $7/79$, exceeding $\Delta_n$.
+Retained resolution and tie mass are therefore not the whole price of the
+certificate. Guard displacement is a third term, zero exactly while the guard sleeps.
+
+Two guards compatible with the certificate are implemented as options. Deleting
+offending knots keeps the survivors at exact order statistics and enlarges the
+realized cell width. The smallest-displacement guard solves, for fixed $e$, the
+feasibility system
+\[
+  y_{(r_j - e)} \le \bar w_j \le y_{(r_j + e)}, \qquad
+  0 \le \bar w_{j+1} - \bar w_j \le L\,(x_{j+1} - x_j),
+\]
+with flat knots dropped for invertibility, and obtains the certified upper bound
+$\Delta_n + e/(n+1)$ with the smallest $e$ feasible for the fixed retained grid. On
+this example the per-slot smallest displacement is $e = 7$ and the leave-one-out
+maximum of Proposition~\ref{prop:loo} is $e^* = 8$. Both guards report realized,
+data-dependent quantities, so their certificates are the conditional ones of
+Proposition~\ref{prop:loo}, or deterministic ones under budgets declared in advance.
+On the campaign corpus, replacing the moving cap by either guard moves mean log score
+by less than $0.0003$ nats, with identical output on ninety-seven percent of series.
 \end{remark}
 
 The corpus of Section~\ref{sec:experiments} filters to repeat fraction below five
 percent rather than zero, so $\beta_n$ is small and not vanishing there. The statement
 worth keeping is that the certificate is a function of knot resolution, sketch error,
-and tie mass: the guarantee is priced in the operator's computational budget.
+tie mass, and guard displacement: the guarantee is priced in the operator's
+computational budget.
 
 The discrete fence-post map and gaussianize-full both have global error at most
 $1/(n+1)$: the discrete map's output is supported on the grid, so as a distribution on
 $[0,1]$ it too sits within Kolmogorov distance $1/(n+1)$ of uniform, and only the full
-map is invertible. The implemented retained-knot map has global error at most
-$\Delta_n$, exact at retained levels under distinctness.
+map is invertible. With distinct input and the guard inactive, the implemented retained-knot map is
+exact at retained levels with global error at most $\Delta_n$. Under a guarded
+displacement with uniform budget $e$ the bound is $\Delta_n + e/(n+1)$, and with
+data-dependent guards it is read through Proposition~\ref{prop:loo}.
 
 What separates them is the exact statement. The discrete map is deterministic,
 exactly calibrated at every grid level, noninvertible, and $1/(n+1)$-calibrated between
@@ -512,8 +550,10 @@ disjoint calibration block and freezes, and test points meet only frozen maps.
 The chains
 of this paper enforce the same rule with the finest clock. Every operator emits before it
 absorbs, so the map applied at time $t$ is built from $y_1, \dots, y_{t-1}$ alone, and
-the past is a calibration set that never contains the present. Batching is one scheduler
-for one rule, and updating after emission is another.
+the past is a calibration set that never contains the present. Emit-before-absorb
+enforces non-anticipation, and nothing else. It does not preserve calibration-test
+exchangeability under adaptive upstream transforms, and the narrowing after
+Proposition~\ref{prop:sequential} makes the difference from splitting precise.
 
 On the exchangeable hypothesis the fine clock matches the batch guarantee and adds
 independence across time.
@@ -621,7 +661,9 @@ work on the flat scale.
 
 The
 empirical distribution function is Galton's ogive \citep{galton1875}. Plotting positions
-place ordered observations at probabilities of the form $i/(n+1)$ \citep{hazen1914}, and
+place ordered observations at chosen probabilities, from Hazen's $(i - \tfrac12)/n$
+onward \citep{hazen1914}, with $i/(n+1)$ being Weibull's position
+\citep{weibull1939}, and
 the probability integral transformation received its name and first systematic treatment
 from \citet{pearson1938}. Normal scores, the replacement of ranks by standard-normal
 quantiles, are the gaussianize map's direct ancestor \citep{vanderwaerden1952}. That
@@ -639,6 +681,19 @@ mapping in the geosciences is the same move under another name
 \citet{diebold1998evaluating}. The prequential stance that all of this paper's
 scoring obeys is \citet{dawid1984present}.\footnote{A fuller annotated timeline is maintained at
 \url{https://skaters.microprediction.org/heritage.html}.}
+
+Modeling after marginal Gaussianization is classical outside conformal prediction
+too. \citet{chenfan2006} estimate an unknown time-series marginal by the rescaled
+empirical distribution with denominator $n + 1$, model temporal dependence with a
+parametric copula on the probability scale, and invert the fitted transition law for
+conditional forecasts. Meta-Gaussian hydrologic processors place the normal quantile
+transform inside a Gaussian predictive model and map back \citep{bogner2012normal}.
+Autoregressive transformation models write the conditional law as a monotone
+transformation of a fixed base distribution \citep{rugamer2023autoregressive}. The
+distinction here is not the transform, model, inverse architecture. It is the
+finite-sample grid certificate attached to the empirical operator, the regularity
+debit charged against it, the online clock and state semantics, and score-based
+pooling over composed chains.
 
 The transform also ran as a market before it ran here as an operator. The
 microprediction platform's z-streams solicited competitive real-time predictions of
@@ -830,9 +885,10 @@ adaptivity under regime change, so the measured G-versus-H comparison is empiric
 does not inherit the exact bound.
 
 Rerunning both pools as genuine Bayes mixtures reproduces the comparison on a fresh
-data vintage. Nothing is clamped or pruned, the reference blend sits inside the
-weight updates, and the depth prior is applied once, so the telescoping identity
-applies verbatim to these scores. G is ahead of H by $0.012$ nats on average over
+data vintage. There is no likelihood clipping and no cross-expert mixture pruning, the reference
+blend sits inside the weight updates, and the depth prior is applied once, so the
+telescoping identity applies verbatim to these scores. The operator's $|z| \le 8$
+learner-input channel stays active inside each expert, as everywhere in the paper. G is ahead of H by $0.012$ nats on average over
 $572$ series, with the same lopsided shape, wins on one series in ten, and median
 difference zero. The sub-pool prior mass is $\pi_Q = 0.573$, so the proposition's
 worst case is $0.56$ nats in total however long the series run. The realized
@@ -966,9 +1022,10 @@ transform.
 Writing them this way shows what the grammar adds. Each system holds the rank map at a
 fixed position and reads out a set, an interval, or a distribution it then quotes. The
 one operator that literature composes after the map is a controller on the quoted
-level, driven by coverage. None fits a model on the map's output, none carries
-predictive densities back through its inverse, and none scores the map as one operator
-among peers under a proper scoring rule. Those are the moves this paper adds, and the
+level, driven by coverage. Among the conformal systems above, we have not found one
+that fits a predictive-density model on the rank map's observation-coordinate output,
+carries predictive densities back through its inverse, or scores the map as one
+operator among peers under a proper scoring rule. Those are the moves this paper adds, and the
 nesting is the point: every system above is a chain the pools of
 Section~\ref{sec:experiments} could hold.
 
