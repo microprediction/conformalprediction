@@ -207,15 +207,10 @@ inherits the steepness of the inverse map $m^{-1}$, and beyond the edge knots th
 is an assumption rather than an estimate, because tail mass is unobservable at any $n$.
 The slope cap makes the assumption finite. It declares that $m^{-1}$ is Lipschitz, with
 constant $L$ equal to twenty times the central inverse slope, and the declaration buys a
-guarantee.
-
-The declaration also has a price, and three objects need separating. The exact-knot
-interpolant is what the propositions of Section~\ref{sec:typing} certify. The
-slope-guarded map is what the experiments run. Its cap is enforced by lowering any
-knot whose segment is too steep. When it binds, the map no longer passes through the
-displaced order statistics, and retained-level exactness is suspended there. The
-clamped emission is a third object, a winsorized channel to downstream state and not
-part of the invertible map. Remark~\ref{rem:guard} prices the middle one.
+guarantee. The declaration also has a price: a binding cap moves knots off their
+order statistics. Appendix~\ref{app:certificate} separates the objects involved,
+prices the displacement, and traces the guard's ancestry in Lipschitz isotonic
+regression and regularized empirical transport.
 
 \begin{lemma}[Pullback quantiles are budgeted]\label{lem:budget}
 Let $m$ be a strictly increasing forward map whose inverse is $L$-Lipschitz on all of $\mathbb{R}$,
@@ -253,34 +248,6 @@ dial. Fitting the tail where the sample reaches, generalized-Pareto by censored 
 likelihood as the leaf already does, with the budget kept as a prior bound, is the
 refinement we leave open \citep[the tail instability of the normal quantile
 transform is documented by][]{bogner2012normal}.
-
-Regularity of empirical transforms has a separate lineage, and the guard is not new
-as an optimization. Write $x_j = \Phi^{-1}(r_j/(n+1))$ and $w_j = y_{(r_j)}$, so
-that the inverse empirical Gaussianizer is the monotone quantile transport
-$x_j \mapsto w_j$. Replacing $w_j$ by nearby values $\bar w_j$ satisfying
-$0 \le \bar w_{j+1} - \bar w_j \le L\,(x_{j+1} - x_j)$ is Lipschitz isotonic
-regression, studied by \citet{yeganova2009isotonic}, \citet{agarwal2010lipschitz},
-and \citet{kakade2011efficient}, with the bounded-increment ancestry running back to
-isotonic optimization \citep{jewell1975isotonic}. \citet{paty2020regularity}
-identify the two-sided version, lower and upper slope bounds together, as the
-one-dimensional case of regularized empirical optimal transport, recovered by
-piecewise-affine interpolation. The unguarded operator has close kin as well: the
-continuous invertible empirical distribution transform of
-\citet{harar2022redistributor} is essentially the full-grid map without the
-conformal reading, and truncated normal scores go back to the nonparanormal
-\citep{liu2009nonparanormal}.
-
-So the guard is not offered as a new slope-constrained regression method, and the
-operator is not offered as a new transform. In transport language the inverse
-Gaussianizer is a one-dimensional empirical transport map and the guard is Lipschitz
-isotonic regularization of it. The role of the guard here is to declare an inverse
-sensitivity budget and to expose the finite-sample calibration price of enforcing it,
-through the rank-displacement term of Proposition~\ref{prop:sparse}. The canonical guard would be the least-squares projection onto
-the slope-constrained set, the regularized transport of \citet{paty2020regularity}.
-A guard fitted to this paper instead minimizes the rank displacement $e$ subject to
-the budget, solving exactly the optimization the proposition prices. The operator
-implements both this and the deletion guard as options, and
-Remark~\ref{rem:guard} measures them.
 
 Before enough observations accumulate, the operator standardizes by expanding moments,
 which is the $n \to 0$ limit of the empirical map. After the warmup the knots are rebuilt each step, at most
@@ -332,180 +299,19 @@ This is the standard conformal fact \citep{vovk2005algorithmic} stated as a prop
 operator's output. It certifies the discrete map \eqref{eq:fencepost}, and the discrete
 map is what the experiments do not run. The interpolated operator of
 Section~\ref{sec:operator} uses spacings as well as ranks, and its output between knots
-is not distribution-free. What survives interpolation is the grid.
-
-\begin{proposition}[Grid calibration survives interpolation]\label{prop:grid}
-Let $Y_1, \dots, Y_{n+1}$ be exchangeable and almost surely distinct. Let $m$ be any
-strictly increasing map, interpolation and tails arbitrary, that passes through the
-knots: $m(y_{(i)}) = z_{(i)}$ at the order statistics
-$y_{(1)} < \dots < y_{(n)}$ of $Y_1, \dots, Y_n$. Then
-\[
-  \Pr\{\, m(Y_{n+1}) \le z_{(i)} \,\} \;=\; \frac{i}{n+1},
-  \qquad i = 1, \dots, n.
-\]
-\end{proposition}
-
-\begin{proof}
-Monotonicity gives $\{m(Y_{n+1}) \le z_{(i)}\} = \{Y_{n+1} \le y_{(i)}\}$. By
-exchangeability and distinctness the rank of $Y_{n+1}$ among all $n+1$ values is uniform
-on $\{1, \dots, n+1\}$, and $Y_{n+1} \le y_{(i)}$ holds for exactly the $i$ lowest
-ranks.
-\end{proof}
-
-There is no need to insist on exactness off the grid, because the relaxation is
-uniformly small and assumption-free. Call an operator \emph{$\delta$-conformal} if,
-on exchangeable almost surely distinct input, its output $U$ satisfies
-$\sup_{u} |\Pr\{U \le u\} - u| \le \delta$.
-
-\begin{proposition}[Interpolation is $1/(n+1)$-conformal]\label{prop:delta}
-In the setting of Proposition~\ref{prop:grid}, write $U = \Phi(m(Y_{n+1}))$ for the
-probability-scale output of any interpolated map through the knots. Then
-\[
-  \sup_{u \in (0,1)} \big|\Pr\{U \le u\} - u\big| \;\le\; \frac{1}{n+1},
-\]
-whatever the interpolation, the tails, and the continuous input law. Equivalently,
-$m(Y_{n+1})$ is within Kolmogorov distance $1/(n+1)$ of standard Gaussian.
-\end{proposition}
-
-\begin{proof}
-For $u$ between consecutive grid levels $i/(n+1)$ and $(i+1)/(n+1)$, monotonicity of the
-distribution function and Proposition~\ref{prop:grid} trap $\Pr\{U \le u\}$ in
-$[\,i/(n+1),\, (i+1)/(n+1)\,]$, the same cell that contains $u$. Two points of one cell
-differ by at most $1/(n+1)$. The edge cells are the same argument with endpoints $0$
-and $1$.
-\end{proof}
-
-The bound generalizes to the implemented operator, which does not keep every knot.
-
-\begin{proposition}[The certificate scales with the retained resolution]\label{prop:sparse}
-Let $0 = r_0 < r_1 < \dots < r_K < r_{K+1} = n+1$, and let $m$ be any strictly
-increasing map with $m(y_{(r_j)}) = \Phi^{-1}\big(r_j/(n+1)\big)$ at the retained
-order statistics, interpolation and tails arbitrary. Then $U = \Phi(m(Y_{n+1}))$
-satisfies
-\[
-  \sup_{u \in (0,1)} \big|\Pr\{U \le u\} - u\big| \le
-  \Delta_n := \max_{0 \le j \le K} \frac{r_{j+1} - r_j}{n+1}.
-\]
-If each retained knot's value sits within $e$ stream ranks of its nominal rank, the
-bound degrades to $\Delta_n + e/(n+1)$. The hypothesis of
-Proposition~\ref{prop:grid}, exchangeable and almost surely distinct input, is in
-force.
-\end{proposition}
-
-\begin{proof}
-The argument of Proposition~\ref{prop:grid} gives exactness at each retained level
-$r_j/(n+1)$. Between consecutive retained levels, monotonicity traps
-$\Pr\{U \le u\}$ and $u$ in one retained cell, of width at most $\Delta_n$. For
-the rank-error term, the hypothesis is a bracketing contract: each interpolation knot
-$\bar y_j$ satisfies $y_{(r_j - e)} \le \bar y_j \le y_{(r_j + e)}$ almost surely.
-Event inclusion then traps $\Pr\{Y_{n+1} \le \bar y_j\}$ between
-$(r_j - e)/(n+1)$ and $(r_j + e)/(n+1)$, so the level error at a knot is at most
-$e/(n+1)$, which adds to the cell width.
-\end{proof}
-
-The full map is the case $\Delta_n = 1/(n+1)$. For the implemented operator the
-accounting has two regimes. While the slope guard is inactive the retained knots are
-exact order statistics, $e = 0$, and after warmup the certificate is roughly one part
-in forty everywhere, exact at the retained levels. When the guard binds it lowers the
-offending knots, the map no longer passes through the displaced order statistics, and
-the displacement enters $e$ through the bracketing contract. The displacement need
-not be small, as Remark~\ref{rem:guard} shows, so the guarded operator is not
-$\Delta_n$-conformal unconditionally. The $e$ term is also the price a future
-bounded-memory compaction would pay.
-
-There is a subtlety the guards force into the open.
-Proposition~\ref{prop:sparse} needs a budget $e$ declared for every possible sample.
-A guard that inspects the realized sample and reports the smallest feasible
-displacement has produced a data-dependent quantity, selected by the same data that
-built the map, and it cannot be substituted into the unconditional bound. Two repairs
-work. Declare fixed budgets $e_0$ and $\Delta_0$ in advance, with a declared
-fallback when the slope budget is not achievable within them, and the deterministic
-certificate $\Delta_0 + e_0/(n+1)$ stands. Or condition on the multiset and take
-worst cases over the held-out slot. The second repair is the next statement, and it
-covers ties as well.
-
-\begin{proposition}[Leave-one-out certificate]\label{prop:loo}
-Let $Y_1, \dots, Y_N$ be exchangeable, $N = n + 1$, and condition on the multiset
-$M$ of their values. For each slot $s$, build the operator from the other $n$ values,
-and suppose its retained knots satisfy the bracketing contract with rank displacement
-at most $e_s$ and retained-cell width at most $\Delta_s$. Let $\Delta^*$ and $e^*$
-be the maxima over slots, and let $\beta^* = (b^* - 1)/N$, where $b^*$ is the
-largest tie-block size of $M$. Then, conditionally on $M$ and hence unconditionally,
-\[
-  \sup_u \big| \Pr\{U \le u\} - u \big| \;\le\;
-  \Delta^* + \frac{e^* + 1}{N} + \beta^*.
-\]
-\end{proposition}
-
-\begin{proof}
-Conditionally on $M$ the slot of the held-out value is uniform, by exchangeability.
-Fix a retained nominal rank $r$ and a slot $s$, and write $\bar y^{(s)}$ for the
-corresponding knot. Removing one value moves order statistics by at most one
-position, $Y_{(k)} \le y^{(s)}_{(k)} \le Y_{(k+1)}$, so the contract traps
-$\bar y^{(s)}$ between $Y_{(r - e^*)}$ and $Y_{(r + e^* + 1)}$. At least $r - e^*$
-of the $N$ values are at most $Y_{(r - e^*)}$, and at most $r + e^* + 1 + (b^* - 1)$
-are at most $Y_{(r + e^* + 1)}$. The count of slots whose held-out value falls at or
-below that slot's own knot therefore differs from $r$ by at most
-$e^* + 1 + (b^* - 1)$, which bounds the knot-level error by
-$(e^* + 1)/N + \beta^*$. Between retained levels the sandwich of
-Proposition~\ref{prop:sparse} runs with cell width at most $\Delta^*$. Averaging
-over $M$ gives the unconditional bound.
-\end{proof}
-
-\begin{corollary}[Tie handling]\label{cor:ties}
-Drop the distinctness assumption. For the discrete rank, randomization restores
-exactness: ordering tied observations uniformly at random makes the rank of $Y_{n+1}$
-uniform on $\{1, \dots, n+1\}$ whatever the tie structure, so
-Proposition~\ref{prop:uniform} survives ties unchanged. Interpolation admits no such
-fix, because tied values are numerically equal and reordering them does not change the
-map. For the interpolated operator with one knot per distinct retained value,
-Proposition~\ref{prop:loo} applies as stated: its tie term $\beta^*$ is the price,
-and exactness at retained levels is lost. The corollary is the tied case of the
-proposition, and needs no separate proof.
-\end{corollary}
-
-\begin{remark}[The guard is a third price]\label{rem:guard}
-Take an exchangeable vector of $N = 79$ distinct values, seventy-one at
-$0, 1, \dots, 70$ and eight near $10^9$, and hold one out. With $39$ retained knots
-the top knot of the calibration map sits at the seventy-eighth calibration order
-statistic and $\Delta_n = 2/79$. The moving cap, at twenty times the central inverse
-slope, drags that knot from the high cluster down to roughly $671$, between the
-clusters. At the retained level $78/79$ the probability that the held-out value falls
-below the displaced knot is $71/79$, an error of $7/79$, exceeding $\Delta_n$.
-Retained resolution and tie mass are therefore not the whole price of the
-certificate. Guard displacement is a third term, zero exactly while the guard sleeps.
-
-Two guards compatible with the certificate are implemented as options. Deleting
-offending knots keeps the survivors at exact order statistics and enlarges the
-realized cell width. The smallest-displacement guard solves, for fixed $e$, the
-feasibility system
-\[
-  y_{(r_j - e)} \le \bar w_j \le y_{(r_j + e)}, \qquad
-  0 \le \bar w_{j+1} - \bar w_j \le L\,(x_{j+1} - x_j),
-\]
-with flat knots dropped for invertibility, and obtains the certified upper bound
-$\Delta_n + e/(n+1)$ with the smallest $e$ feasible for the fixed retained grid. On
-this example the per-slot smallest displacement is $e = 7$ and the leave-one-out
-maximum of Proposition~\ref{prop:loo} is $e^* = 8$. Both guards report realized,
-data-dependent quantities, so their certificates are the conditional ones of
-Proposition~\ref{prop:loo}, or deterministic ones under budgets declared in advance.
-On the campaign corpus, replacing the moving cap by either guard moves mean log score
-by less than $0.0003$ nats, with identical output on ninety-seven percent of series.
-\end{remark}
-
-The corpus of Section~\ref{sec:experiments} filters to repeat fraction below five
-percent rather than zero, so $\beta_n$ is small and not vanishing there. The statement
-worth keeping is that the certificate is a function of knot resolution, sketch error,
-tie mass, and guard displacement: the guarantee is priced in the operator's
-computational budget.
-
-The discrete fence-post map and gaussianize-full both have global error at most
-$1/(n+1)$: the discrete map's output is supported on the grid, so as a distribution on
-$[0,1]$ it too sits within Kolmogorov distance $1/(n+1)$ of uniform, and only the full
-map is invertible. With distinct input and the guard inactive, the implemented retained-knot map is
-exact at retained levels with global error at most $\Delta_n$. Under a guarded
-displacement with uniform budget $e$ the bound is $\Delta_n + e/(n+1)$, and with
-data-dependent guards it is read through Proposition~\ref{prop:loo}.
+is not distribution-free. What survives interpolation is the grid, and the
+accounting is mechanical. Call an operator $\delta$-conformal if, on exchangeable
+almost surely distinct input, its probability-scale output is within $\delta$ of
+calibrated at every level. Any interpolation through every knot is
+$1/(n+1)$-conformal, exact at the knots. The implemented $39$-knot map is conformal
+to roughly one part in forty, exact at its retained levels while its guard sleeps.
+Compression, a binding guard, and ties each pay a stated price, and a leave-one-out
+statement covers guards whose budgets are data-dependent.
+Appendix~\ref{app:certificate} states and proves the accounting, with a
+counterexample showing the moving cap can dominate the other prices. Nothing
+downstream depends on the details, only on the headline: the certificate is priced
+in the operator's computational budget, and none of the prices moved the campaign's
+scores.
 
 What separates them is the exact statement. The discrete map is deterministic,
 exactly calibrated at every grid level, noninvertible, and $1/(n+1)$-calibrated between
@@ -1074,6 +880,220 @@ composition is a discipline we have only begun here, with one operator, a few
 propositions, and the first rows of a table, and the rest of the table is open.
 
 \appendix
+\section{The certificate, priced}\label{app:certificate}
+
+This appendix carries the exact calibration accounting for readers who want
+coverage statements. The rest of the paper uses only its headline.
+
+The slope guard's declaration has a price, and three objects need separating. The exact-knot
+interpolant is what the propositions below certify. The
+slope-guarded map is what the experiments run. Its cap is enforced by lowering any
+knot whose segment is too steep. When it binds, the map no longer passes through the
+displaced order statistics, and retained-level exactness is suspended there. The
+clamped emission is a third object, a winsorized channel to downstream state and not
+part of the invertible map. Remark~\ref{rem:guard} prices the middle one.
+
+\begin{proposition}[Grid calibration survives interpolation]\label{prop:grid}
+Let $Y_1, \dots, Y_{n+1}$ be exchangeable and almost surely distinct. Let $m$ be any
+strictly increasing map, interpolation and tails arbitrary, that passes through the
+knots: $m(y_{(i)}) = z_{(i)}$ at the order statistics
+$y_{(1)} < \dots < y_{(n)}$ of $Y_1, \dots, Y_n$. Then
+\[
+  \Pr\{\, m(Y_{n+1}) \le z_{(i)} \,\} \;=\; \frac{i}{n+1},
+  \qquad i = 1, \dots, n.
+\]
+\end{proposition}
+
+\begin{proof}
+Monotonicity gives $\{m(Y_{n+1}) \le z_{(i)}\} = \{Y_{n+1} \le y_{(i)}\}$. By
+exchangeability and distinctness the rank of $Y_{n+1}$ among all $n+1$ values is uniform
+on $\{1, \dots, n+1\}$, and $Y_{n+1} \le y_{(i)}$ holds for exactly the $i$ lowest
+ranks.
+\end{proof}
+
+There is no need to insist on exactness off the grid, because the relaxation is
+uniformly small and assumption-free. Call an operator \emph{$\delta$-conformal} if,
+on exchangeable almost surely distinct input, its output $U$ satisfies
+$\sup_{u} |\Pr\{U \le u\} - u| \le \delta$.
+
+\begin{proposition}[Interpolation is $1/(n+1)$-conformal]\label{prop:delta}
+In the setting of Proposition~\ref{prop:grid}, write $U = \Phi(m(Y_{n+1}))$ for the
+probability-scale output of any interpolated map through the knots. Then
+\[
+  \sup_{u \in (0,1)} \big|\Pr\{U \le u\} - u\big| \;\le\; \frac{1}{n+1},
+\]
+whatever the interpolation, the tails, and the continuous input law. Equivalently,
+$m(Y_{n+1})$ is within Kolmogorov distance $1/(n+1)$ of standard Gaussian.
+\end{proposition}
+
+\begin{proof}
+For $u$ between consecutive grid levels $i/(n+1)$ and $(i+1)/(n+1)$, monotonicity of the
+distribution function and Proposition~\ref{prop:grid} trap $\Pr\{U \le u\}$ in
+$[\,i/(n+1),\, (i+1)/(n+1)\,]$, the same cell that contains $u$. Two points of one cell
+differ by at most $1/(n+1)$. The edge cells are the same argument with endpoints $0$
+and $1$.
+\end{proof}
+
+The bound generalizes to the implemented operator, which does not keep every knot.
+
+\begin{proposition}[The certificate scales with the retained resolution]\label{prop:sparse}
+Let $0 = r_0 < r_1 < \dots < r_K < r_{K+1} = n+1$, and let $m$ be any strictly
+increasing map with $m(y_{(r_j)}) = \Phi^{-1}\big(r_j/(n+1)\big)$ at the retained
+order statistics, interpolation and tails arbitrary. Then $U = \Phi(m(Y_{n+1}))$
+satisfies
+\[
+  \sup_{u \in (0,1)} \big|\Pr\{U \le u\} - u\big| \le
+  \Delta_n := \max_{0 \le j \le K} \frac{r_{j+1} - r_j}{n+1}.
+\]
+If each retained knot's value sits within $e$ stream ranks of its nominal rank, the
+bound degrades to $\Delta_n + e/(n+1)$. The hypothesis of
+Proposition~\ref{prop:grid}, exchangeable and almost surely distinct input, is in
+force.
+\end{proposition}
+
+\begin{proof}
+The argument of Proposition~\ref{prop:grid} gives exactness at each retained level
+$r_j/(n+1)$. Between consecutive retained levels, monotonicity traps
+$\Pr\{U \le u\}$ and $u$ in one retained cell, of width at most $\Delta_n$. For
+the rank-error term, the hypothesis is a bracketing contract: each interpolation knot
+$\bar y_j$ satisfies $y_{(r_j - e)} \le \bar y_j \le y_{(r_j + e)}$ almost surely.
+Event inclusion then traps $\Pr\{Y_{n+1} \le \bar y_j\}$ between
+$(r_j - e)/(n+1)$ and $(r_j + e)/(n+1)$, so the level error at a knot is at most
+$e/(n+1)$, which adds to the cell width.
+\end{proof}
+
+The full map is the case $\Delta_n = 1/(n+1)$. For the implemented operator the
+accounting has two regimes. While the slope guard is inactive the retained knots are
+exact order statistics, $e = 0$, and after warmup the certificate is roughly one part
+in forty everywhere, exact at the retained levels. When the guard binds it lowers the
+offending knots, the map no longer passes through the displaced order statistics, and
+the displacement enters $e$ through the bracketing contract. The displacement need
+not be small, as Remark~\ref{rem:guard} shows, so the guarded operator is not
+$\Delta_n$-conformal unconditionally. The $e$ term is also the price a future
+bounded-memory compaction would pay.
+
+There is a subtlety the guards force into the open.
+Proposition~\ref{prop:sparse} needs a budget $e$ declared for every possible sample.
+A guard that inspects the realized sample and reports the smallest feasible
+displacement has produced a data-dependent quantity, selected by the same data that
+built the map, and it cannot be substituted into the unconditional bound. Two repairs
+work. Declare fixed budgets $e_0$ and $\Delta_0$ in advance, with a declared
+fallback when the slope budget is not achievable within them, and the deterministic
+certificate $\Delta_0 + e_0/(n+1)$ stands. Or condition on the multiset and take
+worst cases over the held-out slot. The second repair is the next statement, and it
+covers ties as well.
+
+\begin{proposition}[Leave-one-out certificate]\label{prop:loo}
+Let $Y_1, \dots, Y_N$ be exchangeable, $N = n + 1$, and condition on the multiset
+$M$ of their values. For each slot $s$, build the operator from the other $n$ values,
+and suppose its retained knots satisfy the bracketing contract with rank displacement
+at most $e_s$ and retained-cell width at most $\Delta_s$. Let $\Delta^*$ and $e^*$
+be the maxima over slots, and let $\beta^* = (b^* - 1)/N$, where $b^*$ is the
+largest tie-block size of $M$. Then, conditionally on $M$ and hence unconditionally,
+\[
+  \sup_u \big| \Pr\{U \le u\} - u \big| \;\le\;
+  \Delta^* + \frac{e^* + 1}{N} + \beta^*.
+\]
+\end{proposition}
+
+\begin{proof}
+Conditionally on $M$ the slot of the held-out value is uniform, by exchangeability.
+Fix a retained nominal rank $r$ and a slot $s$, and write $\bar y^{(s)}$ for the
+corresponding knot. Removing one value moves order statistics by at most one
+position, $Y_{(k)} \le y^{(s)}_{(k)} \le Y_{(k+1)}$, so the contract traps
+$\bar y^{(s)}$ between $Y_{(r - e^*)}$ and $Y_{(r + e^* + 1)}$. At least $r - e^*$
+of the $N$ values are at most $Y_{(r - e^*)}$, and at most $r + e^* + 1 + (b^* - 1)$
+are at most $Y_{(r + e^* + 1)}$. The count of slots whose held-out value falls at or
+below that slot's own knot therefore differs from $r$ by at most
+$e^* + 1 + (b^* - 1)$, which bounds the knot-level error by
+$(e^* + 1)/N + \beta^*$. Between retained levels the sandwich of
+Proposition~\ref{prop:sparse} runs with cell width at most $\Delta^*$. Averaging
+over $M$ gives the unconditional bound.
+\end{proof}
+
+\begin{corollary}[Tie handling]\label{cor:ties}
+Drop the distinctness assumption. For the discrete rank, randomization restores
+exactness: ordering tied observations uniformly at random makes the rank of $Y_{n+1}$
+uniform on $\{1, \dots, n+1\}$ whatever the tie structure, so
+Proposition~\ref{prop:uniform} survives ties unchanged. Interpolation admits no such
+fix, because tied values are numerically equal and reordering them does not change the
+map. For the interpolated operator with one knot per distinct retained value,
+Proposition~\ref{prop:loo} applies as stated: its tie term $\beta^*$ is the price,
+and exactness at retained levels is lost. The corollary is the tied case of the
+proposition, and needs no separate proof.
+\end{corollary}
+
+\begin{remark}[The guard is a third price]\label{rem:guard}
+Take an exchangeable vector of $N = 79$ distinct values, seventy-one at
+$0, 1, \dots, 70$ and eight near $10^9$, and hold one out. With $39$ retained knots
+the top knot of the calibration map sits at the seventy-eighth calibration order
+statistic and $\Delta_n = 2/79$. The moving cap, at twenty times the central inverse
+slope, drags that knot from the high cluster down to roughly $671$, between the
+clusters. At the retained level $78/79$ the probability that the held-out value falls
+below the displaced knot is $71/79$, an error of $7/79$, exceeding $\Delta_n$.
+Retained resolution and tie mass are therefore not the whole price of the
+certificate. Guard displacement is a third term, zero exactly while the guard sleeps.
+
+Two guards compatible with the certificate are implemented as options. Deleting
+offending knots keeps the survivors at exact order statistics and enlarges the
+realized cell width. The smallest-displacement guard solves, for fixed $e$, the
+feasibility system
+\[
+  y_{(r_j - e)} \le \bar w_j \le y_{(r_j + e)}, \qquad
+  0 \le \bar w_{j+1} - \bar w_j \le L\,(x_{j+1} - x_j),
+\]
+with flat knots dropped for invertibility, and obtains the certified upper bound
+$\Delta_n + e/(n+1)$ with the smallest $e$ feasible for the fixed retained grid. On
+this example the per-slot smallest displacement is $e = 7$ and the leave-one-out
+maximum of Proposition~\ref{prop:loo} is $e^* = 8$. Both guards report realized,
+data-dependent quantities, so their certificates are the conditional ones of
+Proposition~\ref{prop:loo}, or deterministic ones under budgets declared in advance.
+On the campaign corpus, replacing the moving cap by either guard moves mean log score
+by less than $0.0003$ nats, with identical output on ninety-seven percent of series.
+\end{remark}
+
+The corpus of Section~\ref{sec:experiments} filters to repeat fraction below five
+percent rather than zero, so $\beta_n$ is small and not vanishing there. The statement
+worth keeping is that the certificate is a function of knot resolution, sketch error,
+tie mass, and guard displacement: the guarantee is priced in the operator's
+computational budget.
+
+The discrete fence-post map and gaussianize-full both have global error at most
+$1/(n+1)$: the discrete map's output is supported on the grid, so as a distribution on
+$[0,1]$ it too sits within Kolmogorov distance $1/(n+1)$ of uniform, and only the full
+map is invertible. With distinct input and the guard inactive, the implemented retained-knot map is
+exact at retained levels with global error at most $\Delta_n$. Under a guarded
+displacement with uniform budget $e$ the bound is $\Delta_n + e/(n+1)$, and with
+data-dependent guards it is read through Proposition~\ref{prop:loo}.
+
+Regularity of empirical transforms has a separate lineage, and the guard is not new
+as an optimization. Write $x_j = \Phi^{-1}(r_j/(n+1))$ and $w_j = y_{(r_j)}$, so
+that the inverse empirical Gaussianizer is the monotone quantile transport
+$x_j \mapsto w_j$. Replacing $w_j$ by nearby values $\bar w_j$ satisfying
+$0 \le \bar w_{j+1} - \bar w_j \le L\,(x_{j+1} - x_j)$ is Lipschitz isotonic
+regression, studied by \citet{yeganova2009isotonic}, \citet{agarwal2010lipschitz},
+and \citet{kakade2011efficient}, with the bounded-increment ancestry running back to
+isotonic optimization \citep{jewell1975isotonic}. \citet{paty2020regularity}
+identify the two-sided version, lower and upper slope bounds together, as the
+one-dimensional case of regularized empirical optimal transport, recovered by
+piecewise-affine interpolation. The unguarded operator has close kin as well: the
+continuous invertible empirical distribution transform of
+\citet{harar2022redistributor} is essentially the full-grid map without the
+conformal reading, and truncated normal scores go back to the nonparanormal
+\citep{liu2009nonparanormal}.
+
+So the guard is not offered as a new slope-constrained regression method, and the
+operator is not offered as a new transform. In transport language the inverse
+Gaussianizer is a one-dimensional empirical transport map and the guard is Lipschitz
+isotonic regularization of it. The role of the guard here is to declare an inverse
+sensitivity budget and to expose the finite-sample calibration price of enforcing it,
+through the rank-displacement term of Proposition~\ref{prop:sparse}. The canonical guard would be the least-squares projection onto
+the slope-constrained set, the regularized transport of \citet{paty2020regularity}.
+A guard fitted to this paper instead minimizes the rank displacement $e$ subject to
+the budget, solving exactly the optimization the proposition prices. The operator
+implements both this and the deletion guard as options, and
+Remark~\ref{rem:guard} measures them.
+
 \section{Reproducibility}\label{app:repro}
 
 Every number in Section~\ref{sec:experiments} is produced by one of two runners in
