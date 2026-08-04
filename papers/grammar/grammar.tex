@@ -60,11 +60,15 @@ the guarantee rides on the count of cells, not of points. The knot probabilities
 $i/(n+1)$ are Weibull's plotting positions, the means of uniform order statistics, so the
 object is classical.
 
-The literature treats this chain as a
+The literature mostly treats this chain as a
 construction to be studied whole, and its many variants, normalized, Mondrian, quantile,
 distributional, and temporal
 \citep{bostrom2021mondrian,romano2019conformalized,chernozhukov2021distributional,gibbs2021adaptive,auer2023hopcpt},
-as separate constructions. We propose a different organization. The fence-post transform is
+as separate constructions. The nearest exceptions stop one step short. Conformal
+predictive systems made the map emit a distribution function, and conformal calibrators
+\citep{vovk2020calibrators} apply that map to another system's output, one level of
+composition with the map still the last word. We propose a different organization, in
+which the map's position is a variable. The fence-post transform is
 one operator. The chain is one production rule in a grammar of composable transforms. The
 interesting question is then not which conformal method to choose but which sequence of
 transforms minimizes the forecaster's scoring rule.
@@ -607,12 +611,11 @@ A second campaign, run for this revision, adds the decomposition ladder and robu
 grids reported below. Config D0 is config D with its fitted leaf replaced by the fixed $N(0,1)$ law, the
 literal conformal terminal forecast, and a full-grid variant retains every knot. Alternative fixed links replace gaussianize in the E position. Guard and
 resolution grids, an iid null suite, and a CRPS-weighted pool complete the set. The
-refetch recovers $572$ of the $701$ series, and the campaign runs use those, with
-percentile bootstrap intervals resampling series. The subset is not random. The
-dropped $129$ are mostly short monthly macro series, and on the original run they
-carried roughly double the average E-versus-F log-score tax, so the campaign corpus
-is tilted toward series friendlier to the operator, and the smaller tax measured on
-it, $0.079$ nats against $0.108$, is partly composition and partly data vintage.
+refetch recovers $572$ of the $701$ series, mostly dropping short monthly ones, and
+the campaign runs use those, with percentile bootstrap intervals resampling series.
+The dropped series carried a larger share of the operator's log-score tax on the
+original run, which is part of why the tax reads $0.079$ nats here against $0.108$
+there, the rest being data vintage. The corpus can always grow.
 Figure~\ref{fig:duels} summarizes the comparisons behind the paper's three findings.
 
 \begin{figure}[t]
@@ -846,6 +849,34 @@ Fence-post (here) & residual & interpolated rank map & yes & finite-sample, at p
 \bottomrule
 \end{tabular}
 \end{center}
+
+Two wrapper lines make the composition explicit. Conformal calibrators
+\citep{vovk2020calibrators} apply the rank map to the output of an arbitrary
+predictive system, and modular conformal calibration \citep{marx2022modular} unifies
+the recalibration family the table lists. Both are one level of composition, and in
+both the map is terminal by construction.
+
+The time-series conformal systems nest as production rules too. Sequential predictive
+conformal inference \citep{xu2023spci} replaces the unconditional rank rung with a
+fitted conditional quantile model on the residual stream: the same slot, a different
+operator, the certificate traded for sharpness. Ensemble batch prediction intervals
+\citep{xu2021enbpi} keep the empirical rung and give it a sliding-window clock.
+Adaptive conformal inference \citep{gibbs2021adaptive} composes an operator after the
+rank map, a feedback controller that moves the quoted level in response to coverage
+errors, and conformal PID control \citep{angelopoulos2023pid} adds a scorecaster, a
+serial forecaster fitted on the score stream that feeds the controller. Flow-based
+conformal regression \citep{colombo2024flows} fits an invertible reshaping upstream
+and applies the rank map to its output, our location and scale rungs with a richer
+transform.
+
+Writing them this way shows what the grammar adds. Each system holds the rank map at a
+fixed position and reads out a set, an interval, or a distribution it then quotes. The
+one operator that literature composes after the map is a controller on the quoted
+level, driven by coverage. None fits a model on the map's output, none carries
+predictive densities back through its inverse, and none scores the map as one operator
+among peers under a proper scoring rule. Those are the moves this paper adds, and the
+nesting is the point: every system above is a chain the pools of
+Section~\ref{sec:experiments} could hold.
 
 A probabilistic lifting of the same geometry appears in
 \citet{snell2025quadrature}. If $T_{(i)} = F(Y_{(i)})$ are the latent probability
