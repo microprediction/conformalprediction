@@ -582,10 +582,10 @@ grammar and architecture. We measured the largest bundled component directly. Th
 filter excludes only consecutive repetition, and isolated exact repeats remain (the median
 series has $1\%$ exact-zero changes), which the lattice projection rewards with sharp atoms.
 Rescoring the complete forecaster with the projection disabled splits $\Delta_5$: the lattice
-contributes a mean $0.076$ nats (median zero, positive on $38\%$ of series, concentrated on
-near-lattice series), and the remaining $0.087$ nats (positive on $83\%$) is the
-grammar-and-architecture part. Without the lattice the total recovered gain is $0.53$ nats,
-still positive on every series, and the scale family's share rises to $50\%$
+contributes a mean $0.078$ nats (median zero, positive on $36\%$ of series, concentrated on
+near-lattice series), and the remaining $0.060$ nats (positive on $77\%$) is the
+grammar-and-architecture part. Without the lattice the total recovered gain is $0.41$ nats,
+positive on all but one series, and the scale family's share rises to $53\%$
 (\texttt{r5\_nosticky.py}). A Shapley analysis over the
 $2^5$ family subsets gives an insertion-order-robust attribution for this fixed grouping.
 It is not robust to regrouping, and moving GARCH from the shape family to the scale family
