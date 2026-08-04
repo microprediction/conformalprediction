@@ -70,34 +70,38 @@ distributional, and temporal
 as separate constructions. The nearest exceptions stop one step short. Conformal
 predictive systems made the map emit a distribution function. Conformal calibrators
 \citep{vovk2020calibrators} apply that map to another system's output. Both compose
-once, and the map is still the last word. We propose a different organization, in
+once, and the map is still the last word.
+
+We propose a different organization, in
 which the map's position is a variable. The fence-post transform is
 one operator. The chain is one production rule in a grammar of composable transforms. The
 interesting question is then not which conformal method to choose but which sequence of
 transforms minimizes the forecaster's scoring rule.
 
-Stated plainly, conformal prediction is not, in general, an alternative to statistical
-modeling. It is a particular rank-based transform of a model's output. Its finite-sample
-property distinguishes it from fitted recalibrators at the point where it is applied. It
-does not privilege stopping there, it does not remove the modeling that follows, and it
-does not determine predictive quality under a proper scoring rule.
+Viewed this way conformal prediction is not, in general, an alternative to statistical
+modeling put to one side but a gracefully integrated operator in a chain whose finite-sample properties
+may well be valuable at the point where they are computed. This distinguishes it from other
+operators that it gracefully commingles with, but it does not privilege stopping there, nor need
+it remove the modeling that follows where appropriate. Used carefully in this manner, it
+does not materiallty degrade predictive quality under a proper scoring rule, at least in our experiments.
 
 The standard conformal pattern also carries a tension the present work avoids. A
-skeptic of the standard conformal prediction patterns might reasonably ask why an
-approach that essentially adopts the empirical distribution, in a sense advocating not
-modeling at all, is appropriate in the context of model residuals but not in general
-(for instance, as a replacement for the base model).
+skeptic of the standard conformal prediction patterns might reasonably ask why
+ heavy anchoring on the empirical distribution (in a sense, thereby not
+modeling at all) is appropriate in the context of model residuals, whereas to apply the same
+ emphasis in general would be absurd.
 
 The stock answer is about targets. For marginal coverage, pooling is justified by
 exchangeability of the residuals alone, a weaker and testable hypothesis, and
 distribution-free conditional coverage is provably out of reach
 \citep{vovk2012conditional,lei2014distribution,barber2021limits}, so the pooled law
-is what one settles for. That answer does not carry over to a forecaster scored by a
+is what one settles for.
+
+That answer is not satisfactory for a forecaster scored by a
 proper scoring rule. There the pooled residual law is quoted as a predictive density,
 its adequacy is exactly conditional invariance, and the certificate does not establish
 that. Certifying ranks under exchangeability makes stopping at the pooled law a
-modeling decision, not a consequence of the guarantee, and pooling the observable
-itself, the limiting case of an inadequate model, would frequently be ludicrous.
+modeling decision, not a consequence of the guarantee.
 
 In univariate probabilistic forecasting, Platt scaling,
 isotonic and quantile recalibration, temperature scaling, conformal predictive systems,
