@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Just a transform — Conformal Prediction</title>
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/papers/">Papers &amp; notes</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration</p>
+  <h1>Just a transform</h1>
+  <p class="subtitle">The heart of conformal prediction is a univariate monotone map, exact at its knots on any exchangeable input.</p>
+
+  <p>Strip split conformal prediction to its moving parts and three remain: a model, a scalar residual, and the fence-post rank map
+  $$E_n(r) \;=\; \frac{1 + \#\{i \le n : R_i \le r\}\,}{n+1}.$$
+  Everything else is bookkeeping. The prediction set is a level-set readout of this map; the conformal p-value is its value at the new point; the conformal predictive distribution is the map itself. The two \(+1\)s are the fence posts: \(n\) points cut the line into \(n+1\) cells, and the guarantee rides on the count of cells.</p>
+
+  <p>The raw map is a step function, so it has no density and no inverse. Interpolate it, knots at the order statistics with probabilities \(i/(n+1)\), compose with the probit, and it becomes an invertible transform \(z = \Phi^{-1}(E_n(y))\): an empirical Gaussianizer. That object is what the demo below builds, online, from whatever law you pick.</p>
+
+  <div class="demo">
+    <div class="canvas-box med"><canvas id="mapview"></canvas></div>
+    <div class="canvas-box med"><canvas id="calview"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <p>The left panel is the transform against the oracle \(\Phi^{-1}(F(y))\) it estimates. The right panel is the entire finite-sample content of conformal prediction, seen from the transform side: draw fresh values from the same law, push them through the map, and plot the distribution of \(U = \Phi(z)\). At every retained knot the curve pins the diagonal, whatever the input distribution, because on exchangeable input the rank of a fresh point among \(n+1\) is uniform. Between knots the excursion is bounded by the largest retained cell, shaded. Cut the knots to four and the certificate coarsens exactly as the shading widens; raise them and it tightens. Calibration is priced in resolution, and nothing else about the input law matters.</p>
+
+  <h2>Why this demotion is useful</h2>
+
+  <p>Once the conformal step is a transform, it has peers, and the peers clarify what it is. A running location estimate is a transform. A scale standardization is a transform. A fixed monotone link is a transform. An AR(1) whitening is a transform. All of them are state-conditional bijections that reshape a stream, push predictive distributions back through their inverses, and compose. The fence-post map is the member of this family whose output carries a finite-sample certificate at its position in the chain. That is a real distinction. It is also the only one: the certificate covers the map&rsquo;s own output and nothing downstream, and it says nothing about predictive quality under a proper score.</p>
+
+  <p>The object is also old. Plotting positions of the form \(i/(n+1)\) are Weibull&rsquo;s; ranks-to-normal-scores is van der Waerden; Vovk&rsquo;s conformal predictive systems made the map emit a distribution function; the same interpolated transform was reinvented as recently as 2022 as a data-preprocessing tool. What the transform view adds is not the object but the freedom: nothing obliges a forecaster to stop at it. Its output is a coordinate system, and whatever structure the model missed is easier to fit in those coordinates &mdash; which is <a href="/demos/30-past-the-stop.html">the next demonstration</a>.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. Conformal prediction, at heart, is one univariate monotone transform with a certificate attached at its output. The certificate is exact at the retained knots on any exchangeable input, degrades by at most one knot cell in between, and does not travel: not into the tails, not through later fitting, not into a proper score. Treat the map as a library member beside location, scale, links, and autoregressions, and the question stops being whether to be conformal. It becomes where in the chain, if anywhere, this particular transform earns its place.</p>
+  </div>
+
+  <p class="note">The transform view, its typing rules, and the measurements behind it are developed in the grammar paper in <a href="/papers/">papers &amp; notes</a>, with the operator implemented in the <a href="https://github.com/microprediction/skaters">skaters</a> library. Heritage: Weibull plotting positions, van der Waerden normal scores, Vovk et al.&rsquo;s conformal predictive systems (<a href="https://link.springer.com/article/10.1007/s10994-018-5755-8">2019</a>), and the Redistributor of Harar et al. (<a href="https://arxiv.org/abs/2210.14219">2022</a>).</p>
+
+  <div class="prevnext">
+    <a href="28-price-of-dumb.html">&larr; The price of a dumb model</a>
+    <span class="spacer"></span>
+    <a href="30-past-the-stop.html">Past the stop &rarr;</a>
+  </div>
+
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+
+<script type="module" src="../js/demo29.js"></script>
+</body>
+</html>

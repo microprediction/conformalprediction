@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Past the stop — Conformal Prediction</title>
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/papers/">Papers &amp; notes</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration</p>
+  <h1>Past the stop</h1>
+  <p class="subtitle">The transform&rsquo;s output is a coordinate system, not a terminus.</p>
+
+  <p>In conformal practice the rank map is where inference ends: fit a model, rank the residuals, quote the ranked law. The stop is a design decision, and it assumes the residuals arrive exchangeable, with nothing left in them worth modeling. <a href="/demos/29-just-a-transform.html">The previous page</a> made the map an invertible transform; this one asks what happens if you keep going.</p>
+
+  <p>The data are a warped AR(1): a Gaussian autoregression \(z_t = \varphi z_{t-1} + \varepsilon_t\) observed through a monotone warp, \(y_t = \mathrm{sign}(z_t)\,|z_t|^{\gamma}\). The warp hides the linear structure without removing an ounce of it. Three online forecasters run prequentially, and every density is scored by the exact change of variables, Jacobians included:</p>
+
+  <p><strong>Stop at the map</strong> Gaussianize the stream and quote \(N(0,1)\) where you stand: the conformal pattern&rsquo;s terminal forecast. <strong>Refit through the map</strong> The same transform, then an AR(1) fitted online on the transformed stream. <strong>Same refit, no map</strong> The identical AR(1) on a scale-standardized stream, with no rank map in the chain.</p>
+
+  <div class="demo">
+    <div class="canvas-box med"><canvas id="series"></canvas></div>
+    <div class="canvas-box med demo"><canvas id="race"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <p>With the warp at \(\gamma = 1.5\) and \(\varphi = 0.8\), refitting through the map wins on both flanks. It beats the stop because the transformed stream still carries the serial structure the stop leaves on the table. It beats the no-map chain because the AR model is well specified only in the transformed coordinates: the warp makes the raw stream heavy-tailed and nonlinear, and a linear model fed the raw coordinates fits the wrong thing. Slide \(\gamma\) to \(1\) and the warp vanishes: the map has nothing to undo, and the two refits converge. Slide \(\varphi\) to \(0\) and the serial structure vanishes: the stop becomes optimal, and refitting pays a small estimation tax, visible as the gap running the other way.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. Whether to stop at the conformal step is an empirical question the certificate does not answer, because the certificate holds at the map&rsquo;s output whether or not structure remains beyond it. When the residual stream still carries signal, the map&rsquo;s best role is not terminal but interior: a coordinate change that hands the next model a stream it can actually fit. Stopping, continuing, and skipping the map are three chains, and the scoring rule, not the philosophy, picks between them.</p>
+  </div>
+
+  <p class="note">On 572 economic series the same three-way race, run with the full grammar, gives the refit-through chain the lead under both log score and CRPS; the grammar paper in <a href="/papers/">papers &amp; notes</a> reports the campaign, and the <a href="https://github.com/microprediction/skaters">skaters</a> library implements the operator with its guards and certificates.</p>
+
+  <div class="prevnext">
+    <a href="29-just-a-transform.html">&larr; Just a transform</a>
+    <span class="spacer"></span>
+    <a href="01-how-conformal-works.html">How conformal works &rarr;</a>
+  </div>
+
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+
+<script type="module" src="../js/demo30.js"></script>
+</body>
+</html>

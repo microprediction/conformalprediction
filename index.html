@@ -171,7 +171,21 @@
   </div>
 
   <!-- ============================================================ -->
-  <h2 id="exchangeable">5 &middot; Exchangeability: de Finetti and the signed corner</h2>
+  <h2 id="transform">5 &middot; Just a transform: conformal in a grammar</h2>
+  <p>Strip the ceremony and the conformal step is one univariate monotone map, exact at its knots on any exchangeable input. Interpolated, it is an invertible transform with peers &mdash; location, scale, links, autoregressions &mdash; and its certificate is a property of a position in a chain, not a licence to stop there. Two demonstrations: the transform itself, and what continuing past it buys.</p>
+  <div class="cards">
+    <a class="card" href="demos/29-just-a-transform.html">
+      <h3>Just a transform</h3>
+      <p>The fence-post rank map built live from any law you pick: knots at order statistics, probit composition, and a calibration curve that pins the diagonal at every retained level whatever the input distribution. Cut the knots and watch the certificate coarsen at exactly the retained-cell width.</p>
+    </a>
+    <a class="card" href="demos/30-past-the-stop.html">
+      <h3>Past the stop</h3>
+      <p>A warped AR(1), three online chains: stop at the map, refit through it, or skip it. When structure hides behind a monotone warp, refitting through the transform beats both &mdash; its output is a coordinate system, not a terminus. Slide the warp away and the advantage goes with it.</p>
+    </a>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2 id="exchangeable">6 &middot; Exchangeability: de Finetti and the signed corner</h2>
   <p>A different perspective, on the one assumption many results are based on. Exchangeability is what de Finetti&rsquo;s theorem describes, and its finite form lets the mixing measure go negative. The sign of that measure is a separate axis from the information gap above: it decides whether conformal&rsquo;s per-case coverage stays near nominal or quietly fans.</p>
   <div class="cards">
     <a class="card" href="demos/15-de-finetti.html">
@@ -193,7 +207,7 @@
   </div>
 
   <!-- ============================================================ -->
-  <h2 id="herding">6 &middot; The mechanism: balanced placements</h2>
+  <h2 id="herding">7 &middot; The mechanism: balanced placements</h2>
   <p>Where the 1/n comes from. Conformal validity is a counting statement: rotate the &ldquo;test&rdquo; label through the slots and exactly k of n+1 placements are covered, for any distinct scores; exchangeability enters once, to make the realized placement an even draw. The exact dual construction under the same permutation action is Steinitz balancing, the ordering of a zero-sum population with bounded prefix sums; herding (Welling 2009) is its with-replacement relaxation, and the demo below runs it. <a href="/papers/steinitz/">The note</a> has the exact statements.</p>
   <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
     <summary style="cursor:pointer;font-weight:600;">How this section came about</summary>
@@ -215,7 +229,7 @@
   </div>
 
   <!-- ============================================================ -->
-  <h2 id="ts">7 &middot; Time series &amp; distribution shift</h2>
+  <h2 id="ts">8 &middot; Time series &amp; distribution shift</h2>
   <p>Time series break <em>exchangeability</em>, but that actually isn&rsquo;t such a big deal for coverage: plain split
   conformal degrades gracefully, with a coverage loss provably bounded by
   (dependence&nbsp;range)&thinsp;/&thinsp;(calibration&nbsp;size) for stationary series whose dependence
@@ -245,11 +259,11 @@
   </div>
 
   <!-- ============================================================ -->
-  <h2 id="practice">8 &middot; A minimalist example of using conformal wrappers</h2>
+  <h2 id="practice">9 &middot; A minimalist example of using conformal wrappers</h2>
   <p>One small, reproducible <a href="benchmark.html">worked example</a>, not a benchmark, just a controlled experiment on synthetic data with a known answer, runs the actual libraries (<a href="https://github.com/scikit-learn-contrib/MAPIE">MAPIE</a>, <a href="https://github.com/henrikbostrom/crepes">crepes</a>) and the strong time-series methods against probabilistic baselines and an oracle, scored by conditional coverage and proper scores (CRPS, interval/Winkler). It isolates one clean point: the adaptive conformal methods <em>do</em> help, but the help comes from the conditional model they wrap, raw quantile regression with no conformal step ties conformalized quantile regression, with the conformal layer adding the marginal certificate on top. <a href="benchmark.html">See the example &rarr;</a></p>
 
   <!-- ============================================================ -->
-  <h2 id="applications">9 &middot; When coverage is the goal: the litmus test?</h2>
+  <h2 id="applications">10 &middot; When coverage is the goal: the litmus test?</h2>
   <p>Everything so far was about reading the guarantee carefully. One reward is a sense of when conformal prediction is a natural fit, not merely valid. A useful question:</p>
   <blockquote><p>Is your loss a function of <em>whether</em> the truth lands in a set, or of <em>where</em> it lands? When the answer is &ldquo;whether,&rdquo; coverage <em>is</em> the objective, the set is the deliverable, and a distribution-free guarantee of it is exactly what conformal prediction supplies.</p></blockquote>
   <details style="margin:10px 0 16px;border:1px solid var(--line,#ddd);border-radius:8px;padding:8px 16px;">
@@ -259,7 +273,7 @@
   <p>That &ldquo;whether&rdquo; column is large, and often high-stakes. The next sections walk through four families you can play with right here, with several more covered on the <a href="applications.html">applications page</a>. In each, the marginal guarantee is the product.</p>
 
   <!-- ============================================================ -->
-  <h2 id="sets">10 &middot; Prediction sets &amp; selective triage</h2>
+  <h2 id="sets">11 &middot; Prediction sets &amp; selective triage</h2>
   <p>In classification, conformal prediction returns a <em>set</em> of labels guaranteed to contain the true one at your chosen rate, and the set&rsquo;s <em>size</em> adapts to difficulty: a single confident label where one class dominates, a short ranked shortlist where the input is genuinely ambiguous. That is exactly the signal you want for human-in-the-loop triage: answer automatically when you can, defer the ambiguous cases to an expert, and bound how often the wrong shortlist is handed over. The adaptivity that was a <em>caveat</em> for coverage in Section&nbsp;2 becomes the <em>feature</em> here, because now the set is what you ship.</p>
   <div class="cards">
     <a class="card" href="demos/09-prediction-sets.html">
@@ -270,7 +284,7 @@
   </div>
 
   <!-- ============================================================ -->
-  <h2 id="anomaly">11 &middot; Anomaly &amp; out-of-distribution detection</h2>
+  <h2 id="anomaly">12 &middot; Anomaly &amp; out-of-distribution detection</h2>
   <p>This is conformal prediction at its strongest, it would seem, working as a <em>test</em> rather than a forecaster. A conformal \(p\)-value of a genuine inlier is (super-)uniform, so flagging whenever \(p\le\alpha\) controls the false-alarm rate at <em>at most</em> \(\alpha\) (exactly \(\lfloor\alpha(n+1)\rfloor/(n+1)\) for continuous scores), distribution-free, finite-sample, with no threshold to tune. Type-I error control is coverage, and coverage is what conformal certifies. Detection power is the score&rsquo;s job; the false-alarm budget is guaranteed.</p>
   <div class="cards">
     <a class="card" href="demos/10-anomaly-pvalues.html">
@@ -281,7 +295,7 @@
   </div>
 
   <!-- ============================================================ -->
-  <h2 id="recall">12 &middot; Retrieval &amp; screening: guaranteed recall</h2>
+  <h2 id="recall">13 &middot; Retrieval &amp; screening: guaranteed recall</h2>
   <p>Drug-candidate triage, document retrieval, fraud review: the deliverable is a shortlist, and the thing that must not happen is dropping the real hit. That is a recall guarantee, which is coverage under another name. One conformal threshold on the model&rsquo;s score, calibrated on known hits, guarantees a new hit survives the cut at least \(1-\alpha\) of the time, with no assumptions about how scores are distributed. A sharper model does not change the guarantee; it shrinks the list you have to read.</p>
   <div class="cards">
     <a class="card" href="demos/11-guaranteed-recall.html">
@@ -292,7 +306,7 @@
   </div>
 
   <!-- ============================================================ -->
-  <h2 id="safety">13 &middot; Safety in robotics &amp; control</h2>
+  <h2 id="safety">14 &middot; Safety in robotics &amp; control</h2>
   <p>Robotics and control are a natural home for conformal prediction, because the question is almost always <em>containment</em>: will the true state lie inside a region I can plan around? Calibrate a state predictor&rsquo;s error and you get a distribution-free <em>safety tube</em> around the nominal trajectory; if the tube clears the obstacle, you hold a certificate that the system stays out of the keep-out zone at the chosen confidence. A controller rarely needs a sharp forecast of the next state, it needs a region it can prove it stays within.</p>
   <div class="cards">
     <a class="card" href="demos/12-safety-envelope.html">
@@ -303,16 +317,16 @@
   </div>
 
   <!-- ============================================================ -->
-  <h2 id="llms">14 &middot; Language models &amp; structured outputs</h2>
+  <h2 id="llms">15 &middot; Language models &amp; structured outputs</h2>
   <p>The same idea tames generative models. Emit a <em>set</em> of candidate answers guaranteed to contain the correct one with high probability, or abstain when that set grows too large to be useful, a distribution-free handle on hallucination and a principled deferral rule. Conformal factuality, calibrated selective generation, and coverage-guaranteed retrieval-augmented pipelines all rest on the same certificate. The <a href="applications.html">applications page</a> walks through the methods and the papers that apply them carefully.</p>
 
   <!-- ============================================================ -->
-  <h2 id="risk">15 &middot; Risk control, deferral &amp; audit</h2>
+  <h2 id="risk">16 &middot; Risk control, deferral &amp; audit</h2>
   <p>Sometimes the deliverable is the certificate itself. Conformal risk control and Learn-then-Test extend the machinery from coverage to any monotone risk, a bounded miss rate, false-negative rate, or expected loss, chosen in advance and honoured on fresh data. For compliance and audit, &ldquo;contained 95% of the time, under almost no assumptions&rdquo; is exactly the kind of guarantee little else can promise so cheaply. Full depth, with citations, including scientific discovery, causal inference, survival analysis, and medical imaging, where coverage is just as central, is on the <a href="applications.html">applications page</a>.</p>
   <p>In every one of these the skill is the same: recognising which column your problem is in. When it is &ldquo;whether,&rdquo; reach for conformal prediction with confidence.</p>
 
   <!-- ============================================================ -->
-  <h2 id="contribute">16 &middot; Contributions</h2>
+  <h2 id="contribute">17 &middot; Contributions</h2>
   <p>The common objections, and straight answers, live on the <a href="faq.html">FAQ page</a>. Beyond that, the site is open to contributions: <a href="https://github.com/microprediction/conformalprediction/pulls">pull requests</a> and <a href="https://github.com/microprediction/conformalprediction/issues">issues</a> are welcome, whether more demonstrations, papers, insight, or pushback.</p>
 
   <!-- ============================================================ -->
