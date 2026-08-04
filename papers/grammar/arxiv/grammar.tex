@@ -129,12 +129,11 @@ remains. The second is that nesting is
 cheap: a pool over chains that includes the conformal pattern should not pay materially
 for admitting it, because the pool reallocates weight away from the pattern on series
 where it is a bad choice. We confirm both on a corpus of economic series and report a third
-finding we did not anticipate: the largest effect in the study was a mis-typed peer.
-A scale rung whose implemented map was not the affine map its inverse assumed had
-been bounding the coordinate on the side, crediting the chain without the operator,
-and repairing it flipped the operator's measured contribution from a small tax to a
-large gain. The grammar's type contracts turned out to be the empirical story, not
-only the formalism.
+finding we did not anticipate: the operator's measured value is dominated by whether
+any peer in the chain already bounds the emitted coordinate. An ablation with a
+self-normalized scale rung, which bounds on the side, absorbs nearly all of the
+operator's contribution, so the grammar's type contracts are the empirical story,
+not only the formalism.
 
 A companion paper prices what a fixed representation choice costs
 \citep{cotton2026gap}. Under logarithmic loss the irreducible cost of pooling residuals in
@@ -184,8 +183,8 @@ Gaussian tail in the observable, with scale set by the spacing of the extreme qu
 Tail mass is unobservable, so any usable version of the operator carries a tail assumption,
 and this is the mildest one consistent with the coordinates. A kernel-smoothed variant
 replaces the empirical distribution function with a Gaussian-kernel estimate at Silverman
-bandwidth, represented by a monotone $C^1$ cubic through the same knots, and we use it in
-Section~\ref{sec:smooth} to test whether smoothness matters.
+bandwidth, represented by a monotone $C^1$ cubic through the same knots, and Section~\ref{sec:robust}
+checks that smoothness changes little.
 
 Two guards complete the definition, and both were forced by data rather than taste. First,
 every knot segment's inverse slope $dy/dz$ is capped at twenty times the
@@ -340,8 +339,8 @@ forecasting, and exchangeability supplies none of them.
 
 The log score will still notice: it
 integrates the predictive density between grid points and in the tails, exactly where
-the certificate is $\delta$-relaxed and assumption-laden, and
-Section~\ref{sec:smooth} measures what that costs.
+the certificate is $\delta$-relaxed and assumption-laden, which is where the
+fixed-link comparisons of Section~\ref{sec:interior} bite.
 
 The second fact is that this guarantee is positional. Proposition~\ref{prop:uniform}
 concerns the operator's immediate output. If a downstream model is fitted on
@@ -568,7 +567,7 @@ fence-post empirical map, stop, and read the predictive off the inverse. Config 
 through the operator. The pools use the same likelihood-weighted online ensembling as the
 companion paper's forecaster, with a complexity penalty by chain depth.
 
-A second campaign, run for this revision, adds the decomposition ladder and robustness
+A second campaign adds the decomposition ladder and robustness
 grids reported below. Config D0 is config D with its fitted leaf replaced by the fixed $N(0,1)$ law, the
 terminal conformal forecast up to the nine-particle inverse representation, and a
 full-grid variant retains every knot. Alternative fixed links replace gaussianize in the E position. Guard and
@@ -630,30 +629,32 @@ conformal stopping point is defensible series by series and beaten on the corpus
 A synthetic experiment shows the mechanism in isolation. Let $z_t = 0.8 z_{t-1} +
 \varepsilon_t$ and observe $y_t = \mathrm{sign}(z_t) |z_t|^{1.5}$, a monotone warp of an
 AR(1), which obscures the linear representation without removing the dependence. Stopping at
-gaussianize scores $-1.56$ nats and $0.62$ CRPS. Refitting AR(1) through it scores $-1.07$
-and $0.41$, beating both the stop and the same AR chain without the operator ($-1.16$,
-$0.42$). When the downstream learner is well specified only in the empirical map's
+gaussianize scores $-2.27$ nats and $1.24$ CRPS. Refitting AR(1) through it scores
+$-2.00$ and $0.95$, beating both the stop and the same AR chain without the operator
+($-2.13$, $1.04$). When the downstream learner is well specified only in the empirical map's
 coordinates, passing through the operator beats both stopping and applying the same
 learner in the original coordinates.
 
 Stopping is one question, and inserting is another. E versus D0 asks whether the
 rank transform is a good architectural stopping rule. On average the answer is no.
 On the median series it is a coin flip. The operator's incremental value is E versus
-F, the same refit without the operator, and here this revision corrects its
-predecessors. Earlier drafts measured a log-score tax of about a tenth of a nat for
-inserting the operator. The tax was an artifact. The scale rung then in use divided
-each emission by a standard deviation that already contained it, a self-normalization
-that bounds the emitted coordinate, and a bounded coordinate is most of what the rank
-map supplies. The rung was quietly doing the operator's job, so the operator,
-measured against it, looked redundant.
-
-With the scale rung repaired to the affine map its inverse applies, the comparison
-changes sign and grows an order of magnitude. E beats F by $0.65$ nats on average
+F, the same refit without the operator. E beats F by $0.65$ nats on average
 (interval $0.54$ to $0.76$), with a median of $0.06$, wins on $61$ percent of
 series, and wins the per-series CRPS comparison on $97$ percent. Without a bounding
 rung, heavy-tailed coordinates reach the serial model and its leaf raw, and the
 worst series destroy the chain. In this chain the operator is not decoration. It is
 the difference between a usable pipeline and a fragile one.
+
+The comparison is sensitive to the peers' types, and one ablation shows how sharply.
+Replace the affine scale rung by a self-normalized one, dividing each emission by a
+running standard deviation that already contains it. The emitted coordinate is then
+bounded by construction, the chain without the operator inherits the bound, and the
+measured value of inserting the operator collapses to a small negative number.
+Bounding the coordinate is most of what the rank map supplies, and any rung that
+bounds on the side absorbs the operator's credit. A mis-typed rung, one whose
+implemented map is not the map its inverse assumes, can misprice an operator two
+positions away. The type contracts are what the measurement of any one operator
+silently assumes about all the others.
 
 Part of every particle-scored number is representation rather than operator. The
 exact-pullback runner scores the true change of variables,
@@ -676,13 +677,13 @@ a shade better on average, with no certificate at all.
 
 \subsection{Nesting limits the cost of admission}\label{sec:nesting}
 
-The raw conformal pattern C is a reasonable forecaster on this corpus, better than the
-location baseline on average under both scores. It is also, on a minority of series, a bad
-choice. Config G, the likelihood-weighted pool over all seven chains, gaussianize chains
-included, beats the fixed pattern C on $95$ percent of series by log score, by $0.249$
-nats on average. On the twenty series where C is worst, with relative CRPS $1.020$, the
-pool sits at $0.843$ on the same series. The pool walks away from the production rule
-where it underperforms.
+The raw conformal pattern C is a reasonable forecaster on this corpus, better than
+the location baseline on average under both scores. It is also, on a minority of
+series, a bad choice. Config G, the pool over all seven chains, gaussianize chains
+included, beats the fixed pattern C on $87$ percent of series by log score, by
+$0.163$ nats on average. On the twenty series where C is worst, with relative CRPS
+$1.018$, the pool sits at $0.824$ on the same series. The pool walks away from the
+production rule where it underperforms.
 
 Admitting the pattern now buys a real gain, and the shape is still lopsided. The
 exact Bayes pool G beats its sub-pool H, the same pool with the gaussianize chains
@@ -723,7 +724,8 @@ mixture pruning, the reference blend inside the weight updates, and the depth pr
 applied once. The operator's $|z| \le 8$ learner-input channel stays active inside
 each expert, as everywhere in the paper. The production ensemble instead tempers its
 likelihood update at rate $0.8$ and applies its depth penalty per step, for
-adaptivity under regime change, and its comparison does not inherit the exact bound.
+adaptivity under regime change. Its comparison does not inherit the exact bound, and
+it shows the same picture, the tempered G ahead of its H by $0.078$ nats.
 The runner resets the mixture weights to
 the depth prior at the start of the scored window, because the bound's prior-mass
 penalty controls the loss from initialization, not from an arbitrary suffix: scoring
@@ -750,28 +752,6 @@ is revised online by the scoring rule. Nesting does not avert disasters on this 
 because the guarded operator does not produce disasters. An exact Bayes pool trims the bad tail at a bounded cumulative price, vanishing per
 observation.
 
-\subsection{An apparent tax, dissolved}\label{sec:smooth}
-
-Earlier drafts reported the opposite insertion result: the operator cost about a
-tenth of a nat against F under the log score, and a kernel-smoothed $C^1$ variant of
-the operator paid the same, which ruled out the piecewise-linear kinks as the cause.
-Both measurements were made against the self-normalized scale rung. The smoothing
-test was sound, and its negative answer was the first hint that the tax did not live
-in the operator at all. The diagnosis of Section~\ref{sec:interior} completes it:
-the tax was a mis-typed peer doing the operator's job, plus about $0.09$ nats of
-particle representation error that exact-pullback scoring removes.
-
-A finding those drafts advertised as score dependence, the operator helping CRPS
-while costing log score, does not survive the repair. In the repaired chains the
-operator helps under both rules, and what remains score-dependent is the narrow
-comparison between the rank map and the fixed Cauchy link.
-
-The episode is the grammar's second cautionary tale, beside the warmup emission of
-Section~\ref{sec:operator}. A mis-typed rung, one whose implemented map is not the
-map its inverse assumes, transfers credit between its neighbors and can misprice an
-operator two positions away. The type contracts are not pedantry. They are what the
-measurement of any one operator silently assumes about all the others.
-
 \subsection{Robustness}\label{sec:robust}
 
 Three checks bound the sensitivity of these findings. An iid null suite runs the ladder when there is nothing to find. The kinds are
@@ -790,8 +770,11 @@ $159$, and the full grid all sit within $0.003$ nats of $39$, none ahead of it. 
 hundred series those intervals cannot exclude effects of the size the particle count
 shows. Raising the inverse from nine particles to nineteen is worth $0.016$ nats,
 and going further is not, which is the subsample's view of the $0.09$-nat
-representation price the exact-pullback runner measures in full. The certificate's resolution parameter is not the empirical bottleneck. The
-inverse's resolution is, mildly.
+representation price the exact-pullback runner measures in full. The
+kernel-smoothed $C^1$ variant of the operator tracks the linear one, $0.003$ nats
+below it on the refit chain, so smoothness is not where the value lives. The
+certificate's resolution parameter is not the empirical bottleneck. The inverse's
+resolution is, mildly.
 
 \section{One family}\label{sec:family}
 
@@ -885,8 +868,8 @@ invertible online transform, and the rule's distinguishing stop, quoting the emp
 where it stands, becomes a choice the scoring rule can overrule. On economic series,
 a serial model added after the operator outscores the literal terminal stop on
 average. Inserted into a chain whose scale rung is honestly affine, the operator is
-load-bearing under both scoring rules, and the tax earlier drafts measured was a
-mis-typed peer doing its job, plus representation error. A pool that admits the
+load-bearing under both scoring rules, and its measured value collapses only when
+some other rung bounds the coordinate on the side. A pool that admits the
 pattern pays a bounded price and collects a real gain. A fixed Cauchy link supplies
 the same bounding a shade better on average, and carries no certificate.
 
