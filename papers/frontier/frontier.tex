@@ -48,9 +48,9 @@ is the mutual information between residual and input, and pooling after any inve
 state-dependent change of coordinates has the analogous gap in the transformed coordinates.
 Conformal calibration can improve estimation and provide a coverage certificate, but it
 cannot recover predictive information excluded by the retained representation. We apply the decomposition to a
-nested grammar of online transformations on 701 economic series. Conditional scale is the
+nested grammar of online transformations on 572 economic series. Conditional scale is the
 largest and most reliable component of the measured architecture gain, and, holding the point
-predictor fixed, scale-normalized empirical pooling beats raw pooling on 87 percent of the
+predictor fixed, scale-normalized empirical pooling beats raw pooling on 90 percent of the
 series under a quantile approximation to CRPS. The value of residual pooling depends jointly
 on the coordinates, the residual-law estimator, and the scoring rule.
 \end{abstract}
@@ -157,7 +157,7 @@ or immediate. We state them with explicit regularity conditions and with learned
 representations
 treated conditionally on training data. Our own contributions are the transform-pooling
 theorem, which prices every pooled-residual scheme by the coordinates in which it pools, and
-two experiments built on it: a nested-ladder ablation over 701 economic series
+two experiments built on it: a nested-ladder ablation over 572 economic series
 (Figure~\ref{fig:ladder}) and a matched-predictor comparison that separates the cost of a
 method's coordinates from the cost of its estimator.
 
@@ -401,14 +401,17 @@ Section~\ref{sec:comparison} recasts the bridge as a Bayesian architecture-compa
 The ladder is an empirical realization of the comparison in that theorem: measured predictive
 gain equals representation gain net of the change in within-representation excess risk.
 
-\subsection{An architecture ablation on 701 economic time series}\label{sec:ablation}
+\subsection{An architecture ablation on 572 economic time series}\label{sec:ablation}
 
 The top rung of the ladder is \emph{laplace}, a new online distributional forecaster built
 as a likelihood-weighted ensemble over a population of composed transforms. Its algorithmic
 specification and baseline comparisons are documented with the library
 \citep{cotton_skaters}. Here it serves as the measurement instrument, and the lower rungs
-are restrictions of the same design. We ran the nested ladder on 701 economic time series
-drawn from the FRED database by fixed enumeration rules rather than hand-curation. Each series enters as changes: first differences, or log differences when the levels are
+are restrictions of the same design. We ran the nested ladder on 572 economic time
+series drawn from the FRED database by fixed enumeration rules rather than
+hand-curation: the enumeration returned 701 series, of which 572 retained full
+histories on the August 2026 refetch used here, the drops being mostly short monthly
+series. Each series enters as changes: first differences, or log differences when the levels are
 strictly positive. The choice is made once from the full series and is shared by every rung,
 so it does not differentiate them. The corpus is filtered to continuous series, meaning fewer than five percent
 repeated consecutive changes, with at least 600 observations. Forecasting is online and one
@@ -422,7 +425,7 @@ best-scoring one on at most a third of one percent of observations at every rung
 
 The benchmark average weights series equally: each series contributes its per-observation
 mean, with the first 301 observations unscored as burn-in. FRED contains related and occasionally near-duplicate
-quantities, so the 701 series are not independent draws. The intervals reported below
+quantities, so the 572 series are not independent draws. The intervals reported below
 resample whole series and are descriptive, since cross-series correlation is not modeled. Each rung is a likelihood-weighted ensemble over a candidate pool that strictly
 contains the previous rung's pool:
 
@@ -500,7 +503,7 @@ under the declared nesting order.
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.92\textwidth]{fig_ladder.pdf}
-\caption{Measured representation values on 701 continuous FRED change series, under the
+\caption{Measured representation values on 572 continuous FRED change series, under the
 nesting order declared in advance. Bar lengths are held-out one-step log-score gains in nats
 per observation from moving from each rung to the next architecture; the final-system
 increment is split into its lattice-projection component and the remainder. Annotations give
@@ -514,16 +517,16 @@ each bar's share of the mean total recovered gain and the fraction of series imp
 \toprule
 Rung & $\Delta_j$ mean & 90\% CI & median & share & improves\\
 \midrule
-$+$location & $+0.142$ & $[0.114,\,0.173]$ & $0.000$ & $23\%$ & $59\%$ of series\\
-$+$scale & $+0.264$ & $[0.228,\,0.309]$ & $+0.114$ & $44\%$ & $95\%$ of series\\
-$+$seasonal & $+0.014$ & $[0.004,\,0.026]$ & $-0.000$ & $2\%$ & $20\%$ of series\\
-$+$serial & $+0.023$ & $[0.019,\,0.026]$ & $+0.002$ & $4\%$ & $75\%$ of series\\
-$+$final-system bundle & $+0.162$ & $[0.142,\,0.185]$ & $+0.050$ & $27\%$ & $88\%$ of series\\
+$+$location & $+0.114$ & $[0.086,\,0.142]$ & $0.000$ & $23\%$ & $55\%$ of series\\
+$+$scale & $+0.218$ & $[0.195,\,0.240]$ & $+0.104$ & $44\%$ & $95\%$ of series\\
+$+$seasonal & $+0.003$ & $[-0.001,\,0.008]$ & $-0.000$ & $1\%$ & $16\%$ of series\\
+$+$serial & $+0.018$ & $[0.015,\,0.021]$ & $+0.001$ & $4\%$ & $74\%$ of series\\
+$+$final-system bundle & $+0.138$ & $[0.117,\,0.161]$ & $+0.045$ & $28\%$ & $85\%$ of series\\
 \midrule
-total $T_0\to T_5$ & $+0.604$ & & $+0.310$ & & $100\%$ of series\\
+total $T_0\to T_5$ & $+0.489$ & & $+0.239$ & & $99.8\%$ of series\\
 \bottomrule
 \end{tabular}
-\caption{Measured representation values on 701 continuous FRED change series: held-out one-step
+\caption{Measured representation values on 572 continuous FRED change series: held-out one-step
 log-score gains, in nats per observation, from adding each transform family to the nested pool.
 Intervals are series-resampling descriptive intervals: whole series are resampled, which
 respects dependence within a series but not correlation between related FRED series, so they
@@ -535,8 +538,8 @@ trivial-to-full-grammar gain.}
 We highlight four features of the measurement that bear directly on the theory.
 
 First, the full grammar recovered a positive predictive gain relative to the trivial
-architecture on every one of the 701 series, with mean $0.60$ nats per observation and
-per-series quartiles $0.15$, $0.31$, and $0.65$. By Proposition~\ref{prop:cumulative} this realized architecture gain equals the
+architecture on all but one of the 572 series, with mean $0.49$ nats per observation and
+per-series quartiles $0.13$, $0.24$, and $0.60$. By Proposition~\ref{prop:cumulative} this realized architecture gain equals the
 representation-floor reduction plus the change in endpoint within-representation excess
 risk. It shows that the richer grammar matters without identifying how much of the total is
 population information rather than endpoint fitting improvement. It is, at any rate, not a
@@ -545,12 +548,12 @@ measure-zero curiosity on this benchmark.
 Second, conditional scale is the largest and by far the most reliable family under the declared
 order: $44\%$ of the mean gain, improving $95\%$ of series. This is the piece a globally pooled
 residual law cannot represent and a scale-normalized law can. Read cumulatively: the
-location-only architecture trails the full grammar by a mean $0.46$ nats per observation, and
-$57\%$ of that shortfall is recovered by the scale family alone.
+location-only architecture trails the full grammar by a mean $0.38$ nats per observation, and
+$58\%$ of that shortfall is recovered by the scale family alone.
 
 Third, location is bimodal where scale is uniform. Its median value is zero and it improves
-only $59\%$ of series (many economic change series are close to white noise in the mean),
-but on the $28\%$ of series where it is worth more than $0.01$ nats, it is worth $0.50$ nats on
+only $55\%$ of series (many economic change series are close to white noise in the mean),
+but on the $23\%$ of series where it is worth more than $0.01$ nats, it is worth $0.50$ nats on
 average. Averages conceal this composition, and the per-series distribution is part of the
 answer.
 
@@ -733,7 +736,7 @@ separately in Section~\ref{sec:certification}.
 
 \subsubsection*{Matched-predictor experiment: design and scoring}
 
-We ran the depth-by-estimator grid on the same 701 series with a single fixed point predictor
+We ran the depth-by-estimator grid on the same 572 series with a single fixed point predictor
 for every cell: the full grammar's mean forecast, computed online. We call the residual law
 attached at the bottom of a transform stack its \emph{terminal leaf}. The four residual
 depths, with their fitted and empirical laws, are:
@@ -773,20 +776,20 @@ under this score should be read at that resolution.
 \toprule
 rel.\ 99-qtl.\ CRPS & $T_0$ const & $T_1$ scale & $T_2$ $+$serial & $T_3$ $+$shape\\
 \midrule
-fitted $\widehat Q_j$ & $1.000$ / $1.000$ & $0.951$ / $0.976$ & $1.091$ / $0.991$ & $1.280$ / $0.992$\\
-empirical $\widehat E_j$ & $0.957$ / $0.988$ & $\mathbf{0.938}$ / $\mathbf{0.971}$ & $0.961$ / $0.974$ & $1.011$ / $0.983$\\
+fitted $\widehat Q_j$ & $1.000$ / $1.000$ & $0.940$ / $0.975$ & $1.059$ / $0.988$ & $1.135$ / $0.990$\\
+empirical $\widehat E_j$ & $0.948$ / $0.987$ & $\mathbf{0.927}$ / $\mathbf{0.970}$ & $0.940$ / $0.972$ & $0.976$ / $0.978$\\
 \bottomrule
 \end{tabular}
 \par\smallskip
-{\small mean / median across 701 series; lower is better; best cell in bold.}
+{\small mean / median across 572 series; lower is better; best cell in bold.}
 \end{center}
 
 We report four findings. First, the empirical estimator outperforms its fitted counterpart
-at every depth, winning on $81\%$, $78\%$, $97\%$, and $87\%$ of series at depths $0$--$3$
-(paired series-resampling $90\%$ intervals for the mean effect: $[-4.9,-3.7]$,
-$[-1.5,-1.1]$, $[-16.1,-10.2]$, and $[-40.1,-16.1]$ percent of the pooled score). The
+at every depth, winning on $86\%$, $80\%$, $98\%$, and $88\%$ of series at depths $0$--$3$
+(paired series-resampling $90\%$ intervals for the mean effect: $[-6.0,-4.4]$,
+$[-1.5,-1.1]$, $[-18.1,-6.8]$, and $[-23.5,-9.5]$ percent of the pooled score). The
 advantage is modest at the raw and scale-normalized depths and much larger where the fitted
-serial and shape models are unstable, with mean relative scores of $1.09$ and $1.28$ for the
+serial and shape models are unstable, with mean relative scores of $1.06$ and $1.14$ for the
 fitted serial and shape laws against stable empirical counterparts. The result is consistent
 with the projection interpretation, since the empirical estimator avoids the shape
 restrictions of the fitted families, though the asymptotic projection theorem does not itself
@@ -795,18 +798,18 @@ useful regularizer at these sample sizes.
 
 Second, the best cell on this benchmark is $\widehat E_1$: scale-normalized empirical
 pooling, the predictive core of normalized conformal. It has the best mean and median and is
-the single best cell on $54\%$ of series. The scale rung is best on $70\%$ with either
-estimator, and an empirical cell is best on $81\%$.
+the single best cell on $56\%$ of series. The scale rung is best on $72\%$ with either
+estimator, and an empirical cell is best on $83\%$.
 
 Third, within this grid the main deficit of raw pooling is attributable to its coordinates
 rather than to empirical estimation. $\widehat E_0$'s
-empirical-versus-fitted term is favorable, at a mean $-4.3\%$ of the pooled score. But it trails $\widehat E_1$ by $2.0\%$ on average ($90\%$ interval $[1.8,2.2]$, median
+empirical-versus-fitted term is favorable, at a mean $-5.2\%$ of the pooled score. But it trails $\widehat E_1$ by $2.1\%$ on average ($90\%$ interval $[1.9,2.3]$, median
 $1.4\%$).
 
 \begin{center}
 \fbox{\parbox{0.9\textwidth}{With the point predictor held fixed, scale-normalized
-empirical pooling $\widehat E_1$ beats raw empirical pooling $\widehat E_0$ on $87\%$ of
-the 701 series under the quantile-approximated CRPS.}}
+empirical pooling $\widehat E_1$ beats raw empirical pooling $\widehat E_0$ on $90\%$ of
+the 572 series under the quantile-approximated CRPS.}}
 \end{center}
 
 This is the single number most directly relevant to the conformal thesis. The measured
