@@ -79,18 +79,22 @@ property distinguishes it from fitted recalibrators at the point where it is app
 does not privilege stopping there, it does not remove the modeling that follows, and it
 does not determine predictive quality under a proper scoring rule.
 
-The standard conformal pattern also carries a methodological inconsistency that is
-avoided in the present work. A skeptic of the standard conformal prediction patterns
-might reasonably ask why an approach that essentially adopts the empirical
-distribution, in a sense advocating not modeling at all, is appropriate in the context
-of model residuals but not in general (for instance, as a replacement for the base
-model). The model predicts
-conditionally. Its residuals are then pooled across covariate states, and the pooling is
-justified exactly to the extent that the model has made the residual law conditionally
-invariant. The certificate does not establish that adequacy. It certifies ranks under
-exchangeability, so stopping at the pooled law is a modeling decision rather than a
-consequence of the guarantee. Pooling the observable itself, the limiting case of an
-inadequate model, would frequently be ludicrous.
+The standard conformal pattern also carries a tension the present work avoids. A
+skeptic of the standard conformal prediction patterns might reasonably ask why an
+approach that essentially adopts the empirical distribution, in a sense advocating not
+modeling at all, is appropriate in the context of model residuals but not in general
+(for instance, as a replacement for the base model).
+
+The stock answer is about targets. For marginal coverage, pooling is justified by
+exchangeability of the residuals alone, a weaker and testable hypothesis, and
+distribution-free conditional coverage is provably out of reach
+\citep{vovk2012conditional,lei2014distribution,barber2021limits}, so the pooled law
+is what one settles for. That answer does not carry over to a forecaster scored by a
+proper scoring rule. There the pooled residual law is quoted as a predictive density,
+its adequacy is exactly conditional invariance, and the certificate does not establish
+that. Certifying ranks under exchangeability makes stopping at the pooled law a
+modeling decision, not a consequence of the guarantee, and pooling the observable
+itself, the limiting case of an inadequate model, would frequently be ludicrous.
 
 In univariate probabilistic forecasting, Platt scaling,
 isotonic and quantile recalibration, temperature scaling, conformal predictive systems,
