@@ -27,14 +27,17 @@
 \maketitle
 
 \begin{abstract}
-Conformal procedures factor into a model, a scalar residual, and a rank-calibration
-operator. The factorization is a chain in a grammar of transforms, the rank map one
-operator beside location, scale, and autoregression. Interpolated, it is invertible.
-On distinct exchangeable input it is exactly calibrated at its retained levels,
-within one knot cell everywhere, while its guard sleeps. The certificate covers the
-operator's output, nothing downstream. On economic series, a serial refit after the
-operator beats stopping there on average. Inserting it into the same chain improves
-CRPS and worsens log score. A Bayes pool admits it at bounded cost.
+Conformal prediction is typically presented as a bundle: a base model, a scalar
+residual, and a rank-calibration step carrying an average coverage guarantee. The
+dangers of chasing coverage alone are just as well documented. Building an autonomous
+economic prediction system forced a different arrangement on us: a grammar of
+distributional transforms in which one univariate transform embodies the conformal
+step but need not terminate the processing. Its peers are the classical tools of
+time-series analysis, all state-conditional bijections. This resolves the
+inconsistency of treating residuals unconditionally beneath a conditional base model,
+and keeps the coverage certificate where wanted, though it does not propagate down
+the chain. On the economic series studied, inclusion via pooling is largely harmless
+in log-likelihood and slightly beneficial in CRPS.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
