@@ -208,9 +208,7 @@ is an assumption rather than an estimate, because tail mass is unobservable at a
 The slope cap makes the assumption finite. It declares that $m^{-1}$ is Lipschitz, with
 constant $L$ equal to twenty times the central inverse slope, and the declaration buys a
 guarantee. The declaration also has a price: a binding cap moves knots off their
-order statistics. Appendix~\ref{app:certificate} separates the objects involved,
-prices the displacement, and traces the guard's ancestry in Lipschitz isotonic
-regression and regularized empirical transport.
+order statistics, and Appendix~\ref{app:certificate} prices the displacement.
 
 \begin{lemma}[Pullback quantiles are budgeted]\label{lem:budget}
 Let $m$ be a strictly increasing forward map whose inverse is $L$-Lipschitz on all of $\mathbb{R}$,
@@ -259,7 +257,7 @@ its price is the rank-error term of Proposition~\ref{prop:sparse}.
 
 \section{What composition preserves}\label{sec:typing}
 
-The grammar can be said minimally and formally. A \emph{chain} is a finite word
+A \emph{chain} is a finite word
 $C = (T_1, \dots, T_m, L)$, stateful transforms followed by a terminal leaf. A
 transform is a tuple: a forward emission, an inverse pullback, a state update, a clock,
 input and output types, and declared properties. The forward map consumes an
@@ -305,13 +303,11 @@ almost surely distinct input, its probability-scale output is within $\delta$ of
 calibrated at every level. Any interpolation through every knot is
 $1/(n+1)$-conformal, exact at the knots. The implemented $39$-knot map is conformal
 to roughly one part in forty, exact at its retained levels while its guard sleeps.
-Compression, a binding guard, and ties each pay a stated price, and a leave-one-out
-statement covers guards whose budgets are data-dependent.
-Appendix~\ref{app:certificate} states and proves the accounting, with a
-counterexample showing the moving cap can dominate the other prices. Nothing
-downstream depends on the details, only on the headline: the certificate is priced
-in the operator's computational budget, and none of the prices moved the campaign's
-scores.
+Compression, a binding guard, and ties each pay a price.
+Appendix~\ref{app:certificate} states and proves the prices, a leave-one-out
+version for data-dependent guards among them, and a counterexample where the moving
+cap dominates. The certificate is priced in the operator's computational budget, and
+none of the prices moved the campaign's scores.
 
 What separates them is the exact statement. The discrete map is deterministic,
 exactly calibrated at every grid level, noninvertible, and $1/(n+1)$-calibrated between
@@ -390,9 +386,8 @@ exchangeability testing \citep{vovk2003testing}. The proposition concerns the di
 sequential ranks alone. The interpolated coordinates carry spacing information, and no
 independence is claimed for them.
 
-The narrowing matters, because previsibility is not a substitute for splitting.
-Previsibility prevents leakage, the map at time $t$ not containing $y_t$, and that is
-all it prevents. It does not make the transformed stream exchangeable: previsible
+Previsibility is not a substitute for splitting. It prevents leakage, the map at
+time $t$ not containing $y_t$, and that is all it prevents. It does not make the transformed stream exchangeable: previsible
 strictly increasing maps that differ across time destroy exchangeability trivially,
 as when every second observation is shifted by a constant. Splitting does more. It
 freezes one map for calibration and test, so their scores stay exchangeable whenever
@@ -825,7 +820,7 @@ conformal regression \citep{colombo2024flows} fits an invertible reshaping upstr
 and applies the rank map to its output, our location and scale rungs with a richer
 transform.
 
-Writing them this way shows what the grammar adds. Each system holds the rank map at a
+Each system holds the rank map at a
 fixed position and reads out a set, an interval, or a distribution it then quotes. The
 one operator that literature composes after the map is a controller on the quoted
 level, driven by coverage. Among the conformal systems above, we have not found one
@@ -881,9 +876,6 @@ propositions, and the first rows of a table, and the rest of the table is open.
 
 \appendix
 \section{The certificate, priced}\label{app:certificate}
-
-This appendix carries the exact calibration accounting for readers who want
-coverage statements. The rest of the paper uses only its headline.
 
 The slope guard's declaration has a price, and three objects need separating. The exact-knot
 interpolant is what the propositions below certify. The
@@ -972,8 +964,8 @@ not be small, as Remark~\ref{rem:guard} shows, so the guarded operator is not
 $\Delta_n$-conformal unconditionally. The $e$ term is also the price a future
 bounded-memory compaction would pay.
 
-There is a subtlety the guards force into the open.
-Proposition~\ref{prop:sparse} needs a budget $e$ declared for every possible sample.
+Proposition~\ref{prop:sparse} needs a budget $e$ declared for every possible
+sample.
 A guard that inspects the realized sample and reports the smallest feasible
 displacement has produced a data-dependent quantity, selected by the same data that
 built the map, and it cannot be substituted into the unconditional bound. Two repairs
@@ -1053,10 +1045,9 @@ by less than $0.0003$ nats, with identical output on ninety-seven percent of ser
 \end{remark}
 
 The corpus of Section~\ref{sec:experiments} filters to repeat fraction below five
-percent rather than zero, so $\beta_n$ is small and not vanishing there. The statement
-worth keeping is that the certificate is a function of knot resolution, sketch error,
-tie mass, and guard displacement: the guarantee is priced in the operator's
-computational budget.
+percent rather than zero, so $\beta_n$ is small and not vanishing there. The certificate is a function of knot resolution, sketch error, tie mass, and
+guard displacement: the guarantee is priced in the operator's computational
+budget.
 
 The discrete fence-post map and gaussianize-full both have global error at most
 $1/(n+1)$: the discrete map's output is supported on the grid, so as a distribution on
