@@ -242,7 +242,9 @@ $L\sigma\,|\Phi^{-1}(\alpha)|$. The budget is conditional on the operator's stat
 $L$ is twenty times the current central inverse slope and $\sigma$ is fitted, so the
 lemma bounds quoted quantiles relative to the current central scale, not by a
 universal constant. Within that reading, no realization amplifies a quoted quantile
-past its budget. The global $L$ is also purchased with the knot displacement of
+past its budget. The lemma budgets the ideal pulled-back predictive. The
+implemented nine-particle mixture approximates that predictive, and the
+approximation error is not bounded here. The global $L$ is also purchased with the knot displacement of
 Remark~\ref{rem:guard}: the Lipschitz budget and retained-level exactness are
 competing constraints, and no operator holds both exactly on arbitrary data. The naive empirical map declares $L = \infty$ and buys nothing. The clamp is
 the same discipline in the forward direction. The retained knot coordinates lie
@@ -250,7 +252,9 @@ within $(-8, 8)$ for every practical history length, so the clamp controls only
 extrapolated and warmup emissions, and a downstream learner with expanding memory is
 safe against exactly the emissions it excludes. Any finite multiplier yields the
 lemma, so the value twenty is the one remaining choice of taste, a tail-conservatism
-dial. Fitting the tail where the sample reaches, generalized-Pareto by censored maximum
+dial. The budget statement is for the piecewise-linear operator: the
+Fritsch--Butland tangents of the smooth variant can steepen the inverse of a capped
+secant by a factor approaching two, so that variant's declared budget is $2L$. Fitting the tail where the sample reaches, generalized-Pareto by censored maximum
 likelihood as the leaf already does, with the budget kept as a prior bound, is the
 refinement we leave open \citep[the tail instability of the normal quantile
 transform is documented by][]{bogner2012normal}.
@@ -562,7 +566,8 @@ companion paper's forecaster, with a complexity penalty by chain depth.
 
 A second campaign, run for this revision, adds the decomposition ladder and robustness
 grids reported below. Config D0 is config D with its fitted leaf replaced by the fixed $N(0,1)$ law, the
-literal conformal terminal forecast, and a full-grid variant retains every knot. Alternative fixed links replace gaussianize in the E position. Guard and
+terminal conformal forecast up to the nine-particle inverse representation, and a
+full-grid variant retains every knot. Alternative fixed links replace gaussianize in the E position. Guard and
 resolution grids, an iid null suite, and a CRPS-weighted pool complete the set. The
 refetch recovers $572$ of the $701$ series, mostly dropping short monthly ones, and
 the campaign runs use those, with percentile bootstrap intervals resampling series.
@@ -587,8 +592,9 @@ residuals, and quotes the ranked law as the predictive. The fence-post step is w
 inference ends, and the design assumes the residuals arrive exchangeable, with nothing
 left in them worth modeling. Config D is that pattern written as a chain up to one caveat: its terminal leaf is a
 fitted unconditional Gaussian. Config D0 removes the caveat by quoting the fixed
-$N(0,1)$ law at the operator's output, which is the literal conformal terminal
-forecast. Config E reads
+$N(0,1)$ law at the operator's output. Its scored predictive is the nine-particle
+representation of that law's pullback, so it is the terminal conformal forecast up
+to inverse representation. Config E reads
 the same operator differently: its output is a coordinate system, and whatever structure
 the model missed is easier to fit in those coordinates. The two readings are testable
 against each other. For the exact sequential ranks, exchangeable input leaves no serial
@@ -697,11 +703,14 @@ Rerunning both pools as genuine Bayes mixtures reproduces the comparison on a fr
 data vintage. There is no likelihood clipping and no cross-expert mixture pruning, the reference
 blend sits inside the weight updates, and the depth prior is applied once, so the
 telescoping identity applies verbatim to these scores. The operator's $|z| \le 8$
-learner-input channel stays active inside each expert, as everywhere in the paper. G is ahead of H by $0.012$ nats on average over
-$572$ series, with the same lopsided shape, wins on one series in ten, and median
-difference zero. The sub-pool prior mass is $\pi_Q = 0.573$, so the proposition's
-worst case is $0.56$ nats in total however long the series run. The realized
-comparison sits on the profitable side of it. Nothing
+learner-input channel stays active inside each expert, as everywhere in the paper. The runner also resets the mixture weights to
+the depth prior at the start of the scored window, because the bound's prior-mass
+penalty controls the loss from initialization, not from an arbitrary suffix: scoring
+after a burn-in that already reweighted the pool would need the realized posterior
+mass in place of the prior. With the reset, the sub-pool prior mass
+$\pi_Q = 0.573$ makes the worst case $0.56$ nats in total for the reported scores,
+however long the series run, and the realized comparison sits on the profitable
+side of it. Nothing
 in the reported comparison hinges on the tempering. The measured $0.012$
 nats in G's favor says this corpus more than repays the admission.
 
@@ -891,7 +900,10 @@ slope-guarded map is what the experiments run. Its cap is enforced by lowering a
 knot whose segment is too steep. When it binds, the map no longer passes through the
 displaced order statistics, and retained-level exactness is suspended there. The
 clamped emission is a third object, a winsorized channel to downstream state and not
-part of the invertible map. Remark~\ref{rem:guard} prices the middle one.
+part of the invertible map. The nine-particle mixture representation of the pullback
+is a fourth: the campaign scores that mixture exactly, which is exact scoring of an
+approximate distribution, not exact change of variables, and its representation error
+is separate from all three prices above. Remark~\ref{rem:guard} prices the middle one.
 
 \begin{proposition}[Grid calibration survives interpolation]\label{prop:grid}
 Let $Y_1, \dots, Y_{n+1}$ be exchangeable and almost surely distinct. Let $m$ be any
@@ -984,31 +996,42 @@ worst cases over the held-out slot. The second repair is the next statement, and
 covers ties as well.
 
 \begin{proposition}[Leave-one-out certificate]\label{prop:loo}
-Let $Y_1, \dots, Y_N$ be exchangeable, $N = n + 1$, and condition on the multiset
-$M$ of their values. For each slot $s$, build the operator from the other $n$ values,
-and suppose its retained knots satisfy the bracketing contract with rank displacement
-at most $e_s$ and retained-cell width at most $\Delta_s$. Let $\Delta^*$ and $e^*$
-be the maxima over slots, and let $\beta^* = (b^* - 1)/N$, where $b^*$ is the
-largest tie-block size of $M$. Then, conditionally on $M$ and hence unconditionally,
+Let $Y_1, \dots, Y_N$ be exchangeable, $N = n + 1$, and let the knot construction
+depend on its calibration values only through their multiset, as the sorted-buffer
+operator does after warmup. Condition on the multiset $M$ of the $N$ values. For each
+slot $s$, build the map $m_s$ from the other $n$ values, and suppose its retained
+knots satisfy the bracketing contract with rank displacement at most $e_s$ and
+retained-cell width at most $\Delta_s$. Let $\Delta^*$ and $e^*$ be the maxima over
+slots, and $\beta^* = (b^* - 1)/N$ with $b^*$ the largest tie-block size of $M$.
+Let $S$ be the held-out slot, uniform given $M$ by exchangeability, and
+$U = \Phi(m_S(Y_S))$. Then, almost surely,
 \[
-  \sup_u \big| \Pr\{U \le u\} - u \big| \;\le\;
-  \Delta^* + \frac{e^* + 1}{N} + \beta^*.
+  \sup_u \big| \Pr\{U \le u \mid M\} - u \big| \;\le\;
+  B(M) := \Delta^* + \frac{e^* + 1}{N} + \beta^*,
 \]
+and unconditionally
+$\sup_u |\Pr\{U \le u\} - u| \le \mathbb{E}\,[B(M)] \le
+\operatorname{ess\,sup} B(M)$.
 \end{proposition}
 
 \begin{proof}
-Conditionally on $M$ the slot of the held-out value is uniform, by exchangeability.
-Fix a retained nominal rank $r$ and a slot $s$, and write $\bar y^{(s)}$ for the
-corresponding knot. Removing one value moves order statistics by at most one
-position, $Y_{(k)} \le y^{(s)}_{(k)} \le Y_{(k+1)}$, so the contract traps
-$\bar y^{(s)}$ between $Y_{(r - e^*)}$ and $Y_{(r + e^* + 1)}$. At least $r - e^*$
-of the $N$ values are at most $Y_{(r - e^*)}$, and at most $r + e^* + 1 + (b^* - 1)$
-are at most $Y_{(r + e^* + 1)}$. The count of slots whose held-out value falls at or
-below that slot's own knot therefore differs from $r$ by at most
-$e^* + 1 + (b^* - 1)$, which bounds the knot-level error by
-$(e^* + 1)/N + \beta^*$. Between retained levels the sandwich of
-Proposition~\ref{prop:sparse} runs with cell width at most $\Delta^*$. Averaging
-over $M$ gives the unconditional bound.
+Fix $u \in (0,1)$. For slot $s$, let $a_s \le Nu \le b_s$ be the retained ranks of
+slot $s$'s grid adjacent to $Nu$, with the conventions $r_{s,0} = 0$ and
+$r_{s, K_s + 1} = N$, so that $(b_s - a_s)/N \le \Delta^*$, and this holds even
+when the grids differ across slots, as under the deletion guard. Set
+$a = \min_s a_s$ and $b = \max_s b_s$; then $a/N \ge u - \Delta^*$ and
+$b/N \le u + \Delta^*$. For slot $s$ the event $\{U \le u\}$ is
+$\{Y_s \le m_s^{-1}(\Phi^{-1}(u))\}$, and monotonicity places
+$m_s^{-1}(\Phi^{-1}(u))$ between slot $s$'s knots at ranks $a_s$ and $b_s$, with the
+convention that the interval is unbounded on a side where the boundary rank is $0$ or
+$N$. Removing one value moves order statistics by at most one position,
+$Y_{(k)} \le y^{(s)}_{(k)} \le Y_{(k+1)}$, so the bracketing contract traps those
+knot values between $Y_{(a - e^*)}$ and $Y_{(b + e^* + 1)}$. At least $a - e^*$ of
+the $N$ values are at most $Y_{(a - e^*)}$, and at most $b + e^* + 1 + (b^* - 1)$
+are at most $Y_{(b + e^* + 1)}$. The count of slots satisfying the event therefore
+lies between $a - e^*$ and $b + e^* + 1 + (b^* - 1)$, and dividing by $N$,
+$\Pr\{U \le u \mid M\}$ differs from $u$ by at most $B(M)$. Taking expectations
+gives the marginal statement.
 \end{proof}
 
 \begin{corollary}[Tie handling]\label{cor:ties}
@@ -1043,11 +1066,20 @@ feasibility system
   0 \le \bar w_{j+1} - \bar w_j \le L\,(x_{j+1} - x_j),
 \]
 with flat knots dropped for invertibility, and obtains the certified upper bound
-$\Delta_n + e/(n+1)$ with the smallest $e$ feasible for the fixed retained grid. On
-this example the per-slot smallest displacement is $e = 7$ and the leave-one-out
-maximum of Proposition~\ref{prop:loo} is $e^* = 8$. Both guards report realized,
-data-dependent quantities, so their certificates are the conditional ones of
-Proposition~\ref{prop:loo}, or deterministic ones under budgets declared in advance.
+$\Delta_n + e/(n+1)$ with the smallest $e$ feasible for the fixed retained grid.
+When flat knots are dropped the grid changes, so $\Delta_n$ in the bound is the
+width recomputed after the drop, and minimizing $e$ alone need not minimize the
+total: the guard fitted exactly to the certificate would minimize
+$\Delta_n + e/(n+1)$ jointly. On this example the per-slot smallest displacement is
+$e = 7$ and the leave-one-out maximum of Proposition~\ref{prop:loo} is $e^* = 8$.
+
+Three certificates must be kept apart. Budgets $e_0$ and $\Delta_0$ declared in
+advance give a prospective certificate, available before the test value arrives.
+The leave-one-out maxima $e^*$ and $\Delta^*$ give the conditional certificate of
+Proposition~\ref{prop:loo}, and computing them needs the completed multiset and $N$
+reconstructions, so it is an ex-post transductive diagnostic. The single realized
+$e_S$ and $\Delta_S$ that a guard reports on the forecasting path bound neither and
+are a diagnostic only.
 On the campaign corpus, replacing the moving cap by either guard moves mean log score
 by less than $0.0003$ nats, with identical output on ninety-seven percent of series.
 \end{remark}
@@ -1095,12 +1127,17 @@ Remark~\ref{rem:guard} measures them.
 
 \section{Reproducibility}\label{app:repro}
 
-Every number in Section~\ref{sec:experiments} is produced by one of two runners in
-the \texttt{benchmarks} directory of the \texttt{skaters} repository. The original run
+Every number in Section~\ref{sec:experiments} is produced by one of four runners
+in the \texttt{benchmarks} directory of the \texttt{skaters} repository. They are
+\texttt{gaussianize\_chain.py} and \texttt{grammar\_campaign.py}, with
+\texttt{grammar\_exact\_bayes.py} and \texttt{grammar\_exact\_pullback.py}
+described below. The original run
 is \texttt{gaussianize\_chain.py}, with per-series results frozen in
 \texttt{gaussianize\_chain.csv}, and it also produces the synthetic warp numbers. The campaign runner is described at the end of this appendix. The
 configuration is as follows. The location operator is an EMA transform with rate $0.1$.
-The scale operator is an EWMA standardization with rate $0.05$. The AR(1) operator
+The scale operator is an EWMA standardization with rate $0.05$, emitting against
+the prior state so that the rung is the affine change of coordinates its inverse
+applies, with the first informative emission scaled to one as cold start. The AR(1) operator
 estimates its coefficient by recursive least squares with forgetting factor $0.99$ and
 ridge $1.0$. The gaussianize operator uses at most $39$ knots at equal mass from the
 full sorted history of its inputs (exact order statistics before the slope guard,
@@ -1111,7 +1148,10 @@ and a $9$-particle equal-probability approximation for the inverse. The kernel-s
 variant uses a Gaussian-kernel distribution function at Silverman bandwidth,
 represented by a monotone $C^1$ cubic with Fritsch--Butland tangents and inverted by
 Newton's method. The guards are the inverse-slope cap at twenty times the interquartile
-inverse slope and the downstream-update clamp $|z| \le 8$.
+inverse slope and the downstream-update clamp $|z| \le 8$. The implementation
+returns the clamped value from the forward callable, so the software object is not
+itself injective: the invertible map and the bounded update channel are separated in
+the analysis, and a typed implementation would return them as two channels.
 
 The pools are tempered likelihood mixtures over the candidate chains of the design
 table, with tempering rate $0.8$, a complexity penalty of $0.005$ per unit of chain
