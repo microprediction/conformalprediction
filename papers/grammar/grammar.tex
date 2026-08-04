@@ -418,9 +418,11 @@ $671$, between the clusters. At the retained level $78/79$ the probability that 
 exchangeable draw falls below the displaced knot is $71/79$, an error of $7/79$,
 exceeding $\Delta_n$. Retained resolution and tie mass are therefore not the whole
 price of the certificate. Guard displacement is a third term, zero exactly while the
-guard sleeps. Deleting offending knots instead of moving them would restore exact
-order statistics at an enlarged $\Delta_n$, and is the cleaner operator we did not
-implement.
+guard sleeps. Deleting offending knots instead of moving them restores exact order
+statistics at an enlarged $\Delta_n$, and the operator implements it as an option.
+On the campaign corpus the deletion guard is indistinguishable from the moving cap,
+identical on all but three percent of series with a mean difference under $0.0003$
+nats, so the unconditional certificate costs nothing measurable.
 \end{remark}
 
 The corpus of Section~\ref{sec:experiments} filters to repeat fraction below five
@@ -794,15 +796,14 @@ tempers the likelihood update at rate $0.8$ and applies its depth penalty per st
 adaptivity under regime change, so the measured G-versus-H comparison is empirical and
 does not inherit the exact bound.
 
-Rerunning both pools with untempered weights and the depth prior applied once, with
-the runner that ships alongside the benchmark, reproduces the comparison on a fresh
-data vintage: G ahead of H by $0.011$ nats on average over $572$ qualifying series,
-the same lopsided shape, win rate under a third, median difference zero. That runner
-is near-Bayes rather than exact. The shared ensemble clamps each expert's log density
-to $[-20, 20]$ before the weight update, prunes the emitted mixture to twenty
-components, and applies the scoring blend toward the reference outside the updates,
-so the telescoping identity does not apply verbatim to the reported scores, and the
-rerun stands as a robustness check rather than an instantiation of the bound. Nothing
+Rerunning both pools as genuine Bayes mixtures, unclamped, unpruned, with the
+reference blend applied inside the weight updates and the depth prior applied once,
+reproduces the comparison on a fresh data vintage: G ahead of H by $0.012$ nats on
+average over $572$ series, the same lopsided shape, wins on one series in ten, median
+difference zero. The telescoping identity applies verbatim to these scores. The
+sub-pool prior mass is $\pi_Q = 0.573$, so the proposition's worst case is $0.56$
+nats in total however long the series run, and the realized comparison sits on the
+profitable side of it. Nothing
 in the reported comparison hinges on the tempering. The measured $0.012$
 nats in G's favor says this corpus more than repays the admission.
 
@@ -1028,7 +1029,12 @@ The null suite draws series of length $1200$ and forty replicates per kind. The
 CRPS pool uses exponential weights with rate $1$ on cumulative CRPS and the exact-Bayes
 prior. The guard and resolution subsamples take every fifth series alphabetically,
 truncated to one hundred, a deterministic rule that never samples the last
-seventy-odd series. Bootstrap intervals are percentile intervals resampling series,
+seventy-odd series. The deletion-guard comparison is the \texttt{delguard}
+subcommand, using the operator's \texttt{guard} option, on the full campaign corpus.
+The exact Bayes pools are produced by \texttt{grammar\_exact\_bayes.py}, which
+updates weights by exact blended likelihoods without clamping or pruning and reports
+CRPS from a pruned copy of the predictive, the log score being exact. Bootstrap
+intervals are percentile intervals resampling series,
 $2000$ draws, seed $0$.
 
 \bibliographystyle{plainnat}
