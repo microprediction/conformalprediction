@@ -28,6 +28,8 @@
           <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
           <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
           <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
@@ -68,7 +70,7 @@
   <h1>Past the stop</h1>
   <p class="subtitle">The transform&rsquo;s output is a coordinate system, not a terminus.</p>
 
-  <p>In conformal practice the rank map is where inference ends: fit a model, rank the residuals, quote the ranked law. The stop is a design decision, and it assumes the residuals arrive exchangeable, with nothing left in them worth modeling. <a href="/demos/29-just-a-transform.html">The previous page</a> made the map an invertible transform; this one asks what happens if you keep going.</p>
+  <p>This is what the conformal community is apparently getting wrong. In conformal practice the rank map is where inference ends: fit a model, rank the residuals, quote the ranked law, stop. The stop is treated as principle. It is nothing of the sort. It is a bet that the residuals arrived exchangeable, with nothing left in them worth modeling &mdash; and the certificate is silent on whether that bet is any good, because coverage holds either way. <a href="/demos/29-just-a-transform.html">The previous page</a> made the map an invertible transform; this one shows what stopping leaves on the table.</p>
 
   <p>The data are a warped AR(1): a Gaussian autoregression \(z_t = \varphi z_{t-1} + \varepsilon_t\) observed through a monotone warp, \(y_t = \mathrm{sign}(z_t)\,|z_t|^{\gamma}\). The warp hides the linear structure without removing an ounce of it. Three online forecasters run prequentially, and every density is scored by the exact change of variables, Jacobians included:</p>
 
@@ -84,7 +86,7 @@
   <p>With the warp at \(\gamma = 1.5\) and \(\varphi = 0.8\), refitting through the map wins on both flanks. It beats the stop because the transformed stream still carries the serial structure the stop leaves on the table. It beats the no-map chain because the AR model is well specified only in the transformed coordinates: the warp makes the raw stream heavy-tailed and nonlinear, and a linear model fed the raw coordinates fits the wrong thing. Slide \(\gamma\) to \(1\) and the warp vanishes: the map has nothing to undo, and the two refits converge. Slide \(\varphi\) to \(0\) and the serial structure vanishes: the stop becomes optimal, and refitting pays a small estimation tax, visible as the gap running the other way.</p>
 
   <div class="takeaway">
-    <p>Takeaway. Whether to stop at the conformal step is an empirical question the certificate does not answer, because the certificate holds at the map&rsquo;s output whether or not structure remains beyond it. When the residual stream still carries signal, the map&rsquo;s best role is not terminal but interior: a coordinate change that hands the next model a stream it can actually fit. Stopping, continuing, and skipping the map are three chains, and the scoring rule, not the philosophy, picks between them.</p>
+    <p>Takeaway. Stopping at the conformal step is a bet, not a theorem, and the certificate does not answer it: the certificate holds at the map&rsquo;s output whether or not structure remains beyond it. When the residual stream still carries signal, the map&rsquo;s best role is not terminal but interior: a coordinate change that hands the next model a stream it can actually fit. Stopping, continuing, and skipping the map are three chains, and the scoring rule, not the philosophy, picks between them.</p>
   </div>
 
   <p class="note">On 572 economic series the same three-way race, run with the full grammar, gives the refit-through chain the lead under both log score and CRPS; the grammar paper in <a href="/papers/">papers &amp; notes</a> reports the campaign, and the <a href="https://github.com/microprediction/skaters">skaters</a> library implements the operator with its guards and certificates.</p>
