@@ -2,21 +2,22 @@
 
 Improvement convention in both panels: bars to the right are better for the
 first-named config. Log score improvement is the mean difference in nats per
-observation. CRPS improvement is the mean difference in percent of the
-location-baseline CRPS, sign-flipped so positive means lower CRPS. Win rates
-annotate each bar. Numbers from skaters/benchmarks/gaussianize_chain.log
-(701 series, final operator).
+observation. CRPS improvement is the mean per-series CRPS ratio, expressed as
+the percent cut, so positive means lower CRPS. Win rates annotate each bar.
+Ladder and E-vs-F duels from skaters/benchmarks/grammar_campaign_*.csv (572
+series, refetched vintage); pool duels from gaussianize_chain.csv (701 series,
+original vintage).
 """
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 DUELS = [
-    ("serial refit vs unconditional leaf\n(E vs D)",              +0.0530, 4.02, 75, 71),
-    ("refit through vs no operator\n(E vs F)",        -0.1083, 1.00,  8, 65),
-    ("pool with vs pool without\n(G vs H)",           +0.0121, 0.35, 31, 35),
-    ("pool vs fixed raw pattern\n(G vs C)",           +0.2493, 4.58, 95, 77),
-    ("smooth vs linear operator\n(E2 vs E)",          -0.0050, 0.01, 38, 39),
+    ("serial refit vs literal stop\n(E vs D0, 572 series)",   +0.0194, 3.90, 33, 66),
+    ("literal stop vs fitted leaf\n(D0 vs D, 572 series)",    +0.0267, 0.03, 97, 76),
+    ("refit through vs no operator\n(E vs F, 572 series)",    -0.0786, 1.01,  9, 64),
+    ("pool with vs pool without\n(G vs H, 701 series)",       +0.0121, 0.42, 31, 35),
+    ("pool vs fixed raw pattern\n(G vs C, 701 series)",       +0.2493, 4.93, 95, 77),
 ]
 
 labels = [d[0] for d in DUELS][::-1]

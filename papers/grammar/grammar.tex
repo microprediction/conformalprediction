@@ -45,7 +45,7 @@ tonight. That tension, conditional effort upstream and unconditional treatment a
 end, is the subject of this paper.
 
 Split conformal prediction can be written as a chain. Fit a model, take residuals, apply
-the fence-post empirical transform
+the fence-post empirical map
 \begin{equation}\label{eq:fencepost}
 E_n(r) \;=\; \frac{1 + \#\{i \le n : R_i \le r\}}{n+1},
 \end{equation}
@@ -106,13 +106,15 @@ member of the transform library. Conformal calibration stops at the transform. T
 keeps going.
 
 Two testable claims follow. The first is that the operator is not a natural stopping
-point: a serial model fitted on the Gaussianized stream can beat an unconditional
-terminal fit when exploitable residual structure remains. The second is that nesting is
+point: a serial model fitted on the Gaussianized stream can beat quoting the
+transformed empirical law where it stands, when exploitable residual structure
+remains. The second is that nesting is
 cheap: a pool over chains that includes the conformal pattern should not pay materially
 for admitting it, because the pool reallocates weight away from the pattern on series
 where it is a bad choice. We confirm both on a corpus of economic series and quantify a third
 finding we did not anticipate: the operator's incremental value inside a fixed chain
-depends on the scoring rule for a structural reason, not an implementation one.
+depends on the scoring rule, and the dependence is not explained by the smoothing we
+tested.
 
 A companion paper prices what a fixed representation choice costs
 \citep{cotton2026gap}. Under logarithmic loss the irreducible cost of pooling residuals in
@@ -247,8 +249,9 @@ are judgments, monotone, invertible, density-carrying, bi-Lipschitz with a decla
 budget, exchangeability-preserving, previsible, or $\delta$-calibrated at a position.
 
 Composition obeys checkable rules. Invertible composed with invertible is invertible,
-and Lipschitz budgets multiply (Lemma~\ref{lem:budget}). A fixed increasing link
-transports any calibration statement unchanged, because ranks are invariant under it.
+and Lipschitz budgets multiply (Lemma~\ref{lem:budget}). A fixed strictly increasing link
+transports the grid certificate, with its levels transported along the link, because
+ranks are invariant under it.
 Previsible composed with previsible is previsible, since the composite map at time $t$
 is built from maps measurable before $t$. A calibration certificate is not, in
 general, inherited through a fitted state-dependent operator, which is the second fact
@@ -350,27 +353,30 @@ is roughly one part in forty everywhere, exact at the retained levels. The $e$ t
 the price a future bounded-memory compaction would pay. Ties need their own statement.
 
 \begin{corollary}[Tie handling]\label{cor:ties}
-Drop the distinctness assumption, and condition on the multiset of the $n+1$ values,
-which fixes the tie blocks and, under the implementation's rule, the retained knots.
-With randomized tie-breaking, ordering tied observations uniformly at random, the
-conclusions of Proposition~\ref{prop:sparse} hold conditionally and hence
-unconditionally, whatever the tie structure. With the deterministic convention, one
-knot per distinct retained value, the conditional bound is $\Delta_n + \beta_n$,
-where $\Delta_n$ and $\beta_n$ are the realized largest retained-cell width and
-largest tie-block mass, and exactness at retained levels is lost. An unconditional
-bound follows by replacing $\Delta_n + \beta_n$ with any almost-sure bound.
+Drop the distinctness assumption. For the discrete rank, randomization restores
+exactness: ordering tied observations uniformly at random makes the rank of $Y_{n+1}$
+uniform on $\{1, \dots, n+1\}$ whatever the tie structure, so
+Proposition~\ref{prop:uniform} survives ties unchanged. Interpolation admits no such
+fix, because tied values are numerically equal and reordering them does not change the
+map. For the interpolated operator with one knot per distinct retained value, let
+$\beta_n$ be the largest tie-block mass and let $\Delta_n$ be the largest
+retained-cell width, maximized over which slot of the multiset the new observation
+occupies. Then $\sup_u |\Pr\{U \le u\} - u| \le \Delta_n + \beta_n$,
+conditionally on the multiset of the $n+1$ values and hence unconditionally, and
+exactness at retained levels is lost.
 \end{corollary}
 
 \begin{proof}
-Given the multiset, the position of $Y_{n+1}$ among the $n+1$ slots is uniform, by
-exchangeability, and the conditioning fixes every data-dependent quantity: the retained
-knots, the cell widths, and the tie masses. Randomized ranks are then uniform on
-$\{1, \dots, n+1\}$ regardless of ties, which is the only property the
-proposition's proof uses. For the deterministic convention,
-$\Pr\{Y_{n+1} \le y_{(r_j)} \mid \text{multiset}\}$ differs from $r_j/(n+1)$ by
-at most the tied mass at that knot less one slot, which is at most $\beta_n$, and the
-sandwich argument runs conditionally with every cell widened by $\beta_n$. Averaging
-over the multiset preserves any almost-sure bound.
+Given the multiset, the slot of $Y_{n+1}$ among the $n+1$ values is uniform, by
+exchangeability. The knots are built from the remaining $n$ values, so they vary with
+the slot, which is why $\Delta_n$ is maximized over slots: so defined it is a function
+of the multiset alone. For a retained knot at the value $y$ with level $\ell$,
+$\Pr\{Y_{n+1} \le y \mid \text{multiset}\}$ is the mass of tie blocks starting at
+or below $y$, and it differs from $\ell$ by at most the mass of the block at $y$
+together with the one-slot shift of the level itself, in total at most $\beta_n$. The
+sandwich argument of Proposition~\ref{prop:sparse} then runs conditionally with every
+cell widened by $\beta_n$, and averaging over the multiset gives the unconditional
+bound.
 \end{proof}
 
 The corpus of Section~\ref{sec:experiments} filters to repeat fraction below five
@@ -570,7 +576,7 @@ flooring in the reported nats. CRPS is computed in closed
 form from the Gaussian-mixture predictive. Per-series CRPS is normalized by the location
 baseline defined next, so scales are comparable across series.
 
-Six single chains and three pools are compared. All chains end in a Gaussian leaf with
+The bare leaf, six single chains, and three pools are compared. All chains end in a Gaussian leaf with
 online variance, and all transforms update online.
 
 \begin{center}
@@ -598,21 +604,24 @@ through the operator. The pools use the same likelihood-weighted online ensembli
 companion paper's forecaster, with a complexity penalty by chain depth.
 
 A second campaign, run for this revision, adds the decomposition ladder and robustness
-grids reported below. Config D0 is the $39$-knot operator followed by the fixed
-$N(0,1)$ leaf, the literal conformal terminal forecast, and a full-grid variant retains
-every knot. Alternative fixed links replace gaussianize in the E position. Guard and
+grids reported below. Config D0 is config D with its fitted leaf replaced by the fixed $N(0,1)$ law, the
+literal conformal terminal forecast, and a full-grid variant retains every knot. Alternative fixed links replace gaussianize in the E position. Guard and
 resolution grids, an iid null suite, and a CRPS-weighted pool complete the set. The
-refetched corpus recovers full histories for $572$ of the $701$ series, and the
-campaign runs use those, with cluster bootstrap intervals resampling series.
+refetch recovers $572$ of the $701$ series, and the campaign runs use those, with
+percentile bootstrap intervals resampling series. The subset is not random. The
+dropped $129$ are mostly short monthly macro series, and on the original run they
+carried roughly double the average E-versus-F log-score tax, so the campaign corpus
+is tilted toward series friendlier to the operator, and the smaller tax measured on
+it, $0.079$ nats against $0.108$, is partly composition and partly data vintage.
 Figure~\ref{fig:duels} summarizes the comparisons behind the paper's three findings.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{fig_grammar.pdf}
-\caption{The five comparisons behind the three findings, on 701 series under both scoring
-rules. Bars to the right favor the first-named config. Log score improvement is in nats per
-observation. CRPS improvement is in percent of the location-baseline CRPS. Win rates are
-per-series.}\label{fig:duels}
+\caption{The five comparisons behind the three findings, under both scoring rules,
+with each duel's corpus in its label. Bars to the right favor the first-named config.
+Log score improvement is in nats per observation. CRPS improvement is the mean
+per-series ratio, expressed as the percent cut. Win rates are per-series.}\label{fig:duels}
 \end{figure}
 
 \subsection{Stopping and inserting are different questions}\label{sec:interior}
@@ -631,13 +640,14 @@ rank signal for a refit to find, by Proposition~\ref{prop:sequential}. The inter
 coordinates carry spacing information besides, and an estimated AR(1) brings estimation
 noise of its own, so the comparison is informative rather than clean.
 
-The ladder separates three prices. Knot compression is free: the full-grid variant
+The ladder, on the $572$-series campaign corpus, separates three prices. Knot compression is free: the full-grid variant
 differs from $39$-knot D0 by $0.003$ nats, compressed ahead. Refitting the terminal
 leaf hurts: D scores $0.027$ nats below D0 and wins $3$ percent of series, because the
 operator has already standardized its output and a fitted variance adds estimation
 noise. Serial refitting beats the literal stop on average: E improves on D0 by $0.019$
 nats (interval $0.011$ to $0.029$) and cuts the mean per-series CRPS ratio by $3.9$
-percent, winning $66$ percent of series. The log-score wins are a minority. E beats D0
+percent, winning $66$ percent of series on CRPS. The mean CRPS gain is tail-driven,
+with a median cut of $0.3$ percent, and the log-score wins are a minority. E beats D0
 on a third of series, loses slightly on the rest, and gains a lot where it gains.
 Against the fitted-leaf D the margin is $0.046$ nats with $73$ percent wins.
 
@@ -657,20 +667,22 @@ $0.42$). When the downstream learner is well specified only in the empirical map
 coordinates, passing through the operator beats both stopping and applying the same
 learner in the original coordinates.
 
-Stopping is one question, and inserting is another. E versus D asks whether the rank
-transform is a good architectural stopping rule, and the answer is largely no. The
+Stopping is one question, and inserting is another. E versus D0 asks whether the rank
+transform is a good architectural stopping rule, and the answer is: on average, no,
+and on most individual series, yes. The
 operator's incremental value is E versus F, the same refit without the operator, and
 that answer is score-dependent. Under CRPS
 the operator helps: E beats F on $64$ percent of series and holds the best CRPS in the
-study. Under the log score the operator costs $0.079$ nats against F and wins $9$
-percent of series. We return to this in
+study. Under the log score the operator costs $0.079$ nats against F on the campaign
+corpus and wins $9$ percent of series. We return to this in
 Section~\ref{sec:smooth}, because the natural suspicion, that the piecewise-linear density
 is to blame, turns out to be wrong.
 
 The alternative links sharpen the point. A fixed Cauchy link in the same position, the
-probit of the standard Cauchy distribution function, is indistinguishable from F under
-the log score, $0.007$ nats with an interval spanning zero, and captures about half of
-the operator's mean CRPS gain. A sinh-arcsinh link with $\delta = 0.5$ pays no
+probit of the standard Cauchy distribution function, costs $0.007$ nats against F on
+the mean, with an interval spanning zero, though it loses to F on seventy percent of
+series by small margins, and it captures about half of the operator's mean CRPS
+gain. A sinh-arcsinh link with $\delta = 0.5$ pays no
 material tax either and wins the per-series CRPS comparison against the operator on
 $61$ percent of series, though not on average. The rank map keeps the best mean CRPS,
 beating the Cauchy link on $72$ percent of series, and pays for it in nats. Much of the
@@ -690,7 +702,7 @@ where it underperforms.
 Admitting the pattern is approximately free on average. The average hides the shape. Config H, the same pool with the gaussianize chains removed, differs
 from config G by $0.012$ nats and $0.4$ percent of baseline CRPS, with the nesting pool
 G ahead on both means. Per series the picture is lopsided: G wins under a third of
-series under either score, its median difference from H is zero to four decimals, its
+series by log score and just over a third by CRPS, its median difference from H is zero to four decimals, its
 fifth-percentile loss is under a thousandth of a nat, and its ninety-fifth-percentile
 gain is twenty times larger. Frequent negligible losses buy occasional real gains. Under
 the log score this shape is not luck. A standard Bayes-mixture regret inequality
@@ -734,10 +746,13 @@ No such bound is available to us
 under CRPS, and there the claim stays empirical. The
 weights update by likelihood, so the log score does the choosing and CRPS only evaluates
 the chosen blend. The matching experiment is a CRPS-weighted exponential pool over the
-same seven chains with the same prior, and it does not merely match: it beats the exact
-Bayes pool by $0.021$ nats per observation, winning $76$ percent of series, and wins
-the per-series CRPS comparison on $64$ percent. The admission rule is itself a choice
-within the grammar, and likelihood weighting is not obviously the right one.
+same seven chains with the same prior. It beats the exact Bayes pool under the log
+score, by $0.021$ nats per observation with wins on $76$ percent of series, and the
+CRPS comparison is mixed: it wins $64$ percent of series with median ratio $0.99$,
+while its mean per-series CRPS ratio is $1.003$, worse, because a few series blow out.
+The admission rule is itself a choice within the grammar, likelihood weighting is not
+obviously the right one, and why the log-score-driven chooser loses in its own metric
+is an open question we flag rather than resolve.
 
 This is the practical content of the grammar view. A fixed conformal method is
 a commitment, and the companion paper prices what the commitment can cost. A grammar that
@@ -754,11 +769,13 @@ kinks. The kernel-smoothed $C^1$ variant tests this directly, replacing the inte
 empirical distribution function with a smooth kernel estimate while changing nothing else.
 The smooth variant tracks the linear one within $0.012$ nats and $0.2$ percent of
 baseline CRPS in every position, and against config F it costs $0.113$ nats where the
-linear variant cost $0.108$. The tested smoothing does not explain or remove the tax.
+linear variant cost $0.108$, both on the original $701$-series run, whose tax exceeds
+the campaign corpus's $0.079$ for the composition and vintage reasons of
+Section~\ref{sec:design}. The tested smoothing does not explain or remove the tax.
 Alternative bandwidths, adaptive tails, and splines tuned under log loss remain
 untested, and the remaining evidence points at resolution and tail specification.
 
-The tax is structural, and it is the same structure the companion paper measured for
+The tax is not the kinks, and it is the same structure the companion paper measured for
 terminal empirical pooling. An empirical map's resolution is bounded by its ranks, and its
 tails are an assumption, and the log score is exactly the score that pays for resolution
 and tails. Under CRPS, which pays for calibrated quantiles, the operator earns its place in
@@ -785,12 +802,16 @@ consequence of the theorem.
 Three checks bound the sensitivity of these findings. An iid null suite, Gaussian,
 Student $t_3$, lognormal skew, and a two-component mixture, forty replicates each,
 measures how much serial signal the adaptive interpolation invents when there is
-nothing to find: the largest E minus D log-score delta across kinds is $0.0013$ nats.
+nothing to find: the largest E minus D log-score delta across kinds is $0.0013$
+nats, with standard error of the same size, against a headline effect sixteen
+standard errors larger.
 A guard grid crossing slope caps $\{10, 20, 40\}$ with clamps
 $z_{\max} \in \{6, 8, 10\}$ on a hundred-series subsample moves config E by
 $0.0013$ nats end to end, so the guard constants are not doing the work. A resolution
-grid on the same subsample finds the knot count flat, with $79$, $159$, and the full
-grid all within $0.003$ nats of $39$ and intervals spanning zero, while raising the
+grid on the same subsample finds the knot count flat in the point estimates, with
+$79$, $159$, and the full grid all within $0.003$ nats of $39$ and intervals spanning
+zero, though on a hundred series those intervals cannot exclude effects of the size
+the particle count shows, while raising the
 inverse from nine particles to nineteen is worth $0.015$ nats and going further is
 not. The certificate's resolution parameter is not the empirical bottleneck. The
 inverse's resolution is, mildly.
@@ -872,14 +893,17 @@ propositions, and the first rows of a table, and the rest of the table is open.
 \appendix
 \section{Reproducibility}\label{app:repro}
 
-Every number in Section~\ref{sec:experiments} is produced by
-\texttt{benchmarks/gaussianize\_chain.py} in the \texttt{skaters} repository, and the
-per-series results are frozen in \texttt{benchmarks/gaussianize\_chain.csv}. The
+Every number in Section~\ref{sec:experiments} is produced by one of two runners in
+the \texttt{skaters} repository. The original run is
+\texttt{benchmarks/gaussianize\_chain.py}, frozen in
+\texttt{benchmarks/gaussianize\_chain.csv}, and it also produces the synthetic warp
+numbers. The campaign runner is described at the end of this appendix. The
 configuration is as follows. The location operator is an EMA transform with rate $0.1$.
 The scale operator is an EWMA standardization with rate $0.05$. The AR(1) operator
 estimates its coefficient by recursive least squares with forgetting factor $0.99$ and
-ridge $1.0$. The gaussianize operator uses at most $39$ knots at equal mass from the full sorted
-history of its inputs (exact order statistics; the buffer is unbounded), a warmup of
+ridge $1.0$. The gaussianize operator uses at most $39$ knots at equal mass from the
+full sorted history of its inputs (exact order statistics; the buffer is unbounded),
+a warmup of
 $30$ observations with expanding-moment standardization before it,
 and a $9$-particle equal-probability approximation for the inverse. The kernel-smoothed
 variant uses a Gaussian-kernel distribution function at Silverman bandwidth,
@@ -910,7 +934,10 @@ gaussianize: Yeo--Johnson at $\lambda \in \{0.5, 1.5\}$, sinh-arcsinh at
 $\delta \in \{0.5, 2\}$, and the Cauchy link $\Phi^{-1}(F_{\mathrm{Cauchy}})$.
 The null suite draws series of length $1200$ and forty replicates per kind. The
 CRPS pool uses exponential weights with rate $1$ on cumulative CRPS and the exact-Bayes
-prior. Bootstrap intervals resample series, $2000$ draws, seed $0$.
+prior. The guard and resolution subsamples take every fifth series alphabetically,
+truncated to one hundred, a deterministic rule that never samples the last
+seventy-odd series. Bootstrap intervals are percentile intervals resampling series,
+$2000$ draws, seed $0$.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
