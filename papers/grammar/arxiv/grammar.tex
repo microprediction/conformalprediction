@@ -29,12 +29,12 @@
 \begin{abstract}
 Conformal procedures factor into a model, a scalar residual, and a rank-calibration
 operator. We study the fence-post rank map as a stateful operator in a grammar of
-transforms. Interpolated, it is invertible and, on distinct exchangeable input, exactly
-calibrated at its retained levels, within one knot cell everywhere. The certificate
-attaches to the operator's immediate output and is not automatically inherited
-downstream. On economic series a serial model after the operator outscores the literal stop
-on average, while against the same model without it, it improves CRPS and worsens log
-score. An exact Bayes pool admits it at bounded cost.
+transforms. Interpolated, it is invertible and, on distinct exchangeable input with its slope
+guard inactive, exact at retained levels, within one knot cell everywhere. The
+certificate attaches to the operator's immediate output and is not inherited
+automatically. On economic series a serial model after the operator outscores the
+literal stop on average, while against the same model without it, CRPS improves and
+log score worsens. A Bayes pool admits it at bounded cost.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -153,8 +153,8 @@ left limits of the right-continuous map \eqref{eq:fencepost} at the calibration 
 and this convention is what makes the certificate exact at the knots
 (Proposition~\ref{prop:grid}). That is the full map. The implementation retains at
 most $39$ of the knots, chosen at equal mass from the full sorted history so that
-each retained knot is an exact order statistic, and drops any knot whose value ties
-its neighbor, so ties widen the retained cells. We write gaussianize-full for the map
+each retained knot is an exact order statistic until the slope guard below binds, and
+drops any knot whose value ties its neighbor, so ties widen the retained cells. We write gaussianize-full for the map
 through every knot and gaussianize for the implemented retained-knot member.
 Proposition~\ref{prop:sparse} prices the difference: the certificate is a function of
 the retained resolution.
@@ -208,8 +208,16 @@ The slope cap makes the assumption finite. It declares that $m^{-1}$ is Lipschit
 constant $L$ equal to twenty times the central inverse slope, and the declaration buys a
 guarantee.
 
+The declaration also has a price, and three objects need separating. The exact-knot
+interpolant is what the propositions of Section~\ref{sec:typing} certify. The
+slope-guarded map is what the experiments run: the cap is enforced by lowering any
+knot whose segment is too steep, so when it binds, the map no longer passes through
+the displaced order statistics, and retained-level exactness is suspended there. The
+clamped emission is a third object, a winsorized channel to downstream state and not
+part of the invertible map. Remark~\ref{rem:guard} prices the middle one.
+
 \begin{lemma}[Pullback quantiles are budgeted]\label{lem:budget}
-Let $m$ be a monotone forward map whose inverse is $L$-Lipschitz on all of $\mathbb{R}$,
+Let $m$ be a strictly increasing forward map whose inverse is $L$-Lipschitz on all of $\mathbb{R}$,
 extrapolation included, and let $q$ be the quantile function of the predictive in
 transformed coordinates. Then the pulled-back predictive has quantiles
 $y_\alpha = m^{-1}(q(\alpha))$ and
@@ -228,8 +236,13 @@ Lipschitz maps is Lipschitz with the product constant.
 \end{proof}
 
 With a Gaussian leaf of scale $\sigma$ the right side is
-$L\sigma\,|\Phi^{-1}(\alpha)|$, so no realization of the data can make a quoted quantile
-explode. The naive empirical map declares $L = \infty$ and buys nothing. The clamp is
+$L\sigma\,|\Phi^{-1}(\alpha)|$. The budget is conditional on the operator's state:
+$L$ is twenty times the current central inverse slope and $\sigma$ is fitted, so the
+lemma bounds quoted quantiles relative to the current central scale, not by a
+universal constant. Within that reading, no realization amplifies a quoted quantile
+past its budget. The global $L$ is also purchased with the knot displacement of
+Remark~\ref{rem:guard}: the Lipschitz budget and retained-level exactness are
+competing constraints, and no operator holds both exactly on arbitrary data. The naive empirical map declares $L = \infty$ and buys nothing. The clamp is
 the same discipline in the forward direction: the codomain bound $|z| \le 8$ is
 intrinsic to the fence-post ranks, and a downstream learner with expanding memory is
 safe against exactly the emissions the bound excludes. Any finite multiplier yields the
@@ -241,7 +254,8 @@ refinement we leave open.
 Before enough observations accumulate, the operator standardizes by expanding moments,
 which is the $n \to 0$ limit of the empirical map. After the warmup the knots are rebuilt each step, at most
 thirty-nine of them at equal mass from the full sorted history, so the retained knots
-sit at exact order statistics and carry no rank-approximation error. The sorted buffer
+sit at exact order statistics, and carry no rank-approximation error while the slope
+guard is inactive. The sorted buffer
 itself grows with the series. A bounded compacted sketch is the obvious refinement, and
 its price is the rank-error term of Proposition~\ref{prop:sparse}.
 
@@ -350,15 +364,23 @@ force.
 \begin{proof}
 The argument of Proposition~\ref{prop:grid} gives exactness at each retained level
 $r_j/(n+1)$. Between consecutive retained levels, monotonicity traps
-$\Pr\{U \le u\}$ and $u$ in one retained cell, of width at most $\Delta_n$. A rank
-error of $e$ shifts a retained exact level by at most $e/(n+1)$, which adds to the
-cell width.
+$\Pr\{U \le u\}$ and $u$ in one retained cell, of width at most $\Delta_n$. For
+the rank-error term, the hypothesis is a bracketing contract: each interpolation knot
+$\bar y_j$ satisfies $y_{(r_j - e)} \le \bar y_j \le y_{(r_j + e)}$ almost surely.
+Event inclusion then traps $\Pr\{Y_{n+1} \le \bar y_j\}$ between
+$(r_j - e)/(n+1)$ and $(r_j + e)/(n+1)$, so the level error at a knot is at most
+$e/(n+1)$, which adds to the cell width.
 \end{proof}
 
-The full map is the case $\Delta_n = 1/(n+1)$. The implemented operator retains at
-most $39$ knots at exact order statistics, so $e = 0$ and after warmup its certificate
-is roughly one part in forty everywhere, exact at the retained levels. The $e$ term is
-the price a future bounded-memory compaction would pay. Ties need their own statement.
+The full map is the case $\Delta_n = 1/(n+1)$. For the implemented operator the
+accounting has two regimes. While the slope guard is inactive the retained knots are
+exact order statistics, $e = 0$, and after warmup the certificate is roughly one part
+in forty everywhere, exact at the retained levels. When the guard binds it lowers the
+offending knots, the map no longer passes through the displaced order statistics, and
+the displacement enters $e$ through the bracketing contract. The displacement need
+not be small, as the next remark shows, so the guarded operator is not
+$\Delta_n$-conformal unconditionally. The $e$ term is also the price a future
+bounded-memory compaction would pay. Ties need their own statement.
 
 \begin{corollary}[Tie handling]\label{cor:ties}
 Drop the distinctness assumption. For the discrete rank, randomization restores
@@ -386,6 +408,20 @@ sandwich argument of Proposition~\ref{prop:sparse} then runs conditionally with 
 cell widened by $\beta_n$, and averaging over the multiset gives the unconditional
 bound.
 \end{proof}
+
+\begin{remark}[The guard is a third price]\label{rem:guard}
+Take $n = 78$ calibration values, seventy-one at $0, 1, \dots, 70$ and eight near
+$10^9$, all distinct, in exchangeable order. With $39$ retained knots the top knot is
+the seventy-eighth order statistic and $\Delta_n = 2/79$. The slope cap, at twenty
+times the central inverse slope, drags that knot from the high cluster down to roughly
+$671$, between the clusters. At the retained level $78/79$ the probability that a new
+exchangeable draw falls below the displaced knot is $71/79$, an error of $7/79$,
+exceeding $\Delta_n$. Retained resolution and tie mass are therefore not the whole
+price of the certificate. Guard displacement is a third term, zero exactly while the
+guard sleeps. Deleting offending knots instead of moving them would restore exact
+order statistics at an enlarged $\Delta_n$, and is the cleaner operator we did not
+implement.
+\end{remark}
 
 The corpus of Section~\ref{sec:experiments} filters to repeat fraction below five
 percent rather than zero, so $\beta_n$ is small and not vanishing there. The statement
@@ -444,8 +480,8 @@ absorbs, so the map applied at time $t$ is built from $y_1, \dots, y_{t-1}$ alon
 the past is a calibration set that never contains the present. Batching is one scheduler
 for one rule, and updating after emission is another.
 
-On the exchangeable hypothesis the fine clock does not merely match the batch guarantee.
-It strengthens it.
+On the exchangeable hypothesis the fine clock matches the batch guarantee and adds
+independence across time.
 
 \begin{proposition}[Sequential fence-post outputs are independent]\label{prop:sequential}
 Let $Y_1, \dots, Y_T$ be exchangeable and almost surely distinct, and let
@@ -471,7 +507,20 @@ its factor.
 The independence of sequential ranks is classical \citep{renyi1962} and powers online
 exchangeability testing \citep{vovk2003testing}. The proposition concerns the discrete
 sequential ranks alone. The interpolated coordinates carry spacing information, and no
-independence is claimed for them. Here the proposition separates the schedules. Split
+independence is claimed for them.
+
+The narrowing matters, because previsibility is not a substitute for splitting.
+Previsibility prevents leakage, the map at time $t$ not containing $y_t$, and that is
+all it prevents. It does not make the transformed stream exchangeable: previsible
+strictly increasing maps that differ across time destroy exchangeability trivially,
+as when every second observation is shifted by a constant. Splitting does more. It
+freezes one map for calibration and test, so their scores stay exchangeable whenever
+the data are. The accurate statement is that emit-before-absorb guarantees prequential
+out-of-sample evaluation, and if the stream arriving at the fence-post rung is itself
+exchangeable, its sequential ranks are independent. The chains of
+Section~\ref{sec:experiments} do not satisfy that hypothesis, and their certificate
+reads through the idealization already declared. Here the proposition separates the
+schedules. Split
 conformal's p-values share one calibration set and are dependent. The prequential
 outputs are independent, and the price is early resolution: the map at time $t$ has
 granularity $1/t$, hence the warmup of Section~\ref{sec:operator}.
@@ -503,7 +552,8 @@ fence-post, discrete & yes & indep.\ seq.\ ranks & no &
 gaussianize, full grid & yes & not claimed & yes &
   exact on all $n$ rank levels, $1/(n{+}1)$ globally \\
 gaussianize, implemented & yes & not claimed & yes &
-  exact on retained levels (distinct input), $\Delta_n$ globally \\
+  exact on retained levels (distinct input, guard inactive), $\Delta_n$ plus guard
+  displacement \\
 fixed monotone link & yes & yes & yes & transparent \\
 EMA location, EWMA scale & yes & no & given state & none \\
 frozen split-fitted model & yes, coarse clock & cal/test pairs & varies & none \\
@@ -735,18 +785,25 @@ $\prod_t p_t(y_t) \ge \pi_Q \sum_{c \in Q} (\pi_c/\pi_Q) \prod_t p_{t,c}(y_t)
 = \pi_Q \prod_t q_t(y_t)$. Take logarithms.
 \end{proof}
 
-The total price of admitting the gaussianize chains is at most $\log(1/\pi_Q)$ nats,
-however the data falls, and the per-observation price vanishes. The proposition applies
+Taking $Q$ to be the sub-pool without the gaussianize chains, the total price of
+admitting them is at most $\log(1/\pi_Q)$ nats, the prior mass of the retained block
+rather than of the admitted one, however the data falls, and the per-observation price
+vanishes. The proposition applies
 to the untempered Bayes pool with the depth prior applied once. The implemented pool
 tempers the likelihood update at rate $0.8$ and applies its depth penalty per step, for
 adaptivity under regime change, so the measured G-versus-H comparison is empirical and
 does not inherit the exact bound.
 
-Rerunning both pools as exact Bayes mixtures, with the
-runner that ships alongside the benchmark, reproduces the comparison on a fresh data
-vintage: G ahead of H by $0.011$ nats on average over $572$ qualifying series, the same
-lopsided shape, win rate under a third, median difference zero. Nothing in the reported
-comparison hinges on the tempering. The measured $0.012$
+Rerunning both pools with untempered weights and the depth prior applied once, with
+the runner that ships alongside the benchmark, reproduces the comparison on a fresh
+data vintage: G ahead of H by $0.011$ nats on average over $572$ qualifying series,
+the same lopsided shape, win rate under a third, median difference zero. That runner
+is near-Bayes rather than exact. The shared ensemble clamps each expert's log density
+to $[-20, 20]$ before the weight update, prunes the emitted mixture to twenty
+components, and applies the scoring blend toward the reference outside the updates,
+so the telescoping identity does not apply verbatim to the reported scores, and the
+rerun stands as a robustness check rather than an instantiation of the bound. Nothing
+in the reported comparison hinges on the tempering. The measured $0.012$
 nats in G's favor says this corpus more than repays the admission.
 
 No such bound is available to us
@@ -920,7 +977,7 @@ matched by a fixed heavy-tailed link, which pays no tax and carries no certifica
 
 The operator is exceptional as a certificate and ordinary as an architecture, and
 the certificate it carries is priced in its computational budget: retained-knot
-resolution and tie mass set the calibration error. The
+resolution, tie mass, and guard displacement set the calibration error. The
 typing question is the theory this view opens. An operator's guarantee attaches to a position in a chain. Which properties survive
 composition is a discipline we have only begun here, with one operator, a few
 propositions, and the first rows of a table, and the rest of the table is open.
@@ -936,7 +993,8 @@ configuration is as follows. The location operator is an EMA transform with rate
 The scale operator is an EWMA standardization with rate $0.05$. The AR(1) operator
 estimates its coefficient by recursive least squares with forgetting factor $0.99$ and
 ridge $1.0$. The gaussianize operator uses at most $39$ knots at equal mass from the
-full sorted history of its inputs (exact order statistics; the buffer is unbounded),
+full sorted history of its inputs (exact order statistics before the slope guard,
+which can displace knots when it binds; the buffer is unbounded),
 a warmup of
 $30$ observations with expanding-moment standardization before it,
 and a $9$-particle equal-probability approximation for the inverse. The kernel-smoothed
