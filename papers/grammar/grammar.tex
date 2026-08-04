@@ -28,13 +28,13 @@
 
 \begin{abstract}
 Conformal procedures factor into a model, a scalar residual, and a rank-calibration
-operator. We study the fence-post rank map as a stateful operator in a grammar of
-transforms. Interpolated, it is invertible and, on distinct exchangeable input with its slope
-guard inactive, exact at retained levels, within one knot cell everywhere. The
-certificate attaches to the operator's immediate output and is not inherited
-automatically. On economic series a serial model after the operator outscores the
-literal stop on average, while against the same model without it, CRPS improves and
-log score worsens. A Bayes pool admits it at bounded cost.
+operator. We treat it as one operator in a grammar of composable transforms.
+Interpolated, the rank map is invertible. On distinct exchangeable input it is exactly
+calibrated at its retained levels, and within one knot cell everywhere, while its
+slope guard sleeps. The certificate covers the operator's output, nothing downstream.
+On economic series, refitting a serial model after the operator beats stopping there
+on average. Inserting the operator into the same chain improves CRPS and worsens log
+score. A Bayes pool admits it at bounded cost.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -65,9 +65,9 @@ construction to be studied whole, and its many variants, normalized, Mondrian, q
 distributional, and temporal
 \citep{bostrom2021mondrian,romano2019conformalized,chernozhukov2021distributional,gibbs2021adaptive,auer2023hopcpt},
 as separate constructions. The nearest exceptions stop one step short. Conformal
-predictive systems made the map emit a distribution function, and conformal calibrators
-\citep{vovk2020calibrators} apply that map to another system's output, one level of
-composition with the map still the last word. We propose a different organization, in
+predictive systems made the map emit a distribution function. Conformal calibrators
+\citep{vovk2020calibrators} apply that map to another system's output. Both compose
+once, and the map is still the last word. We propose a different organization, in
 which the map's position is a variable. The fence-post transform is
 one operator. The chain is one production rule in a grammar of composable transforms. The
 interesting question is then not which conformal method to choose but which sequence of
@@ -211,9 +211,9 @@ guarantee.
 
 The declaration also has a price, and three objects need separating. The exact-knot
 interpolant is what the propositions of Section~\ref{sec:typing} certify. The
-slope-guarded map is what the experiments run: the cap is enforced by lowering any
-knot whose segment is too steep, so when it binds, the map no longer passes through
-the displaced order statistics, and retained-level exactness is suspended there. The
+slope-guarded map is what the experiments run. Its cap is enforced by lowering any
+knot whose segment is too steep. When it binds, the map no longer passes through the
+displaced order statistics, and retained-level exactness is suspended there. The
 clamped emission is a third object, a winsorized channel to downstream state and not
 part of the invertible map. Remark~\ref{rem:guard} prices the middle one.
 
@@ -273,9 +273,8 @@ So the guard is not offered as a new slope-constrained regression method, and th
 operator is not offered as a new transform. In transport language the inverse
 Gaussianizer is a one-dimensional empirical transport map and the guard is Lipschitz
 isotonic regularization of it. The role of the guard here is to declare an inverse
-sensitivity budget and to expose, through the rank-displacement term of
-Proposition~\ref{prop:sparse}, the finite-sample calibration price paid for
-enforcing that budget. The canonical guard would be the least-squares projection onto
+sensitivity budget and to expose the finite-sample calibration price of enforcing it,
+through the rank-displacement term of Proposition~\ref{prop:sparse}. The canonical guard would be the least-squares projection onto
 the slope-constrained set, the regularized transport of \citet{paty2020regularity}.
 A guard fitted to this paper instead minimizes the rank displacement $e$ subject to
 the budget, solving exactly the optimization the proposition prices. The operator
@@ -293,7 +292,7 @@ its price is the rank-error term of Proposition~\ref{prop:sparse}.
 \section{What composition preserves}\label{sec:typing}
 
 The grammar can be said minimally and formally. A \emph{chain} is a finite word
-$C = (T_1, \dots, T_m, L)$, stateful transforms followed by a terminal leaf, and a
+$C = (T_1, \dots, T_m, L)$, stateful transforms followed by a terminal leaf. A
 transform is a tuple: a forward emission, an inverse pullback, a state update, a clock,
 input and output types, and declared properties. The forward map consumes an
 observation and the operator's state and emits a coordinate. The pullback carries
@@ -452,9 +451,9 @@ price of the certificate. Guard displacement is a third term, zero exactly while
 guard sleeps. Two honest guards are implemented as options. Deleting offending knots restores
 exact order statistics at an enlarged $\Delta_n$. Searching for the smallest rank
 displacement the budget admits, and projecting the knots into that corridor, pays
-exactly $\Delta_n + e/(n+1)$, the least possible: on this counterexample $e = 6$,
-with thirty-five of the thirty-nine knots untouched and the worst segment exactly at
-the cap. On the campaign corpus both are indistinguishable from the moving cap,
+exactly $\Delta_n + e/(n+1)$, the least possible. On this counterexample $e = 6$,
+thirty-five of the thirty-nine knots are untouched, and the worst segment sits
+exactly at the cap. On the campaign corpus both are indistinguishable from the moving cap,
 identical on ninety-seven percent of series with mean differences under $0.0003$
 nats, so the unconditional certificate costs nothing measurable.
 \end{remark}
@@ -490,9 +489,9 @@ Section~\ref{sec:smooth} measures what that costs.
 
 The second fact is that this guarantee is positional. Proposition~\ref{prop:uniform}
 concerns the operator's immediate output. If a downstream model is fitted on
-$z_1, \dots, z_t$ and its parameters enter later forecasts, the composed system's forecast
-at time $t+1$ depends on the ordering of the past stream, and the exchangeability that
-delivered uniformity no longer applies to the composed output. The calibration certificate
+$z_1, \dots, z_t$ and its parameters enter later forecasts, the composed system's
+forecast at time $t+1$ depends on the ordering of the past stream. The exchangeability
+that delivered uniformity no longer applies to the composed output. The calibration certificate
 attaches to a position in the chain, not to the chain. This is not a defect. It is the
 familiar price of fitting, and the reason the companion paper's ledger separates
 representation, model-form, and estimation cost \citep{cotton2026gap}. But it means the
@@ -633,12 +632,12 @@ Rosenblatt's
 chaining through conditional distributions whitens any process
 \citep{rosenblatt1952remarks}, and normalizing flows are its learned, offline
 descendants \citep{tabak2010,papamakarios2021normalizing}. Parametric monotone
-Gaussianizers run from \citet{boxcox1964} to \citet{yeojohnson2000}, quantile mapping
-in the geosciences is the same move under another name \citep{panofskybrier1968},
-transformed residuals as model criticism begin with \citet{coxsnell1968}, the PIT as a
-forecast-evaluation instrument with \citet{diebold1998evaluating}, and the prequential
-stance that all of this paper's scoring obeys is
-\citet{dawid1984present}.\footnote{A fuller annotated timeline is maintained at
+Gaussianizers run from \citet{boxcox1964} to \citet{yeojohnson2000}. Quantile
+mapping in the geosciences is the same move under another name
+\citep{panofskybrier1968}. Transformed residuals as model criticism begin with
+\citet{coxsnell1968}, and the PIT as a forecast-evaluation instrument with
+\citet{diebold1998evaluating}. The prequential stance that all of this paper's
+scoring obeys is \citet{dawid1984present}.\footnote{A fuller annotated timeline is maintained at
 \url{https://skaters.microprediction.org/heritage.html}.}
 
 The transform also ran as a market before it ran here as an operator. The
@@ -703,9 +702,9 @@ literal conformal terminal forecast, and a full-grid variant retains every knot.
 resolution grids, an iid null suite, and a CRPS-weighted pool complete the set. The
 refetch recovers $572$ of the $701$ series, mostly dropping short monthly ones, and
 the campaign runs use those, with percentile bootstrap intervals resampling series.
-The dropped series carried a larger share of the operator's log-score tax on the
-original run, which is part of why the tax reads $0.079$ nats here against $0.108$
-there, the rest being data vintage. The corpus can always grow.
+The dropped series carried more of the operator's log-score tax on the original
+run. That is part of why the tax reads $0.079$ nats here against $0.108$ there, and
+the rest is data vintage. The corpus can always grow.
 Figure~\ref{fig:duels} summarizes the comparisons behind the paper's three findings.
 
 \begin{figure}[t]
@@ -760,9 +759,9 @@ $0.42$). When the downstream learner is well specified only in the empirical map
 coordinates, passing through the operator beats both stopping and applying the same
 learner in the original coordinates.
 
-Stopping is one question, and inserting is another. E versus D0 asks whether the rank
-transform is a good architectural stopping rule, and the answer is: on average, no,
-and on most individual series, yes. The
+Stopping is one question, and inserting is another. E versus D0 asks whether the
+rank transform is a good architectural stopping rule. On average the answer is no. On
+most individual series it is yes. The
 operator's incremental value is E versus F, the same refit without the operator, and
 that answer is score-dependent. Under CRPS
 the operator helps: E beats F on $64$ percent of series and holds the best CRPS in the
@@ -773,9 +772,9 @@ is to blame, turns out to be wrong.
 
 The alternative links sharpen the point. A fixed Cauchy link in the same position, the
 probit of the standard Cauchy distribution function, costs $0.007$ nats against F on
-the mean, with an interval spanning zero, though it loses to F on seventy percent of
-series by small margins, and it captures about half of the operator's mean CRPS
-gain. A sinh-arcsinh link with $\delta = 0.5$ pays no
+the mean, with an interval spanning zero. Series by series it loses to F seventy
+percent of the time, by small margins. It captures about half of the operator's mean
+CRPS gain. A sinh-arcsinh link with $\delta = 0.5$ pays no
 material tax either and wins the per-series CRPS comparison against the operator on
 $61$ percent of series, though not on average. The rank map keeps the best mean CRPS,
 beating the Cauchy link on $72$ percent of series, and pays for it in nats. Much of the
@@ -794,9 +793,9 @@ where it underperforms.
 
 Admitting the pattern is approximately free on average. The average hides the shape. Config H, the same pool with the gaussianize chains removed, differs
 from config G by $0.012$ nats and $0.4$ percent of baseline CRPS, with the nesting pool
-G ahead on both means. Per series the picture is lopsided: G wins under a third of
-series by log score and just over a third by CRPS, its median difference from H is zero to four decimals, its
-fifth-percentile loss is under a thousandth of a nat, and its ninety-fifth-percentile
+G ahead on both means. Per series the picture is lopsided. G wins under a third of series by log score and
+just over a third by CRPS, and its median difference from H is zero to four decimals.
+Its fifth-percentile loss is under a thousandth of a nat, and its ninety-fifth-percentile
 gain is twenty times larger. Frequent negligible losses buy occasional real gains. Under
 the log score this shape is not luck. A standard Bayes-mixture regret inequality
 applies, and its interest here is what the subset represents: the conformal chains as a
@@ -821,23 +820,23 @@ $\prod_t p_t(y_t) \ge \pi_Q \sum_{c \in Q} (\pi_c/\pi_Q) \prod_t p_{t,c}(y_t)
 = \pi_Q \prod_t q_t(y_t)$. Take logarithms.
 \end{proof}
 
-Taking $Q$ to be the sub-pool without the gaussianize chains, the total price of
-admitting them is at most $\log(1/\pi_Q)$ nats, the prior mass of the retained block
-rather than of the admitted one, however the data falls, and the per-observation price
-vanishes. The proposition applies
+Take $Q$ to be the sub-pool without the gaussianize chains. The total price of
+admitting them is then at most $\log(1/\pi_Q)$ nats, however the data falls, and the
+per-observation price vanishes. The mass $\pi_Q$ is the prior mass of the retained
+block, not of the admitted one. The proposition applies
 to the untempered Bayes pool with the depth prior applied once. The implemented pool
 tempers the likelihood update at rate $0.8$ and applies its depth penalty per step, for
 adaptivity under regime change, so the measured G-versus-H comparison is empirical and
 does not inherit the exact bound.
 
-Rerunning both pools as genuine Bayes mixtures, unclamped, unpruned, with the
-reference blend applied inside the weight updates and the depth prior applied once,
-reproduces the comparison on a fresh data vintage: G ahead of H by $0.012$ nats on
-average over $572$ series, the same lopsided shape, wins on one series in ten, median
-difference zero. The telescoping identity applies verbatim to these scores. The
-sub-pool prior mass is $\pi_Q = 0.573$, so the proposition's worst case is $0.56$
-nats in total however long the series run, and the realized comparison sits on the
-profitable side of it. Nothing
+Rerunning both pools as genuine Bayes mixtures reproduces the comparison on a fresh
+data vintage. Nothing is clamped or pruned, the reference blend sits inside the
+weight updates, and the depth prior is applied once, so the telescoping identity
+applies verbatim to these scores. G is ahead of H by $0.012$ nats on average over
+$572$ series, with the same lopsided shape, wins on one series in ten, and median
+difference zero. The sub-pool prior mass is $\pi_Q = 0.573$, so the proposition's
+worst case is $0.56$ nats in total however long the series run. The realized
+comparison sits on the profitable side of it. Nothing
 in the reported comparison hinges on the tempering. The measured $0.012$
 nats in G's favor says this corpus more than repays the admission.
 
@@ -846,12 +845,12 @@ under CRPS, and there the claim stays empirical. The
 weights update by likelihood, so the log score does the choosing and CRPS only evaluates
 the chosen blend. The matching experiment is a CRPS-weighted exponential pool over the
 same seven chains with the same prior. It beats the exact Bayes pool under the log
-score, by $0.021$ nats per observation with wins on $76$ percent of series, and the
-CRPS comparison is mixed: it wins $64$ percent of series with median ratio $0.99$,
-while its mean per-series CRPS ratio is $1.003$, worse, because a few series blow out.
-The admission rule is itself a choice within the grammar, likelihood weighting is not
-obviously the right one, and why the log-score-driven chooser loses in its own metric
-is an open question we flag rather than resolve.
+score, by $0.021$ nats per observation with wins on $76$ percent of series. The CRPS
+comparison is mixed. It wins $64$ percent of series with median ratio $0.99$, and it
+loses on the mean ratio, $1.003$, because a few series blow out. The admission rule
+is itself a choice within the grammar, and likelihood weighting is not obviously the
+right one. Why the log-score-driven chooser loses in its own metric is an open
+question we flag rather than resolve.
 
 This is the practical content of the grammar view. A fixed conformal method is
 a commitment, and the companion paper prices what the commitment can cost. A grammar that
@@ -868,9 +867,10 @@ kinks. The kernel-smoothed $C^1$ variant tests this directly, replacing the inte
 empirical distribution function with a smooth kernel estimate while changing nothing else.
 The smooth variant tracks the linear one within $0.012$ nats and $0.2$ percent of
 baseline CRPS in every position, and against config F it costs $0.113$ nats where the
-linear variant cost $0.108$, both on the original $701$-series run, whose tax exceeds
-the campaign corpus's $0.079$ for the composition and vintage reasons of
-Section~\ref{sec:design}. The tested smoothing does not explain or remove the tax.
+linear variant cost $0.108$. Both numbers are from the original $701$-series run,
+whose tax exceeds the campaign corpus's $0.079$ for the composition and vintage
+reasons of Section~\ref{sec:design}. The tested smoothing does not explain or remove
+the tax.
 Alternative bandwidths, adaptive tails, and splines tuned under log loss remain
 untested, and the remaining evidence points at resolution and tail specification.
 
@@ -898,21 +898,19 @@ consequence of the theorem.
 
 \subsection{Robustness}\label{sec:robust}
 
-Three checks bound the sensitivity of these findings. An iid null suite, Gaussian,
-Student $t_3$, lognormal skew, and a two-component mixture, forty replicates each,
-measures how much serial signal the adaptive interpolation invents when there is
-nothing to find: the largest E minus D log-score delta across kinds is $0.0013$
-nats, with standard error of the same size, against a headline effect sixteen
-standard errors larger.
+Three checks bound the sensitivity of these findings. An iid null suite measures how much serial signal the adaptive interpolation
+invents when there is nothing to find. The kinds are Gaussian, Student $t_3$,
+lognormal skew, and a two-component mixture, forty replicates each. The largest E
+minus D log-score delta across kinds is $0.0013$ nats, with standard error of the
+same size, against a headline effect sixteen standard errors larger.
 A guard grid crossing slope caps $\{10, 20, 40\}$ with clamps
 $z_{\max} \in \{6, 8, 10\}$ on a hundred-series subsample moves config E by
 $0.0013$ nats end to end, so the guard constants are not doing the work. A resolution
-grid on the same subsample finds the knot count flat in the point estimates, with
-$79$, $159$, and the full grid all within $0.003$ nats of $39$ and intervals spanning
-zero, though on a hundred series those intervals cannot exclude effects of the size
-the particle count shows, while raising the
-inverse from nine particles to nineteen is worth $0.015$ nats and going further is
-not. The certificate's resolution parameter is not the empirical bottleneck. The
+grid on the same subsample finds the knot count flat in the point estimates: $79$,
+$159$, and the full grid all sit within $0.003$ nats of $39$, with intervals spanning
+zero. On a hundred series those intervals cannot exclude effects of the size the
+particle count shows. Raising the inverse from nine particles to nineteen is worth
+$0.015$ nats, and going further is not. The certificate's resolution parameter is not the empirical bottleneck. The
 inverse's resolution is, mildly.
 
 \section{One family}\label{sec:family}
@@ -1004,11 +1002,12 @@ Conformal prediction is one production rule in a grammar of composable transform
 residual, fence-post empirical map, inverse. Interpolated, the fence-post map is an ordinary
 invertible online transform, and the rule's distinguishing stop, quoting the empirical law
 where it stands, becomes a choice the scoring rule can overrule. On economic series,
-a serial model added after the operator outscores the literal terminal stop on average,
-a pool that admits the pattern trims its worst cases, at a price bounded for the exact
-Bayes pool and negligible empirically for the tempered one, and the operator's
-remaining cost under the log score is unexplained by the tested smoothing and mostly
-matched by a fixed heavy-tailed link, which pays no tax and carries no certificate.
+a serial model added after the operator outscores the literal terminal stop on
+average. A pool that admits the pattern trims its worst cases, at a price bounded for
+the exact Bayes pool and negligible empirically for the tempered one. The operator's
+remaining cost under the log score is unexplained by the tested smoothing. A fixed
+heavy-tailed link matches most of its CRPS value, pays no tax, and carries no
+certificate.
 
 The operator is exceptional as a certificate and ordinary as an architecture, and
 the certificate it carries is priced in its computational budget: retained-knot
