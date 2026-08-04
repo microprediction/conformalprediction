@@ -36,8 +36,9 @@ step but need not terminate the processing. Its peers are the classical tools of
 time-series analysis, all state-conditional bijections. This resolves the
 inconsistency of treating residuals unconditionally beneath a conditional base model,
 and keeps the coverage certificate where wanted, though it does not propagate down
-the chain. On the economic series studied, inclusion via pooling is largely harmless
-in log-likelihood and slightly beneficial in CRPS.
+the chain. On the economic series studied, the conformal step earns its
+place under both log-likelihood and CRPS, though a fixed heavy-tailed link captures
+most of the same benefit without the certificate.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -127,10 +128,13 @@ transformed empirical law where it stands, when exploitable residual structure
 remains. The second is that nesting is
 cheap: a pool over chains that includes the conformal pattern should not pay materially
 for admitting it, because the pool reallocates weight away from the pattern on series
-where it is a bad choice. We confirm both on a corpus of economic series and quantify a third
-finding we did not anticipate: the operator's incremental value inside a fixed chain
-depends on the scoring rule, and the dependence is not explained by the smoothing we
-tested.
+where it is a bad choice. We confirm both on a corpus of economic series and report a third
+finding we did not anticipate: the largest effect in the study was a mis-typed peer.
+A scale rung whose implemented map was not the affine map its inverse assumed had
+been bounding the coordinate on the side, crediting the chain without the operator,
+and repairing it flipped the operator's measured contribution from a small tax to a
+large gain. The grammar's type contracts turned out to be the empirical story, not
+only the formalism.
 
 A companion paper prices what a fixed representation choice costs
 \citep{cotton2026gap}. Under logarithmic loss the irreducible cost of pooling residuals in
@@ -571,18 +575,18 @@ full-grid variant retains every knot. Alternative fixed links replace gaussianiz
 resolution grids, an iid null suite, and a CRPS-weighted pool complete the set. The
 refetch recovers $572$ of the $701$ series, mostly dropping short monthly ones, and
 the campaign runs use those, with percentile bootstrap intervals resampling series.
-The dropped series carried more of the operator's log-score tax on the original
-run. That is part of why the tax reads $0.079$ nats here against $0.108$ there, and
-the rest is data vintage. The corpus can always grow.
+The dropped series are mostly the short monthly ones. The corpus can always
+grow.
 Figure~\ref{fig:duels} summarizes the comparisons behind the paper's three findings.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{fig_grammar.pdf}
-\caption{The five comparisons behind the three findings, under both scoring rules,
-with each duel's corpus in its label. Bars to the right favor the first-named config.
-Log score improvement is in nats per observation. CRPS improvement is the mean
-per-series ratio, expressed as the percent cut. Win rates are per-series.}\label{fig:duels}
+\caption{Five comparisons on the $572$-series campaign corpus, under both scoring
+rules, with the repaired affine scale rung. Bars to the right favor the first-named
+config. Log score improvement is in nats per observation. CRPS improvement is the
+mean per-series ratio, expressed as the percent cut. Win rates are
+per-series.}\label{fig:duels}
 \end{figure}
 
 \subsection{Stopping and inserting are different questions}\label{sec:interior}
@@ -602,16 +606,19 @@ rank signal for a refit to find, by Proposition~\ref{prop:sequential}. The inter
 coordinates carry spacing information besides, and an estimated AR(1) brings estimation
 noise of its own, so the comparison is informative rather than clean.
 
-The ladder, on the $572$-series campaign corpus, separates three prices. Knot compression is free: the full-grid variant
-differs from $39$-knot D0 by $0.003$ nats, compressed ahead. Refitting the terminal
-leaf hurts: D scores $0.027$ nats below D0 and wins $3$ percent of series, because the
-operator has already standardized its output and a fitted variance adds estimation
-noise. Serial refitting beats the literal stop on average: E improves on D0 by $0.019$
-nats (interval $0.011$ to $0.029$) and cuts the mean per-series CRPS ratio by $3.9$
-percent, winning $66$ percent of series on CRPS. The mean CRPS gain is tail-driven,
-with a median cut of $0.3$ percent, and the log-score wins are a minority. E beats D0
-on a third of series, loses slightly on the rest, and gains a lot where it gains.
-Against the fitted-leaf D the margin is $0.046$ nats with $73$ percent wins.
+The ladder, on the $572$-series campaign corpus, separates three prices. Knot
+compression is free: the full-grid variant differs from $39$-knot D0 by $0.003$
+nats, compressed ahead. Refitting the terminal leaf hurts: D scores $0.011$ nats
+below D0, winning $19$ percent of series, because the operator has already
+standardized its output and a fitted variance adds estimation noise. Serial
+refitting beats the literal stop on average: E improves on D0 by $0.038$ nats
+(interval $0.027$ to $0.052$) and cuts the mean per-series CRPS ratio by $3.2$
+percent, winning $59$ percent of series on CRPS. The margin is skewed. The median
+log-score difference is a thousandth of a nat with wins on $52$ percent of series,
+and the gains concentrate where serial structure is strong. On the iid null suite of
+Section~\ref{sec:robust} the same comparison runs the other way, by $0.011$ to
+$0.051$ nats depending on the null, which is the estimation cost of refitting when
+there is nothing to find, and it makes the corpus margin read as signal.
 
 Under the log score the oracle version of this
 margin is the predictive mutual information remaining in the transformed stream, the
@@ -630,26 +637,42 @@ coordinates, passing through the operator beats both stopping and applying the s
 learner in the original coordinates.
 
 Stopping is one question, and inserting is another. E versus D0 asks whether the
-rank transform is a good architectural stopping rule. On average the answer is no. On
-most individual series it is yes. The
-operator's incremental value is E versus F, the same refit without the operator, and
-that answer is score-dependent. Under CRPS
-the operator helps: E beats F on $64$ percent of series and holds the best CRPS in the
-study. Under the log score the operator costs $0.079$ nats against F on the campaign
-corpus and wins $9$ percent of series. We return to this in
-Section~\ref{sec:smooth}, because the natural suspicion, that the piecewise-linear density
-is to blame, turns out to be wrong.
+rank transform is a good architectural stopping rule. On average the answer is no.
+On the median series it is a coin flip. The operator's incremental value is E versus
+F, the same refit without the operator, and here this revision corrects its
+predecessors. Earlier drafts measured a log-score tax of about a tenth of a nat for
+inserting the operator. The tax was an artifact. The scale rung then in use divided
+each emission by a standard deviation that already contained it, a self-normalization
+that bounds the emitted coordinate, and a bounded coordinate is most of what the rank
+map supplies. The rung was quietly doing the operator's job, so the operator,
+measured against it, looked redundant.
 
-The alternative links sharpen the point. A fixed Cauchy link in the same position, the
-probit of the standard Cauchy distribution function, costs $0.007$ nats against F on
-the mean, with an interval spanning zero. Series by series it loses to F seventy
-percent of the time, by small margins. It captures about half of the operator's mean
-CRPS gain. A sinh-arcsinh link with $\delta = 0.5$ pays no
-material tax either and wins the per-series CRPS comparison against the operator on
-$61$ percent of series, though not on average. The rank map keeps the best mean CRPS,
-beating the Cauchy link on $72$ percent of series, and pays for it in nats. Much of the
-operator's architectural value is heavy-tailed monotone reshaping that a fixed smooth
-link supplies without a tax. What the fixed link cannot supply is the certificate.
+With the scale rung repaired to the affine map its inverse applies, the comparison
+changes sign and grows an order of magnitude. E beats F by $0.65$ nats on average
+(interval $0.54$ to $0.76$), with a median of $0.06$, wins on $61$ percent of
+series, and wins the per-series CRPS comparison on $97$ percent. Without a bounding
+rung, heavy-tailed coordinates reach the serial model and its leaf raw, and the
+worst series destroy the chain. In this chain the operator is not decoration. It is
+the difference between a usable pipeline and a fragile one.
+
+Part of every particle-scored number is representation rather than operator. The
+exact-pullback runner scores the true change of variables,
+$\log q(m(y)) + \log m'(y)$, with analytic Jacobians and no particles. The
+nine-particle representation costs about $0.09$ nats on the gaussianize chains,
+roughly constant across configs, and exactly zero on F, whose chain is affine and
+whose mixture pullback is already exact. Scored exactly on both sides, E beats F by
+$0.74$ nats and beats D0 by $0.032$, so the ladder's conclusions are about the
+operator, not about its representation.
+
+The alternative links complete the picture. A fixed Cauchy link in the same
+position beats F by $0.69$ nats, and it beats the rank map itself by $0.039$ nats on
+average, winning $76$ percent of series, while the rank map wins the per-series CRPS
+comparison against it on $66$ percent. A sinh-arcsinh link at $\delta = 0.5$ wins
+$83$ percent of series against the rank map and loses the mean to its own tail
+blowups, and the Yeo--Johnson links, which do not bound the tails at all, are
+destroyed with F. What the corpus rewards is heavy-tailed monotone bounding. The
+rank map supplies it adaptively, with a certificate. A fixed Cauchy link supplies it
+a shade better on average, with no certificate at all.
 
 \subsection{Nesting limits the cost of admission}\label{sec:nesting}
 
@@ -661,12 +684,13 @@ nats on average. On the twenty series where C is worst, with relative CRPS $1.02
 pool sits at $0.843$ on the same series. The pool walks away from the production rule
 where it underperforms.
 
-Admitting the pattern is approximately free on average. The average hides the shape. Config H, the same pool with the gaussianize chains removed, differs
-from config G by $0.012$ nats and $0.4$ percent of baseline CRPS, with the nesting pool
-G ahead on both means. Per series the picture is lopsided. G wins under a third of series by log score and
-just over a third by CRPS, and its median difference from H is zero to four decimals.
-Its fifth-percentile loss is under a thousandth of a nat, and its ninety-fifth-percentile
-gain is twenty times larger. Frequent negligible losses buy occasional real gains. Under
+Admitting the pattern now buys a real gain, and the shape is still lopsided. The
+exact Bayes pool G beats its sub-pool H, the same pool with the gaussianize chains
+removed, by $0.093$ nats per observation on average (interval $0.072$ to $0.115$)
+and by $4$ percent of the mean per-series CRPS ratio. The median difference is zero
+to four decimals and G wins $36$ percent of series by log score: on most series the
+admitted chains change nothing, and where the repaired F-chains are fragile they
+change everything. Frequent negligible differences buy occasional rescues. Under
 the log score this shape is not luck. A standard Bayes-mixture regret inequality
 applies, and its interest here is what the subset represents: the conformal chains as a
 candidate block whose admission has a price.
@@ -693,98 +717,80 @@ $\prod_t p_t(y_t) \ge \pi_Q \sum_{c \in Q} (\pi_c/\pi_Q) \prod_t p_{t,c}(y_t)
 Take $Q$ to be the sub-pool without the gaussianize chains. The total price of
 admitting them is then at most $\log(1/\pi_Q)$ nats, however the data falls, and the
 per-observation price vanishes. The mass $\pi_Q$ is the prior mass of the retained
-block, not of the admitted one. The proposition applies
-to the untempered Bayes pool with the depth prior applied once. The implemented pool
-tempers the likelihood update at rate $0.8$ and applies its depth penalty per step, for
-adaptivity under regime change, so the measured G-versus-H comparison is empirical and
-does not inherit the exact bound.
-
-Rerunning both pools as genuine Bayes mixtures reproduces the comparison on a fresh
-data vintage. There is no likelihood clipping and no cross-expert mixture pruning, the reference
-blend sits inside the weight updates, and the depth prior is applied once, so the
-telescoping identity applies verbatim to these scores. The operator's $|z| \le 8$
-learner-input channel stays active inside each expert, as everywhere in the paper. The runner also resets the mixture weights to
+block, not of the admitted one. The reported pools are exact Bayes mixtures, so the
+proposition applies to them verbatim: no likelihood clipping, no cross-expert
+mixture pruning, the reference blend inside the weight updates, and the depth prior
+applied once. The operator's $|z| \le 8$ learner-input channel stays active inside
+each expert, as everywhere in the paper. The production ensemble instead tempers its
+likelihood update at rate $0.8$ and applies its depth penalty per step, for
+adaptivity under regime change, and its comparison does not inherit the exact bound.
+The runner resets the mixture weights to
 the depth prior at the start of the scored window, because the bound's prior-mass
 penalty controls the loss from initialization, not from an arbitrary suffix: scoring
 after a burn-in that already reweighted the pool would need the realized posterior
 mass in place of the prior. With the reset, the sub-pool prior mass
 $\pi_Q = 0.573$ makes the worst case $0.56$ nats in total for the reported scores,
-however long the series run, and the realized comparison sits on the profitable
-side of it. Nothing
-in the reported comparison hinges on the tempering. The measured $0.012$
-nats in G's favor says this corpus more than repays the admission.
+however long the series run, and the realized comparison, $0.093$ nats per
+observation in G's favor, sits far on the profitable side of it.
 
 No such bound is available to us
 under CRPS, and there the claim stays empirical. The
 weights update by likelihood, so the log score does the choosing and CRPS only evaluates
 the chosen blend. The matching experiment is a CRPS-weighted exponential pool over the
-same seven chains with the same prior. It beats the exact Bayes pool under the log
-score, by $0.021$ nats per observation with wins on $76$ percent of series. The CRPS
-comparison is mixed. It wins $64$ percent of series with median ratio $0.99$, and it
-loses on the mean ratio, $1.003$, because a few series blow out. The admission rule
-is itself a choice within the grammar, and likelihood weighting is not obviously the
-right one. Why the log-score-driven chooser loses in its own metric is an open
-question we flag rather than resolve.
+same seven chains with the same prior. Its comparison with the exact Bayes pool
+is mixed and close. The CRPS-weighted pool wins $65$ percent of series by log score
+and $68$ percent by CRPS, with median CRPS ratio $0.99$, while its mean log score is
+$0.006$ nats lower with an interval spanning zero. The admission rule is itself a
+choice within the grammar, and neither weighting dominates the other here.
 
 This is the practical content of the grammar view. A fixed conformal method is
 a commitment, and the companion paper prices what the commitment can cost. A grammar that
 contains the method as one rule converts the commitment into a weighted vote, and the vote
 is revised online by the scoring rule. Nesting does not avert disasters on this corpus,
 because the guarded operator does not produce disasters. An exact Bayes pool trims the bad tail at a bounded cumulative price, vanishing per
-observation. The tempered pool used here exhibits the same behavior empirically.
+observation.
 
-\subsection{The tested smoothing does not remove the tax}\label{sec:smooth}
+\subsection{An apparent tax, dissolved}\label{sec:smooth}
 
-The log-score cost of the operator invites an implementation explanation: the
-piecewise-linear empirical map has a piecewise-constant density, and the log score punishes
-kinks. The kernel-smoothed $C^1$ variant tests this directly, replacing the interpolated
-empirical distribution function with a smooth kernel estimate while changing nothing else.
-The smooth variant tracks the linear one within $0.012$ nats and $0.2$ percent of
-baseline CRPS in every position, and against config F it costs $0.113$ nats where the
-linear variant cost $0.108$. Both numbers are from the original $701$-series run,
-whose tax exceeds the campaign corpus's $0.079$ for the composition and vintage
-reasons of Section~\ref{sec:design}. The tested smoothing does not explain or remove
-the tax.
-Alternative bandwidths, adaptive tails, and splines tuned under log loss remain
-untested, and the remaining evidence points at resolution and tail specification.
+Earlier drafts reported the opposite insertion result: the operator cost about a
+tenth of a nat against F under the log score, and a kernel-smoothed $C^1$ variant of
+the operator paid the same, which ruled out the piecewise-linear kinks as the cause.
+Both measurements were made against the self-normalized scale rung. The smoothing
+test was sound, and its negative answer was the first hint that the tax did not live
+in the operator at all. The diagnosis of Section~\ref{sec:interior} completes it:
+the tax was a mis-typed peer doing the operator's job, plus about $0.09$ nats of
+particle representation error that exact-pullback scoring removes.
 
-The tax is not the kinks, and it is the same structure the companion paper measured for
-terminal empirical pooling. An empirical map's resolution is bounded by its ranks, and its
-tails are an assumption, and the log score is exactly the score that pays for resolution
-and tails. Under CRPS, which pays for calibrated quantiles, the operator earns its place in
-the chain. Under the log score a fitted parametric leaf on the same stream is worth more.
-The value of the fence-post operator, like the value of residual pooling in the companion
-paper, depends jointly on the coordinates, the estimator, and the scoring rule. The grammar
-does not remove this dependence. It locates it: the scoring rule chooses among chains, and
-the operator is a candidate, not a default.
+A finding those drafts advertised as score dependence, the operator helping CRPS
+while costing log score, does not survive the repair. In the repaired chains the
+operator helps under both rules, and what remains score-dependent is the narrow
+comparison between the rank map and the fixed Cauchy link.
 
-The probit is likewise a choice, not the point. Composing the operator with any further
-fixed invertible link leaves the representation content unchanged, since mutual information
-is invariant under invertible maps, so the transform-pooling theorem makes the link
-representation-irrelevant. What remains is model form. On a 120-series holdout check, a
-logistic link in place of the probit shifts results by hundredths of a nat under both
-scores, and the shift consistently favors the logistic: the Gaussian leaf pushed through
-the heavier-tailed link implies a heavier-tailed predictive, which fits real standardized
-residuals slightly better. The theorem fixes only the representation content. A link can still matter to a
-restricted downstream learner through specification and estimation, and on this corpus
-it acts as a small tail-shape choice, an empirical observation rather than a
-consequence of the theorem.
+The episode is the grammar's second cautionary tale, beside the warmup emission of
+Section~\ref{sec:operator}. A mis-typed rung, one whose implemented map is not the
+map its inverse assumes, transfers credit between its neighbors and can misprice an
+operator two positions away. The type contracts are not pedantry. They are what the
+measurement of any one operator silently assumes about all the others.
 
 \subsection{Robustness}\label{sec:robust}
 
-Three checks bound the sensitivity of these findings. An iid null suite measures how much serial signal the adaptive interpolation
-invents when there is nothing to find. The kinds are Gaussian, Student $t_3$,
-lognormal skew, and a two-component mixture, forty replicates each. The largest E
-minus D log-score delta across kinds is $0.0013$ nats, with standard error of the
-same size, against a headline effect sixteen standard errors larger.
+Three checks bound the sensitivity of these findings. An iid null suite runs the ladder when there is nothing to find. The kinds are
+Gaussian, Student $t_3$, lognormal skew, and a two-component mixture, forty
+replicates each. Against the literal stop the refit loses on every null, by $0.011$
+to $0.051$ nats depending on kind, which is the estimation cost of fitting absent
+structure and is the sign the corpus reverses. Against the fitted leaf the refit
+gains up to $0.023$ nats on the skewed and mixture nulls, so part of any
+E-versus-D margin is adaptation rather than serial structure, and the stopping
+comparison is E versus D0 for exactly this reason.
 A guard grid crossing slope caps $\{10, 20, 40\}$ with clamps
 $z_{\max} \in \{6, 8, 10\}$ on a hundred-series subsample moves config E by
-$0.0013$ nats end to end, so the guard constants are not doing the work. A resolution
+$0.003$ nats end to end, so the guard constants are not doing the work. A resolution
 grid on the same subsample finds the knot count flat in the point estimates: $79$,
-$159$, and the full grid all sit within $0.003$ nats of $39$, with intervals spanning
-zero. On a hundred series those intervals cannot exclude effects of the size the
-particle count shows. Raising the inverse from nine particles to nineteen is worth
-$0.015$ nats, and going further is not. The certificate's resolution parameter is not the empirical bottleneck. The
+$159$, and the full grid all sit within $0.003$ nats of $39$, none ahead of it. On a
+hundred series those intervals cannot exclude effects of the size the particle count
+shows. Raising the inverse from nine particles to nineteen is worth $0.016$ nats,
+and going further is not, which is the subsample's view of the $0.09$-nat
+representation price the exact-pullback runner measures in full. The certificate's resolution parameter is not the empirical bottleneck. The
 inverse's resolution is, mildly.
 
 \section{One family}\label{sec:family}
@@ -878,11 +884,11 @@ residual, fence-post empirical map, inverse. Interpolated, the fence-post map is
 invertible online transform, and the rule's distinguishing stop, quoting the empirical law
 where it stands, becomes a choice the scoring rule can overrule. On economic series,
 a serial model added after the operator outscores the literal terminal stop on
-average. A pool that admits the pattern trims its worst cases, at a price bounded for
-the exact Bayes pool and negligible empirically for the tempered one. The operator's
-remaining cost under the log score is unexplained by the tested smoothing. A fixed
-heavy-tailed link matches most of its CRPS value, pays no tax, and carries no
-certificate.
+average. Inserted into a chain whose scale rung is honestly affine, the operator is
+load-bearing under both scoring rules, and the tax earlier drafts measured was a
+mis-typed peer doing its job, plus representation error. A pool that admits the
+pattern pays a bounded price and collects a real gain. A fixed Cauchy link supplies
+the same bounding a shade better on average, and carries no certificate.
 
 The operator is exceptional as a certificate and ordinary as an architecture, and
 the certificate it carries is priced in its computational budget: retained-knot

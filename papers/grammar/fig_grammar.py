@@ -4,20 +4,19 @@ Improvement convention in both panels: bars to the right are better for the
 first-named config. Log score improvement is the mean difference in nats per
 observation. CRPS improvement is the mean per-series CRPS ratio, expressed as
 the percent cut, so positive means lower CRPS. Win rates annotate each bar.
-Ladder and E-vs-F duels from skaters/benchmarks/grammar_campaign_*.csv (572
-series, refetched vintage); pool duels from gaussianize_chain.csv (701 series,
-original vintage).
+All duels on the 572-series campaign corpus with the repaired affine scale rung,
+from skaters/benchmarks/grammar_campaign_*.csv and grammar_exact_bayes.csv.
 """
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 DUELS = [
-    ("serial refit vs literal stop\n(E vs D0, 572 series)",   +0.0194, 3.90, 33, 66),
-    ("literal stop vs fitted leaf\n(D0 vs D, 572 series)",    +0.0267, 0.03, 97, 76),
-    ("refit through vs no operator\n(E vs F, 572 series)",    -0.0786, 1.01,  9, 64),
-    ("pool with vs pool without\n(G vs H, 701 series)",       +0.0121, 0.42, 31, 35),
-    ("pool vs fixed raw pattern\n(G vs C, 701 series)",       +0.2493, 4.93, 95, 77),
+    ("serial refit vs literal stop\n(E vs D0)",        +0.0378,  3.20, 52, 59),
+    ("refit through vs no operator\n(E vs F)",         +0.6524, 27.20, 61, 97),
+    ("Cauchy link vs rank map\n(ALT vs E)",            +0.0389,  0.06, 76, 34),
+    ("pool with vs pool without\n(G vs H, exact)",     +0.0931,  4.00, 36, 55),
+    ("CRPS pool vs Bayes pool",                         -0.0061,  0.86, 65, 68),
 ]
 
 labels = [d[0] for d in DUELS][::-1]
