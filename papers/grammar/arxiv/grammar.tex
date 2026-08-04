@@ -78,18 +78,19 @@ one operator. The chain is one production rule in a grammar of composable transf
 interesting question is then not which conformal method to choose but which sequence of
 transforms minimizes the forecaster's scoring rule.
 
-Viewed this way conformal prediction is not, in general, an alternative to statistical
-modeling put to one side but a gracefully integrated operator in a chain whose finite-sample properties
-may well be valuable at the point where they are computed. This distinguishes it from other
-operators that it gracefully commingles with, but it does not privilege stopping there, nor need
-it remove the modeling that follows where appropriate. Used carefully in this manner, it
-does not materiallty degrade predictive quality under a proper scoring rule, at least in our experiments.
+Viewed this way, conformal prediction is not, in general, an alternative that puts
+statistical modeling to one side, but an integrated operator in a chain, whose
+finite-sample properties may well be valuable at the point where they are computed.
+Those properties distinguish it from the operators it commingles with, but they do
+not privilege stopping there, nor need they remove the modeling that follows. Used
+carefully in this manner, it does not materially degrade predictive quality under a
+proper scoring rule, at least in our experiments.
 
 The standard conformal pattern also carries a tension the present work avoids. A
-skeptic of the standard conformal prediction patterns might reasonably ask why
- heavy anchoring on the empirical distribution (in a sense, thereby not
-modeling at all) is appropriate in the context of model residuals, whereas to apply the same
- emphasis in general would be absurd.
+skeptic of the standard conformal prediction patterns might reasonably ask why heavy
+anchoring on the empirical distribution (in a sense, not modeling at all) is
+appropriate in the context of model residuals, whereas to apply the same emphasis in
+general would be absurd.
 
 The stock answer is about targets. For marginal coverage, pooling is justified by
 exchangeability of the residuals alone, a weaker and testable hypothesis, and
