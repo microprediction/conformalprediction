@@ -894,9 +894,9 @@ propositions, and the first rows of a table, and the rest of the table is open.
 \section{Reproducibility}\label{app:repro}
 
 Every number in Section~\ref{sec:experiments} is produced by one of two runners in
-the \texttt{benchmarks} directory of the \texttt{skaters} repository. The original
-run is \texttt{gaussianize\_chain.py}, frozen in \texttt{gaussianize\_chain.csv},
-and it also produces the synthetic warp numbers. The campaign runner is described at the end of this appendix. The
+the \texttt{benchmarks} directory of the \texttt{skaters} repository. The original run
+is \texttt{gaussianize\_chain.py}, with per-series results frozen in
+\texttt{gaussianize\_chain.csv}, and it also produces the synthetic warp numbers. The campaign runner is described at the end of this appendix. The
 configuration is as follows. The location operator is an EMA transform with rate $0.1$.
 The scale operator is an EWMA standardization with rate $0.05$. The AR(1) operator
 estimates its coefficient by recursive least squares with forgetting factor $0.99$ and
