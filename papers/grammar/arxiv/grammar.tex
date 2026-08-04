@@ -143,7 +143,8 @@ Conditional on its own past state, the forward map is an invertible change of va
 the current observation, so predictive densities push back exactly, Jacobians included.
 
 The raw fence-post map \eqref{eq:fencepost} is a step function. It has no density and no
-inverse, so it is not a transform in this sense. The minimal repair is interpolation. Let
+inverse, so it is not a transform in this sense. The minimal repair is interpolation,
+minimal but not unprecedented \citep{harar2022redistributor}. Let
 $y_{(1)} \le \dots \le y_{(n)}$ be the past observations, place knots at the order
 statistics with fence-post probabilities $p_{(i)} = i/(n+1)$ for
 $i = 1, \dots, n$, set
@@ -249,7 +250,37 @@ safe against exactly the emissions the bound excludes. Any finite multiplier yie
 lemma, so the value twenty is the one remaining choice of taste, a tail-conservatism
 dial. Fitting the tail where the sample reaches, generalized-Pareto by censored maximum
 likelihood as the leaf already does, with the budget kept as a prior bound, is the
-refinement we leave open.
+refinement we leave open \citep[the tail instability of the normal quantile
+transform is documented by][]{bogner2012normal}.
+
+Regularity of empirical transforms has a separate lineage, and the guard is not new
+as an optimization. Write $x_j = \Phi^{-1}(r_j/(n+1))$ and $w_j = y_{(r_j)}$, so
+that the inverse empirical Gaussianizer is the monotone quantile transport
+$x_j \mapsto w_j$. Replacing $w_j$ by nearby values $\bar w_j$ satisfying
+$0 \le \bar w_{j+1} - \bar w_j \le L\,(x_{j+1} - x_j)$ is Lipschitz isotonic
+regression, studied by \citet{yeganova2009isotonic}, \citet{agarwal2010lipschitz},
+and \citet{kakade2011efficient}, with the bounded-increment ancestry running back to
+isotonic optimization \citep{jewell1975isotonic}. \citet{paty2020regularity}
+identify the two-sided version, lower and upper slope bounds together, as the
+one-dimensional case of regularized empirical optimal transport, recovered by
+piecewise-affine interpolation. The unguarded operator has close kin as well: the
+continuous invertible empirical distribution transform of
+\citet{harar2022redistributor} is essentially the full-grid map without the
+conformal reading, and truncated normal scores go back to the nonparanormal
+\citep{liu2009nonparanormal}.
+
+So the guard is not offered as a new slope-constrained regression method, and the
+operator is not offered as a new transform. In transport language the inverse
+Gaussianizer is a one-dimensional empirical transport map and the guard is Lipschitz
+isotonic regularization of it. The role of the guard here is to declare an inverse
+sensitivity budget and to expose, through the rank-displacement term of
+Proposition~\ref{prop:sparse}, the finite-sample calibration price paid for
+enforcing that budget. The canonical guard would be the least-squares projection onto
+the slope-constrained set, the regularized transport of \citet{paty2020regularity}.
+A guard fitted to this paper would instead minimize the rank displacement $e$ subject
+to the budget, solving exactly the optimization the proposition prices. Both are
+refinements of the implemented walk, and the deletion variant of
+Remark~\ref{rem:guard} is the one we measure.
 
 Before enough observations accumulate, the operator standardizes by expanding moments,
 which is the $n \to 0$ limit of the empirical map. After the warmup the knots are rebuilt each step, at most
