@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>On authority — Conformal Prediction</title>
+<meta name="robots" content="noindex" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Note</p>
+  <h1>On authority</h1>
+  <p class="subtitle">Who is an expert in conformal prediction?</p>
+
+  <p>To be an expert in the <em>application</em> of conformal prediction, you need to know when to perform the trivial certification. That means knowing when the modeling has finished: when the residuals in front of you are an adequate approximation of whatever assumptions you are making at the moment you claim the certificate, exchangeability above all. And that determination is not a conformal skill. It is expertise in conditional prediction, otherwise known as prediction, together with whatever corners of applied mathematics, machine learning, and statistics bear on the series at hand &mdash; ideally sharpened by decades of work where money was on the line. The certification step itself is counting cells.</p>
+
+  <p>So I would be suspicious of anyone calling themselves an expert in conformal prediction, for roughly the reason I would be suspicious of anyone calling themselves an expert in <a href="https://en.wikipedia.org/wiki/Scholar%27s_mate">Scholar&rsquo;s Mate</a>. The move is real and the move is legal. Knowing only the move tells you nothing about whether the position calls for it, and the whole of the difficulty lives in the position.</p>
+
+  <p>These days, everyone should use the best available LLM to judge the veracity of arguments on purely logical grounds. The machines are patient, they are increasingly good at mathematics, and they do not care who is speaking. That last property matters, because <a href="https://en.wikipedia.org/wiki/Argument_from_authority">argument from authority</a> holds a long-standing place on the <a href="https://en.wikipedia.org/wiki/List_of_fallacies">list of famous logical fallacies</a>, and nothing about the economics of academic credentialing has repealed it. Every claim on these pages is stated so that it can be checked without reference to its author: the <a href="/index.html">demonstrations</a> run in your browser, and the <a href="/papers/">papers</a> carry their proofs.</p>
+
+  <p>You may instead choose to ignore everything offered by busy people working privately in prediction, and read only peer-reviewed work. That is a valid choice. Some of the work here is under submission, and you can wait. But to wait, in an age when a machine will verify the mathematics for you in an afternoon, is to open a different kind of <a href="/index.html#gap">information gap</a> &mdash; one that, unlike the other kind, is entirely self-imposed.</p>
+
+  <p class="note">For whatever it is worth under the second point, which is deliberately little: the author&rsquo;s background is summarized <a href="https://github.com/microprediction/home/blob/main/mitbio.md">here</a>.</p>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+
+</body>
+</html>
