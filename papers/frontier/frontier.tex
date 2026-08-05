@@ -598,10 +598,10 @@ sum to the full-coalition recovered gain.
 
 The final family needs a compositional realization, since its production form presupposes the
 lower rungs: its mixture leaves use the EWMA scale when the scale family is present and a
-near-expanding scale otherwise. The game was evaluated on a
-deterministic third of the corpus (234 series, all $2^5$ coalition pools, with total
-recovered gain $0.35$ nats per observation, smaller than the main ladder's because the
-surrogate final family is weaker than the complete forecaster). To isolate the order effect we also recompute
+near-expanding scale otherwise. The game was evaluated on the
+full corpus (572 series, all $2^5$ coalition pools, with total recovered gain $0.37$
+nats per observation, smaller than the main ladder's because the surrogate final
+family is weaker than the complete forecaster). To isolate the order effect we also recompute
 the declared-order attribution on the same game and series:
 
 \begin{center}
@@ -610,11 +610,11 @@ the declared-order attribution on the same game and series:
 \toprule
 Family & declared order (same game) & Shapley (same game)\\
 \midrule
-location & $42\%$ & $12\%$\\
-scale & $48\%$ & $42\%$\\
+location & $31\%$ & $7\%$\\
+scale & $59\%$ & $53\%$\\
 seasonal & $1\%$ & $1\%$\\
-serial & $7\%$ & $19\%$\\
-shape (final) & $3\%$ & $26\%$\\
+serial & $4\%$ & $13\%$\\
+shape (final) & $5\%$ & $25\%$\\
 \bottomrule
 \end{tabular}
 \end{center}
