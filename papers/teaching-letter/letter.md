@@ -1,7 +1,7 @@
 # Stop teaching conformal prediction as an alternative to statistics
 
-*Draft 1. Venue-agnostic; trim to the chosen format. Bracketed slots take docket
-quotes and final citations.*
+*Draft 2. Venue-agnostic; trim to the chosen format. Quotes per docket.md,
+spot-verify before print.*
 
 ---
 
@@ -71,7 +71,7 @@ nothing else: the corpus margin is signal, not artifact. More striking, insertin
 the transform into a chain that continues outperforms the identical chain without
 it by a wide margin under both the log score and CRPS, because the transform's real
 service is coordinate reshaping, a service the stopping convention throws away.
-[CITE: grammar paper campaign; frontier paper.] The stop is not a neutral default.
+The stop is not a neutral default.
 It is a measurable forfeiture, made invisible by the fact that the certificate
 holds either way.
 
