@@ -65,9 +65,7 @@ step as strictly terminal. Seven route its output onward as a filter or a featur
 None fits a further predictive model on the transform's output and carries the
 fitted law forward as the forecast, the routine move in copula econometrics, where
 estimating an empirical margin, modeling dependence on the transformed scale, and
-inverting has been standard practice for twenty years. In the spirit of the method,
-I report my sample as a marginal guarantee about the average paper, and remain
-silent about the tail. Had
+inverting has been standard practice for twenty years. Had
 the steps been taught separately, as a transform in a toolbox beside location,
 scale, and autoregression, no such uniformity of practice could have arisen. A
 bias toward stopping was created by nothing more than packaging.
