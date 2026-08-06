@@ -1,7 +1,7 @@
 # Stop teaching conformal prediction as an alternative to statistics
 
-*Draft 3. Post hostile-review. [SURVEY] slot pending the 100-paper sample.
-Spot-verify quotes per docket.md before print.*
+*Draft 4. Post hostile-review, fact-checked, survey installed (seed 42, pool 990,
+CSV in this directory). Quotes verbatim-confirmed per fact-check 2026-08-06.*
 
 ---
 
@@ -58,11 +58,16 @@ Because the bundle is taught whole, a remarkable cultural fact has gone largely
 unremarked. Papers that touch the transform's output exist: copula couplings knit
 transformed scores across targets, "scorecasters" forecast the score stream, and
 conformal predictive systems emit whole distribution functions. But each stops at
-a recalibrated set or a terminal distribution. [SURVEY SENTENCE + JOKE HERE.] I can
-find none that refits a serial predictive model on the transformed stream and
-carries the fitted law forward as the forecast, which is the routine move in copula
-econometrics, where estimating an empirical margin, modeling dependence on the
-transformed scale, and inverting has been standard practice for twenty years. Had
+a recalibrated set or a terminal distribution. To check that this is culture rather
+than my imagination, I drew a seed-fixed random sample of one hundred conformal
+papers from an arXiv pool of nearly a thousand. Ninety-three treat the conformal
+step as strictly terminal. Seven route its output onward as a filter or a feature.
+None fits a further predictive model on the transform's output and carries the
+fitted law forward as the forecast, the routine move in copula econometrics, where
+estimating an empirical margin, modeling dependence on the transformed scale, and
+inverting has been standard practice for twenty years. In the spirit of the method,
+I report my sample as a marginal guarantee about the average paper, and remain
+silent about the tail. Had
 the steps been taught separately, as a transform in a toolbox beside location,
 scale, and autoregression, no such uniformity of practice could have arisen. A
 bias toward stopping was created by nothing more than packaging.
@@ -156,4 +161,5 @@ guarantee, stated carefully); Foygel Barber, Candes, Ramdas & Tibshirani,
 Information and Inference 2021 (the conditional impossibility); Recht, "Cover
 Songs," argmin.net 2024 (an independent critique); Cotton, "An Empirical Study of
 the Conformal Information Gap," SSRN 7220538 (the identity, measured); Cotton, the
-transform-grammar paper and interactive demonstrations at conformalprediction.net.*
+transform-grammar paper, the survey sample and classifications, and interactive
+demonstrations, all at conformalprediction.net.*
