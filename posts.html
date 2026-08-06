@@ -4,15 +4,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<title>Adaptive prediction sets — Conformal Prediction</title>
+<title>Posts — Conformal Prediction</title>
 <meta property="og:image" content="https://conformalprediction.net/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content="https://conformalprediction.net/og.png" />
-<link rel="stylesheet" href="../css/style.css" />
-<script>
-  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
-</script>
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 <header class="site">
@@ -64,56 +60,27 @@
   </div>
 </header>
 
-
 <main>
 <div class="wrap">
 
-  <p class="tag">Where it shines</p>
-  <h1>Adaptive prediction sets</h1>
-  <p class="subtitle">When the <em>set</em> is the deliverable, conformal prediction is exactly the right tool, and its size is a usable confidence signal.</p>
+  <p class="tag">Posts</p>
+  <h1>Posts</h1>
+  <p class="subtitle">Short pieces, posted elsewhere, collected here.</p>
 
-  <p>Now the positive case. In classification, conformal prediction returns a <em>set</em> of
-  labels guaranteed to contain the true one at least \(1-\alpha\) of the time. The score is
-  \(s_i = 1 - \hat p_{y_i}(x_i)\), one minus the model&rsquo;s probability on the true class;
-  the set is \(C(x) = \{\,k : \hat p_k(x) \ge 1-q\,\}\). What makes this useful is that the
-  set <em>size adapts</em>: a single label where one class clearly dominates, two or three
-  where the input is genuinely ambiguous. That is precisely what you want for triage, return
-  a confident answer when you can, a short ranked shortlist when you cannot, and let a human
-  take the ambiguous ones. The coverage is the contract; the size is the &ldquo;how sure am
-  I.&rdquo; Move <em>overlap</em> up and watch the sets grow where the classes collide.</p>
+  <ul style="list-style:none;padding:0;">
 
-  <div class="demo">
-    <div class="canvas-box tall"><canvas id="main"></canvas></div>
-    <div class="readouts" id="readouts"></div>
-    <div class="controls" id="controls"></div>
-  </div>
+    <li style="margin:0 0 22px;">
+      <p style="margin:0;"><strong>Mind the gap</strong> &middot; August 2026<br/>
+      The conformal information gap named and priced: the Holloway Gambit, the Halloween Gambit, and why you are not getting that knight back.
+      <a href="https://www.linkedin.com/posts/petercotton_conformalprediction-mathematics-machinelearning-activity-7490882959407894528-pVOw">Read on LinkedIn</a>.</p>
+    </li>
 
-  <div class="canvas-box med demo"><canvas id="sizes"></canvas></div>
-  <p class="note">The distribution of prediction-set sizes over the test inputs. Singletons
-  (green) are the confident calls; size-2 and size-3 sets (amber, red) are where the model
-  reports ambiguity rather than guessing. Coverage holds across all of them.</p>
-
-  <div class="takeaway">
-    <p>Takeaway. Here the marginal guarantee is not a consolation prize, it is
-    the product: a set you can act on, with a coverage contract attached. The adaptivity that
-    was a <em>limitation</em> in <a href="02-marginal-vs-conditional.html">marginal vs. conditional coverage</a>
-    (coverage moving around with \(x\)) reappears here as a <em>feature</em>: the set size
-    moves with difficulty, exactly as a triage signal should. Same theorem, opposite verdict,
-    because the question changed.</p>
-  </div>
-
-  <div class="prevnext">
-    <a href="08-subgroup-coverage.html">&larr; Subgroup coverage</a>
-    <span class="spacer"></span>
-    <a href="10-anomaly-pvalues.html">Calibrated anomaly detection &rarr;</a>
-  </div>
+  </ul>
 
 </div>
-  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
 </main>
 
 <footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
 
-<script type="module" src="../js/demo09.js"></script>
 </body>
 </html>
