@@ -1,163 +1,187 @@
-# Stop teaching conformal prediction as an alternative to statistics
+# Teach conformal prediction without the costume
 
-*Draft 4. Post hostile-review, fact-checked, survey installed (seed 42, pool 990,
-CSV in this directory). Quotes verbatim-confirmed per fact-check 2026-08-06.*
+*Draft 5, for Significance "In Practice". Sharpened: the variants are conditional
+modeling under a conformal banner, and the early stop is universal. Prose only, no
+display maths. Quotes verbatim-confirmed 2026-08-06; survey seed 42, pool 990.*
 
 ---
 
-Conformal prediction has arrived in the classroom, and it has arrived wearing a
-costume. It is taught as an alternative to statistical prediction: a way to attach
-uncertainty to any model that is described, with striking frequency, as more
-rigorous than the statistics around it. I want to argue that teaching it this way
-does more harm than good, and that the repair is simple.
+Conformal prediction has entered the classroom wearing a costume. It is presented
+not as a technique for calibrating prediction sets, which it is, but as an
+alternative to ordinary statistical prediction: a model-agnostic route to
+uncertainty, more rigorous than the model-based methods around it. That presentation
+does more harm than good, and the harm has a shape. It teaches students to stop
+modeling one step too early, and it teaches them to call the last step of modeling by
+another name.
 
-## The rigor claim
+## The rigour claim
 
-The claim appears at the journal level and floods the layer beneath. The field's
-canonical tutorial promises "statistically rigorous uncertainty sets" that are
-"guaranteed to contain the ground truth with a user-specified probability." A
-Nature-family paper calls conformal prediction "essentially the only way to achieve
-valid prediction regions." One rung down, the most popular community resource list
-offers guarantees "regardless of the model or the data distribution," and one
-vendor's documentation ranks forecasting methods in a table on which conformal
-prediction is the only row with a full check for "calibration guarantee."
+The rhetoric starts qualified and loses its qualifications as it travels. A canonical
+tutorial promises "statistically rigorous uncertainty sets" that are "guaranteed to
+contain the ground truth with a user-specified probability." A Nature-family paper
+calls conformal prediction "essentially the only way to achieve valid prediction
+regions." One rung down, the most popular community resource list advertises
+guarantees "regardless of the model or the data distribution," and one vendor's
+documentation ranks forecasting methods in a table on which conformal prediction
+alone earns a full mark for "calibration guarantee."
 
-To be fair at the top: the careful sources are careful. The 2018 JASA paper that
-anchors the modern method puts the word "marginal" in its abstract. The canonical
-tutorial's own body warns that a bad score gives useless sets under perfectly valid
-coverage, and calls adaptivity "non-negotiable." Berkeley's lecture notes spell out
-what the coverage probability averages over, and even exhibit the trivial predictor
-that achieves exact coverage while saying nothing at all. Even the exclusivity
-claim has a theorem behind it, about validity alone. Which is the point: "valid" is
-doing the marketing work, the qualifications live in the bodies of documents, the
-abstracts travel without them, and the layer most students actually read quotes
-only the abstracts. The implication that survives the descent is always the same:
-model-based uncertainty is wishful, conformal uncertainty is proven.
+The careful sources are careful. The 2018 paper that anchors modern split conformal
+prediction puts "marginal" in its abstract. The canonical tutorial's own body warns
+that a poor score gives useless sets under perfectly valid coverage, and calls
+adaptivity "non-negotiable." Course notes spell out what the coverage probability
+averages over, and exhibit a trivial predictor that achieves exact coverage while
+conveying nothing at all. That is the point. "Valid" does the rhetorical work, the
+qualifications live in the bodies of documents, the abstracts travel without them,
+and the layer most students read quotes only the abstracts. The contrast that
+survives the descent is always the same: model-based uncertainty is wishful,
+conformal uncertainty is proven.
 
-The implication is refuted by an equally elementary theorem, one the curriculum
-never mentions. When a forecaster pools model residuals into one law, the expected
-penalty under the standard scoring rule of density forecasting is exactly the
-mutual information between the residuals and the information being ignored. In
-plain words: the forecaster pays, on average and for as long as the model is held
-fixed, precisely the value of what pooling threw away. The identity is classical
-in its parts, Shannon's currency and the forecast-verification literature's
-decomposition; what is new is only the observation that it prices the conformal
-stop, and the measurement of that price on real data. One rigorous theorem says
-the ranks are calibrated on average. An equally rigorous theorem says what the
-calibration costs. A curriculum built on the first alone teaches half a ledger.
+It is a category error. A coverage theorem certifies coverage. It says nothing about
+whether the conditioning information was used, whether the residuals were adequately
+modeled, or whether the forecast is sharp. Those questions have their own theorems,
+and one is elementary. Under the logarithmic score, the expected penalty for
+forecasting a residual with its unconditional law rather than its conditional law is
+exactly the mutual information between the residual and the information left out. The
+average price of pooling residuals is exactly the information pooling throws away.
+The ingredients are classical, Shannon's measure and the standard decomposition of
+forecast loss; what is new is that the quantity prices the conformal stop, and that
+the price has now been measured on real data. One theorem says the ranks are
+calibrated on average. Another says what is forfeited when residual structure remains
+and is ignored. Teach the first alone and you have shown half a ledger.
 
-## The bundle
+## The bundle, and the step nobody takes
 
-Split conformal prediction is a bundle: fit a model, take a scalar residual, rank
-the new residual among the old ones, read off the answer. The interesting member of
-the bundle is the ranking, a univariate transform, and a step function in need of
-one repair, interpolation, after which it is an ordinary invertible map with a
-certificate at its output.
+Split conformal prediction is taught as a bundle: fit a model, take a scalar
+residual, rank the new residual against the calibration residuals, invert the
+threshold to a set. The distinctive operation is the ranking in the middle. Handled
+for ties and discreteness, it is an empirical probability transform, a change of
+coordinates that attaches a finite-sample marginal certificate at one point in a
+chain. Nothing in the mathematics makes that point the end.
 
-Because the bundle is taught whole, a remarkable cultural fact has gone largely
-unremarked. Papers that touch the transform's output exist: copula couplings knit
-transformed scores across targets, "scorecasters" forecast the score stream, and
-conformal predictive systems emit whole distribution functions. But each stops at
-a recalibrated set or a terminal distribution. To check that this is culture rather
-than my imagination, I drew a seed-fixed random sample of one hundred conformal
-papers from an arXiv pool of nearly a thousand. Ninety-three treat the conformal
-step as strictly terminal. Seven route its output onward as a filter or a feature.
-None fits a further predictive model on the transform's output and carries the
-fitted law forward as the forecast, the routine move in copula econometrics, where
-estimating an empirical margin, modeling dependence on the transformed scale, and
-inverting has been standard practice for twenty years. Had
-the steps been taught separately, as a transform in a toolbox beside location,
-scale, and autoregression, no such uniformity of practice could have arisen. A
-bias toward stopping was created by nothing more than packaging.
+The convention makes it the end anyway, and the convention is nearly total. To test
+the impression rather than trust it, I drew a seed-fixed random sample of one hundred
+papers from an archive of nearly a thousand. Ninety-three treat the conformal step as
+terminal. Seven pass its output downstream as a filter or a feature. None estimates
+the transform, fits a further predictive law on the transformed scale, and carries
+that law back through the inverse as its forecast, the move that has been routine in
+copula econometrics for decades. This is not an impossibility theorem, and a
+counterexample may lurk somewhere. It documents a convention that the mathematics
+does not explain.
 
-## The bias is measurable
+Two objections arrive here, and both sharpen the case. First, some conformal papers
+do process the transformed scores: couplings knit them across targets, "scorecasters"
+forecast the score sequence, predictive systems emit whole distribution functions.
+But each terminates in a recalibrated set or a quoted law. None continues the way a
+forecaster continues, by fitting structure and carrying the fitted law onward. The
+cleverness goes into the last step before the stop, never past it.
 
-The stop has a measurable price, and measuring it does not involve scoring sets by
-alien metrics: the comparison is between two forecasters both built from the same
-transform, one quoting the law at its output, one continuing to model, judged by
-the scoring rules both sides share. On 572 economic series, forecasting one step
-ahead, continuing beats stopping on average, and the same comparison run on
-streams constructed to contain no signal shows the opposite sign, the ordinary
-cost of estimating nothing, which is what certifies the corpus margin as signal.
-Inserting the transform into a chain that continues also beats the identical chain
-without it, decisively, because the transform's real service is coordinate
-reshaping, a service the stopping convention discards. The stop is not a neutral
-default. It is a forfeiture, made invisible by the fact that the certificate
-arrives either way.
+Second, and this is the heart of it, the field's own efficiency literature is
+conditional modeling flying a conformal flag. Conformalized quantile regression fits
+a conditional quantile model, then calibrates it. Normalized and locally weighted
+scores fit a conditional model of the residual scale, then divide by it. Mondrian and
+group-conditional methods condition on a partition of the inputs. Every one of these
+is precisely the conditional modeling that the "alternative to statistics" framing
+calls unnecessary, performed and then tucked back under the certificate. The
+discipline cannot help doing statistics. It simply does exactly one step of it,
+re-certifies, and halts. That the field keeps reinventing conditional modeling under
+a new name, and keeps stopping one step in, is the strongest evidence that the
+packaging, not the mathematics, is doing the teaching.
 
-## What the certificate does not say
+## The cost of stopping
 
-That last clause is the mechanism of the harm, and the fault is the certificate's
-indifference, not the field's. The guarantee is marginal: ranks are uniform on
-average over everything. It therefore arrives whether or not the residuals were
-whitened, whether the model finished its work or never started. The field knows
-this, and its efficiency literature, normalized scores, quantile scores,
-group-conditional variants, exists precisely because everyone knows it. But the
-certificate itself is silent on the matter, and in a classroom silence reads as
-absolution. What the curriculum lacks is the theorem that prices the indifference,
-and the theorem exists.
+The stop has a measurable price, and measuring it does not score sets by a foreign
+ruler. The comparison is between two probabilistic forecasters built from the same
+transform, judged by a proper score both share: one quotes the unconditional law at
+the transform's output, the other fits the remaining structure on the transformed
+scale and carries the fitted law forward. Across 572 economic series forecast one
+step ahead, continuing beats stopping on average. Repeated on synthetic streams built
+to hold no signal, the sign flips, and continuing pays only the ordinary cost of
+fitting structure that is not there. That negative control is what turns the economic
+gain into a finding rather than a reward for extra flexibility. A second comparison is
+as telling: a chain that contains the transform beats the identical chain without it,
+because the transform's real service is coordinate reshaping, exposing structure in a
+representation easier to model. The stop throws that service away, and the certificate
+arrives either way. Stopping is not a neutral default. When structure remains it is a
+forfeiture, and the decision to stop is empirical, not licensed by a certificate.
 
-The price is not even fixed. The gap is the value of the structure your residuals
-still carry, so a better model shrinks it, which is exactly why it belongs in the
-curriculum: it is the theorem that tells a student what a better model is worth,
-in the same units the certificate declines to discuss.
+## What the certificate does not settle
 
-## An older, better lesson
+The confusion has one source: the certificate is indifferent to model quality by
+design. Under exchangeability the ranks are marginally valid whether the base model
+is excellent or nearly useless, whether the residuals were whitened or are visibly
+dependent. That robustness is real, and it is dangerous to teach without its
+complement, because in a classroom silence about efficiency reads as absolution: once
+coverage is certified, students infer that the modeling is finished.
 
-Unbundled, the rank map is not new, and the honest lesson is a century of
-statistics. Its knot probabilities are Weibull's plotting positions. Ranks to
-normal scores is van der Waerden. Meteorology has run the normal quantile
-transform inside predictive systems for decades. Copula econometrics estimates the
-same empirical margin, models dependence on the transformed scale, and inverts.
-The transform was even reintroduced, in 2022, as a data-preprocessing tool with no
-conformal vocabulary at all. Taught this way, as the empirical distribution doing
-what the empirical distribution has always done, the student inherits the whole
-lineage plus one genuinely new fact: at this position in a chain, on exchangeable
-input, the map's output carries a finite-sample certificate. That fact is worth a
-lecture. It is not worth a paradigm.
+The information gap supplies the missing lesson, and its value is constructive, not
+merely critical. It tells a student what a better model is worth. If the base model
+removes the conditional structure, the gap shrinks toward zero. If structure remains,
+the value of continuing is exactly that gap, in the units the coverage theorem
+declines to discuss. The two results are complementary. Conformal validity is the
+calibration that survives a bad model; the information gap is the predictive value a
+bad model leaves on the table. Neither refutes the other, and only one is taught.
 
-## The inconsistency
+## The older lineage
 
-Here is the epistemological core. Conformal prediction as taught is normative
-about residuals: model them unconditionally, by the empirical law. Nobody teaches
-that norm for the observable itself, because for the base model it is a priori
-absurd; conditional structure is the entire subject. So the curriculum holds that
-modeling is essential below the residual line and optional above it, with only the
-mandatory step certified, and no invocation of coverage dissolves the asymmetry,
-because coverage is indifferent to it.
+Unbundled, the rank operation belongs to a century of statistics. Its knot
+probabilities are Weibull's plotting positions. Ranks to Gaussian scores is van der
+Waerden. Meteorology has run the normal quantile transform inside predictive systems
+for decades. Copula econometrics estimates an empirical margin, models dependence on
+the transformed scale, and inverts. Machine learning reintroduced the same transform
+in 2022 as a preprocessing device, with no conformal vocabulary at all. That is where
+it should be taught: the empirical distribution as an estimator, the probability
+transform as a change of coordinates, with plotting positions, ties, interpolation,
+inversion, and the cost of estimating the transform. Then the genuinely new fact
+lands cleanly. Built through exchangeable ranks, the transform's output carries a
+finite-sample marginal certificate at its position. That is worth a lecture. It is
+not worth a paradigm.
 
-The dissolution is trivial. Put the empirical whitening transform in the ordinary
-toolbox, next to differencing and standardization, with its certificate noted at
-its position. Then residual modeling is neither mandatory nor forbidden. It is a
-modeling decision, judged the way every modeling decision is judged, by a proper
-score on held-out data, and free to continue past the conformal ribbon-cutting
-ceremony whenever anything remains to be found.
+## The asymmetry
 
-I am not the first to notice trouble. It has been observed, sharply, that the
-guarantee's indifference to model quality means conformal prediction "almost
-invites you to use garbage prediction functions," and the impossibility of
-distribution-free conditional coverage has been in the journals for years. But the
-critiques have aimed at the guarantee, and the guarantee, at its own position, is
-fine. The harm is in the packaging: the stop taught as principle, the transform
-taught as paradigm, and the ledger taught with one page missing.
+The deepest inconsistency is about conditional structure. For the observable, the
+curriculum teaches that conditioning is the whole point: we model the conditional
+law, not the marginal, because exploiting structure is what prediction is. Then a
+base model produces a residual, and canonical practice replaces its conditional law
+with its empirical marginal, full stop. Sometimes that is an excellent approximation.
+Sometimes it is not, and the certificate cannot tell the cases apart. So modeling is
+taught as essential below the residual line and presumptively finished above it, with
+only the certified step mandatory and the rest made to look like embellishment.
+Coverage cannot resolve the asymmetry, because coverage was built to ignore it.
+
+The resolution is trivial. Put the empirical transform in the ordinary toolbox,
+beside differencing, scaling, and whitening, and state its certificate exactly where
+it holds. Then residual modeling is neither a conformal requirement nor a conformal
+violation. It is a modeling decision, judged by proper scores on held-out data, free
+to continue past the conformal ribbon-cutting whenever anything remains to be found.
+Sometimes the evidence favors stopping. Sometimes continuing. The mathematics implies
+neither universally, which is why the choice should be taught as a measurement, not a
+rule.
 
 ## What to teach instead
 
-Teach the empirical distribution and its plotting positions. Teach the transform,
-its interpolation, and its certificate, stated exactly: finite-sample, marginal,
-at one position, silent downstream. Teach the information gap beside it, stated
-exactly: the average price of every unconditional stop, equal to the value of the
-information ignored, shrinking as the model improves. Then let students discover,
-on data, that the two theorems together imply neither stopping nor continuing but
-measuring. That is statistics. It is what conformal prediction was before the
-packaging, and it is a better subject than the costume.
+Teach four things together. The empirical distribution, plotting positions,
+randomized or interpolated ranks, and inverse transforms. The conformal certificate,
+exactly: finite-sample, marginal, assumption-dependent, attached to one stage, silent
+about efficiency. The information gap: under the log score, the cost of quoting a
+residual's marginal in place of its conditional law is the information the marginal
+discards, shrinking as the model improves. And a data exercise on both sides, where
+students watch continuing hurt when no structure remains and help when it does, while
+calibration stays valid either way.
+
+None of this attacks the guarantee. At its position the guarantee is correct and
+useful. The harm is the packaging: a stopping convention taught as a principle, an
+empirical transform sold as a paradigm, conditional modeling smuggled back in under
+the certificate, and a ledger shown with one page missing. Teach both pages and the
+lesson is neither always stop nor always continue. It is measure. That is the better
+subject, and it does not need the costume.
 
 ---
 
-*Further reading (5): Lei, G'Sell, Rinaldo, Tibshirani & Wasserman, JASA 2018 (the
-guarantee, stated carefully); Foygel Barber, Candes, Ramdas & Tibshirani,
-Information and Inference 2021 (the conditional impossibility); Recht, "Cover
-Songs," argmin.net 2024 (an independent critique); Cotton, "An Empirical Study of
-the Conformal Information Gap," SSRN 7220538 (the identity, measured); Cotton, the
-transform-grammar paper, the survey sample and classifications, and interactive
-demonstrations, all at conformalprediction.net.*
+*Further reading: Lei, G'Sell, Rinaldo, Tibshirani and Wasserman (JASA, 2018), the
+split-conformal guarantee stated carefully; Barber, Candes, Ramdas and Tibshirani
+(Information and Inference, 2021), the limits of distribution-free conditional
+coverage; Romano, Patterson and Candes (2019), conformalized quantile regression,
+conditional modeling then calibration; Recht, "Cover Songs" (2024), an independent
+critique; Cotton, "An Empirical Study of the Conformal Information Gap" (SSRN
+7220538), the identity and its measurement; and Cotton's work on transform grammars,
+the literature sample, and interactive demonstrations at conformalprediction.net.*
