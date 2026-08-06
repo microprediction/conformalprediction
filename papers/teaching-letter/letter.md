@@ -1,11 +1,5 @@
 # Teach conformal prediction without the costume
 
-*Draft 5, for Significance "In Practice". Sharpened: the variants are conditional
-modeling under a conformal banner, and the early stop is universal. Prose only, no
-display maths. Quotes verbatim-confirmed 2026-08-06; survey seed 42, pool 990.*
-
----
-
 Conformal prediction has entered the classroom wearing a costume. It is presented
 not as a technique for calibrating prediction sets, which it is, but as an
 alternative to ordinary statistical prediction: a model-agnostic route to
