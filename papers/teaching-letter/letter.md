@@ -18,11 +18,9 @@ canonical tutorial promises "statistically rigorous uncertainty sets" that are
 "guaranteed to contain the ground truth with a user-specified probability." A
 Nature-family paper calls conformal prediction "essentially the only way to achieve
 valid prediction regions." One rung down, the field's most popular resource list
-offers guarantees "regardless of the model or the data distribution," a widely used
-library advertises the superlative outright, "the best uncertainty quantification
-framework for the XXIst century," and one vendor's documentation ranks methods in a
-table on which conformal prediction is the only row with a full check for
-"calibration guarantee."
+offers guarantees "regardless of the model or the data distribution," and one
+vendor's documentation ranks methods in a table on which conformal prediction is
+the only row with a full check for "calibration guarantee."
 
 There is a telling gradient in these quotes. The careful sources say "marginal."
 The 2018 JASA paper that anchors the modern method puts the word in its abstract;
