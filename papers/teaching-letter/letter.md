@@ -13,11 +13,24 @@ way does more harm than good, and that the repair is simple.
 
 ## The rigor claim
 
-The claim appears at the journal level and floods the layer beneath: tutorials,
-books, course notes, vendor documentation. [DOCKET QUOTES: two or three, one per
-stratum.] The word is nearly always "rigorous," sometimes "guaranteed," and the
-implication is always the same: model-based uncertainty is wishful, conformal
-uncertainty is proven.
+The claim appears at the journal level and floods the layer beneath. The field's
+canonical tutorial promises "statistically rigorous uncertainty sets" that are
+"guaranteed to contain the ground truth with a user-specified probability." A
+Nature-family paper calls conformal prediction "essentially the only way to achieve
+valid prediction regions." One rung down, the field's most popular resource list
+offers guarantees "regardless of the model or the data distribution," a widely used
+library advertises the superlative outright, "the best uncertainty quantification
+framework for the XXIst century," and one vendor's documentation ranks methods in a
+table on which conformal prediction is the only row with a full check for
+"calibration guarantee."
+
+There is a telling gradient in these quotes. The careful sources say "marginal."
+The 2018 JASA paper that anchors the modern method puts the word in its abstract;
+Berkeley's own lecture notes spell out what the coverage probability averages over,
+and even exhibit the trivial predictor that achieves exact coverage while saying
+nothing at all. One rung below, the word disappears, and it is the rung below that
+students read. The implication that survives the descent is always the same:
+model-based uncertainty is wishful, conformal uncertainty is proven.
 
 The implication is flatly refuted by an equally rigorous statement. When a
 forecaster pools model residuals into one law, the expected log-score regret
@@ -106,6 +119,14 @@ It is a modeling decision, judged the way every modeling decision is judged, by 
 proper score on held-out data, and free to continue past the conformal
 ribbon-cutting ceremony whenever anything remains to be found.
 
+I am not the first to notice trouble. It has been observed, sharply, that the
+guarantee's indifference to model quality means conformal prediction "almost
+invites you to use garbage prediction functions," and the impossibility of
+distribution-free conditional coverage has been in the journals for years. But the
+critiques have aimed at the guarantee, and the guarantee, at its own position, is
+fine. The harm is in the packaging: the stop taught as principle, the transform
+taught as paradigm, and the ledger taught with one page missing.
+
 ## What to teach instead
 
 Teach the empirical distribution and its plotting positions. Teach the transform,
@@ -119,6 +140,8 @@ subject than the costume.
 
 ---
 
-*[Author note, disclosures, and citations per venue format. Supporting technical
-papers: the information gap identity and measurements; the transform-grammar paper
-and its 572-series campaign; interactive demonstrations at conformalprediction.net.]*
+*Further reading (per venue format, ~5 items): the information gap identity and
+measurements (Cotton, SSRN 7220538 and companion); the transform-grammar paper and
+its 572-series campaign; Lei et al. (JASA 2018) for the guarantee stated carefully;
+Barber, Candes, Ramdas & Tibshirani (2021) for the conditional impossibility;
+interactive demonstrations at conformalprediction.net.*
