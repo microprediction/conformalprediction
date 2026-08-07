@@ -7,6 +7,10 @@
 <title>Working papers and technical notes — Conformal Prediction</title>
 <meta name="description" content="Research papers accompanying conformalprediction.net." />
 <link rel="stylesheet" href="/css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <header class="site">
@@ -22,6 +26,8 @@
           <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
           <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
           <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
@@ -33,13 +39,14 @@
           <a href="/demos/05-drift-timeseries.html">Drift</a>
         </span>
       </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
       <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
         <span class="drop">
           <a href="/literature.html">Bibliography</a>
           <a href="/map.html">The map</a>
           <a href="/connections.html">Connections</a>
           <a href="/applications.html">Applications</a>
-          <a href="/papers/">Papers &amp; notes</a>
           <a href="/blogs.html">Other sites &amp; blogs</a>
         </span>
       </span>
@@ -73,6 +80,41 @@
       <a href="/papers/marginally-useful/">Read more &rarr;</a>
       &nbsp;&middot;&nbsp;
       <a href="/papers/marginally-useful/marginally-useful.pdf">PDF</a>
+    </p>
+  </div>
+
+  <div class="card" style="padding:16px 20px;margin-top:18px;">
+    <h2 style="margin-top:0;">An Empirical Study of the Conformal Information Gap</h2>
+    <p class="note" style="margin-top:2px;">the empirical companion to Marginally Useful</p>
+    <p>Every forecasting architecture restricts the information available to its predictive
+    law. Under logarithmic loss the irreducible cost of replacing the full input by a
+    retained representation is exactly the conditional mutual information between outcome and
+    input given the representation &mdash; the information gap. Conformal calibration improves
+    estimation and provides a coverage certificate, but it cannot recover predictive
+    information the representation excluded. The decomposition is measured on a corpus of
+    economic series through a nested grammar of online transforms, where conditional scale is
+    the largest and most reliable component of the recovered gain.</p>
+    <p style="margin-bottom:0;">
+      <a href="https://papers.ssrn.com/abstract=7220538">SSRN</a>
+    </p>
+  </div>
+
+  <div class="card" style="padding:16px 20px;margin-top:18px;">
+    <h2 style="margin-top:0;">Transforms All the Way Down</h2>
+    <p class="note" style="margin-top:2px;">automatic online distributional forecasting by conjugation</p>
+    <p>The transform-chain machinery the grammar programme runs on. The
+    <a href="https://github.com/microprediction/skaters">skaters</a> package is an online,
+    distributional, univariate time-series forecaster built by conjugation: invertible
+    transforms nest all the way down onto a single distributional leaf fitted by a proper
+    scoring rule. The collection collapses into one parameter-free forecast function,
+    laplace, which leads the per-series held-out log-likelihood race against classical,
+    neural, and foundation-model baselines on FRED series; on asset prices a GARCH-t model
+    remains better, a split reported rather than averaged away. Run in laplace&rsquo;s
+    coordinates and mapped back exactly, existing models improve without retraining.
+    Implemented in Python, zero-dependency JavaScript, R, and a Rust core, held to
+    \(10^{-6}\) agreement by a shared parity suite.</p>
+    <p style="margin-bottom:0;">
+      <a href="https://papers.ssrn.com/abstract=7220478">SSRN</a>
     </p>
   </div>
 
@@ -122,6 +164,8 @@
       <a href="/papers/fan/">Read more &rarr;</a>
       &nbsp;&middot;&nbsp;
       <a href="/papers/fan/conformal-fan.pdf">PDF</a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://papers.ssrn.com/abstract=6979679">SSRN</a>
     </p>
   </div>
 
@@ -159,6 +203,22 @@
       <a href="/papers/two-prices/two-prices.pdf">PDF</a>
       &nbsp;&middot;&nbsp;
       <a href="/demos/22-timeseries-fan.html">Demo</a>
+    </p>
+  </div>
+
+  <div class="card" style="padding:16px 20px;margin-top:18px;">
+    <h2 style="margin-top:0;">Scoring Point-Cloud Distributional Submissions</h2>
+    <p class="note" style="margin-top:2px;">the nearest-the-pin parimutuel, jittered outcomes, and the heat ladder</p>
+    <p>Point-cloud forecasts are often scored by smoothing the samples into a density and
+    evaluating it at the outcome. That procedure is not proper: under log scoring it rewards
+    submitting a deconvolution of one&rsquo;s belief, &ldquo;shave \(h^2\) from the
+    covariance&rdquo; in the Gaussian case. The repair is to add outcome noise from the same
+    kernel used to smooth. More generally, composing a proper score with a fixed Markov kernel
+    preserves propriety, strictly when the induced channel is injective; a ladder of smoothing
+    scales then decomposes log-score regret, via the relative de Bruijn identity, into
+    Fisher-divergence bands plus a coarse-scale remainder.</p>
+    <p style="margin-bottom:0;">
+      <a href="https://papers.ssrn.com/abstract=7054518">SSRN</a>
     </p>
   </div>
 
