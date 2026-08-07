@@ -7,6 +7,10 @@
 <title>Working papers and technical notes — Conformal Prediction</title>
 <meta name="description" content="Research papers accompanying conformalprediction.net." />
 <link rel="stylesheet" href="/css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <header class="site">
@@ -92,6 +96,25 @@
     the largest and most reliable component of the recovered gain.</p>
     <p style="margin-bottom:0;">
       <a href="https://papers.ssrn.com/abstract=7220538">SSRN</a>
+    </p>
+  </div>
+
+  <div class="card" style="padding:16px 20px;margin-top:18px;">
+    <h2 style="margin-top:0;">Transforms All the Way Down</h2>
+    <p class="note" style="margin-top:2px;">automatic online distributional forecasting by conjugation</p>
+    <p>The transform-chain machinery the grammar programme runs on. The
+    <a href="https://github.com/microprediction/skaters">skaters</a> package is an online,
+    distributional, univariate time-series forecaster built by conjugation: invertible
+    transforms nest all the way down onto a single distributional leaf fitted by a proper
+    scoring rule. The collection collapses into one parameter-free forecast function,
+    laplace, which leads the per-series held-out log-likelihood race against classical,
+    neural, and foundation-model baselines on FRED series; on asset prices a GARCH-t model
+    remains better, a split reported rather than averaged away. Run in laplace&rsquo;s
+    coordinates and mapped back exactly, existing models improve without retraining.
+    Implemented in Python, zero-dependency JavaScript, R, and a Rust core, held to
+    \(10^{-6}\) agreement by a shared parity suite.</p>
+    <p style="margin-bottom:0;">
+      <a href="https://papers.ssrn.com/abstract=7220478">SSRN</a>
     </p>
   </div>
 
