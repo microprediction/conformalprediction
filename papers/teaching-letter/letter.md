@@ -31,8 +31,7 @@ the qualifications get buried. The layer most students read quotes only the abst
 survives the descent is always the same: model-based uncertainty is wishful,
 conformal uncertainty is proven.
 
-Yet the rebuke is just as rigorous as the
-coverage guarantee. It has never been stated in the conformal literature. Under the logarithmic score, the expected penalty for forecasting a residual with its unconditional law rather than its conditional law is exactly the mutual information between the residual and the information left out.
+Yet the rebuke is just as rigorous as the coverage guarantee, and I have not found it stated in the conformal literature. Under the logarithmic score, the expected penalty for forecasting a residual with its unconditional law rather than its conditional law is exactly the mutual information between the residual and the information left out.
 
 This second, more unfortunate guarantee has a financial interpretation. It is the mean growth rate of the bankroll of an oracle who bets at the prices offered by someone using split conformal prediction. As unwelcome as that might sound, this side of the Faustian bargain should be presented alongside the average coverage guarantee.
 
@@ -70,25 +69,22 @@ copula econometrics for decades.
 
 ## Branding
 
-Two objections are anticipated, and both sharpen the case. First, some conformal papers
-do process the transformed scores: couplings knit them across targets, "scorecasters"
-forecast the score sequence, predictive systems emit whole distribution functions.
-But each terminates in a recalibrated set or a quoted law. But to emphasize, none continues the way a
-forecaster continues, by fitting structure and carrying the fitted law onward. The
-cleverness goes into the last step before the stop, never past it.
+Two objections sharpen the case rather than blunt it. First, some conformal papers do
+process the transformed scores: couplings knit them across targets, "scorecasters"
+forecast the score sequence, predictive systems emit whole distribution functions. But
+each terminates in a recalibrated set or a quoted law, never continuing the way a
+forecaster continues, by fitting structure and carrying the fitted law onward.
 
 Second, and this is the heart of it, the field's own efficiency literature is
-conditional modeling flying a conformal flag. Conformalized quantile regression fits
-a conditional quantile model, then calibrates it. Normalized and locally weighted
-scores fit a conditional model of the residual scale, then divide by it. Mondrian and
-group-conditional methods condition on a partition of the inputs.
-
-Every one of these is precisely the conditional modeling that the "alternative to statistics" framing
-calls unnecessary, performed and then tucked back under the certificate. The
-discipline cannot help doing statistics. It simply does exactly one step of it,
-re-certifies, and halts. That the field keeps reinventing conditional modeling under
-a new name, and keeps stopping one step in, is the strongest evidence that the
-packaging, not the mathematics, is doing the teaching.
+conditional modeling flying a conformal flag. Conformalized quantile regression fits a
+conditional quantile model, then calibrates it. Normalized scores fit a conditional
+model of the residual scale, then divide by it. Mondrian methods condition on a
+partition of the inputs. Each is exactly the conditional modeling the "alternative to
+statistics" framing calls unnecessary, performed and then tucked back under the
+certificate. The discipline cannot help doing statistics; it simply does one step of
+it, re-certifies, and halts. That it keeps reinventing conditional modeling under a new
+name, and keeps stopping one step in, is the strongest evidence that the packaging, not
+the mathematics, is doing the teaching.
 
 The Vovk periodogram — the spectrum of the conformal p-value stream, which exchangeability requires to be flat — is almost a reductio ad absurdum. Look at it, and one of two things is true. It is flat, in which case the residuals were already white and the calibration certified nothing you did not already have for free. Or it has a peak, in which case exchangeability has failed, the ranks carry exploitable structure, and the certificate you just collected is a guarantee about the one axis that structure leaves untouched. Vovk himself supplies the instrument, in the same family as the test martingales that police online exchangeability, and its needle argues against stopping whichever way it falls. A method that ships with a built-in detector for its own inadequacy is not quite a contradiction. But it is close.
 
