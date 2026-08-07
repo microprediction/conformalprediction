@@ -183,6 +183,22 @@
     </p>
   </div>
 
+  <div class="card" style="padding:16px 20px;margin-top:18px;">
+    <h2 style="margin-top:0;">Scoring Point-Cloud Distributional Submissions</h2>
+    <p class="note" style="margin-top:2px;">the nearest-the-pin parimutuel, jittered outcomes, and the heat ladder</p>
+    <p>Point-cloud forecasts are often scored by smoothing the samples into a density and
+    evaluating it at the outcome. That procedure is not proper: under log scoring it rewards
+    submitting a deconvolution of one&rsquo;s belief, &ldquo;shave \(h^2\) from the
+    covariance&rdquo; in the Gaussian case. The repair is to add outcome noise from the same
+    kernel used to smooth. More generally, composing a proper score with a fixed Markov kernel
+    preserves propriety, strictly when the induced channel is injective; a ladder of smoothing
+    scales then decomposes log-score regret, via the relative de Bruijn identity, into
+    Fisher-divergence bands plus a coarse-scale remainder.</p>
+    <p style="margin-bottom:0;">
+      <a href="https://papers.ssrn.com/abstract=7054518">SSRN</a>
+    </p>
+  </div>
+
   <p class="note" style="margin-top:22px;">More papers will appear here.</p>
 </div>
   <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
