@@ -1,12 +1,12 @@
 # Teach conformal prediction with both guarantees
 
-Conformal prediction has entered the classroom wearing a costume. It is presented
+Conformal prediction has entered the classroom. It is presented
 not as a technique for calibrating prediction sets, which it is, but as an
 alternative to ordinary statistical prediction: a model-agnostic route to
 uncertainty, more rigorous than the model-based methods around it. That presentation
 does more harm than good in a very specific manner: it teaches students to stop
-modeling too early. And its claim to being a rigorous way to provide uncertainty bounds
-is refuted directly by a classical information identity.
+modeling too early. And its claim to rigor, depending on the application, is at best one-sided and at worst 
+refuted directly by a classical information identity.
 
 ## Rigor cuts both ways
 
@@ -56,8 +56,8 @@ with handling for ties and discreteness. Some tidy univariate book-keeping for s
 That "little" is valid, of course. The change of
 coordinates can attach a finite-sample marginal certificate at one point in a
 chain. But nothing in the mathematics makes that point the end of the process, and to the contrary,
-an emphasis on coverage accounting on average can paper over poor modeling (the more common critique, that I
-won't belabor).
+an emphasis on coverage accounting on average can paper over poor modeling (the more common critique, that
+we won't belabor).
 
 The conformal convention makes this univariate change of variable the end anyway, and the convention is almost
 unanimously followed. To test the impression rather than trust it, I drew a seed-fixed random sample of one hundred
@@ -67,7 +67,7 @@ terminal. Seven pass its output downstream as a filter or a feature.
 Not a single one of those one hundred papers estimates the transform, fits a further predictive law on the transformed scale, and carries that law back through the inverse as its forecast, the move that has been routine in
 copula econometrics for decades.
 
-## Branding
+## Wiggling 
 
 Two objections sharpen the case rather than blunt it. First, some conformal papers do
 process the transformed scores: couplings knit them across targets, "scorecasters"
@@ -75,13 +75,15 @@ forecast the score sequence, predictive systems emit whole distribution function
 each terminates in a recalibrated set or a quoted law, never continuing the way a
 forecaster continues, by fitting structure and carrying the fitted law onward.
 
-Second, and this is the heart of it, the field's own efficiency literature is
+Second, and this is the real tell, the field's own efficiency literature is
 conditional modeling flying a conformal flag. Conformalized quantile regression fits a
 conditional quantile model, then calibrates it. Normalized scores fit a conditional
 model of the residual scale, then divide by it. Mondrian methods condition on a
 partition of the inputs. Each is exactly the conditional modeling the "alternative to
 statistics" framing calls unnecessary, performed and then tucked back under the
-certificate. The discipline cannot help doing statistics; it simply does one step of
+certificate. 
+
+The discipline cannot help doing statistics; it simply does one step of
 it, re-certifies, and halts. That it keeps reinventing conditional modeling under a new
 name, and keeps stopping one step in, is the strongest evidence that the packaging, not
 the mathematics, is doing the teaching.
@@ -103,7 +105,7 @@ A second comparison is as telling: a chain that contains the transform beats the
 because the transform's real service is coordinate reshaping, exposing structure in a
 representation easier to model. The stop throws that service away, and the certificate
 arrives either way. Stopping is not a neutral default. When structure remains it is a
-forfeiture, and the decision to stop is empirical, not licensed by a certificate.
+forfeiture, and the decision to stop ought to be empirical instead.  
 
 ## The simple pedagogical solution
 
@@ -132,8 +134,7 @@ Waerden. Meteorology has run the normal quantile transform inside predictive sys
 for decades. Copula econometrics estimates an empirical margin, models dependence on
 the transformed scale, and inverts.
 
-Machine learning reintroduced the same transform
-in 2022 as a preprocessing device, with no conformal vocabulary at all. That is where
+Machine learning reintroduced the same transform in 2022 as a preprocessing device, with no conformal vocabulary at all. That is where
 it should be taught: the empirical distribution as an estimator, the probability
 transform as a change of coordinates, with plotting positions, ties, interpolation,
 inversion, and the cost of estimating the transform.
@@ -144,13 +145,15 @@ not worth a paradigm.
 
 ## The philosophical asymmetry
 
-The deepest inconsistency is about conditional structure. For the observable, the
-curriculum teaches that conditioning is the whole point: it models the conditional
+The deepest inconsistency is methodological. For the observable, the
+curriculum teaches that conditioning is the whole point: we model the conditional
 law, not the marginal, because exploiting structure is what prediction is. Then a
 base model produces a residual, and canonical practice replaces its conditional law
-with its empirical marginal, full stop.
+with its empirical marginal, full stop. 
 
-Sometimes that is an excellent approximation. Sometimes it is not, and the certificate cannot tell the cases apart. So modeling is
+Why would a highly normative procedure be appropriate for one problem and not the other? 
+
+Sometimes the empirical distribution that is an excellent approximation for model residuals. Sometimes it is not, and the certificate cannot tell the cases apart. So modeling is
 taught as essential below the residual line and presumptively finished above it, with
 only the certified step mandatory and the rest made to look like embellishment.
 Coverage cannot resolve the asymmetry, because coverage was built to ignore it.
