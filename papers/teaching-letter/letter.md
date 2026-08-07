@@ -56,8 +56,8 @@ with handling for ties and discreteness. Some tidy univariate book-keeping for s
 That "little" is valid, of course. The change of
 coordinates can attach a finite-sample marginal certificate at one point in a
 chain. But nothing in the mathematics makes that point the end of the process, and to the contrary,
-an emphasis on coverage accounting on average can paper over poor modeling (the more common critique, that
-we won't belabor).
+an emphasis on coverage accounting on average can paper over poor modeling (the more common critique, that I
+won't belabor).
 
 The conformal convention makes this univariate change of variable the end anyway, and the convention is almost
 unanimously followed. To test the impression rather than trust it, I drew a seed-fixed random sample of one hundred
@@ -145,7 +145,7 @@ not worth a paradigm.
 ## The philosophical asymmetry
 
 The deepest inconsistency is about conditional structure. For the observable, the
-curriculum teaches that conditioning is the whole point: we model the conditional
+curriculum teaches that conditioning is the whole point: it models the conditional
 law, not the marginal, because exploiting structure is what prediction is. Then a
 base model produces a residual, and canonical practice replaces its conditional law
 with its empirical marginal, full stop.
