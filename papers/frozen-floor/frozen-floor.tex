@@ -226,6 +226,15 @@ function of the pooled scores $\{A(Z_i)\}$, hence acts only through $\widehat G_
 and $\Delta_n$.
 \end{proof}
 
+Proposition~\ref{prop:noop} settles the schemes that appear to escape the
+characterization by acting after the pooled law is formed. Adaptive conformal
+inference \citep{gibbs2021adaptive} adjusts the level $\alpha_t$ online from past
+coverage; cross-conformal and CV$+$ average pooled laws across folds. Both are
+functions of the calibration scores alone, so both move only $\widehat G_\kappa$ and
+its quantiles, and by Proposition~\ref{prop:noop} neither reduces
+$\I(W;X\given\kappa)$. Level adaptation and fold averaging are calibration
+operations; the floor is a design quantity.
+
 The reason the floor is positive in practice is sharp enough to state as a remark.
 
 \begin{remark}[The use case is the floor]\label{rem:self}
@@ -249,11 +258,14 @@ respect to the data and, crucially, the symmetry is what supplies exchangeabilit
 than a separate fold.
 
 \begin{lemma}[Full-conformal floor]\label{lem:full}
-Let $A_n$ be a nonconformity score that is symmetric in the calibration points and, for
-fixed $x$, strictly increasing and absolutely continuous in $y$, and suppose $A_n(x,\cdot)
-\to A_\infty(x,\cdot)$ and the pooled score law converges to a limit $G_{\kappa(x)}$
-almost surely. Then the conclusion of Theorem~\ref{thm:floor} holds with $A_\infty$ in
-place of $A$: the limiting excess risk is $\I(A_\infty(X,Y);X\given\kappa)$.
+Let $A_n$ be a nonconformity score, symmetric in the calibration points and, for fixed
+$x$, a strictly increasing absolutely continuous bijection in $y$. Assume the following
+\emph{design stability}: there is a limiting score $A_\infty(x,\cdot)$ and a limiting
+pooled law $G_{\kappa(x)}$ with $A_n(x,\cdot)\to A_\infty(x,\cdot)$ and $\widehat
+G_{\kappa(x)}\to G_{\kappa(x)}$ almost surely, and the score densities are uniformly
+integrable so that the divergences converge. Then the conclusion of
+Theorem~\ref{thm:floor} holds with $A_\infty$ in place of $A$: the limiting excess
+risk is $\I(A_\infty(X,Y);X\given\kappa)$.
 \end{lemma}
 
 \begin{proof}[Proof sketch]
@@ -330,6 +342,9 @@ through the modeling that precedes the calibration.
 \begin{thebibliography}{9}
 \bibitem[Cotton(2026)]{cotton2026gap} Cotton, P. (2026). An Empirical Study of the
   Conformal Information Gap. SSRN preprint 7220538.
+\bibitem[Gibbs and Cand\`es(2021)]{gibbs2021adaptive} Gibbs, I. and Cand\`es, E.
+  (2021). Adaptive conformal inference under distribution shift. \emph{Advances in
+  Neural Information Processing Systems} 34.
 \bibitem[Donoho and Johnstone(1998)]{donoho1998minimax} Donoho, D.~L. and Johnstone,
   I.~M. (1998). Minimax estimation via wavelet shrinkage. \emph{Annals of Statistics}
   26(3), 879--921.
