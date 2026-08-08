@@ -179,8 +179,7 @@ subject, and it can be taught honestly.
 *Further reading: Lei, G'Sell, Rinaldo, Tibshirani and Wasserman (JASA, 2018), the
 split-conformal guarantee stated carefully; Barber, Candes, Ramdas and Tibshirani
 (Information and Inference, 2021), the limits of distribution-free conditional
-coverage; Romano, Patterson and Candes (2019), conformalized quantile regression,
-conditional modeling then calibration; Recht, "Cover Songs" (2024), an independent
+coverage; Recht, "Cover Songs" (2024), an independent
 critique; Berta, Holzm\"uller, Bach and Jordan, "CalArena" (2026), a large-scale
 calibration benchmark that scores post-hoc methods by their improvement in a proper
 scoring rule, from outside the conformal literature; Cotton, "An Empirical Study of
