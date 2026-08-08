@@ -1,0 +1,248 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\TV}{\mathrm{TV}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\dtv}{d_{\TV}}
+
+\title{Local Residual Smoothing and Exact Conformal Validity:\\
+a Small-Sample Separation}
+\author{Peter Cotton\\\texttt{peter.cotton@microprediction.com}}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Fix any model, and consider the remaining task: estimate the conditional law of its
+residual at a test point from held-out residuals. When that law varies smoothly with
+the input, the efficient estimator at a small sample size borrows from neighbours by
+kernel smoothing, with a bandwidth that widens as data thin. We show that this
+borrowing is incompatible with an exact, distribution-free, finite-sample coverage
+guarantee. Any test-centred smoothing incurs a coverage gap of the same order as its
+bias, so exact coverage forces the bandwidth to its widest, uniform pooling, which is
+the crudest estimate of the residual law. The two goals, efficient small-sample
+estimation and an exact guarantee, are separated by a quantity of order $h^{s}$ in the
+bandwidth $h$, and the estimation-optimal bandwidth makes that quantity largest exactly
+when data are scarce. The separation vanishes only as the sample grows or when the
+residual law does not vary with the input. Nothing here concerns the base model, which
+may be arbitrarily adaptive; the tension is entirely in the pooling step that supplies
+the guarantee.
+\end{abstract}
+
+\section{The task after the model}
+
+Grant the strongest version of the standard defence of conformal prediction: the base
+model may be anything, a gradient-boosted tree, a normalizing flow, a neural quantile
+network, fit with full access to labels on a training fold. Freeze it. It induces a
+scalar residual, or nonconformity score, $R = A(X,Y)$, and the only remaining question
+is how to turn a held-out sample of residuals into a predictive statement at a fresh
+input. That step is where a conformal guarantee is earned or lost, and it is the only
+step we analyse. Everything below is downstream of an arbitrarily good model.
+
+Write $\mu_x = \mathcal{L}(R \mid X = x)$ for the conditional residual law and let
+$(X_i, R_i)_{i=1}^{n}$ be an exchangeable calibration sample. We want a predictive law,
+or a prediction set, for the residual at a test point $x_0$, and we ask two things of
+it: that it estimate $\mu_{x_0}$ efficiently, and that its set have coverage
+$1-\alpha$. We work on a metric input space $(\cX,\rho)$ of dimension $d$ under two
+assumptions that are mild and, for the interesting case, both present.
+
+\begin{assumption}[Smoothness]\label{as:smooth}
+The residual law is H\"older-$s$ in total variation: there are $C<\infty$ and $s>0$ with
+$\dtv(\mu_x,\mu_{x'}) \le C\,\rho(x,x')^{s}$ for all $x,x'$.
+\end{assumption}
+
+\begin{assumption}[Heterogeneity]\label{as:het}
+The residual law depends on the input: $\mu_x \ne \mu_{x'}$ for some $x,x'$.
+\end{assumption}
+
+Assumption~\ref{as:het} is what makes the problem nontrivial; without it a single
+pooled law is correct and there is nothing to estimate locally. Assumption~\ref{as:smooth}
+is what makes borrowing from neighbours pay: nearby inputs have nearby residual laws, so
+a neighbour's residual is informative about the test point.
+
+\section{The efficient estimator borrows from neighbours}
+
+The natural estimator of $\mu_{x_0}$ from the sample is a weighted empirical law
+\begin{equation}\label{eq:weighted}
+  \widehat\mu_{w}(x_0) \;=\; \sum_{i=1}^{n} w_i(x_0)\, \delta_{R_i},
+  \qquad w_i(x_0) \ge 0, \quad \sum_i w_i(x_0) = 1,
+\end{equation}
+and the natural weights are a kernel, $w_i(x_0) \propto K\!\big(\rho(x_0,X_i)/h\big)$, with
+a bandwidth $h$ that sets how far the estimator reaches for neighbours. Under
+Assumptions~\ref{as:smooth}--\ref{as:het} the bias of \eqref{eq:weighted} in total
+variation is of order $h^{s}$, the variance of order $1/(n h^{d})$, and balancing them
+gives the familiar minimax bandwidth and risk
+\begin{equation}\label{eq:minimax}
+  h^{*} \asymp n^{-1/(2s+d)},
+  \qquad
+  \E\,\dtv\big(\widehat\mu_{w}(x_0),\mu_{x_0}\big) \asymp n^{-s/(2s+d)} ,
+\end{equation}
+which is the optimal rate for estimating a H\"older-$s$ law in $d$ dimensions
+\citep{tsybakov2009introduction}. The point we need from \eqref{eq:minimax} is not the
+rate but its dependence on scale: at a small effective sample size $m$ the optimal
+bandwidth is \emph{large}, $h^{*}(m) \asymp m^{-1/(2s+d)}$, because with few points one
+must reach further to average anything at all. Efficient estimation of a smoothly
+varying residual law at small $m$ requires wide, test-centred borrowing.
+
+\section{Exact coverage forbids the borrowing}
+
+Now ask the weighted estimator \eqref{eq:weighted} to carry a coverage guarantee. The
+prediction set is the weighted $(1-\alpha)$ region of $\widehat\mu_{w}(x_0)$. Two facts
+bound what its coverage can be.
+
+\begin{lemma}[Localization opens a coverage gap]\label{lem:gap}
+Let $C_\alpha(x_0)$ be the level-$(1-\alpha)$ set of the weighted law
+\eqref{eq:weighted}. Then, writing $\widetilde w_i$ for the normalized weights including
+the test slot,
+\begin{equation}\label{eq:barber}
+  \Prob\big(R_0 \in C_\alpha(x_0)\big)
+  \;\ge\; 1-\alpha \;-\; \sum_{i=1}^{n} \widetilde w_i(x_0)\,
+  \dtv\big(\mu_{X_i},\mu_{x_0}\big),
+\end{equation}
+and the bound is attained in the worst case over laws satisfying the stated total
+variations. Under Assumption~\ref{as:smooth} with kernel weights of bandwidth $h$,
+\[
+  \sum_{i} \widetilde w_i(x_0)\, \dtv\big(\mu_{X_i},\mu_{x_0}\big)
+  \;\le\; C \sum_i \widetilde w_i(x_0)\, \rho(x_0,X_i)^{s}
+  \;=\; \Theta\big(h^{s}\big).
+\]
+\end{lemma}
+
+\begin{proof}
+Inequality \eqref{eq:barber} is the coverage bound for non-exchangeable weighted
+conformal prediction \citep{barber2023beyond}: replacing the exchangeable reference by a
+covariate-weighted one costs, in coverage, the weighted total-variation distance between
+the calibration and test residual laws. The second display substitutes
+Assumption~\ref{as:smooth} and evaluates the kernel-weighted average of
+$\rho(x_0,X_i)^{s}$, which under a bandwidth $h$ is of order $h^{s}$ since the weights
+concentrate on $\{\rho(x_0,X_i)\lesssim h\}$.
+\end{proof}
+
+The kernel weights are informative, and so are non-uniform in a way that depends on the
+test point $x_0$; that is exactly what \eqref{eq:barber} charges for. The only way to
+drive the gap to zero, absent a known and fixed covariate-shift tilt of the kind studied
+by \citet{tibshirani2019conformal}, is to remove the test-centred dependence of the
+weights, that is, to make them uniform within a region pre-committed before $x_0$ is
+seen. We record the endpoint.
+
+\begin{proposition}[Exact validity forces uniform pooling]\label{prop:uniform}
+Suppose the predictor \eqref{eq:weighted} attains $\Prob(R_0\in C_\alpha(x_0)) \ge 1-\alpha$
+for every law satisfying Assumptions~\ref{as:smooth}--\ref{as:het} with the stated
+constants, with no further assumption on the covariate distribution. Then the localization
+term in \eqref{eq:barber} is zero, which under Assumption~\ref{as:het} requires the
+weights to be constant across any pair of calibration points with $\mu_{X_i}\ne\mu_{X_j}$.
+Equivalently, the estimator is the equal-weight empirical law within a stratification
+fixed independently of $x_0$: uniform pooling, the $h\to\infty$ end of
+\eqref{eq:weighted}.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:gap} the worst-case coverage is $1-\alpha$ minus the localization term,
+so distribution-free validity at level $1-\alpha$ forces that term to vanish. It is a
+weighted average of nonnegative total variations $\dtv(\mu_{X_i},\mu_{x_0})$; under
+Assumption~\ref{as:het} some of these are strictly positive for calibration points in
+distinct residual regimes, so the term vanishes only if the weights place no differential
+mass across such points. A weight vector that is constant across all covariate-distinct
+points and independent of $x_0$ is uniform pooling within the pre-committed partition into
+residual-law level sets.
+\end{proof}
+
+\section{The separation}
+
+Put the two sides together. Efficiency wants the bandwidth at $h^{*}(m)$, wide when the
+effective count $m$ is small; validity wants the bandwidth at infinity. They meet only at
+$h^{*}=\infty$, that is, only when there is nothing to gain from localization.
+
+\begin{theorem}[Small-sample separation]\label{thm:sep}
+Under Assumptions~\ref{as:smooth}--\ref{as:het}, no predictor of the form
+\eqref{eq:weighted} attains both
+\begin{enumerate}
+\item[(a)] exact distribution-free coverage, $\Prob(R_0\in C_\alpha(x_0))\ge 1-\alpha$
+  for every law with the stated constants; and
+\item[(b)] the minimax estimation rate \eqref{eq:minimax} for $\mu_{x_0}$,
+\end{enumerate}
+unless the sample is unbounded or the residual law is input-free. Quantitatively, along
+the bandwidth family the coverage gap and the excess estimation risk trade at the same
+order: a predictor with estimation risk within a constant of the minimax rate
+$m^{-s/(2s+d)}$ has coverage gap $\Theta\big(h^{*}(m)^{s}\big)=\Theta\big(m^{-s/(2s+d)}\big)$,
+while a predictor with zero coverage gap has estimation risk bounded below by the
+heterogeneity of the residual law across the coarsest admissible pool, a constant that
+does not vanish as $m\to 0$. The product of the two deficits is bounded away from zero for
+every finite $m$; it tends to zero only as $m\to\infty$.
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{prop:uniform}, (a) forces uniform pooling, whose bias is
+$\sup\{\dtv(\mu_x,\mu_{x'})\}$ over the pooled region, a positive constant under
+Assumption~\ref{as:het} independent of $m$; this violates (b), whose risk
+\eqref{eq:minimax} tends to zero in $m$. Conversely, any predictor achieving (b) uses a
+bandwidth $h \asymp h^{*}(m)$, and by Lemma~\ref{lem:gap} its coverage gap is
+$\Theta(h^{*}(m)^{s})$, positive for finite $m$, so it fails (a). The trade at a common
+bandwidth follows from \eqref{eq:minimax} and Lemma~\ref{lem:gap}: bias and coverage gap
+are both $\Theta(h^{s})$, and reducing one raises the other. As $m\to\infty$,
+$h^{*}(m)\to 0$ and both deficits vanish.
+\end{proof}
+
+\begin{corollary}[The scarce-data regime]\label{cor:small}
+The separation is monotone decreasing in the effective sample size and maximal as
+$m\to 0$. In the regime where local smoothing most improves the estimate, small
+$m$ under Assumption~\ref{as:smooth}, the coverage gap of the estimation-optimal
+predictor is largest, and the estimation penalty of the exactly-valid predictor is its
+full heterogeneity constant.
+\end{corollary}
+
+\section{What the separation says}
+
+The base model is not on trial. It may borrow, adapt, and use every label it is given,
+because it is fit on a disjoint fold and the analysis begins after it is frozen. The
+tension is entirely in the pooling of held-out residuals that supplies the guarantee.
+There the choice is stark and quantified. To estimate a smoothly varying residual law
+well from a small sample one must weight nearby residuals more, and that weighting, by
+\eqref{eq:barber}, costs coverage in proportion to how far the estimator reaches and how
+much the residual law changes over that reach. To keep the guarantee exact one must weight
+all residuals in a pre-committed region equally, which is the widest possible reach and the
+largest possible bias. The efficient thing and the guaranteed thing are the two ends of one
+bandwidth, and at a small effective sample size they are far apart.
+
+This is why, with effective sample sizes well below a thousand, a kernel or local-likelihood
+estimate of the residual law is usually the better forecast and does not come with, and is
+not improved by, an exact conformal wrapper. The wrapper would either localize, and forfeit
+the exactness that is its entire justification, or pool, and forfeit the estimate. The
+separation closes only as data accumulate, when a narrow bandwidth is both efficient and
+nearly exchangeable, or when the residual law does not vary with the input, when there was
+never a reason to localize. Between those limits, in the small-sample heterogeneous regime
+that describes most applied forecasting, the guarantee and the estimate pull in opposite
+directions, and the size of the disagreement is $h^{s}$.
+
+\bibliographystyle{plainnat}
+\begin{thebibliography}{9}
+\bibitem[Barber et al.(2023)]{barber2023beyond} Barber, R.~F., Cand\`es, E.~J., Ramdas,
+  A., and Tibshirani, R.~J. (2023). Conformal prediction beyond exchangeability.
+  \emph{Annals of Statistics} 51(2), 816--845.
+\bibitem[Tibshirani et al.(2019)]{tibshirani2019conformal} Tibshirani, R.~J., Foygel
+  Barber, R., Cand\`es, E.~J., and Ramdas, A. (2019). Conformal prediction under
+  covariate shift. \emph{Advances in Neural Information Processing Systems} 32.
+\bibitem[Tsybakov(2009)]{tsybakov2009introduction} Tsybakov, A.~B. (2009).
+  \emph{Introduction to Nonparametric Estimation}. Springer.
+\end{thebibliography}
+
+\end{document}
