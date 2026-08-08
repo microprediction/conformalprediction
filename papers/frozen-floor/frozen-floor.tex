@@ -1,0 +1,343 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\I}{\mathrm{I}}
+\newcommand{\KL}{\mathrm{KL}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\given}{\,|\,}
+
+\title{A Mechanical Characterization of Conformal Prediction\\ and its Irreducible Excess Risk}
+\author{Peter Cotton\\\texttt{peter.cotton@microprediction.com}}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Every split, full, normalized, Mondrian, quantile, and predictive-system conformal
+scheme produces the same shape of object: a frozen monotone reshaping of a
+label-blind, stratum-pooled empirical law. We make that statement mechanical, so it
+can be checked on any scheme by naming two ingredients, a score map and a
+stratification. We then show that the excess logarithmic risk of any such scheme over
+the conditional oracle equals, in the large-calibration limit, a single conditional
+mutual information between the nonconformity score and the input given the stratum.
+The quantity depends only on the two frozen ingredients, so no amount of calibration
+reduces it. It is positive unless the frozen ingredients already render the score
+conditionally independent of the input, that is, unless the modeling was finished
+before the conformal step. The method's stated use case, doubt that the residual law
+is conditionally adequate, is exactly the condition under which its floor is
+positive. A corollary recovers the regressogram rate handicap of universally
+consistent conformal predictive systems from the same constraint.
+\end{abstract}
+
+\section{Setup}
+
+Let $(X,Y)$ have joint law $P$ on $\cX \times \R$, with conditional law $P(\cdot\given X)$
+and conditional density $p(\cdot\given x)$. The benchmark is the conditional oracle
+$P(\cdot\given X)$, whose expected logarithmic loss is the conditional entropy
+$H(Y\given X)$. For a predictive law $F = \{F_x\}$ with density $f_x$ we score by the
+logarithmic rule and measure a forecaster by its \emph{excess risk}
+\begin{equation}\label{eq:excess}
+  L(F) - H(Y\given X)
+  \;=\; \E_X\!\left[\, \KL\big(P(\cdot\given X)\,\big\|\,F_X\big) \,\right] \;\ge\; 0 ,
+\end{equation}
+the average Kullback--Leibler divergence from the truth to the forecast. Excess risk is
+zero if and only if the forecaster is the oracle almost surely.
+
+A conformal scheme is fixed by two objects and a fold. A \emph{nonconformity score}
+$A : \cX \times \R \to \R$ assigns a scalar $A(x,y)$ to a candidate value $y$ at $x$. A
+\emph{stratification} $\kappa : \cX \to \cK$ assigns each $x$ to a category. Both are
+computed from a training fold that is disjoint from the calibration data. The
+calibration multiset $D_n = \{Z_i = (X_i,Y_i)\}_{i=1}^n$ enters only through the pooled
+scores. Write $\widehat G_\kappa$ for the empirical distribution of the calibration
+scores in stratum $\kappa$,
+\[
+  \widehat G_\kappa
+  \;=\; \text{empirical law of } \{\, A(Z_i) : \kappa(X_i) = \kappa \,\}.
+\]
+
+\section{The invariant}
+
+\begin{definition}[Conformal predictor]\label{def:conf}
+The conformal predictive distribution function at $x$ is
+\begin{equation}\label{eq:cdf}
+  \widehat F_x(y) \;=\; \widehat G_{\kappa(x)}\!\big( A(x,y) \big) .
+\end{equation}
+Its prediction set at level $\alpha$ is the sublevel set
+$\{\, y : A(x,y) \le \widehat Q_{1-\alpha}(\kappa(x)) \,\}$, where
+$\widehat Q_{1-\alpha}(\kappa)$ is the $(1-\alpha)$ quantile of $\widehat G_\kappa$.
+\end{definition}
+
+Definition~\ref{def:conf} is the split, Mondrian, normalized, quantile, and
+predictive-system output written once; full conformal is the case in which $A$ depends
+symmetrically on the augmented multiset, treated in Section~\ref{sec:full}. Each named
+scheme is obtained by naming $(A,\kappa)$: split conformal uses
+$A(x,y) = |y - \widehat\mu(x)|$ with one stratum; locally weighted or normalized
+conformal uses $A(x,y) = |y - \widehat\mu(x)|/\widehat\sigma(x)$; conformalized quantile
+regression uses $A(x,y) = \max\{\widehat q_{\mathrm{lo}}(x) - y,\ y - \widehat
+q_{\mathrm{hi}}(x)\}$; Mondrian and group-conditional conformal keep the score simple and
+make $\kappa$ a fixed partition; the universally consistent conformal predictive system
+of \citet{vovk2022universal} uses a fixed dyadic partition $\kappa = \kappa_n$ with cells
+shrinking in $n$.
+
+\begin{lemma}[Reshaping form]\label{lem:invariant}
+Suppose $A(x,\cdot)$ is a strictly increasing bijection of $\R$ for each $x$. Then the
+law $\widehat F_x$ of \eqref{eq:cdf} is the pushforward of the pooled law
+$\widehat G_{\kappa(x)}$ through $A(x,\cdot)^{-1}$,
+\[
+  \widehat F_x \;=\; A(x,\cdot)^{-1} \!\circ\, \widehat G_{\kappa(x)} .
+\]
+\end{lemma}
+
+\begin{proof}
+Immediate from \eqref{eq:cdf}: $\widehat F_x(y) = \widehat G_{\kappa(x)}(A(x,y))$ is the
+distribution function of $A(x,\cdot)^{-1}(W)$ for $W \sim \widehat G_{\kappa(x)}$.
+\end{proof}
+
+The content of Lemma~\ref{lem:invariant} is that in every conformal scheme the input $x$
+touches the predictive law in exactly two frozen ways: through the deterministic
+reshaping $A(x,\cdot)$, and through the choice of which stratum's pooled empirical law
+to use. All non-location content of the forecast, its shape, is a single pooled object
+$\widehat G_{\kappa(x)}$, common to every $x$ in a stratum.
+
+\section{The excess-risk floor}
+
+\begin{assumption}[Frozen design]\label{as:frozen}
+The pair $(A,\kappa)$ is measurable with respect to the training fold and independent
+of the calibration labels $\{Y_i\}$.
+\end{assumption}
+
+\begin{assumption}[Regularity]\label{as:reg}
+For each $x$, $A(x,\cdot)$ is a strictly increasing, absolutely continuous bijection
+$\R \to \R$ with derivative $A'(x,y) = \partial_y A(x,y) > 0$. The laws
+$P(\cdot\given x)$ and the stratum-pooled score laws admit densities, and the
+divergences below are finite.
+\end{assumption}
+
+Assumption~\ref{as:frozen} is not a modeling choice; it is what the exchangeability
+argument requires. If $(A,\kappa)$ were refined using the calibration labels of the
+points being predicted, the calibration and test scores would no longer be exchangeable
+and the distribution-free guarantee would fail. Sample splitting, in which the design is
+fit on one fold and frozen for another, is the standard way to satisfy
+Assumption~\ref{as:frozen}, and it is still a frozen design.
+
+Write $W = A(X,Y)$ for the score as a random variable and $\kappa = \kappa(X)$ for the
+stratum. Let $P_W(\cdot\given x)$ be the true conditional law of $W$ given $X=x$, and let
+$G_\kappa = P_W(\cdot\given \kappa(X)=\kappa)$ be the stratum-pooled score law, the
+population object that $\widehat G_\kappa$ estimates.
+
+\begin{theorem}[Irreducible floor]\label{thm:floor}
+Under Assumptions~\ref{as:frozen} and \ref{as:reg}, the excess risk of the conformal
+predictor $\widehat F_n$ of Definition~\ref{def:conf} satisfies
+\begin{equation}\label{eq:floor}
+  L(\widehat F_n) - H(Y\given X)
+  \;=\; \I\big( W ; X \given \kappa \big) \;+\; \Delta_n ,
+  \qquad \Delta_n \to 0 ,
+\end{equation}
+where $\I(W;X\given\kappa) = \E_X\,\KL\!\big(P_W(\cdot\given X)\,\|\,P_W(\cdot\given
+\kappa(X))\big)$ is the conditional mutual information between the score and the input
+given the stratum, and $\Delta_n = \E_X\,\KL\big(G_{\kappa(X)}\,\|\,\widehat
+G_{\kappa(X)}\big)$ is the pooled-density estimation term, which vanishes as the
+calibration size in each stratum grows.
+\end{theorem}
+
+\begin{proof}
+Fix the fold, so $(A,\kappa)$ is deterministic. By Assumption~\ref{as:reg} the score
+$W = A(x,Y)$ has, given $X=x$, the density obtained by change of variables,
+$p(y\given x) = p_W\big(A(x,y)\given x\big)\, A'(x,y)$. The conformal density is
+$\widehat f_x(y) = \widehat g_{\kappa(x)}\big(A(x,y)\big)\, A'(x,y)$ with $\widehat
+g_\kappa$ the density of $\widehat G_\kappa$. The Jacobian $A'(x,y)$ is common to both,
+so it cancels in the log ratio:
+\[
+  \log \frac{p(y\given x)}{\widehat f_x(y)}
+  \;=\; \log \frac{p_W\big(A(x,y)\given x\big)}{\widehat g_{\kappa(x)}\big(A(x,y)\big)} .
+\]
+Taking expectations over $Y\given X=x$ and substituting $w = A(x,y)$,
+\[
+  \KL\big(P(\cdot\given x)\,\|\,\widehat F_x\big)
+  \;=\; \KL\big(P_W(\cdot\given x)\,\|\,\widehat G_{\kappa(x)}\big) .
+\]
+Average over $X$ and use \eqref{eq:excess}. Split the divergence at the population
+pooled law $G_{\kappa(x)}$:
+\[
+  \KL\big(P_W(\cdot\given x)\,\|\,\widehat G_{\kappa(x)}\big)
+  = \KL\big(P_W(\cdot\given x)\,\|\,G_{\kappa(x)}\big)
+    + \E_{W\sim P_W(\cdot\given x)}\!\left[\log \frac{g_{\kappa(x)}(W)}{\widehat g_{\kappa(x)}(W)}\right] .
+\]
+The second term averages over $X$ to $\Delta_n$. For the first, because
+$\kappa(x)$ is a function of $x$ we have $P_W(\cdot\given X,\kappa)=P_W(\cdot\given X)$
+and $G_{\kappa} = P_W(\cdot\given \kappa)$, so
+\[
+  \E_X\,\KL\big(P_W(\cdot\given X)\,\|\,P_W(\cdot\given \kappa(X))\big)
+  \;=\; \I\big(W;X\given\kappa\big)
+\]
+by the definition of conditional mutual information. This gives \eqref{eq:floor}. The
+term $\Delta_n$ is the expected excess of the log-loss of the estimated pooled density
+over the true pooled density within a stratum; under Assumption~\ref{as:frozen} the
+calibration labels are exchangeable within each stratum, so $\widehat G_\kappa \to
+G_\kappa$ and $\Delta_n \to 0$ as each stratum fills.
+\end{proof}
+
+\begin{corollary}[Positivity and suboptimality]\label{cor:pos}
+$\I(W;X\given\kappa) > 0$ unless $W \perp X \given \kappa$, that is, unless the frozen
+pair $(A,\kappa)$ renders the score conditionally independent of the input within
+strata. When it does not, the excess risk is bounded away from zero for every $n$:
+$\liminf_n\,[\,L(\widehat F_n)-H(Y\given X)\,] \ge \I(W;X\given\kappa) > 0$.
+\end{corollary}
+
+\section{What calibration cannot do}
+
+The floor $\I(W;X\given\kappa)$ is a functional of the frozen pair $(A,\kappa)$ alone.
+The calibration data enter Theorem~\ref{thm:floor} only through $\Delta_n$, which
+vanishes. The ranking, quantile, and $p$-value machinery of conformal prediction is
+precisely the computation of $\widehat G_\kappa$ and its quantiles, so it moves
+$\Delta_n$ and nothing else.
+
+\begin{proposition}[The calibration step is a floor no-op]\label{prop:noop}
+Under Assumptions~\ref{as:frozen} and \ref{as:reg}, no choice of calibration estimator,
+quantile convention, randomization, or level reduces the excess risk below
+$\I(W;X\given\kappa)$. Any reduction of the floor is a change to $A$ or $\kappa$.
+\end{proposition}
+
+\begin{proof}
+Immediate from \eqref{eq:floor}: the first term does not depend on the calibration
+labels once $(A,\kappa)$ is fixed, and every conformal calibration operation is a
+function of the pooled scores $\{A(Z_i)\}$, hence acts only through $\widehat G_\kappa$
+and $\Delta_n$.
+\end{proof}
+
+The reason the floor is positive in practice is sharp enough to state as a remark.
+
+\begin{remark}[The use case is the floor]\label{rem:self}
+Call $(A,\kappa)$ \emph{conditionally sufficient} if $W \perp X \given \kappa$. By
+Corollary~\ref{cor:pos} the floor is zero exactly when the frozen design is
+conditionally sufficient, and a conditionally sufficient design is one whose pooled
+residual law already is the conditional law, that is, one for which the base modeling
+was finished. Conformal calibration is deployed when one is unwilling to assume the
+residual law is conditionally adequate. That unwillingness is the negation of
+conditional sufficiency, and by Corollary~\ref{cor:pos} it is the condition under which
+the floor is strictly positive. The method's stated reason for existing is its lower
+bound.
+\end{remark}
+
+\section{Full conformal}\label{sec:full}
+
+In full conformal prediction the score is refit for each candidate, so $A$ depends on
+the augmented multiset $\{Z_1,\dots,Z_n,(x,y)\}$ through a function that is symmetric in
+its arguments. The reshaping $A(x,\cdot)$ is then random, but it remains measurable with
+respect to the data and, crucially, the symmetry is what supplies exchangeability rather
+than a separate fold.
+
+\begin{lemma}[Full-conformal floor]\label{lem:full}
+Let $A_n$ be a nonconformity score that is symmetric in the calibration points and, for
+fixed $x$, strictly increasing and absolutely continuous in $y$, and suppose $A_n(x,\cdot)
+\to A_\infty(x,\cdot)$ and the pooled score law converges to a limit $G_{\kappa(x)}$
+almost surely. Then the conclusion of Theorem~\ref{thm:floor} holds with $A_\infty$ in
+place of $A$: the limiting excess risk is $\I(A_\infty(X,Y);X\given\kappa)$.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+Condition on the calibration multiset. Symmetry makes the augmented scores exchangeable,
+so the rank of the test score is uniform and \eqref{eq:cdf} holds with the realized
+$A_n$. The change of variables in Theorem~\ref{thm:floor} uses only that $A_n(x,\cdot)$
+is a strictly increasing absolutely continuous bijection for fixed $x$, which holds
+pathwise; the Jacobian cancels as before. Passing to the limit with $A_n \to A_\infty$
+and $\widehat G_{\kappa} \to G_\kappa$, dominated by Assumption~\ref{as:reg}, gives the
+stated floor. The only new ingredient beyond Theorem~\ref{thm:floor} is that the frozen
+design is replaced by a data-measurable but label-symmetric design, which preserves both
+the reshaping form and the cancellation.
+\end{proof}
+
+Lemma~\ref{lem:full} closes the characterization: whether the design is fold-frozen or
+refit-symmetric, the predictive is a reshaping of a pooled law and the floor is a
+conditional mutual information of the score.
+
+\section{The rate handicap of consistent schemes}
+
+Some schemes attack the floor directly by refining the stratification. The universally
+consistent predictive system of \citet{vovk2022universal} takes $\kappa = \kappa_n$ to
+be a dyadic partition with cells of width $h_n \to 0$, so that $\I(W;X\given\kappa_n) \to
+0$ and the excess risk vanishes. Consistency is genuine. Efficiency is not.
+
+\begin{corollary}[Regressogram handicap]\label{cor:rate}
+Let $\kappa_n$ be a data-independent refinement with $|\cK_n| \to \infty$. Then
+Assumption~\ref{as:frozen} requires each cell to retain growing calibration mass,
+$n/|\cK_n| \to \infty$, for $\Delta_n \to 0$, and forbids choosing the cells from the
+calibration labels. The resulting estimator is a fixed-design, label-blind
+regressogram, whose excess risk decays at the fixed-design nonparametric minimax rate.
+Where the conditional law has spatially inhomogeneous complexity, this rate is strictly
+dominated by the label-adaptive minimax rate attained by an estimator permitted to place
+resolution using the labels \citep{stone1982optimal,donoho1998minimax}.
+\end{corollary}
+
+The handicap has the same cause as the floor. Assumption~\ref{as:frozen} says the
+labels may not choose where resolution is spent, so the partition cannot be refined
+where the truth is rough and coarsened where it is smooth. A fixed partition pays the
+worst-case local complexity everywhere. The consistent conformal scheme is a
+regressogram by construction, and a regressogram is minimax-suboptimal wherever
+adaptation would help.
+
+\section{Discussion}
+
+The two frozen ingredients $(A,\kappa)$ are a coarsening of the input. Everything a
+conformal scheme can represent about the conditional law lives in that coarsening; the
+calibration step estimates the pooled score law within it and nothing more. The excess
+risk is therefore governed by a single quantity, the conditional mutual information
+$\I(W;X\given\kappa)$ that the coarsening leaves behind, and this quantity is fixed
+before any calibration is done. Three consequences follow, and together they exhaust the
+options.
+
+If the coarsening carries no input dependence in the shape, one stratum and a location
+score, the floor is the plain residual information gap $\I(R;X)$
+\citep{cotton2026gap}, and no data reduce it. If the coarsening uses the input but is
+frozen, normalized, quantile, or Mondrian, the floor is the smaller but still positive
+$\I(W;X\given\kappa)$, positive by Remark~\ref{rem:self} exactly when the modeling was
+not finished. If the coarsening refines toward sufficiency, the labels may not steer the
+refinement, and Corollary~\ref{cor:rate} charges the regressogram rate. In each case the
+conformal calibration step contributes zero to the floor, by
+Proposition~\ref{prop:noop}. What reduces the floor is a better $(A,\kappa)$, which is
+ordinary conditional modeling done before the conformal step, and which the change of
+variables shows the conformal step then merely reshapes and certifies.
+
+This does not diminish the coverage certificate, which is exact at its position and
+distribution-free. It locates it. The certificate is a statement about the marginal
+rank of the test score; the floor is a statement about the conditional information the
+frozen score discards. The two live on different axes, and the first cannot move the
+second, which is why a valid conformal predictor and a sharp one are related only
+through the modeling that precedes the calibration.
+
+\bibliographystyle{plainnat}
+\begin{thebibliography}{9}
+\bibitem[Cotton(2026)]{cotton2026gap} Cotton, P. (2026). An Empirical Study of the
+  Conformal Information Gap. SSRN preprint 7220538.
+\bibitem[Donoho and Johnstone(1998)]{donoho1998minimax} Donoho, D.~L. and Johnstone,
+  I.~M. (1998). Minimax estimation via wavelet shrinkage. \emph{Annals of Statistics}
+  26(3), 879--921.
+\bibitem[Stone(1982)]{stone1982optimal} Stone, C.~J. (1982). Optimal global rates of
+  convergence for nonparametric regression. \emph{Annals of Statistics} 10(4),
+  1040--1053.
+\bibitem[Vovk(2022)]{vovk2022universal} Vovk, V. (2022). Universally consistent
+  conformal predictive distributions. \emph{Pattern Recognition} 126, 108536.
+\end{thebibliography}
+
+\end{document}
