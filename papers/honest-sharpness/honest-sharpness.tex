@@ -33,22 +33,14 @@ a Sharpness Lower Bound for Prediction Sets}
 \maketitle
 
 \begin{abstract}
-Conformal prediction earns exact finite-sample coverage that is marginal, averaged over
-the test point and the calibration sample. That marginal guarantee is compatible with
-oracle-rate sharpness, so no impossibility can attach to it. The situation changes for a
-guarantee that means something at a fixed test point. We show that any prediction set with
-honest coverage at a fixed interior point, valid with high probability over the calibration
-sample for every conditional residual law in a smoothness class, has expected width
-exceeding the oracle by at least the local nonparametric modulus $n^{-s/(2s+d)}$. The cause
-is not any property of exchangeability or weighting. It is Le~Cam indistinguishability: a
-local increase in residual spread of exactly that size is statistically invisible in the
-calibration sample yet moves the true quantile, so an honest set must protect against it and
-stays inflated even when the smoother baseline holds. A plug-in local estimator can be
-sharper precisely because it does not carry that protection. When smoothness is unknown the
-separation is stronger: an honest set cannot adapt to the faster rate available on smoother
-laws, because a rougher local alternative is indistinguishable. Under scarce local data the
-inflation is large, which is why, at small effective sample sizes, a local residual model is
-the better forecast and an honest local guarantee is expensive.
+Marginal conformal coverage costs no sharpness and admits oracle-rate bands. A guarantee
+at a fixed test point is different. We show that any prediction set with honest coverage at
+an interior point, valid over a H\"older class of residual laws, exceeds the oracle width
+by at least the local minimax modulus $(n\,g(x_0))^{-s/(2s+d)}$. The cause is Le~Cam
+indistinguishability, not exchangeability. A local increase in spread of that size is
+invisible in the sample yet moves the true quantile, so an honest set must insure against
+it. A plug-in estimate is sharper because it does not. Under unknown smoothness, honesty
+cannot adapt.
 \end{abstract}
 
 \section{Two guarantees, one honest}
