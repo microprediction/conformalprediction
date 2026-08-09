@@ -74,8 +74,10 @@ class $\Theta$ if
   \Prob_{\theta}\!\Big\{ F_{\theta(x_0)}\big(T_n(x_0)\big) \ge 1-\alpha \Big\}
   \;\ge\; 1-\eta ,
 \end{equation}
-where $F_{\theta(x_0)}$ is the true conditional law of the score at $x_0$ and the
-probability is over the calibration sample. In words: with probability at least $1-\eta$
+where $F_{\theta(x_0)}$, assumed continuous and strictly increasing, is the true
+conditional law of the score at $x_0$, so the event equals
+$\{T_n(x_0)\ge q_\alpha(\theta(x_0))\}$, and the probability is over the calibration
+sample. In words: with probability at least $1-\eta$
 over the data, the realized set has conditional coverage $1-\alpha$ at $x_0$, whatever
 law in $\Theta$ generated the data. Taking $\eta=0$ is literal per-sample conditional
 coverage.
@@ -110,13 +112,16 @@ regular in information and Lipschitz-regular in quantile:
   c_q\,|u-v| \le \big|q_\alpha(u) - q_\alpha(v)\big| \le C_q\,|u-v| .
 \]
 A truncated exponential family with parameter in a compact interval is a concrete
-instance: smooth in total variation with a smoothly varying quantile.
+instance. The lower bound below uses only the quadratic information bound and the lower
+quantile-sensitivity constant $c_q$; the upper constant $C_q$ and the design lower bound
+$g_-$ of Assumption~\ref{as:design} enter only the attainability statement of
+Section~\ref{sec:attain}.
 \end{assumption}
 
 \begin{assumption}[H\"older smoothness with local richness]\label{as:holder}
 The parameter field lies in a H\"older ball, $\theta \in \Hs(L)$, and the class contains
 localized perturbations of a constant baseline: for a fixed compactly supported bump
-$\psi$ and any $h>0$,
+$\psi$ with $\psi(0)\neq 0$ and any $h>0$,
 \[
   \theta_1(x) = \theta_0(x) + \delta\,\psi\!\Big(\frac{x-x_0}{h}\Big) \in \Hs(L),
   \qquad \delta \asymp L\,h^{s} .
@@ -190,6 +195,28 @@ small, local increase in residual uncertainty. Exact local protection against th
 therefore forces the set to stay inflated even when the baseline is true, and the size of
 the forced inflation is the amplitude of the largest undetectable bump.
 
+\section{Attainability, so the bound is not vacuous}\label{sec:attain}
+
+The lower bound is only interesting if an honest procedure exists whose inflation matches
+it, so that Theorem~\ref{thm:main} describes a real optimum rather than an empty
+constraint. One does, by the standard bias-plus-margin construction. Estimate the local
+oracle threshold by a boxcar (or kernel) quantile $\widehat q(x_0)$ over the ball
+$B(x_0,h)$, holding $m_h \asymp n\,g(x_0)h^{d}$ effective calibration points. Under
+Assumptions~\ref{as:design}--\ref{as:holder} its bias is at most $C_q L h^{s}$ (quantile
+sensitivity applied to the H\"older variation of $\theta$ over the ball) and its
+stochastic fluctuation is $O_P(m_h^{-1/2})$. Set
+\[
+  T_n(x_0) \;=\; \widehat q(x_0) \;+\; C_q L h^{s} \;+\; \kappa\,m_h^{-1/2},
+\]
+with $\kappa=\kappa(\eta)$ a fixed multiple of the fluctuation scale. The deterministic
+bias term covers the systematic error and the margin covers the stochastic error with
+probability $1-\eta$, so $T_n$ is honestly locally valid \eqref{eq:honest}, and its
+excess threshold is $O\big(L h^{s} + m_h^{-1/2}\big)$. Minimizing over $h$ gives the
+modulus \eqref{eq:modulus}, so the excess matches \eqref{eq:rate} up to constants. The
+honest optimum is therefore exactly the local modulus, achieved by inflating a local
+quantile estimate by its own bias and margin, and Theorem~\ref{thm:main} says no honest
+procedure does better.
+
 \section{The bandwidth reading}
 
 The rate is the local modulus of continuity,
@@ -243,8 +270,9 @@ against what it cannot see.
 If validity means only $\inf_\theta \E_\theta F_{\theta(x_0)}(T_n) \ge 1-\alpha$, averaging
 over calibration samples, a procedure may compensate a too-narrow set on some samples with
 a wide set on others, and the first-order argument weakens. For a family in which
-$t \mapsto F_u(t)$ is uniformly strictly concave near $q_\alpha$, Jensen gives
-$\E_\theta T_n \ge q_\alpha(\theta(x_0))$ and a curvature bound
+$t \mapsto F_u(t)$ is concave over the range of $T_n$ and uniformly strictly concave near
+$q_\alpha$ (equivalently, $T_n$ concentrates near $q_\alpha$ with high probability),
+Jensen gives $\E_\theta T_n \ge q_\alpha(\theta(x_0))$ and a curvature bound
 $\mathrm{Var}(T_n) \lesssim \E_\theta T_n - q_\alpha(\theta(x_0))$, so small expected excess
 would make $T_n$ a low-MSE estimator of the conditional quantile; the minimax MSE bound
 then yields
