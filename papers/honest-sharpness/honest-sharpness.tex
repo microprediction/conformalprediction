@@ -54,8 +54,8 @@ the probability averaging over the test point $X_{n+1}$ and the calibration samp
 Under \eqref{eq:marginal} no impossibility holds: \citet{lei2014distribution} construct
 bands with exact finite-sample marginal validity that converge to an oracle band at the
 minimax rate, and localized conformal methods retain marginal validity while weighting by
-proximity. A theorem about the cost of a guarantee must therefore concern a guarantee that
-is local. We take the honest one.
+proximity. The cost we identify attaches not to marginal coverage but to a guarantee at a
+fixed point, formalized next as honest local coverage.
 
 \begin{definition}[Honest local coverage]\label{def:honest}
 Fix an interior point $x_0$ and $0 \le \eta < \tfrac12$. A one-sided prediction set
@@ -273,7 +273,7 @@ $\mathrm{Var}(T_n) \lesssim \E_\theta T_n - q_\alpha(\theta(x_0))$, so small exp
 would make $T_n$ a low-MSE estimator of the conditional quantile; the minimax MSE bound
 then yields
 $\sup_\theta [\E_\theta T_n - q_\alpha(\theta(x_0))] \gtrsim (n g(x_0))^{-2s/(2s+d)}$. The
-squared exponent is not an accident: average coverage is materially weaker than honest
+exponent doubles because average coverage is a materially weaker requirement than honest
 per-sample coverage.
 \end{remark}
 
