@@ -199,9 +199,18 @@ def test_nonadaptation():
 # Produces the third figure.
 # ---------------------------------------------------------------------------
 def test_attainability():
-    print("\n== Test 4: honest k-NN band attains the rate; plug-in is not honest ==")
+    # eta = 0.05 here (distinct from the 0.10 of the testing figures) so the conditional
+    # coverage level 1-alpha = 0.90 and the honesty probability 1-eta = 0.95 cannot be
+    # confused. The plotted quantity is the HONESTY PROBABILITY -- the fraction of
+    # calibration samples on which the realized threshold attains conditional coverage
+    # >= 1-alpha -- NOT predictive coverage. The plug-in's predictive coverage stays near
+    # 1-alpha; what it fails is the honesty target, which it meets on ~half the samples.
+    eta_a = 0.05
+    z_eta = norm.ppf(1 - eta_a)
+    z_a = norm.ppf(1 - ALPHA)
+    print(f"\n== Test 4: honest k-NN band attains the rate; plug-in is not honest (eta={eta_a}) ==")
     rng = np.random.default_rng(7)
-    q_oracle = np.exp(norm.ppf(1 - ALPHA))            # q_alpha(0) = exp(z_{1-alpha}), theta0==0
+    q_oracle = np.exp(z_a)                              # q_alpha(0) = exp(z_{1-alpha}), theta0==0
     ns = np.array([1000, 3000, 10000, 30000, 100000])
     reps = 600
     hon_prob, plug_prob, hon_excess = [], [], []
@@ -215,40 +224,93 @@ def test_attainability():
             th_hat = logR[idx].mean()
             rho_k = np.abs(X[idx] - X0).max()
             # honest band, eq (10): bias L*rho^s + margin z_{1-eta}/sqrt(k)
-            T_hon = np.exp(th_hat + rho_k ** S + Z / np.sqrt(k) + norm.ppf(1 - ALPHA))
-            T_plug = np.exp(th_hat + norm.ppf(1 - ALPHA))    # no bias, no margin
+            T_hon = np.exp(th_hat + rho_k ** S + z_eta / np.sqrt(k) + z_a)
+            T_plug = np.exp(th_hat + z_a)                    # no bias, no margin
             hp += T_hon >= q_oracle
             pp += T_plug >= q_oracle
-            ex += max(T_hon - q_oracle, 0.0)
+            ex += max(T_hon - q_oracle, 0.0)                 # E[(T - q_alpha)_+], the S_theta functional
         hon_prob.append(hp / reps); plug_prob.append(pp / reps); hon_excess.append(ex / reps)
-        print(f"   n={n:6d}  k={k:5d}  honesty P(honest)={hp/reps:.3f}"
-              f"  P(plug-in)={pp/reps:.3f}  honest excess={ex/reps:.4f}")
+        print(f"   n={n:6d}  k={k:5d}  honesty-prob(honest)={hp/reps:.3f}"
+              f"  honesty-prob(plug-in)={pp/reps:.3f}  honest E[(T-q)_+]={ex/reps:.4f}")
     hon_prob, plug_prob, hon_excess = map(np.array, (hon_prob, plug_prob, hon_excess))
     slope = np.polyfit(np.log(ns), np.log(hon_excess), 1)[0]
-    report("honest k-NN band is honest (P{T>=q} >= 1-eta)", hon_prob.min() >= 1 - ETA - 0.02,
-           f"min honesty prob {hon_prob.min():.3f} (want >= {1-ETA:.2f})")
-    report("plug-in threshold is NOT honest (P{T>=q} ~ 1/2)",
+    report("honest k-NN band is honest (honesty prob >= 1-eta)",
+           hon_prob.min() >= 1 - eta_a - 0.02,
+           f"min honesty prob {hon_prob.min():.3f} (want >= {1-eta_a:.2f})")
+    report("plug-in meets the honesty target on ~half of samples",
            abs(plug_prob.mean() - 0.5) < 0.05,
            f"plug-in honesty prob {plug_prob.mean():.3f} (theory 0.5)")
-    report("honest excess decays at the modulus rate n^{-1/3}", abs(slope + EXP) < 0.06,
+    report("honest positive excess E[(T-q)_+] decays at n^{-1/3}", abs(slope + EXP) < 0.06,
            f"log-log slope {slope:.3f} (want {-EXP:.3f})")
 
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(10, 4.0))
     a1.plot(ns, hon_prob, "o-", label="honest k-NN band")
     a1.plot(ns, plug_prob, "s-", label="plug-in threshold")
-    a1.axhline(1 - ETA, ls="--", c="gray", lw=1, label=f"$1-\\eta={1-ETA:.1f}$")
+    a1.axhline(1 - eta_a, ls="--", c="gray", lw=1, label=f"honesty target $1-\\eta={1-eta_a:.2f}$")
     a1.axhline(0.5, ls=":", c="gray", lw=1)
     a1.set_xscale("log"); a1.set_xlabel("calibration size n")
-    a1.set_ylabel("honesty probability  P{ T $\\geq$ q$_\\alpha$ }")
-    a1.set_title("Honest vs plug-in"); a1.set_ylim(0.3, 1.02); a1.legend()
-    a2.loglog(ns, hon_excess, "o-", label="honest excess width")
+    a1.set_ylabel("P$_{D_n}$\\{ conditional coverage $\\geq 1-\\alpha$ \\}")
+    a1.set_title("Honesty probability: honest vs plug-in")
+    a1.set_ylim(0.3, 1.02); a1.legend()
+    a2.loglog(ns, hon_excess, "o-", label="honest $E[(T-q_\\alpha)_+]$")
     a2.loglog(ns, hon_excess[0] * (ns / ns[0]) ** (-EXP), "--", c="gray",
               label="$n^{-1/3}$ guide")
-    a2.set_xlabel("calibration size n"); a2.set_ylabel("mean excess over oracle")
+    a2.set_xlabel("calibration size n")
+    a2.set_ylabel("mean positive excess $E[(T-q_\\alpha)_+]$")
     a2.set_title("Excess pays the modulus"); a2.legend()
     fig.tight_layout()
     fig.savefig("fig_attainability.png", dpi=130)
     plt.close(fig)
+
+
+# ---------------------------------------------------------------------------
+# TEST 5. Random-design exponential model, Monte Carlo. Confirms the same
+# critical-scaling signature in a genuinely nonnegative score family that is NOT
+# a monotone transform of the Gaussian: TV and the Neyman-Pearson inflation ratio
+# stay constant in n. Prints the table displayed in the paper.
+# ---------------------------------------------------------------------------
+def test_exponential_table():
+    print("\n== Test 5: random-design exponential model (TV, NP ratio constant in n) ==")
+    rng = np.random.default_rng(2024)
+    base = 1.0                                        # baseline Exp mean theta0
+    reps = 8000
+    ns = np.array([300, 1000, 3000, 10000])
+    rows = []
+    for n in ns:
+        h = n ** (-CRIT)
+        # count of points in the bump support [x0-h, x0+h] ~ Binomial(n, 2h)
+        counts = rng.binomial(n, min(2 * h, 1.0), size=2 * reps)
+        llr0 = np.empty(reps)   # LLR under H0
+        llr1 = np.empty(reps)   # LLR under H1
+        for j in range(reps):
+            for store, under_h1 in ((llr0, False), (llr1, True)):
+                m = counts[j if not under_h1 else reps + j]
+                if m == 0:
+                    store[j] = 0.0
+                    continue
+                xs = rng.uniform(X0 - h, X0 + h, m)
+                th1 = base + (h ** S) * psi((xs - X0) / h)     # delta = h^s, a = 1
+                mean = th1 if under_h1 else np.full(m, base)
+                r = rng.exponential(mean)
+                # per-point LLR = log(theta0/theta1) + r(1/theta0 - 1/theta1)
+                store[j] = np.sum(np.log(base / th1) + r * (1.0 / base - 1.0 / th1))
+        # TV via Bayes accuracy: threshold LLR at 0 (equal priors)
+        tv = 0.5 * (np.mean(llr1 > 0) + np.mean(llr0 < 0)) * 2 - 1
+        # NP frontier: t with P1(LLR>=t)=1-eta, then beta = P0(LLR>=t)
+        t = np.quantile(llr1, ETA)
+        beta = np.mean(llr0 >= t)
+        rows.append((n, tv, beta))
+        print(f"   n={n:6d}  TV_hat={tv:.3f}   NP inflation ratio_hat={beta:.3f}")
+    tvs = np.array([r[1] for r in rows]); betas = np.array([r[2] for r in rows])
+    report("exponential TV roughly constant in n", tvs.max() - tvs.min() < 0.08,
+           f"TV range {tvs.min():.3f}..{tvs.max():.3f}")
+    report("exponential NP ratio roughly constant and > 1/2",
+           betas.min() > 0.5 and betas.max() - betas.min() < 0.08,
+           f"NP ratio range {betas.min():.3f}..{betas.max():.3f}")
+    # emit a LaTeX table body for the paper
+    print("   LaTeX rows:")
+    for n, tv, beta in rows:
+        print(f"     {n} & {tv:.3f} & {beta:.3f} \\\\")
 
 
 if __name__ == "__main__":
@@ -256,6 +318,7 @@ if __name__ == "__main__":
     test_np_frontier()
     test_nonadaptation()
     test_attainability()
+    test_exponential_table()
     n_pass, n_tot = sum(RESULTS), len(RESULTS)
     print("\n" + "=" * 60)
     print(f"SUMMARY: {n_pass}/{n_tot} checks passed.")

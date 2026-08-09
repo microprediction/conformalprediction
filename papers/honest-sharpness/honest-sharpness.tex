@@ -40,7 +40,7 @@ honestly valid procedure must, at a fixed smooth baseline, exceed the oracle thr
 the local modulus $(n g(x_0))^{-s/(2s+d)}$ on a majority of samples. The cause is Le~Cam
 indistinguishability, a testing-power floor, not exchangeability. For fixed $\eta>0$,
 minimax-rate sharpness stays compatible with honesty. Zero excess and adaptation to unknown
-smoothness are not. A plug-in estimate is sharper because it declines to insure against
+smoothness are not. A plug-in estimate can be sharper because it declines to insure against
 alternatives the data cannot rule out.
 \end{abstract}
 
@@ -73,15 +73,16 @@ conditional law of the score at $x_0$, so the event equals
 $\{T_n(x_0)\ge q_\alpha(\theta(x_0))\}$, and the probability is over the calibration
 sample. In words: with probability at least $1-\eta$
 over the data, the realized set has conditional coverage $1-\alpha$ at $x_0$, whatever
-law in $\Theta$ generated the data. Taking $\eta=0$ is literal per-sample conditional
-coverage. This is a training-conditional, fixed-$x_0$ requirement, the local analogue of
-the training-conditional and tolerance-region guarantees studied for conformal sets
-\citep{vovk2012conditional}, and it is deliberately stronger than the marginal coverage
-\eqref{eq:marginal}.\footnote{\emph{Honest} is the standard term for a coverage guarantee that holds
-uniformly over the class at finite $n$, the $\inf_\theta$ sitting inside the probability,
-as opposed to a pointwise or asymptotic guarantee that fixes $\theta$ first
-\citep{li1989honest,low1997nonparametric,cai2004adaptation}. Here \emph{local} means the
-requirement is imposed at the fixed point $x_0$ rather than over an interval.}
+law in $\Theta$ generated the data. Taking $\eta=0$ asks for coverage almost surely over
+the calibration sample. This is a training-conditional, fixed-$x_0$ requirement, the local
+analogue of the training-conditional and tolerance-region guarantees studied for conformal
+sets \citep{vovk2012conditional}, and it is deliberately stronger than the marginal coverage
+\eqref{eq:marginal}.\footnote{\emph{Honesty} refers to coverage uniformly over the model
+class, the $\inf_\theta$ sitting inside the probability, as opposed to a pointwise guarantee
+that fixes $\theta$ first \citep{li1989honest,low1997nonparametric,cai2004adaptation}. It is
+often stated asymptotically. Here we impose the stronger nonasymptotic version at every $n$.
+And \emph{local} means the requirement is imposed at the fixed point $x_0$ rather than over
+an interval.}
 \end{definition}
 
 Sharpness is measured against the oracle threshold $q_\alpha(u) = F_u^{-1}(1-\alpha)$
@@ -103,14 +104,17 @@ The covariate density $g$ satisfies $0 < g_- \le g(x) \le g_+ < \infty$ on a fix
 neighbourhood of $x_0 \in (0,1)^d$, and $x_0$ is a Lebesgue point of $g$.
 \end{assumption}
 
-All the proof uses is the small-ball relation $\Prob_X\{X\in B(x_0,h)\} = \lambda(x_0)\,
-h^{d}(1+o(1))$, of which the density condition is the Euclidean special case with
-$\lambda(x_0)=g(x_0)$. The small-ball form also covers smooth manifolds, non-Euclidean
-metrics, and an intrinsic dimension $d$ below the raw feature dimension. Without the
-Lebesgue point the local mass is only pinned between $g_-h^d$ and $g_+h^d$, and every rate
-below holds with $g(x_0)$ replaced by a constant in $[g_-,g_+]$. The assumption fails at
-boundaries and in sparse high-dimensional regions, where the local sample size is smaller
-still and the inflation only grows.
+All the proof uses is the local-averaging relation, valid at a Lebesgue point of $g$,
+\[
+  \int \psi^2\!\Big(\frac{x-x_0}{h}\Big)\,g(x)\,dx
+    \;=\; h^{d}\,g(x_0)\!\int\!\psi^2(z)\,dz \;+\; o(h^d),
+\]
+which turns the bump support into $\asymp n\,g(x_0)\,h^{d}$ effective observations. The same
+relation holds on smooth manifolds and under non-Euclidean metrics, with $g(x_0)$ the local
+density and $d$ the intrinsic dimension. Without the Lebesgue point the local mass is only
+pinned between constants times $h^d$, and every rate below holds with $g(x_0)$ replaced by a
+constant in $[g_-,g_+]$. Boundaries and sparse high-dimensional regions violate the
+assumption and need separate treatment.
 
 \begin{assumption}[Regular one-dimensional residual submodel]\label{as:family}
 The calibration sample $(X_i,R_i)_{i=1}^n$ is i.i.d.\ with $X_i\sim g$, and the admissible
@@ -129,10 +133,11 @@ $c_q$. The upper constant $C_q$ enters only attainability (Section~\ref{sec:atta
 The submodel framing is the point. Even if the true residual law varies in scale,
 skewness, and tail thickness, the impossibility follows as soon as the class contains
 \emph{one} regular direction that moves the target quantile, and a lower bound proved on
-the submodel applies to every larger class containing it. A sufficient condition is
-differentiability in quadratic mean with bounded Fisher information and $q_\alpha'(u)$
-bounded above and away from zero, whence the mean-value theorem gives the quantile
-inequalities. The two-sided quantile bound forces $q_\alpha$ strictly monotone, so we
+the submodel applies to every larger class containing it. In a smooth dominated family for
+which the usual local Kullback--Leibler expansion holds, uniformly bounded Fisher
+information yields the quadratic information bound. If $q_\alpha$ is continuously
+differentiable with $0<c\le q_\alpha'(u)\le C$, the quantile inequalities follow by the
+mean-value theorem. The two-sided quantile bound forces $q_\alpha$ strictly monotone, so we
 orient the parameter to make it increasing. What is excluded is worth naming: discrete
 scores, quantiles in flat parts of a CDF, parameters with $q_\alpha'(u)=0$, and families
 with parameter-dependent support giving infinite $\KL$.
@@ -152,14 +157,15 @@ F^{-1}_{\chi^2_1}(1-\alpha)$.
   $C_q=e^{\overline u+\sigma z_{1-\alpha}}$. This model gives a rigorous attainability
   construction (Section~\ref{sec:attain}) and the exact numerical check (Section~\ref{sec:check}).
 \item[(C)] \emph{Exponential scale.} $R\given u \sim \mathrm{Exp}(\text{mean }e^{u})$. Then
-  $\KL(F_u\|F_v)=e^{u-v}-1-(u-v)$ and $q_\alpha(u)=-(\log\alpha)e^{u}$; both bounds follow
+  $\KL(F_u\|F_v)=e^{u-v}-1-(u-v)$ and $q_\alpha(u)=-(\log\alpha)e^{u}$. Both bounds follow
   on a compact interval, with no truncation needed.
 \end{itemize}
 
 \begin{assumption}[H\"older smoothness with local richness]\label{as:holder}
-Write $s=k+\gamma$ with $k=\lfloor s\rfloor$ and $0<\gamma\le1$, and let $\Hs(L)$ be the
-ball of fields $\theta$ with $k$th derivatives $\gamma$-H\"older with seminorm $\le L$ and
-range $\theta(x)\in[\underline u,\overline u]$. Fix a bump profile $\psi$ with $\psi(0)=1$,
+Write $k=\lceil s\rceil-1$ and $\gamma=s-k\in(0,1]$, so $s=k+\gamma$ with the Lipschitz
+class $s=1$ giving $k=0,\gamma=1$, and let $\Hs(L)$ be the ball of fields $\theta$ with
+$k$th derivatives $\gamma$-H\"older with seminorm $\le L$ and range
+$\theta(x)\in[\underline u,\overline u]$. Fix a bump profile $\psi$ with $\psi(0)=1$,
 $\|\psi\|_\infty\le1$, $\operatorname{supp}\psi \subseteq B(0,1)$, and $\psi\in C^s$. There
 are $h_0,a_0>0$ and an interior baseline value $u_0\in(\underline u,\overline u)$ with
 \[
@@ -171,9 +177,10 @@ so small $a$ keeps it in the ball.
 \end{assumption}
 
 Assumption~\ref{as:holder} is the operative one, and it is not innocuous. It holds for
-broad H\"older classes that permit localized features at the detection boundary, but it can
-fail under global parametric structure, analyticity, monotonicity, or self-similarity, and
-those are exactly the restrictions that can restore honest adaptation. Within a H\"older
+broad H\"older classes that permit localized features at the detection boundary. Global
+parametric structure, analyticity, monotonicity, or self-similarity may exclude the local
+bump alternatives, and under additional conditions can change or restore the adaptation
+problem. Within a H\"older
 ball it says the class holds a pair that agree outside a ball of radius $h$ around $x_0$ but
 differ by $\delta = a L h^{s}$ at $x_0$, with the amplitude $a$ shrinkable below $a_0$,
 which the proof uses to place the two hypotheses at any chosen separation.
@@ -209,15 +216,15 @@ $\beta_{1-\eta}(P_1,P_0)\ge 1-\eta-\TV(P_1,P_0)$, since any $A$ with $P_1(A)\ge1
 $P_0(A)\ge P_1(A)-\TV$.
 \end{proof}
 
-The frontier \eqref{eq:frontier} is exact; the $1-\eta-\TV$ reading is the crude corollary.
+The frontier \eqref{eq:frontier} is exact, and the $1-\eta-\TV$ reading is the crude corollary.
 Both feed the same conclusion once the two hypotheses are placed at critical separation.
 
 \begin{theorem}[Honest local coverage forces inflation]\label{thm:main}
 Fix $0<\alpha<1$ and $0 \le \eta < \tfrac12$, and let
 Assumptions~\ref{as:design}--\ref{as:holder} hold. There are constants $c_1,c_2>0$ and
-$n_0$, depending only on $(\alpha,\eta,K,c_q,g_+,\psi,a_0,h_0)$ and the distance from $u_0$
-to the parameter boundary, and a fixed constant baseline $\theta_0\in\Hs(L)$, such that for
-all $n\ge n_0$ every $T_n$ satisfying
+$n_0$, depending on the fixed model class $(s,d,L,\alpha,\eta,K,c_q)$, the local design law
+$g$ near $x_0$, and the bump profile $\psi$, but not on $n$, and a fixed constant baseline
+$\theta_0\in\Hs(L)$, such that for all $n\ge n_0$ every $T_n$ satisfying
 honest local coverage \eqref{eq:honest} over $\Hs(L)$ has, with
 $r_n := L^{d/(2s+d)}\big(n\,g(x_0)\big)^{-s/(2s+d)}$,
 \begin{equation}\label{eq:tail}
@@ -235,7 +242,7 @@ samples, so both its median excess and its expected positive excess satisfy
 \begin{proof}
 Take the constant baseline $\theta_0 \equiv u_0$ and the bump $\theta_1=\theta_{h,a}$ of
 Assumption~\ref{as:holder}. Since $\psi(0)=1$ and $q_\alpha$ is oriented increasing
-(Assumption~\ref{as:family}), $q_1=q_\alpha(u_0+\delta)>q_\alpha(u_0)=q_0$; if $\psi(0)=1$
+(Assumption~\ref{as:family}), $q_1=q_\alpha(u_0+\delta)>q_\alpha(u_0)=q_0$. If $\psi(0)=1$
 gave a decrease we would flip the sign of $\psi$. Both fields lie in $\Hs(L)$.
 
 \emph{Indistinguishability.} The two laws differ only on the bump support, of covariate
@@ -280,10 +287,12 @@ average over rare wide sets, that carries the inflation.
 
 \section{Attainability in a regular example}\label{sec:attain}
 
-An honest procedure attains the lower-bound rate, so Theorem~\ref{thm:main} is a real
-optimum and not an empty constraint. We show this in the lognormal model (B), where the
-finite-sample honesty statement is exact rather than an $O_P$ assertion. Assume
-$0<s\le1$, $0<\eta<\tfrac12$, and
+The lower-bound exponent is sharp in a canonical regular model, so Theorem~\ref{thm:main}
+is a real optimum and not an empty constraint. We demonstrate this in the lognormal
+model (B), where an exactly honest procedure attains the same rate and the finite-sample
+honesty statement is exact rather than an $O_P$ assertion. Assumptions~\ref{as:design}--%
+\ref{as:holder} are lower-bound hypotheses and do not by themselves supply a matching
+estimator in every residual family. Assume $0<s\le1$, $0<\eta<\tfrac12$, and
 \[
   \log R_i \;=\; \theta(X_i) + \varepsilon_i,
   \qquad \varepsilon_i \sim_{\mathrm{iid}} N(0,1),
@@ -298,30 +307,42 @@ N_k(x_0)}\log R_i$. Set
 \end{equation}
 
 \begin{proposition}[Exact honest attainment]\label{prop:attain}
-For every $\theta\in\Hs(L)$, the set $[0,T_{n,k}(x_0)]$ is honestly locally valid
-\eqref{eq:honest} conditional on the design, and with
-$k \asymp L^{-2d/(2s+d)}\big(n g(x_0)\big)^{2s/(2s+d)}$ its excess is $O(r_n)$.
+For every $\theta\in\Hs(L)$ the set $[0,T_{n,k}(x_0)]$ is honestly locally valid
+\eqref{eq:honest} conditional on the design, and with $k \asymp
+L^{-2d/(2s+d)}\big(n g(x_0)\big)^{2s/(2s+d)}$ its sharpness satisfies
+$\sup_{\theta\in\Hs(L)} S_\theta(T_{n,k}) \le C\,r_n$.
 \end{proposition}
 
 \begin{proof}
-Conditional on $X_1,\dots,X_n$, $\widehat\theta_k = k^{-1}\sum_{i\in N_k}\theta(X_i) +
-N(0,1/k)$, and H\"older smoothness with $s\le1$ gives $|\theta(x_0)-k^{-1}\sum_{i\in
-N_k}\theta(X_i)| \le L\rho_k^{s}$. The oracle threshold is
+\emph{Honesty.} Conditional on $X_1,\dots,X_n$, $\widehat\theta_k = k^{-1}\sum_{i\in
+N_k}\theta(X_i) + N(0,1/k)$, and H\"older smoothness with $s\le1$ gives
+$|\theta(x_0)-k^{-1}\sum_{i\in N_k}\theta(X_i)| \le L\rho_k^{s}$. The oracle threshold is
 $q_\alpha(\theta(x_0))=\exp\{\theta(x_0)+z_{1-\alpha}\}$, so $T_{n,k}(x_0)\ge
-q_\alpha(\theta(x_0))$ iff the standard normal $Z=\sqrt k(\widehat\theta_k-k^{-1}\sum\theta(X_i))$
-satisfies $Z \ge \sqrt k\,(\theta(x_0)-k^{-1}\sum\theta(X_i)-L\rho_k^{s}) - z_{1-\eta}$. The
-right side is $\le -z_{1-\eta}$, and $\Prob\{Z\ge -z_{1-\eta}\}=1-\eta$, giving conditional
-coverage at least $1-\eta$ for every $\theta$. Under Assumption~\ref{as:design},
-$\rho_k^{s}\asymp (k/n g(x_0))^{s/d}$, so the excess is of order $L(k/n g(x_0))^{s/d} +
-k^{-1/2}$, and the stated $k$ balances the two terms at
-$L^{d/(2s+d)}(n g(x_0))^{-s/(2s+d)}=r_n$.
+q_\alpha(\theta(x_0))$ iff $Z=\sqrt k(\widehat\theta_k-k^{-1}\sum\theta(X_i))$, a standard
+normal, satisfies $Z \ge \sqrt k\,(\theta(x_0)-k^{-1}\sum\theta(X_i)-L\rho_k^{s}) -
+z_{1-\eta}$. The right side is $\le -z_{1-\eta}$, and $\Prob\{Z\ge -z_{1-\eta}\}=1-\eta$,
+giving conditional coverage at least $1-\eta$ for every $\theta$.
+
+\emph{Sharpness.} Write $T_{n,k}(x_0)=q_\alpha(\theta(x_0))\exp\{b_k+Z/\sqrt k\}$ with
+$0\le b_k \le 2L\rho_k^{s}+k^{-1/2}z_{1-\eta}$. Since $\theta$ ranges over the compact
+interval $[\underline u,\overline u]$, the oracle quantile is uniformly bounded, and the
+Gaussian exponential moment gives $\E[(e^{b+Z/\sqrt k}-1)_+]\le C(b+k^{-1/2})$ uniformly for
+bounded $b$. Hence $S_\theta(T_{n,k}\given X_{1:n}) \le C(L\rho_k^{s}+k^{-1/2})$. Under
+Assumption~\ref{as:design}, $\E\rho_k^{s}\le C'(k/n g(x_0))^{s/d}$, so
+\[
+  \sup_{\theta\in\Hs(L)} S_\theta(T_{n,k})
+    \;\le\; C''\Big\{ L\big(k/n g(x_0)\big)^{s/d} + k^{-1/2} \Big\},
+\]
+and the stated $k$ balances the two terms at $L^{d/(2s+d)}(n g(x_0))^{-s/(2s+d)}=r_n$.
 \end{proof}
 
 Three points. The construction is a genuine finite-sample, design-conditional honesty
 statement, not a concentration theorem asserted without proof. It needs $\eta>0$: the
 margin $k^{-1/2}z_{1-\eta}$ diverges as $\eta\to0$. And it uses $s\le1$, where a local
-average has bias $O(L\rho_k^{s})$. For $s>1$ the local average is replaced by a
-local-polynomial estimate of degree $\lfloor s\rfloor$, which restores the bias order.
+average has bias $O(L\rho_k^{s})$. For $s>1$ a matching honest construction replaces the
+local average by a local-polynomial estimate of degree $\lceil s\rceil-1$. Establishing
+exact design-conditional honesty there needs the standard control of the polynomial
+weights, Taylor remainder, and design conditioning, which we do not carry out.
 
 \begin{remark}[The endpoint $\eta=0$]\label{rem:endpoint}
 The modulus rate is an $\eta>0$ statement. At $\eta=0$, exact per-sample conditional
@@ -351,8 +372,9 @@ it forces protection against locally undetectable alternatives, whose width is t
 
 \section{Unknown smoothness: honesty cannot adapt}
 
-Over a single known class the lower bound \eqref{eq:rate} is attainable, so coverage and
-minimax-rate sharpness are not incompatible there. The genuine separation is adaptive.
+In regular models such as Section~\ref{sec:attain}, minimax-rate sharpness over a single
+known class is attainable, so coverage and minimax-rate sharpness are not incompatible
+there. The genuine obstruction is adaptation.
 
 \begin{theorem}[No adaptation under honesty]\label{thm:adapt}
 Let $0 < s_0 < s_1$, fix $0<\eta<\tfrac12$, and require honest local coverage over
@@ -415,7 +437,7 @@ $q_1-q_0=e^{z_{1-\alpha}}(e^{\delta}-1)\sim e^{z_{1-\alpha}}\delta$, so the crit
 and the constant inflation fraction are unchanged. Along the critical scaling
 $h=n^{-1/(2s+d)}$, $\delta=h^{s}$, the separation converges,
 $I_n\to\int_{-1}^{1}(1-|z|)^2\,dz=\tfrac23$, so both quantities are constant in $n$: the Le
-Cam boundary. Below the critical exponent the bump is detectable and $\TV\to1$; above it,
+Cam boundary. Below the critical exponent the bump is detectable and $\TV\to1$. Above it the bump is
 invisible and $\TV\to0$ (Figure~\ref{fig:phase}). At the boundary the forced minimum
 inflation, as a fraction of the quantile shift, is
 $\beta_{0.9}=\Phi(z_{0.9}-\sqrt{2/3})=0.679$, strictly above the crude Le Cam reading
@@ -424,9 +446,35 @@ $1-\eta-\TV=0.583$ and, being above $\tfrac12$, forcing inflation on a majority 
 same way: the forced $s_0$-rate over the smooth-$s_1$ oracle rate diverges as
 $n^{s_1/(2s_1+d)-s_0/(2s_0+d)}=n^{1/15}$, matched to four decimal places by the closed form.
 Figure~\ref{fig:attain} runs the honest $k$-nearest-neighbour band \eqref{eq:knn} against
-the uncorrected plug-in threshold: the honest band holds $1-\eta$ coverage at the baseline
-while the plug-in covers about half the time, at the cost of the $r_n$ inflation the theorem
-predicts. A random-design exponential experiment reproduces every scaling by Monte Carlo.
+the uncorrected plug-in threshold, at $\eta=0.05$. The panel plots the honesty probability,
+the fraction of calibration samples on which the realized threshold attains conditional
+coverage $1-\alpha$: the honest band clears the target $1-\eta$, while the plug-in meets it
+on about half the samples. The plug-in is not undercovering marginally. It fails the
+fixed-sample honesty requirement, and it pays for that failure by shedding the $r_n$
+inflation the honest band must carry, shown decaying at $n^{-1/3}$ in the right panel.
+
+Table~\ref{tab:exp} confirms the same critical-scaling signature in the exponential
+model (C), a nonnegative family that is not a monotone transform of a Gaussian: the
+Monte-Carlo total variation and Neyman--Pearson inflation ratio stay flat in $n$ and near
+the Gaussian values $0.317$ and $0.679$.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{rcc}
+\hline
+$n$ & $\widehat{\TV}(P^n_{\theta_1},P^n_{\theta_0})$ & NP inflation ratio $\widehat\beta_{0.9}$ \\
+\hline
+$300$   & $0.302$ & $0.705$ \\
+$1000$  & $0.317$ & $0.698$ \\
+$3000$  & $0.316$ & $0.688$ \\
+$10000$ & $0.310$ & $0.686$ \\
+\hline
+\end{tabular}
+\caption{Random-design exponential model at the critical scaling $h=n^{-1/3}$, $\delta=h$,
+$\eta=0.1$. Monte-Carlo estimates over $8000$ replicates. Both columns are constant in $n$,
+the Le~Cam boundary in a genuinely nonnegative score family.}
+\label{tab:exp}
+\end{table}
 
 \begin{figure}[t]
 \centering
@@ -449,10 +497,12 @@ bound ($0.583$), and both are constant in $n$ and above $\tfrac12$.}
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.62\textwidth]{fig_attainability.png}
-\caption{Honest $k$-nearest-neighbour band \eqref{eq:knn} versus the uncorrected plug-in
-threshold, lognormal scores at the smooth baseline. The honest band holds coverage at
-$1-\eta=0.9$; the plug-in covers about half the time. The gap is the $r_n$ inflation the
-lower bound forces, and it decays at the predicted $n^{-1/3}$.}
+\caption{Lognormal scores at the smooth baseline, $\eta=0.05$. Left: the honesty
+probability, the probability over calibration samples that the realized threshold attains
+conditional coverage at least $1-\alpha$. The honest $k$-nearest-neighbour band
+\eqref{eq:knn} clears the target $1-\eta=0.95$. The uncorrected plug-in meets it on about
+half the samples. Right: the honest band's positive excess $\E[(T-q_\alpha)_+]$, decaying at
+the predicted $n^{-1/3}$.}
 \label{fig:attain}
 \end{figure}
 
@@ -463,7 +513,7 @@ that reweight by proximity are marginally valid and can be sharp. The obstructio
 indistinguishability under an honesty requirement. Three statements should be kept apart.
 Zero or $o(r_n)$ oracle excess is incompatible with honesty. Minimax-rate sharpness,
 $O(r_n)$ excess at a known smoothness $s$, is compatible with honesty \emph{for fixed
-$\eta>0$}, and Section~\ref{sec:attain} attains it; at $\eta=0$ even that fails
+$\eta>0$}, and Section~\ref{sec:attain} attains it, and at $\eta=0$ even that fails
 (Remark~\ref{rem:endpoint}). The smooth-class rate while honest over a rougher class is
 again incompatible. Theorem~\ref{thm:main} is therefore a nonparametric \emph{inflation}
 theorem, not a claim that honesty and minimax-rate sharpness never coexist, and
@@ -475,9 +525,10 @@ correspondingly large amount. When the objective is a sharp predictive score rat
 high-probability local coverage, a kernel or local-likelihood estimate of the residual law
 may be preferable, because it does not carry the one-sided insurance radius honesty
 requires. Whether it wins is a separate decision-theoretic comparison under the chosen
-score, not a corollary of the width bound. The honest guarantee is not free and it is not
-distribution-free at a point. Its price is the sharpness it surrenders to insure against
-the alternatives the data cannot rule out.
+score, not a corollary of the width bound. The honest guarantee is not free. A nontrivial
+fixed-point honest guarantee requires structural assumptions on the conditional law.
+Without them, distribution-free pointwise validity is generally vacuous. Its price is the
+sharpness it surrenders to insure against the alternatives the data cannot rule out.
 
 \bibliographystyle{plainnat}
 \begin{thebibliography}{9}
