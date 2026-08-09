@@ -1,0 +1,291 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\KL}{\mathrm{KL}}
+\newcommand{\TV}{\mathrm{TV}}
+\newcommand{\Hs}[1][s]{\mathcal{H}^{#1}}
+\newcommand{\given}{\,|\,}
+
+\title{Locally Honest Coverage Forces Nonparametric Inflation:\\
+a Sharpness Lower Bound for Prediction Sets}
+\author{Peter Cotton\\\texttt{peter.cotton@microprediction.com}}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Conformal prediction earns exact finite-sample coverage that is marginal, averaged over
+the test point and the calibration sample. That marginal guarantee is compatible with
+oracle-rate sharpness, so no impossibility can attach to it. The situation changes for a
+guarantee that means something at a fixed test point. We show that any prediction set with
+honest coverage at a fixed interior point, valid with high probability over the calibration
+sample for every conditional residual law in a smoothness class, has expected width
+exceeding the oracle by at least the local nonparametric modulus $n^{-s/(2s+d)}$. The cause
+is not any property of exchangeability or weighting. It is Le~Cam indistinguishability: a
+local increase in residual spread of exactly that size is statistically invisible in the
+calibration sample yet moves the true quantile, so an honest set must protect against it and
+stays inflated even when the smoother baseline holds. A plug-in local estimator can be
+sharper precisely because it does not carry that protection. When smoothness is unknown the
+separation is stronger: an honest set cannot adapt to the faster rate available on smoother
+laws, because a rougher local alternative is indistinguishable. Under scarce local data the
+inflation is large, which is why, at small effective sample sizes, a local residual model is
+the better forecast and an honest local guarantee is expensive.
+\end{abstract}
+
+\section{Two guarantees, one honest}
+
+Fix a model, freeze it, and let $R = A(X,Y)$ be its scalar nonconformity score with
+conditional law $\mathcal{L}(R\given X=x)$. Ordinary conformal coverage is
+\begin{equation}\label{eq:marginal}
+  \Prob\big\{ R_{n+1} \in C_n(X_{n+1}) \big\} \;\ge\; 1-\alpha ,
+\end{equation}
+the probability averaging over the test point $X_{n+1}$ and the calibration sample $D_n$.
+Under \eqref{eq:marginal} no impossibility holds: \citet{lei2014distribution} construct
+bands with exact finite-sample marginal validity that converge to an oracle band at the
+minimax rate, and localized conformal methods retain marginal validity while weighting by
+proximity. A theorem about the cost of a guarantee must therefore concern a guarantee that
+is local. We take the honest one.
+
+\begin{definition}[Honest local coverage]\label{def:honest}
+Fix an interior point $x_0$ and $0 \le \eta < \tfrac12$. A one-sided prediction set
+$C_n(x_0) = [0, T_n(x_0)]$ for a nonnegative score is \emph{honestly locally valid} over a
+class $\Theta$ if
+\begin{equation}\label{eq:honest}
+  \inf_{\theta \in \Theta}\;
+  \Prob_{\theta}\!\Big\{ F_{\theta(x_0)}\big(T_n(x_0)\big) \ge 1-\alpha \Big\}
+  \;\ge\; 1-\eta ,
+\end{equation}
+where $F_{\theta(x_0)}$ is the true conditional law of the score at $x_0$ and the
+probability is over the calibration sample. In words: with probability at least $1-\eta$
+over the data, the realized set has conditional coverage $1-\alpha$ at $x_0$, whatever
+law in $\Theta$ generated the data. Taking $\eta=0$ is literal per-sample conditional
+coverage.
+\end{definition}
+
+Sharpness is measured against the oracle threshold $q_\alpha(u) = F_u^{-1}(1-\alpha)$
+through the excess
+\begin{equation}\label{eq:sharp}
+  S_\theta(T_n) \;=\; \E_\theta\Big[\big(T_n(x_0) - q_\alpha(\theta(x_0))\big)_{+}\Big] ,
+\end{equation}
+the expected inflation of the threshold above the oracle. The question is how small
+\eqref{eq:sharp} can be made subject to \eqref{eq:honest}.
+
+\section{Assumptions}
+
+The upper H\"older bound alone is not enough for a lower bound; the class must contain
+alternatives that are indistinguishable near $x_0$. Three standing assumptions supply
+this without asking us to estimate an arbitrary law.
+
+\begin{assumption}[Local design regularity]\label{as:design}
+The covariate density $g$ satisfies $0 < g_- \le g(x) \le g_+ < \infty$ on a fixed
+neighbourhood of $x_0 \in (0,1)^d$.
+\end{assumption}
+
+\begin{assumption}[Regular residual family]\label{as:family}
+The conditional score law is $R \given X=x \sim F_{\theta(x)}$ for a one-parameter family
+$\{F_u : u \in [\underline u, \overline u]\}$ that is, locally in $u$, quadratically
+regular in information and Lipschitz-regular in quantile:
+\[
+  \KL\big(F_u, F_v\big) \le K\,(u-v)^2,
+  \qquad
+  c_q\,|u-v| \le \big|q_\alpha(u) - q_\alpha(v)\big| \le C_q\,|u-v| .
+\]
+A truncated exponential family with parameter in a compact interval is a concrete
+instance: smooth in total variation with a smoothly varying quantile.
+\end{assumption}
+
+\begin{assumption}[H\"older smoothness with local richness]\label{as:holder}
+The parameter field lies in a H\"older ball, $\theta \in \Hs(L)$, and the class contains
+localized perturbations of a constant baseline: for a fixed compactly supported bump
+$\psi$ and any $h>0$,
+\[
+  \theta_1(x) = \theta_0(x) + \delta\,\psi\!\Big(\frac{x-x_0}{h}\Big) \in \Hs(L),
+  \qquad \delta \asymp L\,h^{s} .
+\]
+\end{assumption}
+
+Assumption~\ref{as:holder} is the operative one. It says the class holds a pair that
+agree outside a ball of radius $h$ around $x_0$ but differ materially at $x_0$.
+
+\section{The lower bound}
+
+\begin{theorem}[Honest local coverage forces inflation]\label{thm:main}
+Fix $0<\alpha<1$ and $0 \le \eta < \tfrac12$, and let
+Assumptions~\ref{as:design}--\ref{as:holder} hold. Then there is a constant $c>0$,
+depending only on the model constants $(\alpha,\eta,K,c_q,L,g_-,g_+,\psi)$, such that
+every $T_n$ satisfying honest local coverage \eqref{eq:honest} over $\Hs(L)$ obeys
+\begin{equation}\label{eq:rate}
+  \sup_{\theta \in \Hs(L)} S_\theta(T_n) \;\ge\; c\,\big(n\,g(x_0)\big)^{-s/(2s+d)} .
+\end{equation}
+No finite-sample honestly-local procedure is oracle-sharp uniformly over the class; its
+expected excess threshold is at least the local nonparametric estimation scale.
+\end{theorem}
+
+\begin{proof}
+Take the constant baseline $\theta_0 \equiv u_0$ and the bump
+$\theta_1(x) = u_0 + \delta\,\psi((x-x_0)/h)$ of Assumption~\ref{as:holder}, with the sign
+of $\psi(0)$ chosen so that $q_\alpha(\theta_1(x_0)) > q_\alpha(\theta_0(x_0))$. Both lie
+in $\Hs(L)$.
+
+\emph{Indistinguishability.} The two laws differ only on the bump support, of covariate
+measure $\Theta(h^{d})$, carrying $\Theta(n\,g(x_0)\,h^{d})$ calibration points in
+expectation by Assumption~\ref{as:design}. Each contributes at most $K\delta^2$ to the
+Kullback--Leibler divergence by Assumption~\ref{as:family}, so for product measures over
+the calibration sample
+\[
+  \KL\big(P^{n}_{\theta_1}, P^{n}_{\theta_0}\big)
+  \;\lesssim\; n\,g(x_0)\,h^{d}\,\delta^2 .
+\]
+Choose $h \asymp \big(n g(x_0)\big)^{-1/(2s+d)}$, hence $\delta \asymp L\,h^{s} \asymp
+\big(n g(x_0)\big)^{-s/(2s+d)}$. Then $n g(x_0) h^{d}\delta^2 = O(1)$, so by Pinsker the
+total-variation distance is bounded, $\TV(P^{n}_{\theta_1},P^{n}_{\theta_0}) \le \tau$ for
+a constant $\tau < 1-\eta$ (shrink the bump amplitude by a fixed factor if needed to make
+$\tau$ that small).
+
+\emph{Transfer.} Honest validity \eqref{eq:honest} under $\theta_1$ gives
+$\Prob_{\theta_1}\{ T_n(x_0) \ge q_\alpha(\theta_1(x_0)) \} \ge 1-\eta$. The event
+$\{T_n(x_0) \ge q_\alpha(\theta_1(x_0))\}$ is a function of the calibration sample, so its
+probability changes by at most $\TV$ between the two laws:
+\[
+  \Prob_{\theta_0}\big\{ T_n(x_0) \ge q_\alpha(\theta_1(x_0)) \big\}
+  \;\ge\; (1-\eta) - \tau \;>\; 0 .
+\]
+
+\emph{Inflation.} Under the baseline the oracle threshold is $q_\alpha(\theta_0(x_0))$, so
+\begin{align*}
+  S_{\theta_0}(T_n)
+  &= \E_{\theta_0}\big[(T_n(x_0) - q_\alpha(\theta_0(x_0)))_{+}\big] \\
+  &\ge \big[q_\alpha(\theta_1(x_0)) - q_\alpha(\theta_0(x_0))\big]\cdot
+       \Prob_{\theta_0}\big\{ T_n(x_0) \ge q_\alpha(\theta_1(x_0)) \big\} \\
+  &\ge c_q\,\delta\,\big((1-\eta)-\tau\big)
+   \;\gtrsim\; \big(n g(x_0)\big)^{-s/(2s+d)} ,
+\end{align*}
+using the lower quantile-sensitivity bound of Assumption~\ref{as:family} for
+$q_\alpha(\theta_1(x_0)) - q_\alpha(\theta_0(x_0)) \ge c_q\,\delta\,|\psi(0)|$. Since
+$\theta_0 \in \Hs(L)$, the supremum in \eqref{eq:rate} is at least this, proving the
+claim.
+\end{proof}
+
+The mechanism is exactly the intended one. The data cannot tell a smooth baseline from a
+small, local increase in residual uncertainty. Exact local protection against the increase
+therefore forces the set to stay inflated even when the baseline is true, and the size of
+the forced inflation is the amplitude of the largest undetectable bump.
+
+\section{The bandwidth reading}
+
+The rate is the local modulus of continuity,
+\begin{equation}\label{eq:modulus}
+  \big(n g(x_0)\big)^{-s/(2s+d)}
+  \;\asymp\;
+  \inf_{h>0}\Big\{\, L\,h^{s} \;+\; \big(n\,g(x_0)\,h^{d}\big)^{-1/2} \,\Big\} ,
+\end{equation}
+the sum of the largest undetectable local heterogeneity, $L h^{s}$, and the local sampling
+scale, $(n g(x_0) h^{d})^{-1/2}$. Writing $m_h \asymp n g(x_0) h^{d}$ for the effective
+local sample size, the honesty cost is $L h^{s} + m_h^{-1/2}$: as data thin, both the
+best neighbourhood and the unavoidable inflation grow. This is the small-sample statement,
+with no appeal to uniform pooling. Exact local validity does not force wide neighbourhoods;
+it forces protection against locally undetectable alternatives, whose width is the modulus.
+
+\section{Unknown smoothness: honesty cannot adapt}
+
+Over a single known class the lower bound \eqref{eq:rate} is attainable, so coverage and
+minimax-rate sharpness are not incompatible there. The genuine separation is adaptive.
+
+\begin{theorem}[No adaptation under honesty]\label{thm:adapt}
+Let $0 < s_0 < s_1$ and require honest local coverage over $\Hs[s_0](L) \cup \Hs[s_1](L)$.
+Then there is $c>0$ with
+\begin{equation}\label{eq:adapt}
+  \sup_{\theta \in \Hs[s_1](L)} S_\theta(T_n)
+  \;\ge\; c\,\big(n g(x_0)\big)^{-s_0/(2s_0+d)} ,
+\end{equation}
+which is strictly slower than the smooth-class rate
+$\big(n g(x_0)\big)^{-s_1/(2s_1+d)}$. An honest set cannot achieve the faster sharpness
+available on the smoother subclass.
+\end{theorem}
+
+\begin{proof}
+Take the baseline $\theta_0 \equiv u_0$, which is constant and hence lies in
+$\Hs[s_1](L)$, and the indistinguishable bump alternative from the rougher class
+$\Hs[s_0](L)$ at $h \asymp (n g(x_0))^{-1/(2s_0+d)}$, $\delta \asymp (n
+g(x_0))^{-s_0/(2s_0+d)}$. The proof of Theorem~\ref{thm:main} applies verbatim and forces
+$S_{\theta_0}(T_n) \gtrsim \delta \asymp (n g(x_0))^{-s_0/(2s_0+d)}$, even though
+$\theta_0 \in \Hs[s_1](L)$.
+\end{proof}
+
+This is the honesty--adaptation obstruction familiar from nonparametric confidence bands
+\citep{low1997nonparametric,cai2004adaptation}. A sharp point estimator can read apparent
+smoothness off the data and choose a favourable bandwidth. An honest coverage guarantee
+cannot trust apparent smoothness, because a rough local alternative is statistically
+indistinguishable, so it must carry the rougher width. This is the strongest form of the
+thesis: the local estimator is sharper not by a better estimate but by declining to insure
+against what it cannot see.
+
+\begin{remark}[Average validity is weaker]\label{rem:avg}
+If validity means only $\inf_\theta \E_\theta F_{\theta(x_0)}(T_n) \ge 1-\alpha$, averaging
+over calibration samples, a procedure may compensate a too-narrow set on some samples with
+a wide set on others, and the first-order argument weakens. For a family in which
+$t \mapsto F_u(t)$ is uniformly strictly concave near $q_\alpha$, Jensen gives
+$\E_\theta T_n \ge q_\alpha(\theta(x_0))$ and a curvature bound
+$\mathrm{Var}(T_n) \lesssim \E_\theta T_n - q_\alpha(\theta(x_0))$, so small expected excess
+would make $T_n$ a low-MSE estimator of the conditional quantile; the minimax MSE bound
+then yields
+$\sup_\theta [\E_\theta T_n - q_\alpha(\theta(x_0))] \gtrsim (n g(x_0))^{-2s/(2s+d)}$. The
+squared exponent is not an accident: average coverage is materially weaker than honest
+per-sample coverage.
+\end{remark}
+
+\section{What it says for conformal prediction}
+
+The obstruction is not exchangeability, weighting, or pooling; localized conformal sets
+that reweight by proximity are marginally valid and can be sharp. The obstruction is
+indistinguishability under an honesty requirement. Four consequences follow.
+
+Exact marginal conformal validity coexists with local smoothing and asymptotic efficiency.
+Exact local honest validity necessarily inflates the set by at least the local modulus
+$(n g(x_0))^{-s/(2s+d)}$. A plug-in local residual estimate can be sharper because it does
+not protect against every statistically indistinguishable local alternative, only against
+what it can see. And when smoothness is unknown, honesty forbids adaptation to the faster
+rate a smoother law would allow.
+
+The applied reading is the one experience already supplies. At small effective local sample
+size $m_h$, the modulus $L h^{s} + m_h^{-1/2}$ is large, the honest set is inflated by a
+correspondingly large amount, and a kernel or local-likelihood estimate of the residual
+law, which forgoes honest local coverage for asymptotic validity, is the better forecast.
+The honest guarantee is not free and it is not distribution-free at a point; its price is
+the sharpness it must surrender to insure against the alternatives the data cannot rule
+out.
+
+\bibliographystyle{plainnat}
+\begin{thebibliography}{9}
+\bibitem[Cai and Low(2004)]{cai2004adaptation} Cai, T.~T. and Low, M.~G. (2004). An
+  adaptation theory for nonparametric confidence intervals. \emph{Annals of Statistics}
+  32(5), 1805--1840.
+\bibitem[Lei and Wasserman(2014)]{lei2014distribution} Lei, J. and Wasserman, L. (2014).
+  Distribution-free prediction bands for non-parametric regression. \emph{Journal of the
+  Royal Statistical Society, Series B} 76(1), 71--96.
+\bibitem[Low(1997)]{low1997nonparametric} Low, M.~G. (1997). On nonparametric confidence
+  intervals. \emph{Annals of Statistics} 25(6), 2547--2554.
+\bibitem[Tsybakov(2009)]{tsybakov2009introduction} Tsybakov, A.~B. (2009).
+  \emph{Introduction to Nonparametric Estimation}. Springer.
+\end{thebibliography}
+
+\end{document}
