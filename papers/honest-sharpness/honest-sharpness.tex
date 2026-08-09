@@ -72,7 +72,11 @@ $\{T_n(x_0)\ge q_\alpha(\theta(x_0))\}$, and the probability is over the calibra
 sample. In words: with probability at least $1-\eta$
 over the data, the realized set has conditional coverage $1-\alpha$ at $x_0$, whatever
 law in $\Theta$ generated the data. Taking $\eta=0$ is literal per-sample conditional
-coverage.
+coverage.\footnote{\emph{Honest} is the standard term for a coverage guarantee that holds
+uniformly over the class at finite $n$, the $\inf_\theta$ sitting inside the probability,
+as opposed to a pointwise or asymptotic guarantee that fixes $\theta$ first
+\citep{li1989honest,low1997nonparametric,cai2004adaptation}. The qualifier \emph{local}
+is ours: we impose it at a fixed interior point $x_0$ rather than over an interval.}
 \end{definition}
 
 Sharpness is measured against the oracle threshold $q_\alpha(u) = F_u^{-1}(1-\alpha)$
@@ -302,6 +306,8 @@ out.
 \bibitem[Lei and Wasserman(2014)]{lei2014distribution} Lei, J. and Wasserman, L. (2014).
   Distribution-free prediction bands for non-parametric regression. \emph{Journal of the
   Royal Statistical Society, Series B} 76(1), 71--96.
+\bibitem[Li(1989)]{li1989honest} Li, K.-C. (1989). Honest confidence regions for
+  nonparametric regression. \emph{Annals of Statistics} 17(3), 1001--1008.
 \bibitem[Low(1997)]{low1997nonparametric} Low, M.~G. (1997). On nonparametric confidence
   intervals. \emph{Annals of Statistics} 25(6), 2547--2554.
 \bibitem[Tsybakov(2009)]{tsybakov2009introduction} Tsybakov, A.~B. (2009).
