@@ -6,6 +6,10 @@ x_i = (i-1/2)/n on [0,1], and
 
     R_i | X_i = x_i  ~  N(theta(x_i), 1),   d = 1.
 
+The same numbers hold for the lognormal score R = exp(theta(x) + Z): R -> log R is a
+bijection, so total variation and the Neyman-Pearson frontier are identical to the
+Gaussian location model, and only the quantile shift picks up a factor e^{z_{1-alpha}}.
+
 Two-point family: theta0 == 0 (constant baseline, in every Holder class) versus a
 local bump theta1(x) = delta * psi((x-x0)/h) with the triangular profile
 psi(z) = (1-|z|)_+, s = 1.  Along the critical scaling h = n^{-1/(2s+d)}, delta = h^s.
@@ -35,6 +39,7 @@ ALPHA = 0.10
 ETA = 0.10
 S, D = 1.0, 1.0
 CRIT = 1.0 / (2 * S + D)          # critical bandwidth exponent = 1/3
+EXP = S / (2 * S + D)             # modulus rate exponent = 1/3
 Z = norm.ppf(1 - ETA)            # z_{1-eta}
 RESULTS = []
 
@@ -186,12 +191,74 @@ def test_nonadaptation():
            f"ratio log-log slope {slope:.4f} vs predicted {div_exp:.4f} (>0, so honesty cannot adapt)")
 
 
+# ---------------------------------------------------------------------------
+# TEST 4. Attainability (Proposition 6), lognormal model, Monte Carlo. The honest
+# k-NN band of eq (10) holds the honesty probability P{T_n >= q_alpha} at >= 1-eta
+# at the smooth baseline, while the uncorrected plug-in threshold holds it at ~1/2.
+# The honest band pays for this with excess width of the predicted order n^{-1/3}.
+# Produces the third figure.
+# ---------------------------------------------------------------------------
+def test_attainability():
+    print("\n== Test 4: honest k-NN band attains the rate; plug-in is not honest ==")
+    rng = np.random.default_rng(7)
+    q_oracle = np.exp(norm.ppf(1 - ALPHA))            # q_alpha(0) = exp(z_{1-alpha}), theta0==0
+    ns = np.array([1000, 3000, 10000, 30000, 100000])
+    reps = 600
+    hon_prob, plug_prob, hon_excess = [], [], []
+    for n in ns:
+        k = max(8, int(round(n ** (2 * S / (2 * S + D)))))   # k ~ n^{2/3}
+        hp = pp = ex = 0.0
+        for _ in range(reps):
+            X = rng.uniform(0, 1, n)
+            logR = rng.standard_normal(n)                    # theta(x)=0 baseline
+            idx = np.argpartition(np.abs(X - X0), k)[:k]
+            th_hat = logR[idx].mean()
+            rho_k = np.abs(X[idx] - X0).max()
+            # honest band, eq (10): bias L*rho^s + margin z_{1-eta}/sqrt(k)
+            T_hon = np.exp(th_hat + rho_k ** S + Z / np.sqrt(k) + norm.ppf(1 - ALPHA))
+            T_plug = np.exp(th_hat + norm.ppf(1 - ALPHA))    # no bias, no margin
+            hp += T_hon >= q_oracle
+            pp += T_plug >= q_oracle
+            ex += max(T_hon - q_oracle, 0.0)
+        hon_prob.append(hp / reps); plug_prob.append(pp / reps); hon_excess.append(ex / reps)
+        print(f"   n={n:6d}  k={k:5d}  honesty P(honest)={hp/reps:.3f}"
+              f"  P(plug-in)={pp/reps:.3f}  honest excess={ex/reps:.4f}")
+    hon_prob, plug_prob, hon_excess = map(np.array, (hon_prob, plug_prob, hon_excess))
+    slope = np.polyfit(np.log(ns), np.log(hon_excess), 1)[0]
+    report("honest k-NN band is honest (P{T>=q} >= 1-eta)", hon_prob.min() >= 1 - ETA - 0.02,
+           f"min honesty prob {hon_prob.min():.3f} (want >= {1-ETA:.2f})")
+    report("plug-in threshold is NOT honest (P{T>=q} ~ 1/2)",
+           abs(plug_prob.mean() - 0.5) < 0.05,
+           f"plug-in honesty prob {plug_prob.mean():.3f} (theory 0.5)")
+    report("honest excess decays at the modulus rate n^{-1/3}", abs(slope + EXP) < 0.06,
+           f"log-log slope {slope:.3f} (want {-EXP:.3f})")
+
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(10, 4.0))
+    a1.plot(ns, hon_prob, "o-", label="honest k-NN band")
+    a1.plot(ns, plug_prob, "s-", label="plug-in threshold")
+    a1.axhline(1 - ETA, ls="--", c="gray", lw=1, label=f"$1-\\eta={1-ETA:.1f}$")
+    a1.axhline(0.5, ls=":", c="gray", lw=1)
+    a1.set_xscale("log"); a1.set_xlabel("calibration size n")
+    a1.set_ylabel("honesty probability  P{ T $\\geq$ q$_\\alpha$ }")
+    a1.set_title("Honest vs plug-in"); a1.set_ylim(0.3, 1.02); a1.legend()
+    a2.loglog(ns, hon_excess, "o-", label="honest excess width")
+    a2.loglog(ns, hon_excess[0] * (ns / ns[0]) ** (-EXP), "--", c="gray",
+              label="$n^{-1/3}$ guide")
+    a2.set_xlabel("calibration size n"); a2.set_ylabel("mean excess over oracle")
+    a2.set_title("Excess pays the modulus"); a2.legend()
+    fig.tight_layout()
+    fig.savefig("fig_attainability.png", dpi=130)
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     test_phase_transition()
     test_np_frontier()
     test_nonadaptation()
+    test_attainability()
     n_pass, n_tot = sum(RESULTS), len(RESULTS)
     print("\n" + "=" * 60)
     print(f"SUMMARY: {n_pass}/{n_tot} checks passed.")
-    print("Figures written: fig_phase_transition.png, fig_np_frontier.png")
+    print("Figures written: fig_phase_transition.png, fig_np_frontier.png, "
+          "fig_attainability.png")
     print("=" * 60)
