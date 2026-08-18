@@ -6,7 +6,7 @@ alternative to ordinary statistical prediction: a model-agnostic route to
 uncertainty, more rigorous than the model-based methods around it. That presentation
 does more harm than good in a very specific manner: it teaches students to stop
 modeling too early. And its claim to rigor, depending on the application, is at best one-sided and at worst 
-refuted directly by a classical information identity.
+undercut directly by a classical information identity.
 
 ## Rigor cuts both ways
 
@@ -31,7 +31,7 @@ the qualifications get buried. The layer most students read quotes only the abst
 survives the descent is always the same: model-based uncertainty is wishful,
 conformal uncertainty is proven.
 
-Yet the rebuke is just as rigorous as the coverage guarantee, and I have not found it stated in the conformal literature. Under the logarithmic score, the expected penalty for forecasting a residual with its unconditional law rather than its conditional law is exactly the mutual information between the residual and the information left out.
+Yet the rebuke is just as rigorous as the coverage guarantee, and I have not found it stated in the conformal literature. Under the logarithmic score, the expected penalty for forecasting a residual with its unconditional law rather than its conditional law is exactly the mutual information between the residual and the input.
 
 This second, more unfortunate guarantee has a financial interpretation. It is the mean growth rate of the bankroll of an oracle who bets at the prices offered by someone using split conformal prediction. As unwelcome as that might sound, this side of the Faustian bargain should be presented alongside the average coverage guarantee.
 
@@ -39,13 +39,13 @@ This second, more unfortunate guarantee has a financial interpretation. It is th
 ## Students stop modeling too early, as do practitioners
 
 The pedagogical danger: encouraging early stopping in the modeling pipeline. This is not a risk for
-students or newcomers alone, but in fact for the profession as a whole who should know better.
+students or newcomers alone, but in fact for the profession as a whole, which should know better.
 Conformal prediction is presented as a package deal: several steps tied together that are sometimes
 considered, in aggregate, to constitute an important new paradigm (or brand, dare I say).
 
 This is manifestly nonsense. The empirical distribution is not a modeling panacea. The far more useful
  representation of the key idea, which is of course not new at all, is simply as a univariate transform motivated
- by the empirical distribution, one that can - and this is the key point - be
+ by the empirical distribution, one that can, and this is the key point, be
 useful in the beginning, middle or end of a chain of transformations of the data.
 
 Instead, split conformal prediction is taught as a bundle: fit a model, take a scalar
@@ -56,8 +56,8 @@ with handling for ties and discreteness. Some tidy univariate book-keeping for s
 That "little" is valid, of course. The change of
 coordinates can attach a finite-sample marginal certificate at one point in a
 chain. But nothing in the mathematics makes that point the end of the process, and to the contrary,
-an emphasis on coverage accounting on average can paper over poor modeling (the more common critique, that
-we won't belabor).
+an emphasis on coverage accounting on average can paper over poor modeling (the more common critique, which
+I won't belabor).
 
 The conformal convention makes this univariate change of variable the end anyway, and the convention is almost
 unanimously followed. To test the impression rather than trust it, I drew a seed-fixed random sample of one hundred
@@ -151,7 +151,7 @@ with its empirical marginal, full stop.
 
 Why would a highly normative procedure be appropriate for one problem and not the other? 
 
-Sometimes the empirical distribution that is an excellent approximation for model residuals. Sometimes it is not, and the certificate cannot tell the cases apart. So modeling is
+Sometimes the empirical distribution is an excellent approximation for model residuals. Sometimes it is not, and the certificate cannot tell the cases apart. So modeling is
 taught as essential below the residual line and presumptively finished above it, with
 only the certified step mandatory and the rest made to look like embellishment.
 Coverage cannot resolve the asymmetry, because coverage was built to ignore it.
