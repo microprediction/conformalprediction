@@ -96,7 +96,7 @@ The early stopping has a measurable price when tested on economic time-series da
 the transform's output, the other fits the remaining structure on the transformed
 scale and carries the fitted law forward.
 
-Across 572 economic series forecast one step ahead, continuing beats stopping on average. Repeated on synthetic streams built
+Across 701 economic series forecast one step ahead, continuing beats stopping on average. Repeated on synthetic streams built
 to hold no signal, the sign flips, and continuing pays only the ordinary cost of
 fitting structure that is not there. That negative control is what turns the economic
 gain into a finding rather than a reward for extra flexibility.
@@ -184,5 +184,7 @@ critique; Berta, Holzm\"uller, Bach and Jordan, "CalArena" (2026), a large-scale
 calibration benchmark that scores post-hoc methods by their improvement in a proper
 scoring rule, from outside the conformal literature; Cotton, "An Empirical Study of
 the Conformal Information Gap" (SSRN
-7220538), the identity and its measurement; and Cotton's work on transform grammars,
-the literature sample, and interactive demonstrations at conformalprediction.net.*
+7220538), the identity and its measurement; Cotton, "Conformal Prediction as a Transform
+within a Grammar for Probabilistic Forecasting" (SSRN 7244778), the transform as one step in
+a larger grammar of state-conditional bijections; and the literature sample and interactive
+demonstrations at conformalprediction.net.*
