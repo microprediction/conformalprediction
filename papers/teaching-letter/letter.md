@@ -88,8 +88,6 @@ it, re-certifies, and halts. That it keeps reinventing conditional modeling unde
 name, and keeps stopping one step in, is the strongest evidence that the packaging, not
 the mathematics, is doing the teaching.
 
-The Vovk periodogram — the spectrum of the conformal p-value stream, which exchangeability requires to be flat — is almost a reductio ad absurdum. Look at it, and one of two things is true. It is flat, in which case the residuals were already white and the calibration certified nothing you did not already have for free. Or it has a peak, in which case exchangeability has failed, the ranks carry exploitable structure, and the certificate you just collected is a guarantee about the one axis that structure leaves untouched. Vovk himself supplies the instrument, in the same family as the test martingales that police online exchangeability, and its needle argues against stopping whichever way it falls. A method that ships with a built-in detector for its own inadequacy is not quite a contradiction. But it is close.
-
 ## The empirical finding
 
 The early stopping has a measurable price when tested on economic time-series data. The relevant comparison is between two probabilistic forecasters built from the same transform, judged by a proper score. One quotes the unconditional law at
