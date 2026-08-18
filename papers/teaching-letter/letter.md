@@ -182,7 +182,5 @@ critique; Berta, Holzm\"uller, Bach and Jordan, "CalArena" (2026), a large-scale
 calibration benchmark that scores post-hoc methods by their improvement in a proper
 scoring rule, from outside the conformal literature; Cotton, "An Empirical Study of
 the Conformal Information Gap" (SSRN
-7220538), the identity and its measurement; Cotton, "Conformal Prediction as a Transform
-within a Grammar for Probabilistic Forecasting" (SSRN 7244778), the transform as one step in
-a larger grammar of state-conditional bijections; and the literature sample and interactive
+7220538), the identity and its measurement; and the literature sample and interactive
 demonstrations at conformalprediction.net.*
