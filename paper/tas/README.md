@@ -1,27 +1,26 @@
-# paper/tas/ — superseded
+# paper/tas/ — the TAS submission record only
 
-The live paper is **`papers/marginally-useful-short/holloway-gambit.tex`**, seven pages.
-Decided 2026-08-20: one short paper, not a long one plus a letter.
+There is one live paper: **`papers/marginally-useful-short/holloway-gambit.tex`**, seven
+pages. Decided 2026-08-20.
 
-Two things here are still worth keeping.
+What remains here is the record of what The American Statistician actually has.
+`submitted-2026-06-11/` is the frozen submission, both blind and non-blind PDFs plus
+source, and `marginallyuseful.pdf` / `marginallyusefulanon.pdf` are the same two files in
+the working directory. Do not edit any of them. `COVER_LETTER.md`, `references.bib`,
+`figures/`, `check_gap.py` and `fig_plane_schematic.py` are the supporting material that
+went with it.
 
-`submitted-2026-06-11/` is the exact manuscript under review at The American
-Statistician, frozen with both blind and non-blind PDFs. Do not edit it. It is the record
-of what the editors actually have.
+The 26-page revision of 2026-08-20 was deleted from the working tree so that only one
+paper exists on disk. It is in git at **`9215785`**, recoverable with
 
-`marginally-useful.tex` is the 26-page revision of 2026-08-20, which was reworked in
-Peter's voice and then cut down to the short paper. Nothing here is lost that the short
-paper needs. What the long version still carries, and the short one drops on purpose:
+    git show 9215785:paper/tas/marginally-useful.tex > /tmp/long.tex
 
-- three of the five readings of the identity (the log Bayes factor, the conditional
-  non-uniformity of conformal ranks, and the information projection);
-- case (B) of the re-leveling proposition, the symmetrization term
-  `KL(r̄ ‖ h_sym)` paid by reading absolute-residual intervals as a distribution;
+That version is the only place the following now lives, all of it dropped from the short
+paper on purpose:
+
+- three of the five readings of the identity: the log Bayes factor, the conditional
+  non-uniformity of conformal ranks, and the information projection;
+- case (B) of the re-leveling proposition in full, though the short paper keeps its
+  identity in a footnote;
 - the exchangeability and time-series section, and the coverage-as-objective section;
 - five figures, including the two impossibility illustrations.
-
-If any of that is ever wanted again it is here and it compiles. It is not maintained,
-so do not fix a typo in one file and expect the other to follow.
-
-`marginally-useful-peter.tex` is Peter's editing copy of the long version, also frozen at
-this point.
