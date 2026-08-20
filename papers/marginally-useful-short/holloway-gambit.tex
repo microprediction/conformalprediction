@@ -153,22 +153,23 @@ informally. Perhaps the most blunt of these commentators is \citet{recht2024cove
 writes that conformal validity ``almost invites you to use garbage prediction functions''.
 How could it be otherwise? The spread never entered \eqref{eq:q}.
 
-\section{The gap}
+\section{The conformal information gap}
 
-A conformal predictor can be made to output a distribution rather than a set, the
-\emph{conformal predictive system} (CPS) of \citet{vovk2019nonparametric}, built from
-\emph{signed} residual scores. We view it as an attempt to fix the residuals subject to the
-restriction of using only one unconditional shared shape, as compared to a data-dependent
-scale such as one would see in a GARCH model. It is the mode in which conformal prediction
-estimates a full distribution, so it is the form the criticism must address.
+Our identities apply when split conformal prediction is made to output a distribution by means
+of the \emph{conformal predictive system} (CPS) of \citet{vovk2019nonparametric}. We view this
+ as a constrained attempt to fix the residuals {\em subject to the
+restriction of using only one unconditional shared shape} as compared to a data-dependent
+scale such as one would see in, say, a GARCH model. 
 
-Fix a location predictor $\hat\mu$ with residual $R=Y-\hat\mu(X)$ of marginal density $g$
+To wit, fix a location predictor $\hat\mu$ with residual $R=Y-\hat\mu(X)$ of marginal density $g$
 and CDF $G$. In the large-calibration limit the CPS predictive distribution is
 $\Pi_x(y)=G(y-\hat\mu(x))$, with density $\pi_x(y)=g(y-\hat\mu(x))$. This is the base
 location forecast re-leveled by the marginal signed-residual law, and the estimation in it
 was all done by the base model and the residual sample. Conformal supplies the leveling and
-nothing else. Write the true conditional residual density as $r(\cdot\given x)$, so the
-oracle density is $q^\star(y\given x)=r(y-\hat\mu(x)\given x)$, and let $\bar r=g$ be the
+nothing else. 
+
+One can write the true conditional residual density as $r(\cdot\given x)$, and the
+oracle density as $q^\star(y\given x)=r(y-\hat\mu(x)\given x)$. We let $\bar r=g$ be the
 marginal residual density.
 
 \begin{proposition}[The residual-information gap]\label{prop:gap}
@@ -201,15 +202,24 @@ $X$-blind shape improves on $I(R;X)$, and $I(R;X)=\KL(P_{X,R}\,\|\,P_X P_R)$ is 
 by conditioning on $X$.
 \end{proof}
 
-The theorem is a small one. Its interest is in what it prices. The right-hand side of
+The right-hand side of
 \eqref{eq:gap} is exactly the information about the residual distribution that remains in
 $X$ after the location predictor is fixed, and calling it the conformal information gap
-gives ``blind to conditional residual shape'' a number. Note what the result does not say.
+gives ``blind to conditional residual shape'' a number. 
+
 The signed CPS is log-score optimal among single-shape location forecasters, so conformal
 prediction is not dominated within its own class. What it pays for is the class restriction,
 not the calibration step. Reading ordinary absolute-residual intervals as a distribution
-costs an additional $\KL(\bar r\,\|\,h_{\mathrm{sym}})$ for discarding sign information, at
-most one bit; the structural loss is $I(R;X)$.
+costs a little more, but only a little.\footnote{The unsigned interval system is not a
+predictive system, but sweeping $\alpha$ through the nested intervals
+$\hat\mu(x)\pm\hat q_\alpha$ produces one implicitly. It is symmetric about $\hat\mu(x)$
+with $|{\cdot}|$ distributed as $|R|$, so its density is the symmetrized marginal residual
+law $h_{\mathrm{sym}}(z)=\tfrac12\big(g(z)+g(-z)\big)$, and \eqref{eq:master} with
+$h=h_{\mathrm{sym}}$ gives a second term,
+$\E[\log q^\star(Y\given X)]-\E[\log h_{\mathrm{sym}}(R)]=I(R;X)+\KL(\bar r\,\|\,
+h_{\mathrm{sym}})$. That second term is the price of discarding the sign. It vanishes when
+the residual law is symmetric, and since $h_{\mathrm{sym}}\ge\tfrac12\bar r$ it never
+exceeds $\log 2$, one bit. The structural loss is $I(R;X)$ either way.}
 
 \paragraph{A false-pooling cost.} A single-shape system asserts that, once $\hat\mu$ is
 fixed, one residual law fits everyone. That is the assertion $R\perp X$. The gap is the
@@ -274,7 +284,7 @@ optimizing a proper objective and trading unconditional guarantees, but so can a
 statistical approach. Where coverage genuinely is the deliverable, as in selective
 prediction, shortlisting, or conformal $p$-values for novelty detection
 \citep{angelopoulos2021uncertainty,bates2021distribution}, the method is not merely sound
-but often ideal. Finally, the exact mutual-information form belongs to the log-score; for
+but often ideal. Finally, the exact mutual-information form belongs to the log-score. For
 CRPS or the interval score the analogous gap is the regret of the best $X$-blind residual
 law under that score, which is not an information quantity.
 
