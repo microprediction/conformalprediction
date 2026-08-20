@@ -118,10 +118,12 @@ $R$ and the input $X$ (Proposition~\ref{prop:gap}). The reason for calling this 
 cannot cross it, no matter how much data subsequently becomes available. It is a structural gambit\footnote{The Holloway Gambit, we might term it, after Royal
 Holloway, University of London, where Vovk and Gammerman developed the subject
 \citep{vovk2005algorithmic}.} and
-common sense suggests that this gambit might be more likely to pay off if the existing base model is very poor, and less likely to pay dividends otherwise. Setting
-any opinions aside on that matter, it behoves the modeler to be aware of what they are sacrificing, just as it is surely informative to know the
-engine evaluation when playing an unsound gambit, even one with good practical results. Ultimately, modeling residuals is like modeling anything
-else, and reducing the gap will typically require heteroscedastic
+common sense suggests that this gambit might be more likely to pay off if the existing base
+model is very poor, and less likely to pay dividends otherwise.\footnote{Setting any
+opinions aside on that matter, it behoves the modeler to be aware of what they are
+sacrificing, just as it is surely informative to know the engine evaluation when playing an
+unsound gambit, even one with good practical results.} Ultimately, modeling residuals is
+like modeling anything else, and reducing the gap will typically require heteroscedastic
 scale, quantiles, shape, multiple time scale effects and so forth.
 
 
@@ -132,57 +134,46 @@ conformal ranks, an information projection, and a Kelly betting rent.
 \paragraph{Limitations of split conformal prediction glossed over}
 
 Split conformal prediction and its finite-sample marginal validity are due to
-\citet{vovk2005algorithmic} and \citet{lei2018distribution}; see \citet{angelopoulos2023gentle}
+\citet{vovk2005algorithmic} and \citet{lei2018distribution}. See \citet{angelopoulos2023gentle}
 and \citet{angelopoulos2025theoretical} for modern treatments. The conformal predictive
 system \citep{vovk2019nonparametric} is the construction that turns a conformal predictor
 into a full predictive distribution by re-leveling the marginal residual law.
-
-Distribution-free conditional coverage cannot be achieved if intervals are finite length. This result
-appears in \citet{lei2014distribution} and it was refined in
-\citet{barber2021limits}. In \citet{vovk2012conditional} the conditional validity for
-inductive conformal predictors was studied. Approaches that approach the conditional objective under
-extra structure include \citet{gibbs2025conditional} and \citet{laplante2026pivotal}.
-
-There are numerous papers that quantify what we call the conditional gap, notably \citet{braun2025conditional}. These
-necessarily condition on $X$ or assume structure.
-
 
 Despite the formal caveats, to which we add another, the applied and survey writing routinely calls the marginal-coverage guarantee
 ``well-calibrated'' or ``reliable'' uncertainty quantification
 \citep{bellotti2025trustworthy}, and tutorials present conformal prediction as the way to
 ``add uncertainty'' \citep{tds_adduncertainty} or to ``predict full probability
-distributions'' \citep{manokhin_fulldist}. 
+distributions'' \citep{manokhin_fulldist}.
+
+The claims get stronger as one descends from the journals toward the practitioner, and the
+curated reading lists of the field are a fair place to watch it happen
+\citep{awesome_conformal}. One widely used forecasting library tabulates methods by
+``Calibration Guarantee'', awarding the check mark to conformal prediction and a tilde to
+bootstrap, quantile regression and ARIMA alike \citep{nixtla_conformal}. A popular
+introduction puts the same thought in words, adding that with Bayesian posteriors or
+bootstrapping ``we have no guarantees that these approaches will perform well on new data''
+\citep{molnar_conformal}. From there it is a short step to conformal prediction as the thing
+that ``converts any statistical, machine or deep learning model into a probabilistic
+prediction model'' \citep{manokhin_neuralprophet}. That is the step we think cannot be taken
+for free.
 
 We hasten to add that the methodological literature is more careful,
 separating \emph{validity} from \emph{efficiency}. A recent critique strand makes related points independently. Sets can be uninformative, as noted in \citet{recht2024cover}. The gaming
 of interval length is a topic in \citet{min2026coveragelength}. The misreading of conformal guarantees in applied domains is remarked
-on in \citet{pitfalls2025medical}. Our observation is morally related but not the same as the impossibility of distribution-free conditional
-coverage due to \citet{lei2014distribution} and \citet{barber2021limits}. It is closest in spirit to 
+on in \citet{pitfalls2025medical}.
+
+Distribution-free conditional coverage cannot be achieved if intervals are finite length.
+That result appears in \citet{lei2014distribution} and it was refined in
+\citet{barber2021limits}. Our observation is morally related but not the same. It is closest in spirit to
 the decomposition of a proper score into calibration and sharpness, which of course is standard
-\citep{gneiting2007probabilistic,gneiting2007strictly}. 
-
-The calibration/sharpness decomposition and the maximize-sharpness-subject-to-calibration
-program are due to \citet{gneiting2007probabilistic,gneiting2007strictly}, with antecedents
-in the prequential view of \citet{dawid1984present}. Recalibration methods
+\citep{gneiting2007probabilistic,gneiting2007strictly}, as is the
+maximize-sharpness-subject-to-calibration program that goes with it. That program has
+antecedents in the prequential view of \citet{dawid1984present}. Recalibration methods
 \citep{platt1999probabilistic,zadrozny2002transforming,guo2017calibration,kuleshov2018accurate}
-adjust a forecast's probabilities. 
-
-Closest to us is \citet{correia2024information}. In that work the conformal set size is related to
-information-theoretic uncertainty via bounds on expected set size in terms of the conditional
-entropy $H(Y\mid X)$. Our identity is for the log-score regret of the predictive
-distribution rather than for set size but the parallel should be clear. These are complementary
-results. 
-
-Also worthy of mention is the general trend to perform conditional prediction while marching under the 
-banner of conformal prediction. For example conditional and shape-adaptive conformal constructions
-leave the single-shape class and our result does not apply to them. Examples include conformalized quantile regression
-\citep{romano2019conformalized}, Mondrian/binned conformal predictive systems
-\citep{bostrom2021mondrian,toccaceli2026crps}, and conformal training
-\citep{stutz2022learning}. These can buy sharpness by conditioning on $X$ or optimizing a
-proper objective and trading unconditional guarantees, but so can almost every statistical approach!
+adjust a forecast's probabilities.
 
 Section~\ref{sec:setup} fixes notation. For context, Section~\ref{sec:marginal} restates
-three known limits of the marginal guarantee. Section~\ref{sec:orthogonality} reiterates
+the known limits of the marginal guarantee. Section~\ref{sec:orthogonality} reiterates
 that coverage and the log-score are orthogonal for a residual score.
 Section~\ref{sec:gap} proves the residual-information gap. Section~\ref{sec:plane}
 suggests a coverage score plane as a methodological crux, and the sections after it deal
@@ -192,7 +183,7 @@ conditional constructions our result does not touch.
 \section{Split conformal and the marginal guarantee}\label{sec:setup}
 
 Let $(X_i,Y_i)_{i=1}^{n+1}$ be exchangeable. Fix a point predictor $\hat\mu$ trained on
-a disjoint set, and a \emph{nonconformity score} $s(x,y)$; the canonical choice in
+a disjoint set, and a \emph{nonconformity score} $s(x,y)$. The canonical choice in
 regression is the absolute residual $s(x,y)=|y-\hat\mu(x)|$. Compute calibration
 scores $s_i=s(X_i,Y_i)$ for $i=1,\dots,n$ and let
 \begin{equation}\label{eq:q}
@@ -258,7 +249,7 @@ band at $1-\alpha\delta$ whose width diverges as $\delta\to0$.}
 \end{minipage}
 \end{figure}
 
-The Faustian bargain is clear. The guarantee you can have distribution-free is
+The bargain is clear. The guarantee you can have distribution-free is
 the marginal one. On the other hand a marginally valid band ``tends to overestimate the set when $x$
 is in the high density area and to underestimate for low density $x$''
 \citep{lei2014distribution}. It over-covers the easy inputs and under-covers the hard
@@ -303,51 +294,45 @@ scores $\{s_i\}$ and of $s(x,\cdot)$. It is not a functional of the predictive d
 $f$ unless $f$ is explicitly used in the score, which it isn't if we are following the spirit of
 this common advice to ``attach uncertainty''. To be mildly formal:
 
-\begin{proposition}[Residual-score coverage does not constrain the log-score]\label{prop:orth}
-
+\begin{remark}[Residual-score coverage does not constrain the log-score]\label{rem:orth}
 Two forecasters with the
 \emph{same} location $\hat\mu$ (hence, for the residual score, the same score function and
 calibration scores) but different predictive densities $f$ have \emph{identical} conformal
 sets, and identical marginal coverage at every level $\alpha$, while their expected
 log-scores $\E[\log f(Y\given X)]$ may differ by an arbitrary amount.
-\end{proposition}
 
-\begin{proof}
-The first claim is immediate from \eqref{eq:q}--\eqref{eq:set}: $\hat q$ is an order
+The first claim is immediate from \eqref{eq:q}--\eqref{eq:set}. Here $\hat q$ is an order
 statistic of $\{s_i\}$ and $C_\alpha(x)=\{y:s(x,y)\le\hat q\}$, so two forecasters
 agreeing on $s$ and on $\{s_i\}$ produce the same set for every $x,\alpha$, and
 \eqref{eq:marginal} concerns only that set.
 
-For the gap, take $X$ degenerate (a point mass at an arbitrary $x_0$, i.e.\ a single
+For the size of the gap, take $X$ degenerate (a point mass at an arbitrary $x_0$, i.e.\ a single
 repeated input, so there is nothing to vary across) and $Y\sim N(0,1)$. Both forecasters
 share the location
 $\hat\mu\equiv 0$, so both use the absolute-residual score $s(x,y)=|y|$, which depends on
 $\hat\mu$ but not on the spread of the predictive density. They differ only in that claimed
-density, $f_\sigma=N(0,\sigma^2)$: for any $\sigma$ the scores are $|Y_i|$, independent of
+density, $f_\sigma=N(0,\sigma^2)$. For any $\sigma$ the scores are $|Y_i|$, independent of
 $\sigma$, so the conformal set is the fixed interval $[-\hat q,\hat q]$ with $\hat q$ the
 empirical $(1-\alpha)$-quantile of $|Y|$. Yet
 \[
   \E[\log f_\sigma(Y)] \;=\; -\tfrac12\log(2\pi\sigma^2)-\frac{\E[Y^2]}{2\sigma^2}
   \;=\; -\tfrac12\log(2\pi\sigma^2)-\frac{1}{2\sigma^2}\;\xrightarrow[\sigma\to 0^+]{}-\infty,
 \]
-and likewise $\to-\infty$ as $\sigma\to\infty$. Hence for any $M>0$ there are
-$\sigma_1,\sigma_2$ with identical conformal sets (identical marginal coverage at every
-$\alpha$) yet log-scores differing by more than $M$.
-\end{proof}
+and likewise $\to-\infty$ as $\sigma\to\infty$. So for any $M>0$ there are
+$\sigma_1,\sigma_2$ with identical conformal sets, identical marginal coverage at every
+$\alpha$, and log-scores differing by more than $M$.
 
-\begin{corollary}\label{cor:orth}
-For a residual-score conformal predictor, marginal validity certifies an order statistic
-of residual magnitudes. It does not identify, bound, or rank the scale, shape, or
-sharpness of any predictive density that was not used to construct the score; in
-particular, no inference about forecast quality (as graded by a strictly proper score)
-can be drawn from coverage alone.
-\end{corollary}
+What marginal validity certifies, then, is an order statistic of residual magnitudes. It
+does not identify, bound, or rank the scale, shape, or sharpness of any predictive density
+that was not used to construct the score, and no inference about forecast quality, as graded
+by a strictly proper score, can be drawn from coverage alone.
+\end{remark}
 
 \begin{remark}[The degenerate $X$ is only for cleanliness]\label{rem:nondeg}
-The point-mass $X$ in the proof makes the unbounded gap transparent, but it is not needed.
+The point-mass $X$ above makes the unbounded gap transparent, but it is not needed.
 For any non-degenerate $X$, take two forecasters sharing the same location $\hat\mu$ (hence,
 for the residual score, the same score function and calibration scores, so identical sets
-and coverage at every $\alpha$) but predictive spreads $\sigma_1(x),\sigma_2(x)$; their
+and coverage at every $\alpha$) but predictive spreads $\sigma_1(x),\sigma_2(x)$. Their
 expected log-scores differ by $\E_X[\log(\sigma_2/\sigma_1)] + \tfrac12\E_X[(\sigma_2^{-2}
 -\sigma_1^{-2})\,\mathrm{Var}(Y\given X)]$, which is unbounded over choices of the
 $\sigma_i$. Coverage is blind to all of it.
@@ -363,7 +348,7 @@ The spread never entered \eqref{eq:q}.
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_orthogonality.pdf}
-\caption{Coverage does not constrain the log-score (Proposition~\ref{prop:orth}). With a
+\caption{Coverage does not constrain the log-score (Remark~\ref{rem:orth}). With a
 residual score the conformal set $[-q,q]$ is fixed by the outcomes alone (left), so two
 predictive densities with very different log-scores share the \emph{same} set and the
 same $90\%$ coverage. Sweeping the forecaster's spread $s$ (right) moves the log-score
@@ -373,20 +358,12 @@ freely while coverage stays pinned at $90\%$.}
 
 \section{The residual-information gap}\label{sec:gap}
 
-Do we need another formal reminder of the conformal Faustian bargain? Forecast quality decomposes into \emph{calibration} and
-\emph{sharpness}, and the discipline's stated goal is to maximize sharpness subject to
-calibration, assessed by a proper scoring rule
-\citep{gneiting2007probabilistic,gneiting2007strictly}. We point out that within the fixed-location,
-single-shape residual class, signed CPS is log-score optimal. It was not lost but gone before, we might say. That
-is why we have termed it a gambit. The conformal calibration step is doing its part, but that is simply
-not enough.
-
 \paragraph{Conformal predictive systems.} A conformal predictor can be made to output a
 distribution rather than a set, the \emph{conformal predictive system} (CPS) of
 \citet{vovk2019nonparametric}, built from \emph{signed} residual scores. It is the mode in which conformal
 prediction estimates a full distribution, so it is the form the criticism must address. We must, however, distinguish it from the more
 common practice of reading the nested symmetric intervals of ordinary
-\emph{absolute}-residual split conformal as if they were a distribution; the two re-level
+\emph{absolute}-residual split conformal as if they were a distribution. The two re-level
 different objects, and the distinction matters for the gap below.
 
 \begin{proposition}[Re-leveling, two cases]\label{prop:relevel}
@@ -405,24 +382,24 @@ forecast re-leveled by the marginal signed-residual law.
 level $\alpha$ returns the symmetric interval $\hat\mu(x)\pm \hat q_\alpha$, with
 $\hat q_\alpha$ the $(1-\alpha)$-quantile of $|R|$. Read as a predictive distribution
 (by sweeping $\alpha$) it is symmetric about $\hat\mu(x)$ with $|{\cdot}|$ distributed as
-$|R|$; its density is the \emph{symmetrized} marginal residual law
+$|R|$. Its density is the \emph{symmetrized} marginal residual law
 $h_{\mathrm{sym}}(z)=\tfrac12\big(g(z)+g(-z)\big)$. This is not an additional conformal
-guarantee; it is the density implicitly obtained if the nested absolute-residual intervals
+guarantee. It is the density implicitly obtained if the nested absolute-residual intervals
 are read as central credible intervals.
 \end{enumerate}
 \end{proposition}
 
 \begin{proof}[Proof sketch]
 (A) The CPS at level $\alpha$ returns endpoints equal to the signed-residual order
-statistics; sweeping $\alpha$ traces $\hat\mu(x)$ plus the residual quantile function,
-i.e.\ $\widehat G_n^{-1}$ shifted by $\hat\mu(x)$, so $\Pi_x(y)=\widehat G_n(y-\hat\mu(x))$;
-take limits \citep{vovk2019nonparametric}. (B) The intervals depend on the data only
-through $|R|$ and are symmetric about $\hat\mu(x)$; the unique symmetric density whose
+statistics. Sweeping $\alpha$ traces $\hat\mu(x)$ plus the residual quantile function,
+i.e.\ $\widehat G_n^{-1}$ shifted by $\hat\mu(x)$, so $\Pi_x(y)=\widehat G_n(y-\hat\mu(x))$.
+Take limits \citep{vovk2019nonparametric}. (B) The intervals depend on the data only
+through $|R|$ and are symmetric about $\hat\mu(x)$. The unique symmetric density whose
 absolute value has the law of $|R|$ (with signed marginal $g$) is
 $h_{\mathrm{sym}}(z)=\tfrac12(g(z)+g(-z))$.
 \end{proof}
 
-In both cases the estimation was done by the base model and the residual sample; conformal
+In both cases the estimation was done by the base model and the residual sample. Conformal
 supplies only the leveling. We now quantify the cost. Write the true conditional residual
 density as $r(\cdot\given x)$, so the oracle density is
 $q^\star(y\given x)=r\big(y-\hat\mu(x)\given x\big)$, and let
@@ -446,7 +423,7 @@ $q^\star$ is
 Both are $\ge 0$. The term $I(R;X)$ vanishes iff $R\perp X$; the extra term
 $\KL(\bar r\,\|\,h_{\mathrm{sym}})$ vanishes iff the marginal residual law is symmetric.
 Among all single-shape forecasters $y\mapsto h(y-\hat\mu(x))$, $\E[\log h(R)]$ is maximized
-at $h=\bar r$; the signed CPS attains this optimum. Hence no recalibration that ignores
+at $h=\bar r$, and the signed CPS attains this optimum. Hence no recalibration that ignores
 $X$ can reduce $I(R;X)$: it can at best replace the shape by $\bar r$, removing the
 skewness term in \eqref{eq:gapB} and reducing case~(B) to case~(A). Reducing $I(R;X)$
 itself requires conditioning on $X$.
@@ -465,12 +442,12 @@ $P_X\otimes H$ has density $p(x)\,h(\rho)$, so
 \end{equation}
 the last step the chain rule for relative entropy along a product reference (the $R$-marginal
 of $P_{X,R}$ is $\bar r$, and $I(R;X)=\KL(P_{X,R}\,\|\,P_X P_R)$). Taking $h=\bar r$ kills the
-second term and gives \eqref{eq:gapA}; taking $h=h_{\mathrm{sym}}$ gives \eqref{eq:gapB}. The
-second term is $\ge 0$ and is minimized at $h=\bar r$ (Gibbs), so no $X$-blind shape improves
+second term and gives \eqref{eq:gapA}, and taking $h=h_{\mathrm{sym}}$ gives \eqref{eq:gapB}.
+The second term is $\ge 0$ and is minimized at $h=\bar r$ (Gibbs), so no $X$-blind shape improves
 on $I(R;X)$, and $I(R;X)=\KL(P_{X,R}\,\|\,P_X P_R)$ is reduced only by conditioning on $X$.
 \end{proof}
 
-\begin{remark}[What this says, and does not say]
+\begin{remark}[The cost is the class restriction, not the calibration step]
 The right-hand side of \eqref{eq:gapA} is exactly the information about the residual
 distribution that remains in $X$ after the location predictor is fixed. Calling it the
 residual-information gap gives ``blind to conditional residual shape'' a number. Three
@@ -568,7 +545,7 @@ coverage and hands back a set.
 \includegraphics[width=0.92\textwidth]{figures/fig_sharpness_gap.pdf}
 \caption{The residual-information gap (Propositions~\ref{prop:relevel}--\ref{prop:gap}).
 A single-shape conformal predictive system uses the marginal residual law $\bar r$ for
-every input; the oracle uses the true conditional $r(\cdot\given x)$, narrow for easy
+every input. The oracle uses the true conditional $r(\cdot\given x)$, narrow for easy
 inputs (left) and wide for hard ones (right). The expected log-score regret is exactly the
 mutual information $I(R;X)$, which no $X$-ignoring recalibration can reduce.}
 \label{fig:gap}
@@ -592,7 +569,7 @@ coordinates are distinct. Our results then read geometrically.
   \item Residual split conformal is a horizontal projection. It maps a report
   $(C_\alpha^{\text{base}},f)$ to $(C_\alpha^{\text{conf}},f)$, changing the set so that
   $C\to 0$ and leaving the density $f$, and hence $S$, exactly where it was
-  (Proposition~\ref{prop:orth}). It moves a point left, never up.
+  (Remark~\ref{rem:orth}). It moves a point left, never up.
   \item Conformal predictive systems are a different matter. They supply their own
   density-valued report, so they do have a vertical coordinate. But that coordinate is
   governed by the single-shape restriction of Proposition~\ref{prop:gap}, and it is capped
@@ -608,7 +585,7 @@ device, and a close relative of reliability and sharpness diagrams
 the distinction hard to miss, which is the whole point of drawing it. It also sharpens the
 connection to \citet{correia2024information}, whose set-size and entropy bound lives on the
 \emph{efficiency} coordinate, the one that carries information, while the marginal-coverage
-coordinate carries none by Proposition~\ref{prop:orth}. Figure~\ref{fig:plane} is the
+coordinate carries none by Remark~\ref{rem:orth}. Figure~\ref{fig:plane} is the
 schematic. Conformalization is the horizontal move, left toward exact coverage and never up.
 $X$-blind recalibration is the vertical move, but only as far as the single-shape ceiling.
 The residual-information gap $I(R;X)$ between that ceiling and the oracle is crossed only by
@@ -619,9 +596,9 @@ conditioning on $X$.
 \includegraphics[width=0.72\textwidth]{figures/fig_plane.pdf}
 \caption{The coverage--score plane (schematic). The two coordinates are distinct:
 conformalizing a residual-score report moves it horizontally toward exact marginal coverage
-without changing its proper score (Proposition~\ref{prop:orth}); fitting the residual shape
+without changing its proper score (Remark~\ref{rem:orth}). Fitting the residual shape
 to a proper score moves it up, but an $X$-blind shape can rise only to the single-shape
-ceiling (Proposition~\ref{prop:gap}); the remaining residual-information gap $I(R;X)$ to the
+ceiling (Proposition~\ref{prop:gap}). The remaining residual-information gap $I(R;X)$ to the
 oracle is closed only by conditioning on~$X$.}
 \label{fig:plane}
 \end{figure}
@@ -633,7 +610,7 @@ literature are ingenious and we do not fault them. They are uniform in one respe
 Each survives by redefining what is guaranteed.
 \begin{itemize}
   \item Weighted conformal prediction \citep{tibshirani2019conformal} restores
-  marginal coverage under covariate shift when the likelihood ratio is known; with
+  marginal coverage under covariate shift when the likelihood ratio is known. With
   estimated weights coverage becomes approximate and the effective sample size drops.
   \item Adaptive Conformal Inference \citep{gibbs2021adaptive} updates the level
   online and ``puts no constraints on the data generating distribution,'' but guarantees
@@ -641,7 +618,7 @@ Each survives by redefining what is guaranteed.
   $\frac1T\sum_t \mathrm{err}_t\to\alpha$, not a finite-sample statement about
   $\Pr(Y\in C(X))$, and certainly not conditional coverage.
   \item EnbPI \citep{xu2021conformal} drops exchangeability for approximate
-  marginal coverage under strong-mixing/stationarity surrogates; later online methods
+  marginal coverage under strong-mixing or stationarity surrogates. Later online methods
   \citep{zaffran2022adaptive,gibbs2024conformal} retreat to regret bounds over local
   intervals. The general beyond-exchangeability analysis of \citet{barber2023conformal}
   bounds the coverage gap by a total-variation distance that is exactly what
@@ -720,15 +697,17 @@ Section~\ref{sec:marginal}.
 \section{Scope, and the constructive escapes}\label{sec:scope}
 
 Our strong claims target one object, the one that is actually over-sold. That is
-\emph{post-hoc, marginal, split conformal prediction with a residual score}. A large and
-active literature builds conformal methods that do considerably more. The conditional
-constructions below, CQR and Mondrian or binned CPS, are standard practice by now rather
-than niche alternatives, and we do not question their effectiveness for a moment. How they
-relate still matters, because in every case they confirm the mechanism rather than
-contradict it. They buy sharpness or conditional coverage by \emph{conditioning on $X$ or
-optimizing a proper objective}, which is precisely what Proposition~\ref{prop:gap} says is
-required. They buy it by modeling, in other words, and not by anything the conformal step
-itself supplies.
+\emph{post-hoc, marginal, split conformal prediction with a residual score}. The conditional
+constructions below are standard practice by now rather than niche alternatives, and we do
+not question their effectiveness for a moment.
+
+Also worthy of mention is the general trend to perform conditional prediction while marching under the
+banner of conformal prediction. For example conditional and shape-adaptive conformal constructions
+leave the single-shape class and our result does not apply to them. Examples include conformalized quantile regression
+\citep{romano2019conformalized}, Mondrian/binned conformal predictive systems
+\citep{bostrom2021mondrian,toccaceli2026crps}, and conformal training
+\citep{stutz2022learning}. These can buy sharpness by conditioning on $X$ or optimizing a
+proper objective and trading unconditional guarantees, but so can almost every statistical approach!
 
 \paragraph{Conformal predictive systems that condition on $X$.}
 Mondrian or binned conformal predictive systems \citep{bostrom2021mondrian} fit a separate
@@ -738,15 +717,16 @@ by leaving the single-shape class of Proposition~\ref{prop:relevel}, since a per
 is $X$-dependent, and in the CRPS case by making the partition criterion a proper score.
 This is the most pointed case for the defence and the concession is a real one. When the
 reference class is itself selected by a proper scoring rule, the conformal
-\emph{construction} is performing conditional density estimation. The distinction we are
-drawing does not vanish. It relocates, to the question of which component is estimating the
-distribution, and the answer is the conditional partition rather than the coverage
-certificate. The value sits in the estimation, as it does throughout. Conformalized quantile
-regression \citep{romano2019conformalized} is the same story with a quantile model standing
-in for the bins.
+\emph{construction} is performing conditional density estimation.
+
+The distinction we are drawing does not vanish. It relocates, to the question of which
+component is estimating the distribution, and the answer is the conditional partition rather
+than the coverage certificate. The value sits in the estimation, as it does throughout.
+Conformalized quantile regression \citep{romano2019conformalized} is the same story with a
+quantile model standing in for the bins.
 
 \paragraph{End-to-end conformal training.}
-The orthogonality of Proposition~\ref{prop:orth} is a statement about \emph{post-hoc}
+The orthogonality of Remark~\ref{rem:orth} is a statement about \emph{post-hoc}
 conformalization of a fixed predictor. Conformal training
 \citep{stutz2022learning,correia2024information} deliberately differentiates through the
 conformalizer to minimize expected set size subject to coverage, which couples the coverage
@@ -755,22 +735,27 @@ illustrates the corollary, which is that to obtain sharpness one must optimize f
 cannot read it off a coverage certificate.
 
 \paragraph{The information in set size.}
-\citet{correia2024information} connect conformal set size to information-theoretic
-uncertainty, with bounds relating expected prediction-set size to the conditional entropy
-$H(Y\mid X)$. This is complementary to our Proposition~\ref{prop:gap}, in that both say
-conformal \emph{geometry} carries information. It also sharpens the two-coordinate plane of
-Section~\ref{sec:plane}. The \emph{efficiency} coordinate, set size or sharpness, is the one
-that bears information, while the marginal \emph{coverage} coordinate does not, by
-Proposition~\ref{prop:orth}. Report only the latter and one has discarded precisely the
-coordinate that encodes aleatoric uncertainty.
+Closest to us is \citet{correia2024information}. In that work the conformal set size is related to
+information-theoretic uncertainty via bounds on expected set size in terms of the conditional
+entropy $H(Y\mid X)$. Our identity is for the log-score regret of the predictive
+distribution rather than for set size but the parallel should be clear. These are complementary
+results.
+
+It also sharpens the two-coordinate plane of Section~\ref{sec:plane}. The \emph{efficiency}
+coordinate, set size or sharpness, is the one that bears information, while the marginal
+\emph{coverage} coordinate does not, by Remark~\ref{rem:orth}. Report only the latter
+and one has discarded precisely the coordinate that encodes aleatoric uncertainty.
 
 \paragraph{Approaching conditional coverage.}
 The no-go result of Section~\ref{sec:marginal} concerns \emph{exact, distribution-free,
-finite-length} conditional coverage, and it is not the end of the subject. Diagnostics such
-as the excess-risk-of-target-coverage family \citep{braun2025conditional} quantify and
-decompose the conditional gap. Methods that target conditional or subgroup-wise validity
-directly interpolate between marginal and conditional coverage \citep{gibbs2025conditional}.
-Post-processing via pivotal scores and optimal transport \citep{laplante2026pivotal} attains
+finite-length} conditional coverage, and it is not the end of the subject. In
+\citet{vovk2012conditional} the conditional validity for inductive conformal predictors was
+studied. Approaches that approach the conditional objective under extra structure include
+\citet{gibbs2025conditional} and \citet{laplante2026pivotal}.
+
+There are numerous papers that quantify what we call the conditional gap, notably
+\citet{braun2025conditional}. These necessarily condition on $X$ or assume structure.
+The post-processing route, via pivotal scores and optimal transport, attains
 \emph{approximate} conditional coverage by estimating the conditional law of the score,
 which is again conditioning on $X$, and explicitly under the structural assumptions the
 impossibility theorem rules out for the exact, assumption-free case. All of these approach
@@ -809,8 +794,8 @@ whatever gain one has came from the modeling. And to close $I(R;X)$, add conditi
 model, in the form of heteroscedastic spread or quantile or residual-shape estimation. Do
 not add tightness to the conformal step. There is nothing there to tighten.
 
-\paragraph{Limitations.} The exact result is deliberately narrow and it is worth saying
-where it stops. On \emph{scope}, the strong claims concern post-hoc, marginal, split
+\paragraph{Limitations.} The exact result is deliberately narrow. On \emph{scope}, the
+strong claims concern post-hoc, marginal, split
 conformal with a residual score, and the single-shape residual class. The conditional
 constructions of Section~\ref{sec:scope}, meaning CQR, Mondrian or binned CPS, and conformal
 training, leave that class by design and are not targets of the critique. On \emph{fixed
@@ -828,8 +813,12 @@ computable, and the identity itself is verified numerically by \texttt{check\_ga
 \section{Conclusion}
 
 Conformal prediction certifies the coverage of a set, finite-sample and distribution-free,
-under exchangeability. That guarantee is genuine and, for the right objective, exact. The
-error is reading it as distributional forecast quality.
+under exchangeability. That guarantee is genuine and, for the right objective, exact. In
+this paper we go beyond the usual caution (against reading the guarantee as forecast
+quality) and we have emphasized the permanent structural concession made at the point
+residual pooling is chosen. Our message is only that nothing comes without a price. The
+unconditional coverage guarantee is accompanied by an equally rigorous guarantee that the
+conformal information gap will never be crossed.
 
 For a fixed location predictor the guarantee one can have, the marginal one, is rarely the
 guarantee one wants, and the conditional one is not available distribution-free without more
@@ -843,18 +832,18 @@ guarantee is the product it is the right tool. But coverage answers the question
 the truth in this region?}, and in forecasting that is frequently not the question anyone
 was asking. This is not weak uncertainty quantification. It is exact uncertainty
 quantification for a set, a coverage guarantee, no more and no less. The gambit is
-permanent, the rent is $I(R;X)$, and one should at least know what one has paid.
+permanent. Its price is $I(R;X)$, and the modeler should know what has been paid.
 
 \paragraph{Reproducibility.} Every data figure is generated by the accompanying script
 \texttt{figures.py} (Figures~\ref{fig:nogo}--\ref{fig:margcond}, \ref{fig:orth},
 \ref{fig:gap}, \ref{fig:ts}), and the time-series illustration by the benchmark scripts, all
-from the synthetic generators described in the text; Figure~\ref{fig:plane} is a schematic
+from the synthetic generators described in the text. Figure~\ref{fig:plane} is a schematic
 drawn by \texttt{fig\_plane\_schematic.py}. The
 identities of Proposition~\ref{prop:gap} are confirmed numerically by \texttt{check\_gap.py},
 which computes both sides independently (by grid integration) and matches them to machine
 precision on a heteroscedastic Gaussian and a skewed residual law.
 \ifanon
-Code, figures, and an interactive companion are provided as supplementary material; public
+Code, figures, and an interactive companion are provided as supplementary material. Public
 URLs are omitted for anonymous review.
 \else
 Code, figures, and an interactive companion are available at
@@ -864,7 +853,7 @@ Code, figures, and an interactive companion are available at
 
 \paragraph{Data Availability Statement.} This study uses no external or third-party data.
 All figures and numerical results are produced from the synthetic data-generating processes
-described in the text; the code that implements them and reproduces every figure, together
+described in the text. The code that implements them and reproduces every figure, together
 with \texttt{check\_gap.py} (the machine-precision numerical verification of
 Proposition~\ref{prop:gap}), is openly available
 \ifanon
@@ -882,7 +871,7 @@ restructure and copy-edit the exposition for this venue, to help organize and re
 related-work discussion and its citations, and to generate the Python plotting script for the
 schematic in Figure~\ref{fig:plane}. No AI-generated text was incorporated without the
 author's review. All definitions, propositions, proofs, numerical results, and conclusions
-are the author's own; the author has verified the manuscript, including all references and
+are the author's own. The author has verified the manuscript, including all references and
 attributions, and takes full responsibility for its content.
 
 \bibliographystyle{asa-authoryear}
