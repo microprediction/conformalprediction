@@ -192,7 +192,7 @@ conditional constructions our result does not touch.
 \section{Split conformal and the marginal guarantee}\label{sec:setup}
 
 Let $(X_i,Y_i)_{i=1}^{n+1}$ be exchangeable. Fix a point predictor $\hat\mu$ trained on
-a disjoint set, and a \emph{nonconformity score} $s(x,y)$; the canonical choice in
+a disjoint set, and a \emph{nonconformity score} $s(x,y)$. The canonical choice in
 regression is the absolute residual $s(x,y)=|y-\hat\mu(x)|$. Compute calibration
 scores $s_i=s(X_i,Y_i)$ for $i=1,\dots,n$ and let
 \begin{equation}\label{eq:q}
@@ -338,8 +338,8 @@ $\alpha$) yet log-scores differing by more than $M$.
 \begin{corollary}\label{cor:orth}
 For a residual-score conformal predictor, marginal validity certifies an order statistic
 of residual magnitudes. It does not identify, bound, or rank the scale, shape, or
-sharpness of any predictive density that was not used to construct the score; in
-particular, no inference about forecast quality (as graded by a strictly proper score)
+sharpness of any predictive density that was not used to construct the score. In
+particular, no inference about forecast quality, as graded by a strictly proper score,
 can be drawn from coverage alone.
 \end{corollary}
 
@@ -347,7 +347,7 @@ can be drawn from coverage alone.
 The point-mass $X$ in the proof makes the unbounded gap transparent, but it is not needed.
 For any non-degenerate $X$, take two forecasters sharing the same location $\hat\mu$ (hence,
 for the residual score, the same score function and calibration scores, so identical sets
-and coverage at every $\alpha$) but predictive spreads $\sigma_1(x),\sigma_2(x)$; their
+and coverage at every $\alpha$) but predictive spreads $\sigma_1(x),\sigma_2(x)$. Their
 expected log-scores differ by $\E_X[\log(\sigma_2/\sigma_1)] + \tfrac12\E_X[(\sigma_2^{-2}
 -\sigma_1^{-2})\,\mathrm{Var}(Y\given X)]$, which is unbounded over choices of the
 $\sigma_i$. Coverage is blind to all of it.
@@ -386,7 +386,7 @@ distribution rather than a set, the \emph{conformal predictive system} (CPS) of
 \citet{vovk2019nonparametric}, built from \emph{signed} residual scores. It is the mode in which conformal
 prediction estimates a full distribution, so it is the form the criticism must address. We must, however, distinguish it from the more
 common practice of reading the nested symmetric intervals of ordinary
-\emph{absolute}-residual split conformal as if they were a distribution; the two re-level
+\emph{absolute}-residual split conformal as if they were a distribution. The two re-level
 different objects, and the distinction matters for the gap below.
 
 \begin{proposition}[Re-leveling, two cases]\label{prop:relevel}
@@ -405,24 +405,24 @@ forecast re-leveled by the marginal signed-residual law.
 level $\alpha$ returns the symmetric interval $\hat\mu(x)\pm \hat q_\alpha$, with
 $\hat q_\alpha$ the $(1-\alpha)$-quantile of $|R|$. Read as a predictive distribution
 (by sweeping $\alpha$) it is symmetric about $\hat\mu(x)$ with $|{\cdot}|$ distributed as
-$|R|$; its density is the \emph{symmetrized} marginal residual law
+$|R|$. Its density is the \emph{symmetrized} marginal residual law
 $h_{\mathrm{sym}}(z)=\tfrac12\big(g(z)+g(-z)\big)$. This is not an additional conformal
-guarantee; it is the density implicitly obtained if the nested absolute-residual intervals
+guarantee. It is the density implicitly obtained if the nested absolute-residual intervals
 are read as central credible intervals.
 \end{enumerate}
 \end{proposition}
 
 \begin{proof}[Proof sketch]
 (A) The CPS at level $\alpha$ returns endpoints equal to the signed-residual order
-statistics; sweeping $\alpha$ traces $\hat\mu(x)$ plus the residual quantile function,
-i.e.\ $\widehat G_n^{-1}$ shifted by $\hat\mu(x)$, so $\Pi_x(y)=\widehat G_n(y-\hat\mu(x))$;
-take limits \citep{vovk2019nonparametric}. (B) The intervals depend on the data only
-through $|R|$ and are symmetric about $\hat\mu(x)$; the unique symmetric density whose
+statistics. Sweeping $\alpha$ traces $\hat\mu(x)$ plus the residual quantile function,
+i.e.\ $\widehat G_n^{-1}$ shifted by $\hat\mu(x)$, so $\Pi_x(y)=\widehat G_n(y-\hat\mu(x))$.
+Take limits \citep{vovk2019nonparametric}. (B) The intervals depend on the data only
+through $|R|$ and are symmetric about $\hat\mu(x)$. The unique symmetric density whose
 absolute value has the law of $|R|$ (with signed marginal $g$) is
 $h_{\mathrm{sym}}(z)=\tfrac12(g(z)+g(-z))$.
 \end{proof}
 
-In both cases the estimation was done by the base model and the residual sample; conformal
+In both cases the estimation was done by the base model and the residual sample. Conformal
 supplies only the leveling. We now quantify the cost. Write the true conditional residual
 density as $r(\cdot\given x)$, so the oracle density is
 $q^\star(y\given x)=r\big(y-\hat\mu(x)\given x\big)$, and let
@@ -446,7 +446,7 @@ $q^\star$ is
 Both are $\ge 0$. The term $I(R;X)$ vanishes iff $R\perp X$; the extra term
 $\KL(\bar r\,\|\,h_{\mathrm{sym}})$ vanishes iff the marginal residual law is symmetric.
 Among all single-shape forecasters $y\mapsto h(y-\hat\mu(x))$, $\E[\log h(R)]$ is maximized
-at $h=\bar r$; the signed CPS attains this optimum. Hence no recalibration that ignores
+at $h=\bar r$, and the signed CPS attains this optimum. Hence no recalibration that ignores
 $X$ can reduce $I(R;X)$: it can at best replace the shape by $\bar r$, removing the
 skewness term in \eqref{eq:gapB} and reducing case~(B) to case~(A). Reducing $I(R;X)$
 itself requires conditioning on $X$.
@@ -465,8 +465,8 @@ $P_X\otimes H$ has density $p(x)\,h(\rho)$, so
 \end{equation}
 the last step the chain rule for relative entropy along a product reference (the $R$-marginal
 of $P_{X,R}$ is $\bar r$, and $I(R;X)=\KL(P_{X,R}\,\|\,P_X P_R)$). Taking $h=\bar r$ kills the
-second term and gives \eqref{eq:gapA}; taking $h=h_{\mathrm{sym}}$ gives \eqref{eq:gapB}. The
-second term is $\ge 0$ and is minimized at $h=\bar r$ (Gibbs), so no $X$-blind shape improves
+second term and gives \eqref{eq:gapA}, and taking $h=h_{\mathrm{sym}}$ gives \eqref{eq:gapB}.
+The second term is $\ge 0$ and is minimized at $h=\bar r$ (Gibbs), so no $X$-blind shape improves
 on $I(R;X)$, and $I(R;X)=\KL(P_{X,R}\,\|\,P_X P_R)$ is reduced only by conditioning on $X$.
 \end{proof}
 
@@ -568,7 +568,7 @@ coverage and hands back a set.
 \includegraphics[width=0.92\textwidth]{figures/fig_sharpness_gap.pdf}
 \caption{The residual-information gap (Propositions~\ref{prop:relevel}--\ref{prop:gap}).
 A single-shape conformal predictive system uses the marginal residual law $\bar r$ for
-every input; the oracle uses the true conditional $r(\cdot\given x)$, narrow for easy
+every input. The oracle uses the true conditional $r(\cdot\given x)$, narrow for easy
 inputs (left) and wide for hard ones (right). The expected log-score regret is exactly the
 mutual information $I(R;X)$, which no $X$-ignoring recalibration can reduce.}
 \label{fig:gap}
@@ -619,9 +619,9 @@ conditioning on $X$.
 \includegraphics[width=0.72\textwidth]{figures/fig_plane.pdf}
 \caption{The coverage--score plane (schematic). The two coordinates are distinct:
 conformalizing a residual-score report moves it horizontally toward exact marginal coverage
-without changing its proper score (Proposition~\ref{prop:orth}); fitting the residual shape
+without changing its proper score (Proposition~\ref{prop:orth}). Fitting the residual shape
 to a proper score moves it up, but an $X$-blind shape can rise only to the single-shape
-ceiling (Proposition~\ref{prop:gap}); the remaining residual-information gap $I(R;X)$ to the
+ceiling (Proposition~\ref{prop:gap}). The remaining residual-information gap $I(R;X)$ to the
 oracle is closed only by conditioning on~$X$.}
 \label{fig:plane}
 \end{figure}
@@ -633,7 +633,7 @@ literature are ingenious and we do not fault them. They are uniform in one respe
 Each survives by redefining what is guaranteed.
 \begin{itemize}
   \item Weighted conformal prediction \citep{tibshirani2019conformal} restores
-  marginal coverage under covariate shift when the likelihood ratio is known; with
+  marginal coverage under covariate shift when the likelihood ratio is known. With
   estimated weights coverage becomes approximate and the effective sample size drops.
   \item Adaptive Conformal Inference \citep{gibbs2021adaptive} updates the level
   online and ``puts no constraints on the data generating distribution,'' but guarantees
@@ -641,7 +641,7 @@ Each survives by redefining what is guaranteed.
   $\frac1T\sum_t \mathrm{err}_t\to\alpha$, not a finite-sample statement about
   $\Pr(Y\in C(X))$, and certainly not conditional coverage.
   \item EnbPI \citep{xu2021conformal} drops exchangeability for approximate
-  marginal coverage under strong-mixing/stationarity surrogates; later online methods
+  marginal coverage under strong-mixing or stationarity surrogates. Later online methods
   \citep{zaffran2022adaptive,gibbs2024conformal} retreat to regret bounds over local
   intervals. The general beyond-exchangeability analysis of \citet{barber2023conformal}
   bounds the coverage gap by a total-variation distance that is exactly what
@@ -848,13 +848,13 @@ permanent, the rent is $I(R;X)$, and one should at least know what one has paid.
 \paragraph{Reproducibility.} Every data figure is generated by the accompanying script
 \texttt{figures.py} (Figures~\ref{fig:nogo}--\ref{fig:margcond}, \ref{fig:orth},
 \ref{fig:gap}, \ref{fig:ts}), and the time-series illustration by the benchmark scripts, all
-from the synthetic generators described in the text; Figure~\ref{fig:plane} is a schematic
+from the synthetic generators described in the text. Figure~\ref{fig:plane} is a schematic
 drawn by \texttt{fig\_plane\_schematic.py}. The
 identities of Proposition~\ref{prop:gap} are confirmed numerically by \texttt{check\_gap.py},
 which computes both sides independently (by grid integration) and matches them to machine
 precision on a heteroscedastic Gaussian and a skewed residual law.
 \ifanon
-Code, figures, and an interactive companion are provided as supplementary material; public
+Code, figures, and an interactive companion are provided as supplementary material. Public
 URLs are omitted for anonymous review.
 \else
 Code, figures, and an interactive companion are available at
@@ -864,7 +864,7 @@ Code, figures, and an interactive companion are available at
 
 \paragraph{Data Availability Statement.} This study uses no external or third-party data.
 All figures and numerical results are produced from the synthetic data-generating processes
-described in the text; the code that implements them and reproduces every figure, together
+described in the text. The code that implements them and reproduces every figure, together
 with \texttt{check\_gap.py} (the machine-precision numerical verification of
 Proposition~\ref{prop:gap}), is openly available
 \ifanon
@@ -882,7 +882,7 @@ restructure and copy-edit the exposition for this venue, to help organize and re
 related-work discussion and its citations, and to generate the Python plotting script for the
 schematic in Figure~\ref{fig:plane}. No AI-generated text was incorporated without the
 author's review. All definitions, propositions, proofs, numerical results, and conclusions
-are the author's own; the author has verified the manuscript, including all references and
+are the author's own. The author has verified the manuscript, including all references and
 attributions, and takes full responsibility for its content.
 
 \bibliographystyle{asa-authoryear}
