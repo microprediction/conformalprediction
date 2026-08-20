@@ -93,8 +93,8 @@ Victor Chernozhukov, Kaspar W{\"u}thrich, and Yinchu Zhu.
 
 \bibitem[Cotton(2026{\natexlab{a}})]{cotton2026marginally}
 Peter Cotton.
-\newblock Marginally useful: Formalizing the information gap in conformal
-  prediction.
+\newblock Marginally useful: An identity for the information gap in split
+  conformal prediction.
 \newblock \emph{arXiv preprint arXiv:2608.07479}, 2026{\natexlab{a}}.
 \newblock URL \url{https://arxiv.org/abs/2608.07479}.
 \newblock Submitted to The American Statistician.
