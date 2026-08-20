@@ -248,9 +248,9 @@ of $R$. Under heteroscedasticity the \emph{conditional law} of the residual stil
 $I(R;X)>0$ in general. The gap measures conditional residual scale and shape, and that is
 orthogonal to getting the location right.
 
-\section{What follows in practice}
+\section{Discussion}
 
-Coverage error and proper-score performance are two coordinates, not one. Residual split
+Coverage error and proper-score performance are two coordinates, both potentially useful. Residual split
 conformal moves a report horizontally, changing the set so that coverage error goes to zero
 and leaving the density, and hence the score, exactly where it was. Conformal predictive
 systems do have a vertical coordinate, but it is capped at the oracle minus $I(R;X)$.
@@ -286,22 +286,18 @@ but often ideal. Finally, the exact mutual-information form belongs to the log-s
 CRPS or the interval score the analogous gap is the regret of the best $X$-blind residual
 law under that score, which is not an information quantity.
 
-\section{Conclusion}
 
-Conformal prediction certifies the coverage of a set, finite-sample and distribution-free,
-under exchangeability. That guarantee is genuine and, for the right objective, exact. In
-this note we go beyond the usual caution (against reading the guarantee as forecast quality)
-and we have emphasized the permanent structural concession made at the point residual
-pooling is chosen. Our message is only that nothing comes without a price. The unconditional
-coverage guarantee is accompanied by an equally rigorous guarantee that the conformal
-information gap will never be crossed.
+None of our discussion detracts from the fact that conformal prediction certifies the coverage
+ of a set, finite-sample and distribution-free,
+under exchangeability. That guarantee is genuine and, for the right objective, exact. Moreover within
+the single-shape residual class split conformal prediction is optimal in the sense we have judged it. It
+is the choice that may well be the right one for some applications or a reasonable one, either theoretically or pragmatically.  
 
-Within the single-shape residual class conformal prediction is optimal, and where a
-guarantee is the product it is the right tool. But coverage answers the question \emph{is
-the truth in this region?}, and in forecasting that is frequently not the question anyone was
-asking. This is not weak uncertainty quantification. It is exact uncertainty quantification
-for a set, a coverage guarantee, no more and no less. The gambit is permanent. Its price is
-$I(R;X)$, and the modeler should know what has been paid.
+However coverage answers the question \emph{is
+the truth in this region?}, and in forecasting, to name one use, that is frequently {\em not} the question anyone was
+asking.  In this note we have gone beyond the usual vague cautions and emphasized
+the definable permanent structural concession. Nothing comes without a price, and 
+the price for the split conformal coverage guarantee is exactly $I(R;X)$. 
 
 \bibliographystyle{asa-authoryear}
 \bibliography{references}
