@@ -7,19 +7,31 @@ rejection on merit — he calls the paper "of potential relevance and
 interest" — but it must be resubmitted, and it will then be treated as
 a **new submission**, screened again before any review.
 
-## Blocking: the companion note
+## Blocking: the companion note — RESOLVED 2026-08-20
 
 The cover letter and abstract refer to a "companion note" (Marginally
-Useful, under double-blind review at The American Statistician).
-Editors and referees cannot judge this paper's merits relative to a
-document they cannot see. Two acceptable fixes, in his order of
-preference:
+Useful), which editors and referees could not see.
 
-1. **Public link to the latest version** of the companion note.
-2. Upload an **anonymized copy** as a supplementary file. It must be
-   the latest version, and the status must be stated explicitly
-   ("submitted to The American Statistician", or whatever holds at the
-   time).
+Now public, which is the editor's preferred of the two fixes:
+**arXiv:2608.07479** (v1, 3 June 2026, q-fin.ST),
+<https://arxiv.org/abs/2608.07479>. Cite that link in the cover letter.
+
+Two things still to do with it:
+
+- **State the status alongside the link.** He was explicit that the
+  status must be specified — "submitted to The American Statistician"
+  as of this writing. The bib entry now carries exactly that in its
+  `note` field.
+- The alternative he offered (uploading an anonymized copy as a
+  supplementary file) is no longer needed, though note the arXiv
+  posting is under Peter's name, so it de-anonymizes authorship to any
+  referee who follows the link. That is unavoidable once the preprint
+  is public and is the route the editor preferred anyway.
+
+Done already: `cotton2026marginally` in all three `references.bib`
+copies (`paper/`, `papers/frontier/`, `papers/frontier/arxiv/`) now
+points at the arXiv eprint with the status note, and the site links it
+from `papers/index.html` and the note's landing page.
 
 Generalized instruction, which applies beyond this one note: cite all
 closely relevant literature, and specifically **all submitted or
