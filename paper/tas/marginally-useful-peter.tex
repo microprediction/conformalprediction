@@ -582,14 +582,8 @@ A system reported by its coverage alone is a system reported by one coordinate o
 two-coordinate quality. We make no great claim for the plane itself. It is a presentation
 device, and a close relative of reliability and sharpness diagrams
 \citep{gneiting2007probabilistic}. But the ``conformal moves left, never up'' reading makes
-the distinction hard to miss, which is the whole point of drawing it. It also sharpens the
-connection to \citet{correia2024information}, whose set-size and entropy bound lives on the
-\emph{efficiency} coordinate, the one that carries information, while the marginal-coverage
-coordinate carries none by Remark~\ref{rem:orth}. Figure~\ref{fig:plane} is the
-schematic. Conformalization is the horizontal move, left toward exact coverage and never up.
-$X$-blind recalibration is the vertical move, but only as far as the single-shape ceiling.
-The residual-information gap $I(R;X)$ between that ceiling and the oracle is crossed only by
-conditioning on $X$.
+the distinction hard to miss, which is the whole point of drawing it.
+Figure~\ref{fig:plane} is the schematic.
 
 \begin{figure}[t]
 \centering
@@ -741,10 +735,11 @@ entropy $H(Y\mid X)$. Our identity is for the log-score regret of the predictive
 distribution rather than for set size but the parallel should be clear. These are complementary
 results.
 
-It also sharpens the two-coordinate plane of Section~\ref{sec:plane}. The \emph{efficiency}
-coordinate, set size or sharpness, is the one that bears information, while the marginal
-\emph{coverage} coordinate does not, by Remark~\ref{rem:orth}. Report only the latter
-and one has discarded precisely the coordinate that encodes aleatoric uncertainty.
+The two sit on different coordinates of Section~\ref{sec:plane}. Their bound lives on the
+\emph{efficiency} coordinate, set size or sharpness, which is the one that bears
+information, while the marginal \emph{coverage} coordinate does not, by
+Remark~\ref{rem:orth}. Report only the latter and one has discarded precisely the coordinate
+that encodes aleatoric uncertainty.
 
 \paragraph{Approaching conditional coverage.}
 The no-go result of Section~\ref{sec:marginal} concerns \emph{exact, distribution-free,
@@ -776,39 +771,29 @@ residual law under that score. The accompanying benchmark in fact ranks methods 
 interval (Winkler) score and CRPS \citep{gneiting2007strictly}, and the same orderings hold
 there.
 
-\section{Prediction versus verification}\label{sec:verification}
-Conformal prediction \emph{verifies} a coverage property. It does not \emph{model}, and a
-fixed rule is no substitute for modeling. Conformalization is best viewed as a terminal
-certification operator. It repairs the marginal coverage coordinate of a set-valued report,
-and any improvement in a proper score has to come from upstream modeling of the conditional
-location, scale, quantiles, or residual shape. It moves the coverage coordinate and nothing
-else. The residual-information gap is reduced by conditioning on $X$, which is what the
-conditional-shape models of Section~\ref{sec:scope} do, and never by the conformal step.
+\paragraph{Practical remarks.} Some consequences follow. In the post-hoc setting considered
+here, conformalize \emph{last}. A conformal step applied to a residual score changes the set
+and leaves the predictive density, and hence its score, untouched
+(Remark~\ref{rem:orth}), so a proper score is improved by estimating and never by
+certifying. The conformal predictive system is the exception that proves the point. It does
+supply a density, and by Proposition~\ref{prop:gap} it is the best single shape available,
+but its score stops at the oracle minus $I(R;X)$.
 
-\paragraph{Practical remarks.} Three suggestions follow, and none of them is exotic.
-Conformalize \emph{last}. Model first and then add the certificate, since the conformal step
-cannot improve any proper score, so one should estimate first and certify second. Use a
-proper score, log-likelihood or CRPS, as the sharpness diagnostic. Because conformalization
-leaves it unchanged, a score that does not move after conformalizing is confirmation that
-whatever gain one has came from the modeling. And to close $I(R;X)$, add conditioning to the
-model, in the form of heteroscedastic spread or quantile or residual-shape estimation. Do
-not add tightness to the conformal step. There is nothing there to tighten.
+To close that gap one must condition on $X$. The cheapest way to do so is inside the
+conformal step itself, by replacing the plain residual with a normalized score
+$s(x,y)=|y-\hat\mu(x)|/\hat\sigma(x)$ \citep{lei2018distribution}, which is exactly the move
+that leaves the single-shape class of Proposition~\ref{prop:relevel}. Whether one then calls
+the result conformal prediction or heteroscedastic modeling is a matter of labelling. The
+sharpness came from $\hat\sigma$.
 
-\paragraph{Limitations.} The exact result is deliberately narrow. On \emph{scope}, the
-strong claims concern post-hoc, marginal, split
-conformal with a residual score, and the single-shape residual class. The conditional
-constructions of Section~\ref{sec:scope}, meaning CQR, Mondrian or binned CPS, and conformal
-training, leave that class by design and are not targets of the critique. On \emph{fixed
-location}, the gap $I(R;X)$ is defined for a fixed $\hat\mu$ and measures conditional
-residual shape, not the quality of the point forecast, as Remark~\ref{rem:mudep} sets out.
-The identity is also \emph{score-specific}. The exact mutual-information form belongs to the
-log-score, and for CRPS or the interval score the analogous gap is the regret of the best
-$X$-blind residual law under that score, which is not an information quantity. The
-density and log-score equalities of Propositions~\ref{prop:relevel} and \ref{prop:gap} are a
-large-calibration, or smoothed-density, statement, and what conformal delivers finite-sample
-is coverage rather than a density. Finally the figures and benchmark use synthetic
-generators with known ground truth, which is exactly what makes the oracle and $I(R;X)$
-computable, and the identity itself is verified numerically by \texttt{check\_gap.py}.
+\paragraph{Limitations.} Two further limits are worth recording. The gap $I(R;X)$ is defined
+for a fixed $\hat\mu$ and measures conditional residual shape, not the quality of the point
+forecast, as Remark~\ref{rem:mudep} sets out. And the density and log-score equalities of
+Propositions~\ref{prop:relevel} and \ref{prop:gap} are a large-calibration, or
+smoothed-density, statement, since what conformal delivers finite-sample is coverage rather
+than a density. The figures and benchmark use synthetic generators with known ground truth,
+which is exactly what makes the oracle and $I(R;X)$ computable, and the identity itself is
+verified numerically by \texttt{check\_gap.py}.
 
 \section{Conclusion}
 
