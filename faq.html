@@ -34,6 +34,7 @@
           <a href="/demos/24-balanced-placements.html">Balanced placements</a>
           <a href="/demos/29-just-a-transform.html">Just a transform</a>
           <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/homogenization.html">Homogenization</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
@@ -112,6 +113,18 @@
 
   <h3>Does it work for time series?</h3>
   <p>Better than the folklore says as regards moving sideways in the coverage / accuracy diagram. Exchangeability is not the right perspective: it is the assumption under which the guarantee is exact, not a switch that turns it off. On a stationary series whose dependence vanishes beyond a finite lag, plain split conformal provably loses at most (dependence range)/(calibration size) of its coverage, plus a mixing term when the dependence merely fades &mdash; watch it in <a href="/demos/19-dependence-tax.html">the dependence-tax demo</a>. What genuinely breaks a fixed band is drift (<a href="/demos/05-drift-timeseries.html">the drift demo</a>); there the adaptive methods (ACI, conformal PID, EnbPI) recover a long-run average coverage and are well worth using &mdash; just don&rsquo;t read them as a per-step guarantee. Dependence also carries a second, permanent bill: the sharpness rent priced in <a href="/papers/two-prices/">the two-prices note</a>. See <a href="/timeseries.html">the coverage games</a> and <a href="/timeseries-conditional.html">conditional coverage and sharpness</a>.</p>
+
+  <h3>Is any of this connected to something outside statistics?</h3>
+  <p>Conformal prediction is a gateway drug to homogenization. Pooling residuals over states is
+  averaging a fast, unobserved variable over its invariant law, which is the first move in
+  homogenization and averaging theory. The difference is what happens next. That field calls the
+  averaged limit the <em>naive</em> one and spends its energy on the corrector, the solvability
+  condition that says when averaging is legitimate, and the rate. Conformal prediction stops at the
+  average and attaches a certificate. If the pooling step feels unsatisfying to you, the literature
+  you want is already written, and it is a century deep.
+  <a href="/homogenization.html">The homogenization page</a> makes the comparison, with two processes
+  whose conformal intervals and marginal coverage are identical while their conditional coverage runs
+  from 57% to 100%.</p>
 
   <h3>Then what should I use to make forecasts better?</h3>
   <p>Model the conditional distribution (heteroscedastic models, quantile regression, mixture or flow densities) and recalibrate against a proper score. <em>Then</em> conformalize, if you also need a distribution-free coverage certificate. The order matters: estimate first, certify second. <a href="/alternatives.html">The alternatives page</a> lists the workhorses (t-GARCH, laplace, pymc_forecast), <a href="/demos/17-laplace-vs-conformal.html">demo 17</a> races one against a conformal wrap, and <a href="/recipes.html">the recipes page</a> has the audit code.</p>
