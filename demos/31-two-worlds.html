@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Two worlds: a matched pair</title>
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration 31</p>
+  <h1>Two worlds</h1>
+  <p class="subtitle">A pair of data generating processes that split conformal prediction cannot tell
+  apart. The intervals agree, the marginal coverage agrees, and in one world the method is optimal
+  while in the other it is leaving a measurable amount on the table.</p>
+
+  <p><strong>World A.</strong> The forecast error is drawn from the same heavy tailed law every
+  period, a Student \(t_\nu\). Large errors happen and they are bad luck. Nothing about this period
+  made it dangerous, so one interval width is correct forever.</p>
+
+  <p><strong>World B.</strong> Each period draws its own scale, \(\sigma^2 \sim
+  \mathrm{InvGamma}(\nu/2, \nu/2)\), and given that scale the error is Gaussian. Large errors
+  happen on high scale periods. If you knew the scale you would know in advance that the period was
+  dangerous, so the correct interval is narrow when it is calm and wide when it is not.</p>
+
+  <p>These are not similar processes. They are marginally identical, because the Student \(t\) is
+  exactly a Gaussian scale mixture. Split conformal only ever reads a quantile off the pooled
+  residuals, so the calibration scores, the interval and the coverage agree in law between the two. The
+  demo below goes further and hands both worlds the same calibration set, so the band is literally
+  identical. No output of the method distinguishes them.</p>
+
+  <div class="demo">
+    <div class="canvas-box med"><canvas id="series"></canvas></div>
+    <div class="canvas-box med demo"><canvas id="cond"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <p>The upper panel draws the same band on both worlds. The lower panel is where they separate:
+  conditional coverage against the percentile of the period&rsquo;s scale. World A has no scale to
+  condition on, so its curve is flat and sits on target. World B runs from over-covering the calm
+  periods to badly under-covering the turbulent ones, crossing the target exactly once, and the
+  certificate reports the same number throughout.</p>
+
+  <p>Push \(\nu\) upward and both worlds converge on the Gaussian: the scale mixture degenerates,
+  the World B curve flattens onto World A&rsquo;s, and the gap goes to zero. Pull \(\nu\) down
+  toward 2 and the spread widens. Around \(\nu = 3\), a realistic tail index for daily financial
+  returns, conditional coverage in World B runs from roughly 57% to 100% while the certificate says
+  90%.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. The question &ldquo;are the tails fat, or is the volatility stochastic?&rdquo; is the
+    standard disagreement about return series, and every practitioner has a view. Conformal prediction
+    returns the same interval either way and certifies it either way. That is not a defect in the
+    guarantee, which is exactly true in both worlds. It is what the guarantee is: a statement about
+    the average over periods, which cannot distinguish a world where every period is alike from one
+    where they differ and you could have known.</p>
+  </div>
+
+  <p class="note">The information discarded by pooling is
+  \(I(R;X) = h(t_\nu) - \tfrac12[\log(\nu/2) - \psi(\nu/2)] - \tfrac12\log 2\pi e\),
+  shown in the readout. The closed form is checked against numerical integration and Monte Carlo in
+  <a href="https://github.com/microprediction/conformalprediction/tree/main/papers/matched-pair">papers/matched-pair</a>,
+  and the identity behind it is in <a href="/papers/marginally-useful/">Marginally Useful</a>. For why
+  this is the same construction applied mathematics calls averaging out a fast variable, see
+  <a href="/homogenization.html">homogenization</a>.</p>
+
+  <div class="prevnext">
+    <a href="30-past-the-stop.html">&larr; Past the stop</a>
+    <span class="spacer"></span>
+    <a href="/homogenization.html">Homogenization &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+
+<script type="module" src="../js/demo31.js"></script>
+</body>
+</html>
