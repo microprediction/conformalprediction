@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this work, please cite it as below."
-title: "Marginally Useful: Formalizing the Information Gap in Conformal Prediction"
+title: "Marginally Useful: An Information-Gap Identity in Split Conformal Prediction"
 abstract: >-
   Conformal prediction gives finite-sample, distribution-free marginal coverage for a set,
   a guarantee often misread as evidence of forecast quality. For a fixed location predictor

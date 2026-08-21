@@ -15,7 +15,7 @@ assumptions, and replication on an out-of-development holdout. The practical gui
 for forecasters is direct: transform until residuals are conditionally homogeneous, pool
 in those coordinates, and add a conformal certificate afterward when one is needed.
 
-A short companion note, "Marginally Useful: Formalizing the Information Gap in Conformal
+A short companion note, "Marginally Useful: An Information-Gap Identity in Split Conformal
 Prediction," which proves the single-pool special case of the identity used here, is
 currently under review at The American Statistician. The present paper does not depend
 on that note's acceptance: it generalizes the identity to arbitrary retained
