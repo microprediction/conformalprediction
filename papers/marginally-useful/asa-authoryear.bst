@@ -1,9 +1,5 @@
-%% File: `tmlr.bst'
-%% A copy of iclm2010.bst, which is a modification of `plainnl.bst' for use with natbib package 
-%%
-%% Copyright 2010 Hal Daum\'e III
-%% Modified by J. Fürnkranz
-%% - Changed labels from (X and Y, 2000) to (X & Y, 2000)
+%% File: `plainnat.bst'
+%% A modification of `plain.bst' for use with natbib package 
 %%
 %% Copyright 1993-2007 Patrick W Daly
 %% Max-Planck-Institut f\"ur Sonnensystemforschung
@@ -18,7 +14,7 @@
 %% version 1 of the License, or any later version.
 %%
  % Version and source file information:
- % \ProvidesFile{icml2010.mbs}[2007/11/26 1.93 (PWD)]
+ % \ProvidesFile{natbst.mbs}[2007/11/26 1.93 (PWD)]
  %
  % BibTeX `plainnat' family
  %   version 0.99b for BibTeX versions 0.99a or later,
@@ -223,7 +219,7 @@ FUNCTION {format.names}
   s num.names$ 'numnames :=
   numnames 'namesleft :=
     { namesleft #0 > }
-    { s nameptr "{ff~}{vv~}{ll}{, jj}" format.name$ 't :=
+    { s nameptr "{vv~}{ll}{, f.}{, jj}" format.name$ 't :=
       nameptr #1 >
         { namesleft #1 >
             { ", " * t * }
@@ -265,8 +261,8 @@ FUNCTION {format.editors}
     { "" }
     { editor format.names
       editor num.names$ #1 >
-        { " (eds.)" * }
-        { " (ed.)" * }
+        { ", editors" * }
+        { ", editor" * }
       if$
     }
   if$
@@ -522,8 +518,8 @@ FUNCTION {format.pages}
 { pages empty$
     { "" }
     { pages multi.page.check
-        { "pp.\ " pages n.dashify tie.or.space.connect }
-        { "pp.\ " pages tie.or.space.connect }
+        { "pages" pages n.dashify tie.or.space.connect }
+        { "page" pages tie.or.space.connect }
       if$
     }
   if$
@@ -1112,7 +1108,7 @@ FUNCTION {format.lab.names}
         'skip$
         { s #2 "{ff }{vv }{ll}{ jj}" format.name$ "others" =
             { " et~al." * }
-            { " \& " * s #2 "{vv~}{ll}" format.name$ * }
+            { " and " * s #2 "{vv~}{ll}" format.name$ * }
           if$
         }
       if$

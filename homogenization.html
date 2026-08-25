@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Homogenization: without the corrector</title>
+<meta name="description" content="Homogenization and residual pooling begin with the same move: average out the fast variable. One field then computes the corrector. The other issues a certificate and stops." />
+<meta property="og:title" content="Conformal Prediction: homogenization without the corrector" />
+<meta property="og:description" content="Two fields average out a hidden fast variable. One treats the averaged limit as naive and corrects it. The other treats it as the answer." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Perspective</p>
+  <h1>Homogenization without the corrector</h1>
+  <p class="subtitle">Two fields face the same problem. There is a hidden variable moving faster than the
+  one you care about, and you would like a single effective description that does not mention it. Both
+  fields take the same first step. They take opposite second steps, and the second step is where all the
+  content is.</p>
+
+  <h2>The shared first step</h2>
+
+  <p>Suppose the state has a slow part you model and a fast part you do not observe. Volatility that
+  clusters, a regime that switches, a latent scale that drifts. The obvious move is to average the fast
+  part over its stationary law and keep the average.</p>
+
+  <p>In homogenization this is called the fast mixing limit, or the averaged limit, and the resulting
+  coefficients are the effective coefficients. In split conformal prediction the same move is called
+  pooling the residuals. You take the errors your model made across every past state, put them in one
+  pile, and read a quantile off the pile. Pooling residuals over states <em>is</em> averaging the fast
+  variable over its invariant measure. The two operations are the same operation.</p>
+
+  <h2>Where they part</h2>
+
+  <p>Homogenization theory regards the averaged limit as the beginning of the analysis. The standard
+  adjective for it, in the literature, is <em>naive</em>. What follows is the interesting part: a
+  solvability condition that says when the averaging is legitimate, a corrector that recovers the leading
+  behaviour the average destroyed, and a rate that says how large the error is in terms of the separation
+  between the two time scales.</p>
+
+  <p>Split conformal prediction regards the same limit as the end of the analysis, and attaches a
+  coverage certificate to it.</p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Homogenization</h3>
+      <p>Average the fast variable. Then compute the corrector. The adequacy condition is scale
+      separation, stated and checked, and the error is quantified in the separation parameter.</p>
+    </div>
+    <div class="card">
+      <h3>Split conformal</h3>
+      <p>Pool the residuals. Then issue a certificate. The adequacy condition is not stated, because
+      the guarantee holds whether or not it is met, and the error is not quantified.</p>
+    </div>
+  </div>
+
+  <p>The certificate is not wrong. It is the claim that the interval covers the truth with the stated
+  frequency on average over inputs, and that claim is true, finite sample, without distributional
+  assumptions. The question this page asks is what the second step would have found.</p>
+
+  <h2>What stopping costs</h2>
+
+  <p>Here is a pair of data generating processes that split conformal prediction cannot tell apart.</p>
+
+  <p><strong>World A.</strong> The forecast error is drawn from the same heavy tailed law every period,
+  a Student <em>t</em> with three degrees of freedom. Large errors happen and they are bad luck. Nothing
+  about today made today dangerous, and one interval width is correct forever.</p>
+
+  <p><strong>World B.</strong> Each period has its own volatility, drawn at random, and given that
+  volatility the error is Gaussian. Large errors happen on high volatility periods. If you knew the
+  volatility you would know in advance that the period was dangerous, and the correct interval is narrow
+  when it is calm and wide when it is not.</p>
+
+  <p>These are not similar. They are marginally identical, because the Student <em>t</em> is exactly a
+  Gaussian scale mixture. Pile up a long run of errors from each world and you have drawn twice from the
+  same distribution. Split conformal only ever looks at that pile, so the calibration scores, the
+  quantile, the intervals and the coverage agree in law. No output of the method differs between the
+  worlds.</p>
+
+  <div class="takeaway">
+    <p>Same intervals. Same marginal coverage, 90% in both. Conditional coverage in world A stays between
+    88% and 92%. In world B it runs from <strong>57% to 100%</strong>, and the certificate says 90%
+    throughout. The information the pooling discarded is 0.17 nats per observation, in closed form.</p>
+  </div>
+
+  <p>Three degrees of freedom is a realistic tail index for daily financial returns, so this is not a
+  constructed pathology. It is the standard disagreement about return series, stated twice. Are the tails
+  fat, or is the volatility stochastic? Every practitioner has a view. Conformal prediction returns the
+  same interval either way and certifies it either way, which is precisely why a guarantee can be true
+  and uninformative at the same time.</p>
+
+  <p>The numbers above are reproduced by
+  <a href="https://github.com/microprediction/conformalprediction/tree/main/papers/matched-pair">two short
+  scripts</a>, one checking the closed form against numerical integration and Monte Carlo, the other
+  checking that the two worlds are statistically indistinguishable to the method.</p>
+
+  <h2>The hypothesis nobody states</h2>
+
+  <p>Residual pooling has an adequacy condition. It is legitimate when the state dependence in the error
+  law mixes away over the calibration window, and misleading when it does not. Conformal prediction never
+  states this condition, because the coverage guarantee holds either way. That is the appeal, and it is
+  also why the condition goes unexamined.</p>
+
+  <p>Homogenization is the theory of exactly that condition. It names the separation parameter, gives the
+  solvability condition under which the averaged limit is the right leading term, and quantifies the
+  error in terms of that parameter. Whether the information discarded by pooling admits a clean expansion
+  in the same parameter is open, and it is worth asking, because in the fast mean reverting models the
+  corrections to the conditional density are already known in closed form.</p>
+
+  <h2>The honest trade</h2>
+
+  <p>None of this makes conformal prediction a mistake, and the asymmetry that saves it is real.
+  Homogenization needs a model. You cannot compute a corrector without writing down what the fast variable
+  is doing. Conformal prediction needs nothing, which is why it travels so well.</p>
+
+  <p>So the trade is clear once it is stated. The corrector is what you sacrifice in order not to specify
+  anything. In some settings that is a good trade, and where the base model's error law really is state
+  invariant the corrector is zero and pooling is optimal. The objection is not to the trade. It is to
+  making it without pricing it, and then reading the certificate as though it were evidence that nothing
+  was given up.</p>
+
+  <h2>Where the modelling lives</h2>
+
+  <p>The corrector is the part a certificate cannot see. It is also the part that improves a proper score,
+  which is why conformalizing a forecast leaves the log score exactly where it was. If you want the
+  sharpness back there is only one place to get it, and it is upstream, in the conditional model of scale
+  and shape.</p>
+
+  <p>Averaging the fast variable is a good first step. Every field that has faced this problem takes it.
+  The difference is whether you treat the average as the answer or as the leading term of something you
+  intend to correct.</p>
+
+  <div class="refs">
+    <h3>Sources</h3>
+    <p>On homogenization and averaging: Bensoussan, Lions and Papanicolaou, <em>Asymptotic Analysis for
+    Periodic Structures</em> (1978). On fast mean reverting stochastic volatility and its correctors:
+    Fouque, Papanicolaou and Sircar, <em>Derivatives in Financial Markets with Stochastic Volatility</em>
+    (2000), and Cotton, <em>An Analytic Approach to Ornstein-Uhlenbeck Processes with Fluctuating
+    Parameters</em> (Stanford, 2001), which treats the averaged limit as naive and computes the correction
+    to the conditional density.</p>
+    <p>On the conformal side: Vovk, Gammerman and Shafer, <em>Algorithmic Learning in a Random World</em>
+    (2005); Lei, G'Sell, Rinaldo, Tibshirani and Wasserman (JASA, 2018); Barber, Cand&egrave;s, Ramdas and
+    Tibshirani on the limits of distribution free conditional inference (Information and Inference, 2021).
+    The identity that prices the pooling is in
+    <a href="/papers/marginally-useful/">Marginally Useful</a>.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="/papers/">&larr; Papers</a>
+    <span class="spacer"></span>
+    <a href="/faq.html">FAQ &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+</body>
+</html>

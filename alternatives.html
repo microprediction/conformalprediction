@@ -30,6 +30,8 @@
           <a href="/demos/24-balanced-placements.html">Balanced placements</a>
           <a href="/demos/29-just-a-transform.html">Just a transform</a>
           <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
@@ -145,6 +147,14 @@
   <a href="/papers/two-prices/">the two-prices note</a> prices what ignoring the conditional
   information costs. There is no free lunch: the conditional models pay in assumptions, conformal
   pays in sharpness, and the only real decision is which bill your application can afford.</p>
+
+  <p class="note">This trade has a name elsewhere. Averaging a fast, unobserved variable out of a
+  model is homogenization, and that field treats the averaged limit as the naive leading term and
+  then computes a corrector for what the averaging destroyed. Residual pooling is the same average,
+  stopped one step earlier, and the corrector is what the certificate cannot see.
+  <a href="/homogenization.html">The homogenization page</a> works the comparison through, including
+  two processes with identical conformal intervals and identical marginal coverage whose conditional
+  coverage runs from 57% to 100%.</p>
 
   <p>NNS and the seasonal-pool idea both run live on
   <a href="https://skaters.microprediction.org">the skaters benchmarks</a>, part of an ongoing

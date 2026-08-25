@@ -87,7 +87,7 @@ authors" note).
 
 **Cover letter disclosure sentence** (include verbatim or near it):
 ```
-A short companion note, "Marginally Useful: Formalizing the Information Gap in Conformal
+A short companion note, "Marginally Useful: An Information-Gap Identity in Split Conformal
 Prediction," which proves the single-pool special case of the identity used here, is
 currently under review at The American Statistician. The present paper does not depend on
 that note's acceptance: it generalizes the identity to arbitrary retained representations,
