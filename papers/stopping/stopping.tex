@@ -1,0 +1,564 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\I}{\mathrm{I}}
+\newcommand{\given}{\,|\,}
+\newcommand{\KLop}{\mathrm{KL}}
+
+\title{The Price of Eschewing Smoothness and Stopping Early:\\
+a Theoretical and Empirical Analysis of Conformal Methods}
+\author{Peter Cotton\\\texttt{peter.cotton@microprediction.com}}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Conformal practice makes two choices so uniformly that they pass for definitions:
+residuals are pooled rather than smoothed, and the calibration step ends the chain.
+Of 686 arXiv papers titled with conformal prediction, 94.5\% never depart from
+pooling at any granularity and 87\% stop at the empirical map. We price the two
+choices separately, on 212 economic series against a strong online forecaster.
+Pooling costs 0.14 nats and buys the guarantee; a separation theorem shows local
+smoothing cannot lower that price without forfeiting exactness. Stopping costs a
+further 0.44 nats and buys nothing. Coverage detects neither.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+A conformal prediction system is assembled in a fixed order: fit a model, compute
+residuals on held-out data, pool their empirical law, read the answer off the
+pooled quantiles. Two conventions hide in that sentence. The residual law is
+\emph{pooled}: one shape serves every state, however much the truth varies with the
+input. And the empirical map is \emph{terminal}: nothing is fitted to its output.
+Neither convention is argued for in the papers that adopt it. This paper measures
+what each costs, and separates the price that buys the coverage certificate from
+the price that buys nothing.
+
+The paper has exactly four components, and each subsequent section is one of them.
+
+\begin{enumerate}
+\item \textbf{The count} (Section~\ref{sec:count}, empirical). In a frame of 686
+  arXiv papers, 599 stop at the empirical map and 648 never depart from residual
+  pooling at any granularity. One paper composes a model after the map. Every
+  smooth-weighting paper that claims exactness was read in full; none overclaims,
+  and the escapes they use are exactly the three the theory permits.
+\item \textbf{The floor} (Section~\ref{sec:floor}, a proposition). The excess
+  logarithmic risk of any frozen conformal scheme equals a conditional mutual
+  information fixed by its score and stratification. No calibration choice moves
+  it. This is classical in spirit and stated because Section~\ref{sec:price} uses
+  it.
+\item \textbf{The separation theorem} (Section~\ref{sec:smooth}, the theoretical
+  centre). Exact distribution-free validity forces uniform pooling of the
+  calibration residuals; test-centred smoothing opens a coverage gap of the same
+  order as its bias, and the conflict is greatest exactly where smoothing would
+  help most, at small samples. So the floor of Section~\ref{sec:floor} cannot be
+  undercut from within.
+\item \textbf{The price} (Section~\ref{sec:price}, empirical). Holding one strong
+  forecaster and one empirical object fixed and moving only the object's
+  \emph{position} in the chain: pooling costs $0.14$ nats net of estimation
+  effects, while stopping costs a further $0.44$, three times more. The sign of
+  the CRPS comparison flips across the same line. Adaptivity in time recovers
+  $0.075$ of it. Coverage registers none of it.
+\end{enumerate}
+
+Section~\ref{sec:discussion} states the recommendation, which is not a better
+calibrator: keep the map, keep the certificate where it is wanted, and keep
+modelling past it.
+
+\paragraph{What is new and what is borrowed.} The count, the two results, and the
+price are this paper's; both results are proved here, the floor in
+Appendix~\ref{app:floor} and the separation in Appendix~\ref{app:sep}. The key
+coverage inequality behind the separation is due to \citet{barber2023beyond}. The
+impossibility of exact distribution-free conditional coverage is
+\citet{lei2014distribution} and \citet{barber2021limits}; the inflation forced by
+training-conditional coverage at a fixed point is classical
+\citep{li1989honest,low1997nonparametric,cai2004adaptation}. The base forecaster
+is the subject of \citet{cotton2026transforms}.
+
+\section{The count}\label{sec:count}
+
+This section establishes that the two conventions are near-universal. It is a
+claim about published work, so it gets a protocol rather than a citation.
+
+\subsection{Frame and classification}
+
+The frame is every arXiv paper with ``conformal prediction'' in the title at
+harvest date, $n = 686$. Each paper is classified on two orthogonal axes by
+documented keyword screens over titles and abstracts, with the cells that matter
+verified by reading; classifier, frame, and per-paper verdicts are in the
+repository.
+
+\emph{The position axis} records what a paper does to the fence-post empirical map
+$E_n$: quote its output as the answer (\textsc{stop}); substitute a conditional
+estimate for the pooled quantile (\textsc{replace}); keep the map and adapt the
+level online (\textsc{tune}); feed its output to a downstream decision
+(\textsc{consume}); or keep the map \emph{and fit a model on its output}
+(\textsc{compose}), the only move that refutes the stopping claim.
+
+\emph{The pooling axis} records whether the weights on calibration residuals ever
+depend on the test point. \textsc{pooled} means one empirical law;
+\textsc{stratified} means pooling within a pre-committed partition (Mondrian,
+binned, group-conditional), which coarsens the granularity but still pools;
+\textsc{smooth} means test-centred weighting (localized, kernel, similarity
+weights on the calibration residuals). A smooth \emph{score} is not smooth
+pooling: a kernel or normalized score is a richer score map, and the shape it
+reshapes is still one pooled object. The first version of the screen missed this
+distinction and was corrected; the correction is documented in the classifier.
+
+\subsection{Results}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+ & \textsc{pooled} & \textsc{stratified} & \textsc{smooth} & total \\
+\midrule
+\textsc{stop}     & 523 & 55 & 21 & 599 \\
+\textsc{replace}  &   2 &  0 & 14 &  16 \\
+\textsc{tune}     &  21 &  4 &  3 &  28 \\
+\textsc{consume}  &  36 &  1 &  1 &  38 \\
+n/a               &   4 &  0 &  1 &   5 \\
+\midrule
+total             & 588 & 60 & 38 & 686 \\
+\bottomrule
+\end{tabular}
+\caption{Position of the empirical map against pooling of the calibration
+residuals, 686 papers, after full-text reclassification of two screen false
+positives. \textsc{compose} does not appear as a row because one candidate was
+flagged and none confirmed.}
+\label{tab:crosstab}
+\end{table}
+
+Three facts carry forward. First, $599/686$ stop, and the single flagged
+compose candidate did not survive reading; the missing move of
+Section~\ref{sec:price} is missing from the literature. Second, $648/686$
+($94.5\%$) never depart from residual pooling at any granularity. Third, the two
+axes are close to independent except in one corner: \textsc{replace} and
+\textsc{smooth} nearly coincide ($14$ of $16$), as they should, since substituting
+a conditional estimate is the smooth move. Twenty-one papers weight smoothly and
+still stop, paying both of the title's prices at once.
+
+\subsection{The nine reads}\label{sec:reads}
+
+Nine \textsc{smooth} papers also claim exact or distribution-free validity in the
+abstract. Under the separation theorem of Section~\ref{sec:smooth} each must be
+using one of three escapes, so all nine were read in full. None overclaims. Four
+restore \emph{marginal} validity by recalibration or design
+\citep{guan2023localized,hore2023randomly}; one states a coverage bound with an
+explicit gap in the style of \citet{barber2023beyond}; one uses known
+covariate-shift tilts \citep{tibshirani2019conformal}; one proves finite-sample
+\emph{local} bounds by assuming a smoothness class outright, surrendering
+distribution-freeness. Two were screen false positives whose smoothing lives in
+the score, and were reclassified \textsc{pooled}. \citet{hore2023randomly} state
+the boundary in the community's own words: for local coverage, ``there are no
+known distribution-free theoretical results to guarantee this.''
+
+The field's best localization papers therefore already respect the line the
+theorem draws. What the theorem adds is why the line is where it is, and
+Section~\ref{sec:price} adds what crossing it, or declining to, is worth.
+
+\subsection{Refutation criteria}
+
+The stopping claim is falsified by a paper that retains the empirical rank
+transform, applies it to residuals, and fits a downstream model on the transformed
+stream, keeping the transform in the chain. Reweighting the empirical law does not
+count; conditioning upstream does not count; adapting the level does not count.
+The pooling claim is falsified by exhibiting exact distribution-free validity with
+test-centred weights outside the known covariate-shift escape. Outside the
+conformal banner the composing move is routine: the normal quantile transform and
+meta-Gaussian forecasting \citep{bogner2012}, copula time series
+\citep{chenfan2006}, and autoregressive transformation models \citep{rugamer2023}
+all apply an empirical marginal map and keep modelling in the transformed
+coordinates. The absence is a fact about a community's habit, not about the
+difficulty of the idea.
+
+\section{The floor}\label{sec:floor}
+
+This section states the identity that Section~\ref{sec:price} measures against.
+It is borderline classical and is presented as a proposition with lineage, not as
+a discovery.
+
+Fix a nonconformity score $A:\mathcal{X}\times\mathbb{R}\to\mathbb{R}$, strictly
+increasing in its second argument, and a stratification
+$\kappa:\mathcal{X}\to\mathcal{K}$, both frozen independently of the calibration
+labels. Every split, normalized, Mondrian, quantile, and predictive-system
+conformal scheme emits the same object: the pooled empirical law of the scores in
+the test point's stratum, reshaped through $A(x,\cdot)^{-1}$; the named schemes
+differ only in $(A,\kappa)$. Write $W=A(X,Y)$.
+
+\begin{proposition}[Irreducible floor]\label{prop:floor}
+Suppose $(A,\kappa)$ is frozen independently of the calibration labels, each
+$A(x,\cdot)$ is a strictly increasing absolutely continuous bijection, and the
+relevant densities and divergences exist and are finite. Then the
+excess logarithmic risk of the conformal predictor over the conditional oracle
+satisfies
+\[
+L(\widehat F_n) - H(Y\given X) \;=\; \I(W;X\given\kappa) \;+\; \Delta_n,
+\qquad \Delta_n \to 0,
+\]
+where $\Delta_n$ is the pooled-density estimation term. Consequently no choice of
+calibration estimator, quantile convention, randomization, or level reduces the
+excess below $\I(W;X\given\kappa)$; only a change to $(A,\kappa)$ can.
+\end{proposition}
+
+The proof is a change of variables in which the Jacobian of $A$ cancels between
+truth and forecast, followed by the definition of conditional mutual information;
+it is reproduced in Appendix~\ref{app:floor}. With a location score and one
+stratum the floor is the plain residual information gap $\I(R;X)$.
+Level adaptation \citep{gibbs2021adaptive} and fold averaging act on the pooled
+scores alone, so they move $\Delta_n$ and nothing else.
+
+\begin{remark}\label{rem:usecase}
+The floor is zero exactly when $(A,\kappa)$ renders the score conditionally
+independent of the input, that is, when the modelling was finished before the
+conformal step. Conformal calibration is deployed precisely when one is unwilling
+to assume that. The method's stated reason for existing is its lower bound.
+\end{remark}
+
+\section{The separation theorem}\label{sec:smooth}
+
+This section is the theoretical centre. It shows the floor of
+Proposition~\ref{prop:floor} cannot be undercut from within: the one estimator
+that would lower it, local smoothing of the calibration residuals, is exactly the
+estimator that exact validity forbids.
+
+Assume the conditional residual law $\mu_x$ is H\"older-$s$ in total variation and
+is not input-free. The efficient estimator of $\mu_{x_0}$ at effective sample size
+$m$ is kernel-weighted with bandwidth $h^{*}(m)\asymp m^{-1/(2s+d)}$, wide when
+$m$ is small. The coverage of a weighted conformal set obeys the bound of
+\citet{barber2023beyond}: localization costs, in coverage, the weighted
+total-variation distance between calibration and test residual laws, which under
+the H\"older condition is of order $h^{s}$.
+
+\begin{theorem}[Small-sample separation]
+\label{thm:sep}
+No weighted residual predictor attains both exact distribution-free coverage for
+every law in the class and the minimax estimation rate for $\mu_{x_0}$, unless the
+sample is unbounded or the residual law is input-free. Exact validity forces the
+weights uniform within a pre-committed stratification; the estimation-optimal
+bandwidth incurs a coverage gap of order $h^{*}(m)^{s}$; and the product of the two
+deficits is bounded away from zero at every finite $m$.
+\end{theorem}
+
+\begin{corollary}[The scarce-data regime]\label{cor:scarce}
+The separation is maximal as $m\to 0$: in the regime where local smoothing most
+improves the estimate, the exactly-valid predictor pays its full heterogeneity
+constant.
+\end{corollary}
+
+Three consequences frame the measurement. First, \textsc{stratified} practice in
+Table~\ref{tab:crosstab} is rational: pooling within pre-committed strata is what
+the theorem permits, and it is how granularity can be bought without losing
+exactness. Second, the \textsc{smooth} escapes found in Section~\ref{sec:reads}
+are the theorem's own taxonomy realised: retreat to marginal validity, state the
+gap, assume the class, or move the smoothness into the score. Third, the known
+escapes are bounded. Fixed covariate-shift tilts \citep{tibshirani2019conformal}
+evade the uniform-pooling conclusion because their weights do not depend on the
+residual laws; refining the stratification toward sufficiency is permitted but,
+because the labels may not steer the refinement, delivers a label-blind
+regressogram, minimax-suboptimal wherever adaptation would help
+\citep{vovk2022universal,stone1982optimal}. Coverage at a fixed point under a
+training-conditional guarantee inflates by the local modulus for classical
+reasons \citep{li1989honest,low1997nonparametric}, an orthogonal axis not used
+here.
+
+What no result in this section touches is \emph{position}. The theorem constrains
+how the pooled law may be estimated. It says nothing about whether the chain may
+continue past it, because position is not a coverage question. That is the gap the
+next section measures.
+
+\section{The price}\label{sec:price}
+
+This section holds one forecaster and one empirical object fixed and moves only
+the object's position in the chain. The design answers one question: of the
+information a conformal-shaped step discards, how much is the floor of
+Proposition~\ref{prop:floor}, which Theorem~\ref{thm:sep} protects, and how much
+is the stopping convention of Section~\ref{sec:count}, which nothing protects?
+
+\subsection{Design}\label{sec:design}
+
+The base forecaster is \texttt{laplace}, an online likelihood-weighted pool of
+roughly sixty candidate transform chains with multi-scale mixing, a generalized
+Pareto tail splice, and online PIT resolution; it is the strongest arm in the
+benchmark this study extends. The empirical object is a 41-node quantile grid of
+the base model's own recent $h$-step residuals, kernel-smoothed at the Silverman
+bandwidth, the same construction used by the AutoARIMA-plus-conformal baseline in
+the public benchmark. Two arms place it:
+
+\begin{description}
+\item[stop.] The conformal convention. Take the finished predictive, keep its
+  location, replace its shape with the pooled empirical law. Nothing acts
+  downstream. This is a frozen conformal scheme with a location score and one
+  stratum, so Proposition~\ref{prop:floor} applies to it with floor $\I(R;X)$.
+\item[compose-after.] The same object installed as the terminal residual law
+  \emph{inside} the chain: the candidate pool still weights it, the tail splice
+  still repairs its extremes, PIT resolution still runs, and the transform chain
+  still inverts it to the observation coordinate. This arm is not a conformal
+  scheme; its design is not frozen and it carries no certificate. It is the one
+  move Proposition~\ref{prop:floor} permits, a change of representation, executed
+  after the map instead of before it.
+\end{description}
+
+Windows of 250, 400, and 750 residuals are all reported. Recency-weighted
+variants (exponential weights, half-life 150) run in both positions, so no
+comparison can be attributed to staleness; by Theorem~\ref{thm:sep} the weighted
+variants have already surrendered exactness, which sharpens
+Section~\ref{sec:adaptive}. The corpus is 212 FRED change series with at least
+1{,}100 observations, context 1{,}024, twelve rolling origins per series, horizons
+1, 6, and 12. Long contexts are necessary: at context 256 the three windows
+coincide and the arms collapse into one model with three names. Differences carry
+paired bootstrap intervals clustered by series, and win/draw/loss counts come from
+a per-series Diebold--Mariano test. A control corpus of iid series in three laws
+(Gaussian, $t_3$, Laplace) runs first: there pooling is correct, and a constrained
+arm should lose nothing.
+
+\subsection{The decomposition}\label{sec:decomp}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+ & pooled shape & stops & cost, net of estimation \\
+\midrule
+unconstrained  & no  & no  & --- \\
+compose-after  & yes & no  & $0.14$ nats \\
+stop           & yes & yes & $0.58$ nats \\
+\bottomrule
+\end{tabular}
+\caption{Held-out log-likelihood deficit against the unconstrained base, $h=1$,
+net of the iid control. The pooled shape costs $0.14$; stopping costs a further
+$0.44$, three times more.}
+\label{tab:decomp}
+\end{table}
+
+The raw deficits at $h=1$ are $0.846$ nats for stop (window 400; $1.087$ and
+$1.003$ at windows 250 and 750) and $0.268$ for compose-after. On the iid control
+the same arms lose $0.267$ and $0.127$: about a third of each raw gap is the cost
+of estimating 41 empirical quantiles rather than a parametric scale, and it is
+subtracted in Table~\ref{tab:decomp}. The control behaves: a state-correcting
+reference arm loses nothing there. At $h=6$ the position term is $0.47$ nats.
+
+The theory mapping is asymmetric by construction. The stop arm is a genuine frozen
+conformal object, so its floor is $\I(R;X)$ plus estimation. The compose-after arm
+is the permitted move, and its $0.14$ is the residual gap of a far richer
+representation. The $0.44$ between them is therefore a measured lower bound on how
+much of $\I(R;X)$ a richer representation recovers: three quarters of the stop
+arm's information loss was never floor at all. No theorem defends paying it, and
+by Table~\ref{tab:crosstab}, $599$ of $686$ papers pay it.
+
+\subsection{The CRPS sign flip}\label{sec:crps}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\toprule
+arm & logpdf deficit & CRPS vs.\ base \\
+\midrule
+stop, $w=250$            & $-1.087$ & $-1.4\%$ \\
+stop, $w=400$            & $-0.846$ & $+4.9\%$ \\
+stop, $w=750$            & $-1.003$ & $+4.9\%$ \\
+stop, recency-weighted   & $-0.771$ & $-0.4\%$ \\
+compose-after, $w=400$   & $-0.268$ & $\mathbf{-7.0\%}$ \\
+compose-after, weighted  & $-0.275$ & $\mathbf{-8.1\%}$ \\
+\bottomrule
+\end{tabular}
+\caption{$h=1$, raw. Negative CRPS is an improvement over the unconstrained base.
+The same empirical object makes CRPS worse when placed last and better when placed
+early.}
+\label{tab:crps}
+\end{table}
+
+Placed last, the empirical law degrades CRPS by about five percent relative to the
+parametric leaf it replaced. Placed early, it improves CRPS by seven to eight
+percent, beating the base forecaster's own CRPS-tuned leaf. Two proper scores
+disagree in sign across exactly the position line. This is the strongest form of
+the empirical claim, because CRPS is the score on which conformal practice rests
+its case, and the result cannot be dismissed as a log-score artifact.
+
+\subsection{Adaptivity, priced}\label{sec:adaptive}
+
+Recency weighting moves the stop arm from $-0.846$ to $-0.771$: adaptivity in time
+recovers $0.075$ nats where position recovers $0.58$. Adaptive weighting tracks
+the level of volatility through time and still quotes one shape per step
+regardless of state; the state-dependent version that would close the gap is what
+Theorem~\ref{thm:sep} prices. Level adaptation is dispatched by
+Proposition~\ref{prop:floor} directly, since it acts on the pooled scores alone.
+
+\subsection{The certificate is blind to the loss}\label{sec:blind}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccccc}
+\toprule
+arm & marginal & falling vol & flat & rising vol & spread \\
+\midrule
+unconstrained          & 0.782 & 0.814 & 0.741 & 0.823 & 0.082 \\
+stop, $w=400$          & 0.819 & 0.863 & 0.782 & 0.789 & 0.080 \\
+compose-after, $w=400$ & 0.810 & 0.867 & 0.785 & 0.801 & 0.082 \\
+\bottomrule
+\end{tabular}
+\caption{Empirical 80\%-interval coverage at $h=1$, marginally and within
+volatility regimes. The arm losing $0.85$ nats has the best-looking coverage.}
+\label{tab:cov}
+\end{table}
+
+We expected the stop arm to show good marginal and poor conditional coverage. It
+does not: its calibration is the best in the table, marginally and within regime.
+No claim of miscalibration can be made against it, and none is. The loss is
+information, which coverage does not measure. \citet{cotton2026floor} states the
+reason in advance: the certificate concerns the marginal rank of the test score,
+the floor concerns the conditional information the frozen score discards, and the
+two live on different axes. Table~\ref{tab:cov} is that statement, verified: we
+measured the axis the certificate lives on, and it registered nothing.
+
+\section{Discussion}\label{sec:discussion}
+
+The two conventions of the title now have separate prices and separate statuses.
+Eschewing smoothness costs $0.14$ nats here. It is protected: Theorem~\ref{thm:sep}
+shows the exact guarantee cannot be kept without it, and the nine reads of
+Section~\ref{sec:reads} show the field's own localization literature already
+respects that boundary. Stopping early costs $0.44$ nats here, three times more.
+It is protected by nothing, defended nowhere, and practiced in $87\%$ of the
+frame.
+
+The recommendation is therefore not a better calibrator, a smarter weighting, or a
+tuned level; Proposition~\ref{prop:floor} closes that entire menu. It is to treat
+the empirical map as what it provably is, a coordinate change with a certificate
+attached at its position, and to keep modelling on its output. The compose-after
+arm is one constructive existence proof, and it is conformal prediction with the
+modelling finished, in the sense of Remark~\ref{rem:usecase} run in reverse: the
+certificate is what one holds when the modelling is not finished, and the PIT
+stream of the composed chain measures, rather than assumes, whether it ever was.
+
+\paragraph{Limitations.} The count is a keyword screen with full-text verification
+of the cells that carry the argument: the smooth-with-exact-claim cell is fully
+read, the compose shortlist is fully read, and the 599-paper \textsc{stop} default
+rests on the screen plus a documented refutation criterion. Every price is
+measured on one base forecaster, one economic corpus, and one iid control; the
+position effect should be replicated on a second base before the constants are
+quoted as more than one instance. The compose-after arm carries no coverage
+guarantee, which is the point being priced, and it must not be read as a proposed
+better conformal method.
+
+\appendix
+
+\section{Proof of Proposition~\ref{prop:floor}}\label{app:floor}
+
+Fix the fold, so $(A,\kappa)$ is deterministic. Given $X=x$, the true density of
+$Y$ is $p(y\given x) = p_W(A(x,y)\given x)\,A'(x,y)$ by change of variables, and
+the conformal density is $\widehat f_x(y) = \widehat
+g_{\kappa(x)}(A(x,y))\,A'(x,y)$. The Jacobian cancels in the log ratio, so
+$\KLop(P(\cdot\given x)\,\|\,\widehat F_x) = \KLop(P_W(\cdot\given
+x)\,\|\,\widehat G_{\kappa(x)})$. Splitting at the population pooled law
+$G_{\kappa(x)}$ and averaging over $X$ gives
+$\E_X\,\KLop(P_W(\cdot\given X)\,\|\,P_W(\cdot\given\kappa(X))) + \Delta_n$, and
+the first term is $\I(W;X\given\kappa)$ by definition. The floor depends only on
+$(A,\kappa)$; every calibration operation is a function of the pooled scores and
+so moves only $\Delta_n$. \hfill$\square$
+
+\section{Proof of Theorem~\ref{thm:sep}}\label{app:sep}
+
+Write the weighted estimator $\widehat\mu_w(x_0)=\sum_i w_i(x_0)\,\delta_{R_i}$
+with kernel weights of bandwidth $h$. Two displays give the two horns.
+
+\emph{Localization opens a coverage gap.} By the coverage bound for
+non-exchangeable weighted conformal prediction \citep{barber2023beyond}, the
+level-$(1-\alpha)$ set of the weighted law satisfies
+\[
+\Pr\{R_0\in C_\alpha(x_0)\}\;\ge\;1-\alpha-\sum_i \widetilde w_i(x_0)\,
+d_{\mathrm{TV}}(\mu_{X_i},\mu_{x_0}),
+\]
+attained in the worst case over laws with the stated total variations. Under the
+H\"older-$s$ condition the weighted sum is
+$\le C\sum_i\widetilde w_i\,\rho(x_0,X_i)^s=\Theta(h^s)$, since kernel weights
+concentrate on $\{\rho\lesssim h\}$.
+
+\emph{Exact validity forces uniform pooling.} Distribution-free validity for every
+law in the class forces the localization term to zero. It is a weighted average of
+nonnegative total variations, some strictly positive under heterogeneity, so the
+weights must place no differential mass across covariate-distinct calibration
+points: uniform pooling within a partition committed before $x_0$ is seen, the
+$h\to\infty$ endpoint.
+
+\emph{The separation.} Uniform pooling has total-variation bias equal to the
+heterogeneity constant of the pooled region, positive and independent of $m$,
+violating the minimax rate $m^{-s/(2s+d)}$, which tends to zero. Conversely any
+estimator achieving that rate uses $h\asymp h^*(m)=m^{-1/(2s+d)}$ and by the first
+display has coverage gap $\Theta(h^*(m)^s)=\Theta(m^{-s/(2s+d)})$, positive at
+every finite $m$. Bias and coverage gap are both $\Theta(h^s)$ along the bandwidth
+family, so the product of the two deficits is bounded away from zero for finite
+$m$ and vanishes only as $m\to\infty$. The corollary is the monotonicity of
+$h^*(m)$ in $m$. \hfill$\square$
+
+\medskip
+\noindent\emph{Reproduction.} Study declarations, the classifier with its
+documented corrections, per-paper verdicts, and the tagged result store are in the
+public repositories; every table above regenerates from them.
+
+\bibliographystyle{plainnat}
+\begin{thebibliography}{19}
+\bibitem[Barber et al.(2021)]{barber2021limits} Barber, R.~F., Cand\`es, E.~J.,
+  Ramdas, A., and Tibshirani, R.~J. (2021). The limits of distribution-free
+  conditional predictive inference. \emph{Information and Inference} 10(2).
+\bibitem[Barber et al.(2023)]{barber2023beyond} Barber, R.~F., Cand\`es, E.~J.,
+  Ramdas, A., and Tibshirani, R.~J. (2023). Conformal prediction beyond
+  exchangeability. \emph{Annals of Statistics} 51(2), 816--845.
+\bibitem[Bogner et al.(2012)]{bogner2012} Bogner, K., Pappenberger, F., and
+  Cloke, H.~L. (2012). The normal quantile transformation and its application in
+  flood forecasting. \emph{HESS} 16, 1085--1094.
+\bibitem[Cai and Low(2004)]{cai2004adaptation} Cai, T.~T. and Low, M.~G. (2004).
+  An adaptation theory for nonparametric confidence intervals. \emph{Annals of
+  Statistics} 32(5), 1805--1840.
+\bibitem[Chen and Fan(2006)]{chenfan2006} Chen, X. and Fan, Y. (2006). Estimation
+  of copula-based semiparametric time series models. \emph{Journal of
+  Econometrics} 130(2), 307--335.
+\bibitem[Cotton(2026)]{cotton2026transforms} Cotton, P. (2026). Transforms all
+  the way down: automatic online distributional forecasting by conjugation.
+  Working paper, \url{https://skaters.microprediction.org}.
+\bibitem[Stone(1982)]{stone1982optimal} Stone, C.~J. (1982). Optimal global rates
+  of convergence for nonparametric regression. \emph{Annals of Statistics} 10(4),
+  1040--1053.
+\bibitem[Gibbs and Cand\`es(2021)]{gibbs2021adaptive} Gibbs, I. and Cand\`es, E.
+  (2021). Adaptive conformal inference under distribution shift. \emph{NeurIPS}
+  34.
+\bibitem[Guan(2023)]{guan2023localized} Guan, L. (2023). Localized conformal
+  prediction: a generalized inference framework. \emph{JRSS-B} 85(2).
+\bibitem[Hore and Barber(2023)]{hore2023randomly} Hore, R. and Barber, R.~F.
+  (2023). Conformal prediction with local weights: randomization enables local
+  guarantees. arXiv:2310.07850.
+\bibitem[Lei and Wasserman(2014)]{lei2014distribution} Lei, J. and Wasserman, L.
+  (2014). Distribution-free prediction bands for non-parametric regression.
+  \emph{JRSS-B} 76(1), 71--96.
+\bibitem[Li(1989)]{li1989honest} Li, K.-C. (1989). Honest confidence regions for
+  nonparametric regression. \emph{Annals of Statistics} 17(3), 1001--1008.
+\bibitem[Low(1997)]{low1997nonparametric} Low, M.~G. (1997). On nonparametric
+  confidence intervals. \emph{Annals of Statistics} 25(6), 2547--2554.
+\bibitem[R\"ugamer et al.(2023)]{rugamer2023} R\"ugamer, D., et al. (2023).
+  Probabilistic autoregressive transformation models. \emph{Statistics and
+  Computing}.
+\bibitem[Tibshirani et al.(2019)]{tibshirani2019conformal} Tibshirani, R.~J.,
+  Foygel Barber, R., Cand\`es, E.~J., and Ramdas, A. (2019). Conformal prediction
+  under covariate shift. \emph{NeurIPS} 32.
+\bibitem[Vovk(2022)]{vovk2022universal} Vovk, V. (2022). Universally consistent
+  conformal predictive distributions. \emph{Pattern Recognition} 126.
+\bibitem[Vovk et al.(2005)]{vovk2005algorithmic} Vovk, V., Gammerman, A., and
+  Shafer, G. (2005). \emph{Algorithmic Learning in a Random World}. Springer.
+\end{thebibliography}
+
+\end{document}

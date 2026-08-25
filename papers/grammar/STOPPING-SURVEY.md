@@ -60,3 +60,57 @@ check. This should become a documented survey:
 Conformal training (Stutz 2022) needs care and is not yet placed. It differentiates *through* the
 conformalizer to train the base model, which is composition in the upstream direction. Argue it is
 still not composition after the map, or concede it as a fourth move.
+
+## The second axis: pooling granularity (added 2026-08-25, corrected same day)
+
+The stopping claim is one of two. The smoothing-validity theorem prices the other:
+exact validity forces uniform pooling within a pre-committed stratification, so a
+paper either pools (at some granularity) and keeps exactness, or departs from
+pooling and forfeits it. `classify.py` screens this axis too.
+
+**Definition that matters:** SMOOTH means the weights on calibration residuals
+depend on the test point. A smooth SCORE is not smooth pooling: a kernel or
+normalized score is a richer `A(x,.)` and the shape is still one pooled object.
+The first rule missed this distinction, matched bare "kernel/similarity", caught
+base-model machinery, and inflated SMOOTH to 91. Corrected same day; the rule now
+requires the smoothing word to bind to the calibration/residual step.
+
+| pooling | meaning | n |
+| --- | --- | --- |
+| POOLED | one empirical law | 586 |
+| STRATIFIED | pools within fixed strata (Mondrian, binned, group-conditional) | 60 |
+| SMOOTH | test-point-dependent weights on calibration residuals | 40 |
+
+**646 of 686 (94%) never depart from residual pooling at any granularity.** Of the
+40 that do, **9 also claim exact or distribution-free validity in the abstract** --
+by the theorem each is using a known covariate-shift tilt (legitimate), weakening
+"exact" to a bound with a gap, or overclaiming. Nine full-text reads, priority.
+
+Structure: REPLACE and SMOOTH nearly coincide (14 of 16 REPLACE are SMOOTH), as
+they should -- replacing the pooled quantile with a conditional estimate IS the
+smooth move. And 21 papers weight smoothly yet still STOP, paying both prices at
+once.
+
+## The nine reads (2026-08-25): zero overclaims
+
+Every SMOOTH-with-exact-claim paper was read in full text. None contradicts the
+smoothness theorem. The claims resolve into exactly the trichotomy the theorem
+predicts, plus two screen false positives:
+
+| escape | papers |
+| --- | --- |
+| marginal only, restored by recalibration or design | Guan (LCP, JRSS-B); Hore & Barber (calLCP); GraphLCP; network invariant selectors |
+| bound-with-gap, stated as such | DS-CP (Barber-style gap for data-dependent weights) |
+| known covariate-shift tilt | weighted survival CP |
+| assumptions added, distribution-freeness given up | Conrad-Moulines-Samsonov (finite-sample LOCAL bounds under a smoothness class, n >= n2(h,delta,alpha)) |
+| reclassified POOLED (score modification, not calibration weighting) | Learnable CP (learned score); Leverage-Weighted CP |
+
+The Hore & Barber sentence is the community's own statement of the boundary: for
+local coverage "there are no known distribution-free theoretical results to
+guarantee this." The field's best localization papers respect the line the theorem
+draws; they either retreat to marginal, state the gap, assume the class, or move
+the smoothness into the score, which is pooling with a richer map.
+
+Corrected counts after reclassification: POOLED 588, STRATIFIED 60, SMOOTH 38.
+**648 of 686 (94.5%) never depart from residual pooling at any granularity.**
+Verdicts with placing sentences: `survey/smooth_checks.csv`.

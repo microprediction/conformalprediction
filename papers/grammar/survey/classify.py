@@ -22,6 +22,25 @@ Labels, from ../STOPPING-SURVEY.md:
   COMPOSE  keeps the map and fits a model on its output   <-- the only refuter
   NA       survey, theory, or application proposing no method
 
+A SECOND, ORTHOGONAL axis: what the paper does about residual POOLING. The
+smoothing-validity theorem says exact validity forces uniform pooling within a
+pre-committed stratification, so the field splits three ways, and the interesting
+cell is the one the theorem prices:
+
+  POOLED      one empirical law, no granularity at all (the default)
+  STRATIFIED  pools within fixed strata: Mondrian, binned, group-conditional,
+              clusterwise. Coarser granularity, still pooling -- still eschews
+              smoothness, KEEPS exactness. The theorem permits this.
+  SMOOTH      departs from pooling: kernel / localized / similarity /
+              nearest-neighbour / test-centred weights. The theorem says this
+              FORFEITS exact validity (coverage gap of order the bias), so any
+              SMOOTH paper claiming an exact distribution-free guarantee is
+              either using known covariate-shift tilts (the Tibshirani escape)
+              or overclaiming. SMOOTH papers are therefore shortlisted for
+              full-text checking of their validity claim, the same asymmetric
+              logic as COMPOSE: a missed overclaim damages the argument, a
+              false positive costs one reading.
+
 Usage:
     python classify.py abstracts      # stage 1, a few minutes
     python classify.py screen         # stage 2, instant
@@ -59,6 +78,41 @@ COMPOSE_HINT = re.compile(
     r"(transform|map)\w*\s+(the\s+)?residual.{0,80}?then\s+\w*(model|fit|learn)",
     re.I | re.S,
 )
+
+# --- the pooling axis --------------------------------------------------------
+# First match wins: SMOOTH before STRATIFIED, because papers that smooth often
+# also mention groups, and the departure from pooling is the informative event.
+POOLING_RULES = [
+    # SMOOTH means the WEIGHTS ON CALIBRATION RESIDUALS depend on the test point.
+    # It does NOT mean a smooth score map: a kernel or normalized SCORE is a richer
+    # A(x,.) and is still pooled (frozen-floor: the input may enter through the
+    # score while the shape stays one pooled object). The first version of this
+    # rule matched bare "kernel|similarity|attention" and caught base-model
+    # machinery (hypernetwork kernel parameters, KDE features, retrieval
+    # similarity), inflating SMOOTH to 91. The rule now requires the smoothing
+    # word to bind to the calibration/residual/weighting step.
+    ("SMOOTH", re.compile(
+        r"localized\s+conformal|localised\s+conformal|\bLCP\b"
+        r"|weighted\s+conformal|conformal\s+prediction\s+with\s+\w*\s*weights"
+        r"|(kernel|similarity|distance|proximity).{0,40}?weight\w*\s+"
+        r"(the\s+)?(residual|calibration|nonconformity|score)"
+        r"|(weight|reweight|re-weight)\w*\s+(the\s+)?"
+        r"(residual|calibration|nonconformity|score)s?"
+        r"|nearest.?neighbou?r.{0,40}?(residual|calibration|conformal\s+set)"
+        r"|test.?(point|centred|centered)\s+weight", re.I | re.S)),
+    ("STRATIFIED", re.compile(
+        r"mondrian|group.?(conditional|wise)|class.?conditional|clusterwise"
+        r"|cluster.?(conditional|based)\s+conformal|binn?ed|stratif\w+"
+        r"|taxonom\w+|per.?group\s+(coverage|calibrat)", re.I)),
+]
+# An exactness CLAIM, recorded independently on SMOOTH papers: the cell the
+# smoothing-validity theorem prices is "departs from pooling AND claims exact
+# finite-sample validity".
+EXACT_CLAIM = re.compile(
+    r"exact\s+(finite.?sample\s+)?(coverage|validity)"
+    r"|finite.?sample\s+(coverage\s+)?guarantee"
+    r"|distribution.?free\s+(coverage|validity|guarantee)"
+    r"|provably?\s+valid|valid\s+prediction\s+(set|interval)", re.I)
 
 RULES = [
     ("REPLACE", re.compile(
@@ -138,9 +192,20 @@ def stage_screen():
         hint = bool(COMPOSE_HINT.search(text))
         if hint:
             shortlist += 1
+        pooling = "POOLED"                 # the default, and the theorem's subject
+        for pname, prx in POOLING_RULES:
+            if prx.search(text):
+                pooling = pname
+                break
+        exact = bool(EXACT_CLAIM.search(text))
         counts[label] = counts.get(label, 0) + 1
+        counts[f"pool:{pooling}"] = counts.get(f"pool:{pooling}", 0) + 1
+        if pooling == "SMOOTH" and exact:
+            counts["SMOOTH+exact-claim"] = counts.get("SMOOTH+exact-claim", 0) + 1
         out.append({**r, "provisional": label,
                     "compose_candidate": "yes" if hint else "",
+                    "pooling": pooling,
+                    "claims_exact": "yes" if exact else "",
                     "label": "", "evidence": "", "checked": ""})
     with open(SCREENED, "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=list(out[0].keys()))
