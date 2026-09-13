@@ -132,8 +132,8 @@
   particular procedure, and we do not claim that adaptive prediction sets calibrated on a sample
   produce exactly these laws. Coverage of 100% in an example means only that every set contains the
   truth, so the marginal coverage lower bound is met. Example 1 is the exception. It builds two
-  classifiers inside randomized APS exactly as the paper specifies, and we lead with it. The rest are
-  ordered from the simplest to refute and the most absurd result downward.</p>
+  classifiers inside randomized APS exactly as Romano, Sesia and Cand&egrave;s specify it, and we lead
+  with it. The rest are ordered with the simplest refutation and the most absurd result first.</p>
 
   <h3>Example 1. Opposite confusions, the same matrix, within randomized APS</h3>
 
@@ -165,7 +165,11 @@
   \(C\) as \(B\). Model 2 runs the cycle the other way. Their confusion matrices are transposes of
   each other, both with accuracy zero. The authors write that the matrix &ldquo;contains a superset of
   the information conveyed by the confusion matrix.&rdquo; It does not determine the confusion matrix
-  even when the sets are produced by randomized APS exactly as the paper specifies.</p>
+  even when the sets are produced by randomized APS exactly as Romano, Sesia and Cand&egrave;s specify
+  it. The pair survives the non-randomized variant too: with \(u = 0\) every calibration score is 0.9,
+  so the threshold is 0.9, the second-ranked class is always included, every set is the pair of the
+  top-ranked and the true class, and the two models again share the law of sets with opposite
+  confusions.</p>
 
   <h3>Example 2. A perfect classifier and a perfectly wrong one get the same matrix</h3>
 
@@ -231,9 +235,9 @@
 
   <h3>Example 4. Perfect correlation with one in a million co-occurrence</h3>
 
-  <p><strong>Setup.</strong> Every set contains the true class \(T\), ranked first. Two other labels
-  \(A\) and \(B\) are added to the set together with probability \(\varepsilon\), and otherwise neither
-  is added. Since \(T\) is in every set its own entries are undefined, and the claim concerns
+  <p><strong>Setup.</strong> Every image has the same true class \(T\), which is in every set and
+  ranked first, and \(A\) and \(B\) never occur as true labels. The labels \(A\) and \(B\) are added to
+  the set together with probability \(\varepsilon\), and otherwise neither is added. Since \(T\) is in every set its own entries are undefined, and the claim concerns
   \(\rho_{AB}\).</p>
 
   <p><strong>Calculation.</strong> \(z_A = z_B\) on every image, so their correlation is</p>
@@ -261,15 +265,15 @@
 
   $$\rho_{ij} = \frac{1/2 - (2/3)(2/3)}{2/9} = \tfrac14.$$
 
-  <p><strong>What it shows.</strong> The authors' Remark 1 says positive entries mark
-  &ldquo;intrinsically similar classes.&rdquo; Here every pair is positively correlated and the
-  classifier is perfect. The correlation comes from one shared cause across images, whether the image was hard, and
-  not from any relation between the pair.</p>
+  <p><strong>What it shows.</strong> The authors read a positive entry as confusion between the pair,
+  in their Benefit 1, which is the converse of their Remark 1. Here every pair is positively correlated,
+  every entry is equal, and the classifier is perfect. The correlation comes from one shared cause
+  across images, whether the image was hard, and owes nothing to any relation between the pair.</p>
 
   <h3>Example 6. Pooling two clients creates a strong correlation from nothing</h3>
 
-  <p><strong>Setup.</strong> Every set contains the true class \(T\), ranked first. On client 1 the
-  labels \(A\) and \(B\) are each added to the set independently with probability 0.9. On client 2 they
+  <p><strong>Setup.</strong> Every image has the same true class \(T\), which is in every set and
+  ranked first, and \(A\) and \(B\) never occur as true labels. On client 1 the labels \(A\) and \(B\) are each added to the set independently with probability 0.9. On client 2 they
   are each added independently with probability 0.1. The two clients contribute equally to the pooled
   data.</p>
 
@@ -293,7 +297,7 @@
   positive or negative entry can be produced by the mixture of clients alone, with zero correlation on
   every client and no confusion anywhere.</p>
 
-  <h3>Example 7. Two classes the model never confuses get different entries</h3>
+  <h3>Example 7. Two pairs the model never confuses get different entries</h3>
 
   <p><strong>Setup.</strong> Three classes, cat, dog and plane, with equal numbers of test images. The
   classifier ranks the true class first on every image and returns the same set for every image of a
@@ -318,17 +322,18 @@
     \rho_{\text{cat},\text{plane}} = \frac{0 - (1/3)(1/3)}{2/9} = -\tfrac12, \qquad
     \rho_{\text{dog},\text{plane}} = \frac{0 - (2/3)(1/3)}{2/9} = -1.$$
 
-  <p><strong>What it shows.</strong> The authors' Remark 2 says dissimilar classes show strong negative
-  correlation. Read that way, dog and plane are strongly dissimilar and cat and plane are half as
-  dissimilar. But the classifier treats plane identically with respect to both: it never puts plane in
+  <p><strong>What it shows.</strong> The authors say the entries quantify &ldquo;how easy to confuse
+  those classes are,&rdquo; and their Remark 2 attaches strong negative entries to dissimilar pairs.
+  Read that way, dog and plane are strongly dissimilar and cat and plane less so. But the classifier treats plane identically with respect to both: it never puts plane in
   a set with either. The two entries differ only because dog is in twice as many sets as cat. For any
   two classes that never share a set, \(\rho_{ij} = -\sqrt{p_i p_j / ((1-p_i)(1-p_j))}\), a function of
   the inclusion rates and nothing else.</p>
 
   <h3>Example 8. Moving one label occurrence between rows moves an entry from 1 to almost 0</h3>
 
-  <p><strong>Setup.</strong> There are \(n\) test images. Every set contains the true class \(T\),
-  ranked first, and two rare labels \(A\) and \(B\) each appear in exactly one set.</p>
+  <p><strong>Setup.</strong> There are \(n\) test images, every image has the same true class \(T\),
+  which is in every set and ranked first, and two rare labels \(A\) and \(B\) each appear in exactly
+  one set.</p>
 
   <p><strong>Calculation.</strong> If they appear in the same set, \(z_A = z_B\) and \(\rho_{AB} = 1\).
   If instead the one occurrence of \(B\) is in a different set, then \(p_A = p_B = 1/n\), the
@@ -339,8 +344,9 @@
   <p>which at \(n = 1000\) is about \(-0.001\).</p>
 
   <p><strong>What it shows.</strong> The authors present heat maps of entries with no uncertainty attached.
-  For rare labels moving a single label occurrence from one row to another moves an entry from 1 to about 0, half of its
-  range.</p>
+  For rare labels moving a single label occurrence from one row to another moves an entry from 1 to about 0. That is half of the nominal range from \(-1\) to \(1\) and, by the
+  floor formula above, the whole of the range attainable at these inclusion rates, from
+  \(-1/(n-1)\) to \(1\).</p>
 
   <h2>What is computed</h2>
 
@@ -386,9 +392,9 @@
   <p>The guarantee is also stated loosely. The authors write that &ldquo;for a given input sample&rdquo;
   the set &ldquo;is guaranteed to contain the correct class&rdquo; with probability close to
   \(1-\alpha\). Split conformal coverage is marginal. It does not imply coverage conditional on the input, on a
-  class or on a client. In distribution free regression with nonatomic covariates, exact pointwise
-  conditional coverage forces essentially trivial prediction sets of infinite expected length
-  (Barber, Cand&egrave;s, Ramdas and Tibshirani 2021), and the ten client example below makes the
+  class or on a client. In distribution-free regression, exact pointwise conditional coverage forces prediction intervals
+  of infinite expected length at almost every nonatomic point (Barber, Cand&egrave;s, Ramdas and
+  Tibshirani 2021, Proposition 1, restating Vovk 2012 and Lei and Wasserman 2014), and the ten client example below makes the
   classification point directly. The distinction
   matters here because the authors go on to interpret individual class pairs and individual federated
   clients as if validity transferred to them. The upper term is written as \(1/(n-1)\). For the randomized
@@ -442,7 +448,7 @@
 
   <p>With the model, the calibration data and the auxiliary uniforms fixed the sets are nested in \(\alpha\), so as \(\alpha\)
   grows no inclusion rate increases and the zero co-occurrence floor moves toward zero or stays put,
-  whether or not the classifier changed. The authors present the dependence on
+  although nothing about the classifier has changed. The authors present the dependence on
   \(\alpha\) as a feature. <a href="/demos/32-conformal-correlation.html#d">Panel D</a> shows the
   cost. As the sets approach singletons the matrix loses the ability to rank pairs by their injected
   confusion strength, while the soft statistic keeps it.</p>
@@ -477,8 +483,9 @@
 
   $$o_i = -\frac{\rho_{ij}\,\rho_{ik}}{\rho_{jk}}, \qquad p_i = \frac{o_i}{1 + o_i}.$$
 
-  <p>Inside randomized APS this recovers a client's class proportions exactly. Take a perfect
-  classifier that assigns the ranked probabilities \(0.6, 0.3, 0.1\) with the true class first, and
+  <p>Inside randomized APS this recovers a client's class proportions exactly when the classifier is
+  perfect and every class has the same top probability. Take a perfect classifier that assigns the
+  ranked probabilities \(0.6, 0.3, 0.1\) with the true class first, and
   class proportions \(\pi_1, \pi_2, \pi_3\). Every calibration score is \(0.6 - 0.6u\), so the
   threshold \(\tau\) is below 0.6, the top class is kept with probability \(r = \tau/0.6\), and no
   other class is ever included. The set is \(\{Y\}\) with probability \(r\) and empty otherwise,
@@ -510,8 +517,9 @@
   have a larger local entry for that pair, so the rule may be selecting on class composition.</p>
 
   <p>The conclusion says the method improves the critical classes &ldquo;without hurting the overall
-  classification performance&rdquo; and &ldquo;does not affect the performance for non-critical
-  classes.&rdquo; Table 1 says otherwise.</p>
+  classification performance&rdquo; after summarizing the change as &ldquo;small effects on the accuracy of non-critical
+  classes&rdquo; and then as &ldquo;does not affect the performance for non-critical classes.&rdquo;
+  Table 1 says otherwise.</p>
 
   <div class="tablewrap">
   <table class="phi">
