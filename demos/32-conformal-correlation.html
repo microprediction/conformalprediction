@@ -97,7 +97,8 @@
 
   <p>the average probability the classifier assigns to class \(b\) over images whose true class is
   \(a\). It is directional, it uses the probabilities at full resolution, and it needs no calibration
-  set and no threshold. The authors never compute it. Every panel below puts the conformal correlation
+  set and no threshold. It does need labeled evaluation data, as any confusion matrix does. The authors
+  never compute it. Every panel below puts the conformal correlation
   matrix beside the soft confusion matrix on the same data and asks which one answers the question.</p>
 
   <p>We build a classifier whose mistakes we control. There are \(H = 10\) classes. For an image with
@@ -110,8 +111,10 @@
   <p>The margin \(m\) sets the accuracy. The matrix \(G\) sets the confusions: \(G_{yh} > 0\) pushes
   probability from images of class \(y\) onto class \(h\), and \(G\) need not be symmetric. Panel A uses
   \(G_{01} = G_{10} = c\) and zero elsewhere. Panel B uses \(G_{01} = \theta c\) and
-  \(G_{10} = (1-\theta) c\). Panel C draws a symmetric \(G\) at random. In every case the truth is known
-  exactly.</p>
+  \(G_{10} = (1-\theta) c\). Panel C draws a symmetric \(G\) at random. In every case the injected
+  confusion is known exactly. Pairs with \(G_{ij} = 0\) have no injected confusion, and at the default
+  margin they are separated on almost every image, though not on every image, since the noise is
+  Gaussian.</p>
 
   <p>From this classifier we draw \(n = 1{,}000\) labeled calibration images and 3,000 test images. The
   sets are the adaptive prediction sets of Romano, Sesia and Cand&egrave;s, which the paper uses. Each
@@ -123,7 +126,8 @@
   own mass. The threshold \(q\) is the \(\lceil (n+1)(1-\alpha) \rceil\)-th smallest calibration score.
   For a test image the classes are taken in decreasing order of \(p_h\) while the mass before them is
   below \(q\), and the last class taken is kept with probability equal to the fraction of its mass
-  needed to reach \(q\). Coverage is then exact at \(1-\alpha\).</p>
+  needed to reach \(q\). Marginal coverage is then \(k/(n+1)\) with
+  \(k = \lceil (n+1)(1-\alpha) \rceil\), at least \(1-\alpha\) and within \(1/(n+1)\) of it.</p>
 
   <p>For each test image write \(z_h = 1\) if class \(h\) is in its set and \(0\) otherwise. The
   conformal correlation matrix is</p>
@@ -141,8 +145,8 @@
 
   <h2 id="a">A. The entries are pinned by inclusion rates</h2>
 
-  <p>Here exactly one pair of classes, 0 and 1, is genuinely confusable. Every other pair is cleanly
-  separated. The left heat map is the conformal correlation matrix at the chosen \(\alpha\). The right
+  <p>Here the confusion term is nonzero for exactly one pair, 0 and 1. The other 44 pairs have no
+  injected confusion. The left heat map is the conformal correlation matrix at the chosen \(\alpha\). The right
   is the soft confusion matrix, the mean probability the classifier puts on each column class for
   images of each row class.</p>
 
@@ -156,8 +160,8 @@
     <div class="controls" id="a-controls"></div>
   </div>
 
-  <p>In this experiment the classifier separates 44 of the 45 pairs perfectly. Their entries in the
-  conformal correlation matrix are all the same negative number, and that number is set by how often
+  <p>In this experiment 44 of the 45 pairs have no injected confusion. Their entries in the conformal
+  correlation matrix are all close to the same negative number, and that number is set by how often
   each class is included in a set. It says nothing about the classes.</p>
 
   <p>Write \(p_i\) for the fraction of test sets that contain class \(i\). Two classes that never appear
@@ -174,8 +178,7 @@
   the set sizes, so all 44 entries move together. Adding class imbalance makes common classes appear in
   more sets than rare ones, so the 44 entries spread out in a pattern that copies the class frequencies.
   Raising the share of hard inputs, on which the classifier has no margin and so returns a large set,
-  makes all 45 entries positive, including the 44 pairs the classifier still separates perfectly on
-  every other input.</p>
+  makes all 45 entries positive, including the 44 pairs with no injected confusion.</p>
 
   <p>The authors read a negative entry as dissimilarity and a positive entry as similarity. Here the
   negative entries are a function of \(\alpha\) and the class frequencies only, and the positive entries
@@ -211,10 +214,10 @@
 
   <p>In this experiment every pair of classes has its own confusion strength \(G_{ij} = G_{ji}\), drawn
   at random once and then held fixed. The question is whether a statistic can recover the ordering of
-  the 45 pairs from most to least confusable. The left plot shows the conformal correlation entry for
-  each pair against its true strength, at the chosen \(\alpha\). The middle plot shows the mean pairwise
-  product \(S_{ij} = \mathbb{E}[p_i p_j]\) against the same truth. The right plot shows the rank
-  correlation between each statistic and the truth, as \(\alpha\) varies.</p>
+  the 45 pairs by injected strength. The left plot shows the conformal correlation entry for each pair
+  against its injected strength, at the chosen \(\alpha\). The middle plot shows the mean pairwise
+  product \(S_{ij} = \mathbb{E}[p_i p_j]\) against the same strengths. The right plot shows the rank
+  correlation between each statistic and the injected strengths, as \(\alpha\) varies.</p>
 
   <div class="demo">
     <div class="row3">
@@ -228,8 +231,8 @@
 
   <p>The probability based statistic recovers the ordering well at every \(\alpha\), and it has no
   \(\alpha\) to choose. The conformal correlation entries sit at the floor from panel A for most pairs
-  and rise only for the few strongest, so their rank correlation with the truth is lower at every
-  \(\alpha\). It falls further as \(\alpha\) grows, because larger \(\alpha\) means smaller sets, and a
+  and rise only for the few strongest, so their rank correlation with the injected strengths is
+  lower at every \(\alpha\). It falls further as \(\alpha\) grows, because larger \(\alpha\) means smaller sets, and a
   singleton set says nothing about any pair.</p>
 
   <p>The authors sweep \(\alpha\) over four values and present the dependence on \(\alpha\) as a
@@ -238,9 +241,11 @@
   of its own. Untick the box to remove it, and the sets grow instead.</p>
 
   <div class="takeaway">
-    <p>Takeaway. The conformal correlation matrix is the phi coefficient of a thresholded softmax, and
-    the coverage guarantee concerns the true label alone. The probabilities the sets were cut from answer
-    the authors&rsquo; question better at every setting of every slider.</p>
+    <p>Takeaway. These are controlled settings in which the conformal correlation matrix responds to
+    marginal inclusion rates, set size and the erasure of direction rather than to the pairwise
+    confusion it is meant to measure. The construction injects confusion into the logits, so it is a
+    counterexample generator and not a general comparison of statistics. Each panel is a single
+    simulation draw without error bars. The resample button shows how much the numbers move.</p>
   </div>
 
   <p class="note">The paper is Perlo, Chiasserini, De Veciana and Malandrino, <em>Computer
