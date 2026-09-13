@@ -74,9 +74,8 @@ reaches $\tau$, and the class at that boundary rank is kept or dropped according
 Two coverage bounds hold. Under exchangeability of the calibration pairs and the test pair,
 $\Prob(Y \in C(X)) \ge 1 - \alpha$. When the scores are almost surely distinct, also
 $\Prob(Y \in C(X)) \le 1 - \alpha + 1/(m+1)$ \citep[Theorem~1]{romano2020}. Setting $u = 0$
-throughout gives the non randomized variant, which is conservative. Example~\ref{ex:aps} uses the
-randomized variant exactly as defined here. Nothing else below depends on APS, beyond the fact that
-$C(X)$ is a set of classes.
+throughout gives the non randomized variant, which is conservative. Examples~\ref{ex:aps} and \ref{ex:privacy} use the randomized variant exactly as defined here.
+Nothing else below depends on APS, beyond the fact that $C(X)$ is a set of classes.
 
 The matrix is built from membership indicators. For each class $h$ define
 \[
@@ -198,8 +197,8 @@ smaller by $\delta_a$. So the second and third confusion matrices differ.
 The hypothesis cannot simply be dropped. If every set is a singleton and coverage is one, then
 $\hat Y = Y$ and the confusion matrix is the diagonal matrix of the class proportions. With two
 classes, singleton sets and coverage $\kappa$, the row sums, the column sums and the trace determine
-all four entries. Outside such cases the theorem applies, and Example~\ref{ex:aps} shows that its two
-laws can both be realized by randomized APS classifiers.
+all four entries. Outside such cases the theorem applies, and Example~\ref{ex:aps} exhibits such a pair of laws
+realized by two randomized APS classifiers.
 
 The examples that follow are more concrete, and each contradicts a specific sentence in the paper.
 
@@ -259,8 +258,8 @@ entry is
 \]
 the same for both models and negative for every $r$.
 
-Coverage is the same for both models too, and it is worth stating carefully. Conditional on the
-calibration sample, coverage equals $r$ exactly. Since $\tau$ is the $k$-th smallest of $m$ uniforms
+Coverage is the same for both models too. Conditional on the calibration sample, coverage equals
+$r$ exactly. Since $\tau$ is the $k$-th smallest of $m$ uniforms
 on $(0.6, 0.9)$, the variable $r$ is the $k$-th smallest of $m$ uniforms on $(0, 1)$, which has the
 $\mathrm{Beta}(k, m+1-k)$ law with mean $k/(m+1) \ge 1 - \alpha$. So on a given calibration sample
 $r$ can fall below $1 - \alpha$, and its average over calibration samples meets the marginal
@@ -618,8 +617,7 @@ prediction sets and with $C_{ab}$ and $\E[f_i f_j]$ alongside as $\alpha$ varies
 The conformal correlation matrix is the phi coefficient of APS set membership indicators. By
 Proposition~\ref{prop:law} it sees only the law of the sets, by Proposition~\ref{prop:any} the
 marginal coverage lower bound leaves any single entry free among the laws that satisfy it, and by
-Theorem~\ref{thm:nogo} no statistic of the sets, this one or any other, determines the confusion
-matrix once a set of size two occurs.
+Theorem~\ref{thm:nogo} no statistic of the sets, this one or any other, determines the confusion matrix once a set of size at least two occurs.
 
 Example~\ref{ex:aps} shows, inside randomized APS itself, that the matrix does not determine the
 confusion matrix. Examples~\ref{ex:perfect} through \ref{ex:move} concern laws of sets that meet the
