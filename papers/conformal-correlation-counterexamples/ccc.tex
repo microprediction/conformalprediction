@@ -43,9 +43,30 @@ entries when sets are singletons, which bears on the privacy claim made for the 
 
 There are $H$ classes. A classifier maps an input $X$ to a probability vector $p(X)$ and to a
 prediction set $C(X) \subseteq \set{1, \dots, H}$ built by split conformal prediction
-\citep{vovk2005, lei2018}, in the paper by the adaptive prediction sets of \citet{romano2020}. The
-true label is $Y$ and the class the classifier ranks first is $\hat Y$. For each class $h$ define the
-membership indicator
+\citep{vovk2005, lei2018}, in the paper by the adaptive prediction sets (APS) of \citet{romano2020}.
+The true label is $Y$ and the class the classifier ranks first is $\hat Y$.
+
+For completeness, APS works as follows. Sort the probabilities at $x$ in decreasing order,
+$p_{(1)}(x) \ge \dots \ge p_{(H)}(x)$, write $r(x, y)$ for the rank of class $y$ in that order, and
+write $S_k(x) = \sum_{l \le k} p_{(l)}(x)$ for the probability mass through rank $k$. The score of a
+label $y$ at input $x$ is
+\begin{equation}\label{eq:aps}
+s(x, y, u) = S_{r(x,y)}(x) - u\, p_y(x), \qquad u \sim \mathrm{Unif}(0, 1),
+\end{equation}
+the mass at and above $y$ in the ranking, less a uniform share of the mass of $y$ itself. Given $m$
+labeled calibration pairs $(x_i, y_i)$ with independent uniforms $u_i$, let $\tau$ be the
+$\lceil (m+1)(1-\alpha) \rceil$-th smallest of the calibration scores $s(x_i, y_i, u_i)$. The
+prediction set at a new input $x$ with a fresh uniform $U$ is
+\begin{equation}\label{eq:apsset}
+C(x) = \set{\, y : s(x, y, U) \le \tau \,},
+\end{equation}
+which is the top ranked classes down to the first rank at which the cumulative mass reaches $\tau$,
+with the class at that boundary rank kept or dropped according to $U$. Under exchangeability of the
+calibration pairs and the test pair, $\Prob(Y \in C(X)) \ge 1 - \alpha$, and when the scores are
+almost surely distinct also $\Prob(Y \in C(X)) \le 1 - \alpha + 1/(m+1)$ \citep[Theorem~1]{romano2020}.
+Setting $u = 0$ throughout gives the non randomized variant, which is conservative. Nothing below
+depends on which variant is used, or on APS at all, beyond the fact that $C(X)$ is a set of classes.
+For each class $h$ define the membership indicator
 \[
 z_h = \mathbf{1}\set{h \in C(X)},
 \]
