@@ -90,29 +90,45 @@
   synthetic classifier with known confusability show what the statistic responds to. The close reading is on the
   <a href="/conformal-correlation.html">critique page</a>.</p>
 
-  <p>We build a classifier whose mistakes we control. There are ten classes. For an image of true class
-  \(y\), the logit of each class \(h\) is a margin \(m\) if \(h = y\), plus a confusion term \(G_{yh}\)
-  that we set by hand, plus unit Gaussian noise. The softmax of the logits is the probability vector the
-  classifier reports. A large margin makes the classifier accurate. A positive \(G_{yh}\) makes images of
-  class \(y\) put probability on class \(h\), so we decide which pairs are confusable and in which
-  direction, and the truth is known exactly.</p>
+  <p>We build a classifier whose mistakes we control. There are \(H = 10\) classes. For an image with
+  true class \(y\), the classifier&rsquo;s logits and reported probabilities are</p>
 
-  <p>From this classifier we draw 1,000 labeled calibration images and 3,000 test images. Prediction sets
-  are the adaptive prediction sets of Romano, Sesia and Cand&egrave;s, which the paper uses. For each
-  image the classes are sorted by probability and included from the top until the cumulative mass
-  reaches a threshold, and the threshold is the conformal quantile of the calibration scores at level
-  \(1-\alpha\). The sets are randomized as in the original, so that coverage is exact.</p>
+  $$\ell_h = m\,\mathbf{1}[h = y] + G_{yh} + \varepsilon_h, \qquad
+    \varepsilon_h \sim N(0,1) \text{ independently}, \qquad
+    p_h = \frac{e^{\ell_h}}{\sum_{k=1}^{H} e^{\ell_k}}, \qquad h = 1, \dots, H.$$
 
-  <p>For each test image we then write down an indicator per class, \(z_h = 1\) if class \(h\) is in the
-  set and \(0\) otherwise. The conformal correlation matrix is the correlation of \(z_i\) with \(z_j\)
-  across the test images, computed exactly as the authors define it. Because the indicators are zeros
-  and ones, each entry is a phi coefficient.</p>
+  <p>The margin \(m\) sets the accuracy. The matrix \(G\) sets the confusions: \(G_{yh} > 0\) pushes
+  probability from images of class \(y\) onto class \(h\), and \(G\) need not be symmetric. Panel A uses
+  \(G_{01} = G_{10} = c\) and zero elsewhere. Panel B uses \(G_{01} = \theta c\) and
+  \(G_{10} = (1-\theta) c\). Panel C draws a symmetric \(G\) at random. In every case the truth is known
+  exactly.</p>
 
-  <p>Beside the matrix, each panel computes the statistic the authors never compare against, built from
-  the same probability vectors without any thresholding: the soft confusion matrix, which is the mean
-  probability the classifier puts on each class for images of each true class, and the mean pairwise
-  product \(\mathbb{E}[p_i p_j]\). Each panel then changes one thing about the truth and shows how the
-  matrix responds.</p>
+  <p>From this classifier we draw \(n = 1{,}000\) labeled calibration images and 3,000 test images. The
+  sets are the adaptive prediction sets of Romano, Sesia and Cand&egrave;s, which the paper uses. Each
+  calibration image gets the score</p>
+
+  $$s = \sum_{k :\, p_k \ge p_y} p_k \;-\; U\, p_y, \qquad U \sim \mathrm{Unif}(0,1),$$
+
+  <p>the probability mass at and above the true class, less a random share of the true class&rsquo;s
+  own mass. The threshold \(q\) is the \(\lceil (n+1)(1-\alpha) \rceil\)-th smallest calibration score.
+  For a test image the classes are taken in decreasing order of \(p_h\) while the mass before them is
+  below \(q\), and the last class taken is kept with probability equal to the fraction of its mass
+  needed to reach \(q\). Coverage is then exact at \(1-\alpha\).</p>
+
+  <p>For each test image write \(z_h = 1\) if class \(h\) is in its set and \(0\) otherwise. The
+  conformal correlation matrix is</p>
+
+  $$\rho_{ij} = \frac{\mathbb{E}[z_i z_j] - \mathbb{E}[z_i]\,\mathbb{E}[z_j]}
+    {\sqrt{\operatorname{Var}(z_i)\,\operatorname{Var}(z_j)}},$$
+
+  <p>with the expectations taken over the 3,000 test images, exactly as the authors define it. Since the
+  \(z_h\) are zeros and ones, each entry is a phi coefficient.</p>
+
+  <p>Beside the matrix, each panel computes two statistics from the same probability vectors with no
+  threshold: the soft confusion matrix \(C_{ab} = \mathbb{E}[\,p_b \mid y = a\,]\), the mean probability
+  put on class \(b\) by images of class \(a\), and the mean pairwise product \(S_{ij} = \mathbb{E}[p_i
+  p_j]\). The authors compare against neither. Each panel then changes one thing about \(G\) or the
+  inputs and shows how the matrix responds.</p>
 
   <h2 id="a">A. The entries are pinned by inclusion rates</h2>
 
