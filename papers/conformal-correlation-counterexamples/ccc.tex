@@ -47,7 +47,7 @@ conformal prediction \citep{vovk2005, lei2018} turns the probability vector into
 $C(X) \subseteq \set{1, \dots, H}$. The true label is $Y$ and the class the classifier ranks first is
 $\hat Y$.
 
-The paper builds its sets with the adaptive prediction sets (APS) of \citet{romano2020}. APS
+The authors build their sets with the adaptive prediction sets (APS) of \citet{romano2020}. APS
 assigns a score to each label at each input. Sort the probabilities at $x$ in decreasing order,
 $p_{(1)}(x) \ge \dots \ge p_{(H)}(x)$, write $r(x, y)$ for the rank of class $y$ in that order, and
 write $S_k(x) = \sum_{l \le k} p_{(l)}(x)$ for the probability mass through rank $k$. The score of
@@ -70,8 +70,9 @@ reaches $\tau$, and the class at that boundary rank is kept or dropped according
 Two coverage bounds hold. Under exchangeability of the calibration pairs and the test pair,
 $\Prob(Y \in C(X)) \ge 1 - \alpha$. When the scores are almost surely distinct, also
 $\Prob(Y \in C(X)) \le 1 - \alpha + 1/(m+1)$ \citep[Theorem~1]{romano2020}. Setting $u = 0$
-throughout gives the non randomized variant, which is conservative. Nothing below depends on which
-variant is used, or on APS at all, beyond the fact that $C(X)$ is a set of classes.
+throughout gives the non randomized variant, which is conservative. Example~\ref{ex:aps} uses the
+randomized variant exactly as defined here. Nothing else below depends on APS, beyond the fact that
+$C(X)$ is a set of classes.
 
 The matrix is built from membership indicators. For each class $h$ define
 \[
@@ -208,7 +209,7 @@ $\tau$ exactly when $U \ge (0.9 - \tau)/0.3$, an event of probability $r$. The t
 $1 - 0.1U > 0.9 > \tau$ and is never included. Under either model, therefore, each singleton
 $\set{A}$, $\set{B}$, $\set{C}$ occurs with probability $(1-r)/3$ and each pair $\set{A, B}$,
 $\set{B, C}$, $\set{C, A}$ with probability $r/3$. The same law of sets gives the same matrix, and
-the same coverage $r \ge 1 - \alpha$.
+the same coverage $r$, whose average over calibration draws is at least $1 - \alpha$.
 
 The two models confuse classes in opposite directions. Model 1 labels every $A$ as $C$, every $B$
 as $A$ and every $C$ as $B$. Model 2 runs the cycle the other way. Their confusion matrices are
@@ -494,7 +495,7 @@ is the average probability assigned to class $b$ on inputs of true class $a$. It
 and threshold free, and it needs no calibration set. It needs labeled evaluation data, as any
 confusion matrix does.
 
-$C_{ab}$ is a conditional mean, so it summarizes rather than determines. A model with $p_B(X) = 0.4$
+The matrix $C_{ab}$ is a conditional mean, so it summarizes rather than determines. A model with $p_B(X) = 0.4$
 on every input of class $A$ and a model with $p_B(X)$ equal to $0.6$ or $0.2$ with equal
 probability have the same row $(0.6, 0.4)$, and error rates from $A$ to $B$ of zero and one half.
 The confusion matrix of the ranked prediction carries that difference and $C_{ab}$ does not, so the
