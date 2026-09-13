@@ -32,18 +32,19 @@
 \begin{abstract}
 Conformal prediction has recently been proposed for the diagnosis of classifiers and the selection
 of federated clients, with the prediction sets themselves treated as data from which class
-similarity, confusion and client quality are read off. However, the subsequent information gap
-identity of \citet{cotton2026}, that a marginal conformal object costs exactly the conditional
-information it discards, applies to these types of constructions. We give a specific caution in the form of a no-go theorem and a one bit calculation: no
-statistic of the prediction sets determines the confusion matrix once a set of size two occurs,
-because the sets are computed without the true label or the ranked prediction. We illustrate with
+similarity, confusion and client quality are read off. However, the subsequent information gap identity of \citet{cotton2026}, which prices what a
+marginal residual law discards under the logarithmic score, has a diagnostic analogue for these
+constructions. We give a specific caution in the form of a no-go theorem and a one bit calculation:
+no statistic of the prediction sets determines the confusion matrix once a set of size at least two
+occurs, because an unordered set need not retain the ranking that built it, and the label enters
+only through calibration. We illustrate with
 the conformal correlation matrix of \citet{perlo2026}, the phi coefficient between set membership
 indicators, a natural construction that is likely to be reinvented. Two classifiers built inside
 randomized adaptive prediction sets, exactly as specified, produce the same matrix while confusing
 every class in opposite directions, and seven further hand calculations give a zero entry beside
 99\% directional confusion, an entry of one beside one in a million co-occurrence, and an entry of
-$\pm 0.64$ from pooling two clients with zero correlation on each. For classes that never share a
-set the entry is a function of the inclusion rates alone, and when sets have at most one element the
+$\pm 0.64$ from pooling two clients with zero correlation on each. For classes that never share a set the entry is a function of the inclusion rates alone, and for
+a perfect classifier with equal top probabilities inside randomized adaptive prediction sets the
 matrix reveals a client's class proportions exactly, which undoes the privacy claim made for it.
 \end{abstract}
 
@@ -153,9 +154,9 @@ $0 = \Prob(C = \varnothing) = 1 - p_A - p_B + q_{AB}$ and $q_{AB} = p_A + p_B - 
 three or more classes nothing of the kind holds, as the next lemma shows for a single entry.
 
 \begin{lemma}\label{prop:any}
-Among laws of prediction sets that satisfy the marginal coverage lower bound \eqref{eq:coverage},
-for every $\rho \in [-1, 1]$ there is one with coverage one and accuracy one whose matrix has an
-off-diagonal entry equal to $\rho$.
+With at least three classes, among laws of prediction sets that satisfy the marginal coverage lower
+bound \eqref{eq:coverage}, for every $\rho \in [-1, 1]$ there is one with coverage one and accuracy
+one whose matrix has an off-diagonal entry equal to $\rho$.
 \end{lemma}
 
 \begin{proof}
@@ -226,9 +227,11 @@ the matrix.
 \draw[arr] (yc) -- (cov);
 \end{tikzpicture}
 \caption{The chain of coarsenings from the data to the matrix. The confusion matrix is a function of
-the first object. Theorem~\ref{thm:nogo} shows it is already lost at the first step, where the
-ranked prediction is dropped. Example~\ref{ex:aps} shows a further loss of one bit at the second
-step, where the true label is dropped. The coverage guarantee constrains one scalar of the second
+the first object. Theorem~\ref{thm:nogo} shows it can be lost at the first step, where the ranked prediction is
+dropped. Example~\ref{ex:aps} shows a loss of one bit at the second step, where the true label is
+dropped, by a different construction: there the ranked prediction is recoverable from the label and
+the set, so the first step loses nothing and the second loses the bit. The two results show failures
+at different arrows. The coverage guarantee constrains one scalar of the second
 object. The matrix is a function of the third.}
 \label{fig:chain}
 \end{figure}
@@ -236,8 +239,7 @@ object. The matrix is a function of the third.}
 Two limits on the theorem. First, its hypothesis is sufficient and not necessary. If every set is a
 singleton and coverage is one, then $\hat Y = Y$ and the confusion matrix is the diagonal matrix of
 the class proportions. With two classes, singleton sets and coverage $\kappa$, the row sums, the
-column sums and the trace determine all four entries. The theorem says nothing about cases in which
-no set of size two occurs. Second, the construction changes $\hat Y$ while keeping $C(X)$, and that
+column sums and the trace determine all four entries. The theorem says nothing about cases in which no set of size at least two occurs. Second, the construction changes $\hat Y$ while keeping $C(X)$, and that
 need not be realizable by an APS classifier with its calibration, so the theorem does not establish
 APS realizability for every prescribed set law. Example~\ref{ex:aps} supplies a pair that is
 realized by two randomized APS classifiers.
@@ -321,7 +323,8 @@ The loss can be measured. Fix the threshold and choose between the two models by
 The set law does not depend on $D$, so $I(D; C) = 0$. But when $Y = A$, model~1 produces $\set{C}$
 or $\set{A, C}$ and model~2 produces $\set{B}$ or $\set{A, B}$, and likewise for the other two
 classes, so the set together with its true label identifies $D$ and $I(D; Y \mid C) = \log 2$. The sets alone carry no information about the direction of confusion. The sets with their labels
-carry one full bit. The matrix is computed from the sets alone. The loss is of the same kind as the
+carry one full bit. Put as a loss, the optimal logarithmic loss for predicting $D$ rises from zero
+using $(Y, C)$ to $\log 2$ using $C$ alone. The matrix is computed from the sets alone. The loss is of the same kind as the
 one priced in \citet{cotton2026}, where pooling a conditional residual law into one marginal law
 costs exactly the mutual information between residual and input. There the pooled object is the
 residual law and the cost is a forecasting regret. Here the pooled object is the joint law of set,
@@ -565,9 +568,9 @@ can be negative, so the matrix does not contain probabilities. A row normalized 
 does contain only probabilities, and does not directly disclose counts either.
 
 Lemma~\ref{lem:ident} says more. When every set has at most one element, the off-diagonal entries
-recover every inclusion rate. Inside randomized APS that recovers the class proportions exactly when every class is retained with
-the same probability, which APS does not guarantee in general but which the next construction
-arranges.
+recover every inclusion rate. Inside randomized APS that recovers the class proportions exactly when the classifier is perfect and
+every class is retained with the same probability, which APS does not guarantee in general but
+which the next construction arranges.
 
 \begin{example}[The matrix reveals the class proportions, within randomized APS]\label{ex:privacy}
 Take a perfect classifier that assigns the ranked probabilities $(0.6, 0.3, 0.1)$ with the true
@@ -583,6 +586,12 @@ off-diagonal entries, and then
 The population matrix determines the true class proportions exactly. For an empirical matrix the same algebra recovers the empirical inclusion frequencies exactly,
 provided at least three classes are nondegenerate in the sample and the entries are not rounded,
 and the proportions are then estimated rather than read off.
+
+The equal top probabilities matter. If class $i$ has top probability $a_i$ and $\tau < \min_i a_i$,
+then $p_i = \pi_i\, \tau / a_i$, so the inclusion rates mix the proportions with class dependent
+retention. The proportions $(1/3, 1/3, 1/3)$ with top probabilities $(0.6, 0.6, 0.6)$ and the
+proportions $(5/18, 6/18, 7/18)$ with top probabilities $(0.5, 0.6, 0.7)$ both give $p_i = 5\tau/9$
+for every class, hence the same law of sets and the same matrix.
 \end{example}
 
 The matrix is offered as useful because it exposes how a client's data differs from the others. No
@@ -628,7 +637,9 @@ two are complements.
 
 If labels are unavailable, the mean pairwise product $\E[f_i(X) f_j(X)]$ is symmetric and needs no labeled calibration or evaluation sample. If sets are the object, because a downstream consumer receives sets and nothing else, then
 the co-occurrence rate $q_{ij}$ is the quantity the abstract describes, and the coverage confusion matrix of \citet{stutz2022}, which stratifies by the true label, is
-directional. Its row normalized form $\Prob(k \in C(X) \mid Y = y)$ is the conditional version.
+directional. Divided by the true class frequency it gives the conditional version $\Prob(k \in C(X) \mid Y = y)$.
+Dividing by the row sum instead would divide by the expected set size within the class, since one
+input can contribute to several columns.
 
 In every case the inclusion rates and the set sizes should be reported alongside, since by
 Lemma~\ref{lem:floor} an entry of \eqref{eq:ccm} cannot be read without them.
