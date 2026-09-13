@@ -96,9 +96,9 @@
   $$C_{ab} = \mathbb{E}\big[\,p_b \,\big|\, y = a\,\big],$$
 
   <p>the average probability the classifier assigns to class \(b\) over images whose true class is
-  \(a\). It is directional, it uses the probabilities at full resolution, and it needs no calibration
-  set and no threshold. It does need labeled evaluation data, as any confusion matrix does. The authors
-  never compute it. Every panel below puts the conformal correlation
+  \(a\). It is directional and threshold free, and it needs no calibration set. It does need labeled
+  evaluation data, as any confusion matrix does, and as a conditional mean it summarizes the
+  probabilities rather than determining error rates. The authors never compute it. Every panel below puts the conformal correlation
   matrix beside the soft confusion matrix on the same data and asks which one answers the question.</p>
 
   <p>We build a classifier whose mistakes we control. There are \(H = 10\) classes. For an image with
