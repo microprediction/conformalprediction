@@ -30,10 +30,11 @@
 \begin{abstract}
 The conformal correlation matrix of \citet{perlo2026} is the phi coefficient between indicators of
 class membership in conformal prediction sets. The authors read it as a map of which classes a
-classifier confuses. Eight hand-checkable examples show that it is not. Two classifiers built inside
-randomized adaptive prediction sets, exactly as specified, produce the same law of prediction sets
-and the same matrix while confusing classes in opposite directions, so the matrix does not
-determine the confusion matrix. The reason is that the matrix depends only on the law of the
+classifier confuses. Eight hand-checkable examples show that it is not. Two classifiers built inside randomized
+adaptive prediction sets, exactly as specified, produce the same law of prediction sets and the same
+matrix while confusing classes in opposite directions, so the matrix does not determine the
+confusion matrix. A short no-go theorem extends this to every statistic of the sets: whenever a set
+of size at least two occurs, no functional of the law of the sets determines the confusion matrix. The reason is that the matrix depends only on the law of the
 prediction set, while confusion depends on the joint law of the set, the true label and the ranked
 prediction. Two lemmas give every entry for classes that never share a
 set as a function of the inclusion rates alone, and recover every inclusion rate exactly from three
@@ -169,8 +170,39 @@ $\tfrac14$, and $q_{AB} = \tfrac{1+\rho}{4}$. Substituting into \eqref{eq:ccm},
 \end{proof}
 
 So every value on the correlation scale is available with no classification problem between $A$
-and $B$ at all. The examples that follow are more concrete, and each contradicts a specific
-sentence in the paper.
+and $B$ at all.
+
+The same reasoning gives a no-go result for the whole family of statistics computed from prediction
+sets, of which the conformal correlation matrix is one member. Set size, co-membership similarity
+between classes, and any correlation of the indicators are others.
+
+\begin{theorem}[No statistic of the sets determines the confusion matrix]\label{thm:nogo}
+Suppose some set of size at least two occurs with positive probability. Then for every functional
+$g$ of the law of $C(X)$ there are two joint laws of $(Y, \hat Y, C(X))$ with the same law of sets,
+the same class proportions and the same coverage, hence the same value of $g$, whose confusion
+matrices differ.
+\end{theorem}
+
+\begin{proof}
+Let $S$ be a set with $|S| \ge 2$ and $\Prob(C(X) = S) = \delta > 0$, and let $b \ne b'$ be two of
+its elements. Take any joint law of $(Y, \hat Y, C(X))$ with the given law of sets in which $\hat Y
+\in C(X)$ whenever the set is nonempty, as under APS. Define a second joint law that agrees with the
+first except on the event $\set{C(X) = S}$, where it sets $\hat Y = b$, and a third that agrees with
+the first except on that event, where it sets $\hat Y = b'$. The three laws have the same joint law
+of $(Y, C(X))$, hence the same law of sets, the same class proportions, the same coverage
+$\Prob(Y \in C(X))$, and the same value of every functional $g$ of the law of sets. Pick a class $a$
+with $\Prob(Y = a, C(X) = S) = \delta_a > 0$. The second law has confusion entry
+$\Prob(Y = a, \hat Y = b)$ larger by $\delta_a$ than the third, and entry $\Prob(Y = a, \hat Y = b')$
+smaller by $\delta_a$. So the second and third confusion matrices differ.
+\end{proof}
+
+The hypothesis cannot simply be dropped. If every set is a singleton and coverage is one, then
+$\hat Y = Y$ and the confusion matrix is the diagonal matrix of the class proportions. With two
+classes, singleton sets and coverage $\kappa$, the row sums, the column sums and the trace determine
+all four entries. Outside such cases the theorem applies, and Example~\ref{ex:aps} shows that its two
+laws can both be realized by randomized APS classifiers.
+
+The examples that follow are more concrete, and each contradicts a specific sentence in the paper.
 
 \section{Eight examples}\label{sec:examples}
 
@@ -574,8 +606,10 @@ prediction sets and with $C_{ab}$ and $\E[f_i f_j]$ alongside as $\alpha$ varies
 \section{Conclusion}\label{sec:conclusion}
 
 The conformal correlation matrix is the phi coefficient of APS set membership indicators. By
-Proposition~\ref{prop:law} it sees only the law of the sets, and by Proposition~\ref{prop:any} the
-marginal coverage lower bound leaves any single entry free among the laws that satisfy it.
+Proposition~\ref{prop:law} it sees only the law of the sets, by Proposition~\ref{prop:any} the
+marginal coverage lower bound leaves any single entry free among the laws that satisfy it, and by
+Theorem~\ref{thm:nogo} no statistic of the sets, this one or any other, determines the confusion
+matrix once a set of size two occurs.
 
 Example~\ref{ex:aps} shows, inside randomized APS itself, that the matrix does not determine the
 confusion matrix. Examples~\ref{ex:perfect} through \ref{ex:move} concern laws of sets that meet the
