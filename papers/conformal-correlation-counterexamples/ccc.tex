@@ -47,6 +47,9 @@ a perfect classifier with equal top probabilities inside randomized adaptive pre
 matrix reveals a client's class proportions exactly, which undoes the privacy claim made for it.
 \end{abstract}
 
+\noindent\textit{Keywords:} conformal prediction; prediction sets; phi coefficient; confusion matrix;
+federated learning; identifiability
+
 \section{The statistic}\label{sec:statistic}
 
 There are $H$ classes. A classifier maps an input $X$ to a probability vector $f(X)$, with $f_h(X)$ the probability it assigns to class $h$. Split
@@ -736,6 +739,28 @@ Lemma~\ref{lem:floor} shows that for pairs that never share a set the entry is a
 inclusion rates alone, and Lemma~\ref{lem:ident} with Example~\ref{ex:privacy} shows that inside
 randomized APS a perfect classifier's matrix reveals the class proportions. None of this is repaired by the coverage guarantee, which concerns the true label and does not
 generally determine which other labels sit beside it.
+
+\section*{Declaration of competing interest}
+
+The author has no competing interests to declare. The author has no affiliation with the journal.
+
+\section*{Funding}
+
+This research did not receive any specific grant from funding agencies in the public, commercial,
+or not-for-profit sectors.
+
+\section*{Data availability}
+
+No data were collected. The script that recomputes every quantity in the note, the \LaTeX{} source
+and the compiled note are at
+\url{https://github.com/microprediction/conformalprediction/tree/main/papers/conformal-correlation-counterexamples}.
+
+\section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
+
+During the preparation of this work the author used Claude (Anthropic) to draft prose from the
+author's outline and results, to check citations against the cited papers, and to write the
+verification script. After using this tool, the author reviewed and edited the content and takes
+full responsibility for the content of the published article.
 
 \begin{thebibliography}{99}
 

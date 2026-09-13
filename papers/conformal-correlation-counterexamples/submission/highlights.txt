@@ -1,0 +1,5 @@
+- Two APS classifiers share a prediction-set law and matrix with opposite confusions
+- No statistic of prediction sets determines the confusion matrix once a pair occurs
+- A zero entry coexists with 99% directional confusion from one class to another
+- Entries for classes that never share a set are fixed by inclusion rates alone
+- With singleton sets the matrix reveals a client's class proportions exactly
