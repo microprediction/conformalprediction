@@ -14,8 +14,10 @@
 \newtheorem{corollary}{Corollary}
 \theoremstyle{definition}
 \newtheorem{example}{Example}
+\theoremstyle{definition}
+\newtheorem{observation}{Observation}
 \theoremstyle{remark}
-\newtheorem{remark}{Remark}
+\newtheorem*{remark}{Remark}
 
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\Prob}{\mathbb{P}}
@@ -79,6 +81,8 @@ reaches $\tau$, and the class at that boundary rank is kept or dropped according
 Two coverage bounds hold. Under exchangeability of the calibration pairs and the test pair,
 $\Prob(Y \in C(X)) \ge 1 - \alpha$. When the scores are almost surely distinct, also
 $\Prob(Y \in C(X)) \le 1 - \alpha + 1/(m+1)$ \citep[Theorem~1]{romano2020}. Examples~\ref{ex:aps} and \ref{ex:privacy} use the randomized variant exactly as defined here.
+Theorem~\ref{thm:nogo} uses only that the top-ranked class is in every nonempty set, and the
+remark on $\alpha$ in Section~\ref{sec:lemmas} uses only that the sets are nested in $\alpha$.
 Nothing else below depends on APS, beyond the fact that $C(X)$ is a set of classes.
 
 The matrix is built from membership indicators. For each class $h$ define
@@ -96,7 +100,8 @@ This is the Pearson correlation of two Bernoulli variables, also called the phi 
 \citep{yule1912}. In practice the expectations are sample averages over a test set.
 
 The entry is defined only when $0 < p_i < 1$ and $0 < p_j < 1$, since otherwise a variance is zero.
-The authors give no convention for that case. We exclude such classes from the matrix.
+The authors give no convention for that case in their Section~4, where the matrix is defined. We
+exclude such classes from the matrix.
 
 Nothing below depends on the name or on the paper. The results concern any correlation between
 membership indicators of prediction sets, however the sets were built and whatever the statistic is
@@ -117,11 +122,11 @@ false, and the examples below show it.
 
 \section{The matrix depends only on the law of the sets}\label{sec:organizing}
 
-\begin{remark}\label{prop:law}
+\begin{observation}\label{prop:law}
 The conformal correlation matrix is a functional of the law of the prediction set $C(X)$ alone.
 Two situations with the same law of $C(X)$ have the same matrix, whatever the joint law of $(C(X),
 Y, \hat Y)$.
-\end{remark}
+\end{observation}
 
 \begin{proof}
 Every quantity in \eqref{eq:ccm} is an expectation of a function of the vector $(z_1, \dots, z_H)$,
@@ -130,9 +135,9 @@ and that vector is a function of $C(X)$.
 
 Confusion is a different object. The confusion matrix has entries $\Prob(Y = a, \hat Y = b)$, which
 depend on the joint law of the true label and the ranked prediction. Hold the law of $C(X)$ fixed
-and change $Y$ or $\hat Y$, and by Remark~\ref{prop:law} the matrix cannot notice.
+and change $Y$ or $\hat Y$, and by Observation~\ref{prop:law} the matrix cannot notice.
 
-The remark also disposes of the claim that the entries ``incorporate the entire distribution
+The observation also disposes of the claim that the entries ``incorporate the entire distribution
 of predicted probabilities''. At a fixed $\alpha$, any change to the probability vectors that leaves
 the sets unchanged is invisible to the matrix. The sets are a function of the probabilities and one
 threshold, and the matrix sees the sets.
@@ -152,9 +157,8 @@ $0 = \Prob(C = \varnothing) = 1 - p_A - p_B + q_{AB}$ and $q_{AB} = p_A + p_B - 
 three or more classes nothing of the kind holds, as the next lemma shows for a single entry.
 
 \begin{lemma}\label{prop:any}
-With at least three classes, among laws of prediction sets that satisfy the marginal coverage lower
-bound \eqref{eq:coverage}, for every $\rho \in [-1, 1]$ there is one with coverage one and accuracy
-one whose matrix has an off-diagonal entry equal to $\rho$.
+With at least three classes, for every $\rho \in [-1, 1]$ there is a joint law of $(Y, \hat Y,
+C(X))$ with coverage one and accuracy one whose matrix has an off-diagonal entry equal to $\rho$.
 \end{lemma}
 
 \begin{proof}
@@ -172,16 +176,15 @@ $\tfrac14$, and $q_{AB} = \tfrac{1+\rho}{4}$. Substituting into \eqref{eq:ccm},
 \]
 \end{proof}
 
-So every value on the correlation scale is available with no classification problem between $A$
-and $B$ at all.
+In the construction $Y$ is constant, so every value on the correlation scale is available with no
+classification problem at all.
 
 The same reasoning gives a no-go result that covers the conformal correlation matrix and any other
 statistic computed from the prediction sets.
 
 \begin{theorem}[No statistic of the sets determines the confusion matrix]\label{thm:nogo}
 Consider joint laws of $(Y, \hat Y, C(X))$ in which $\hat Y \in C(X)$ whenever the set is nonempty,
-as under APS. Suppose some set of size at least two occurs with positive probability. Then there are
-two such joint laws with the same joint law of $(Y, C(X))$, hence the same law of sets, the same class
+as under APS. Suppose some set of size at least two occurs with positive probability. Then there are two such joint laws with the given joint law of $(Y, C(X))$, hence the same law of sets, the same class
 proportions, the same coverage and the same value of every functional $g$ of the law of sets, whose
 confusion matrices differ.
 \end{theorem}
@@ -206,10 +209,12 @@ to the matrix.
 
 
 
-Two limits on the theorem. First, its hypothesis is sufficient and not necessary. If every set is a
-singleton and coverage is one, then $\hat Y = Y$ and the confusion matrix is the diagonal matrix of
-the class proportions. With two classes, singleton sets and coverage $\kappa$, the row sums, the
-column sums and the trace determine all four entries. The theorem says nothing about cases in which no set of size at least two occurs. Second, the construction changes $\hat Y$ while keeping $C(X)$, and that
+Two limits on the theorem. First, its hypothesis is not the whole story. When no set of size at
+least two occurs the conclusion can fail: if every set is a singleton and coverage is one, then
+$\hat Y = Y$ and the confusion matrix is the diagonal matrix of the class proportions, and with two
+classes, singleton sets and coverage $\kappa$, the row sums, the column sums and the trace determine
+all four entries. It can also still hold: if the empty set occurs with positive probability, the
+ranked prediction is unconstrained on that event and the same argument applies there. Second, the construction changes $\hat Y$ while keeping $C(X)$, and that
 need not be realizable by an APS classifier with its calibration, so the theorem does not establish
 APS realizability for every prescribed set law. Example~\ref{ex:aps} supplies a pair that is
 realized by two randomized APS classifiers.
@@ -230,15 +235,15 @@ realized by two randomized APS classifiers.
 \node[box, below=of yc] (cov) {coverage\\$\Prob(z_Y = 1)$};
 \draw[arr] (full) -- node[lab, above] {drop $\hat Y$} node[lab, below] {Theorem~\ref{thm:nogo}} (yc);
 \draw[arr] (yc) -- node[lab, above] {drop $Y$} node[lab, below] {Example~\ref{ex:aps}} (c);
-\draw[arr] (c) -- node[lab, above] {indicators and\\second moments} node[lab, below] {Remark~\ref{prop:law}} (ccm);
+\draw[arr] (c) -- node[lab, above] {indicators and\\second moments} node[lab, below] {Observation~\ref{prop:law}} (ccm);
 \draw[arr] (full) -- (conf);
 \draw[arr] (yc) -- (cov);
 \end{tikzpicture}
 \caption{The chain of coarsenings from the data to the matrix. The confusion matrix is a function of
 the first object. Theorem~\ref{thm:nogo} shows it can be lost at the first step, where the ranked prediction is
 dropped. Example~\ref{ex:aps} shows a loss of one bit at the second step, where the true label is
-dropped, by a different construction: there the ranked prediction is recoverable from the label and
-the set, so the first step loses nothing and the second loses the bit. The two results show failures
+dropped, by a different construction: in that mixture the ranked prediction is a function of the label and
+the set, so the first step loses nothing there and the second loses the bit. The two results show failures
 at different arrows. The coverage guarantee constrains one scalar of the second
 object. The matrix is a function of the third.}
 \label{fig:chain}
@@ -254,12 +259,12 @@ Each example needs only the inclusion rates $p_i$ and the co-occurrence rates $q
 into \eqref{eq:ccm}.
 
 Examples~\ref{ex:perfect} through \ref{ex:move} prescribe a law of prediction sets directly. By
-Remark~\ref{prop:law} the law of the sets is all the matrix depends on, so a law is all an
+Observation~\ref{prop:law} the law of the sets is all the matrix depends on, so a law is all an
 example needs to specify.
 
 In those examples coverage is one, meaning that every set contains the true class. Any marginal
-coverage lower bound is then met. We do not claim that randomized APS produces these laws. It cannot produce coverage one: when $k \le m$ and the scores are distinct, its coverage is exactly
-$k/(m+1) < 1$, since the rank of the test score among the $m+1$ scores is uniform
+coverage lower bound is then met. We do not claim that randomized APS produces these laws. When $k \le m$ and the scores are almost surely distinct it cannot produce coverage one, since its
+coverage is then exactly $k/(m+1) < 1$, since the rank of the test score among the $m+1$ scores is uniform
 \citep{lei2018, romano2020}.
 
 Therefore Examples~\ref{ex:perfect} through \ref{ex:move} concern laws of prediction sets that
@@ -268,7 +273,7 @@ sets produced by APS needs a counterexample built inside APS. Example~\ref{ex:ap
 counterexample, which is why it comes first. The remaining examples are ordered from the simplest
 to refute and the most absurd result downward.
 
-In Examples~\ref{ex:rare} and \ref{ex:pool} a label $T$ is in every set. Its own entries are
+In Examples~\ref{ex:rare}, \ref{ex:pool} and \ref{ex:move} a label $T$ is in every set. Its own entries are
 undefined under the convention of Section~\ref{sec:statistic}, and the claims concern
 $\rho_{AB}$ only.
 
@@ -450,8 +455,9 @@ The sign can be reversed. Let client~1 add $A$ with probability $0.9$ and $B$ wi
 $0.1$, and let client~2 do the opposite. Then $q_{AB} = \tfrac12(0.09) + \tfrac12(0.09) = 0.09$ and
 $\rho_{AB} = (0.09 - 0.25)/0.25 = -0.64$.
 
-The authors compute matrices across clients that are non-identically distributed by construction
-and read the entries as properties of the classifier. A strong entry of either sign is produced
+The authors compute matrices across clients that are non-identically distributed by construction,
+their Section~6 and the caption of their Figure~5, and read the entries as properties of the
+classifier. A strong entry of either sign is produced
 here by the mixture of clients alone, with no confusion anywhere.
 \end{example}
 
@@ -488,16 +494,16 @@ Lemma~\ref{lem:floor} gives the general statement.
 \end{example}
 
 \begin{example}[Moving one label occurrence between rows moves an entry from one to almost zero]\label{ex:move}
-There are $n$ test inputs. Every set contains the true class $T$, ranked first, and two rare
-labels $A$ and $B$ each appear in exactly one set. If they appear in the same set then $z_A = z_B$
+There are $N$ test inputs. Every set contains the true class $T$, ranked first, and two rare labels
+$A$ and $B$ each appear in exactly one set. If they appear in the same set then $z_A = z_B$
 and $\rho_{AB} = 1$. If instead the one occurrence of $B$ is
-in a different set then $p_A = p_B = 1/n$, $q_{AB} = 0$, and
+in a different set then $p_A = p_B = 1/N$, $q_{AB} = 0$, and
 \[
-\rho_{AB} = \frac{0 - 1/n^2}{(1/n)(1-1/n)} = -\frac{1}{n-1},
+\rho_{AB} = \frac{0 - 1/N^2}{(1/N)(1-1/N)} = -\frac{1}{N-1},
 \]
-which at $n = 1000$ is about $-0.001$.
+which at $N = 1000$ is about $-0.001$.
 
-The authors present heat maps of entries with no uncertainty attached. For rare labels, moving a
+The authors present heat maps of entries, their Figures~2 and~5, with no uncertainty attached. For rare labels, moving a
 single label occurrence from one row to another moves an entry from one to about zero, half of
 its range.
 \end{example}
@@ -543,14 +549,13 @@ $p_i + p_j > 1$ then $q_{ij} = p_i + p_j - 1$, the numerator is $p_i + p_j - 1 -
 \]
 \end{proof}
 
-The lemma has two consequences for reading a heat map. The first concerns the scale. An entry
-reads $+1$ only when $p_i = p_j$, so a rare class and a common class have a lower ceiling than two
-common classes, and entries for pairs with different inclusion rates are not on a common scale.
+The lemma has two consequences for reading a heat map. The first concerns the scale. An entry can reach $+1$ only when $p_i = p_j$, so the ceiling is below one whenever the two inclusion
+rates differ, and entries for pairs with different inclusion rates are not on a common scale.
 
 The second concerns $\alpha$. With the model, the calibration data and the auxiliary uniforms fixed, the APS sets are nested in $\alpha$. As $\alpha$ grows no inclusion rate increases, so every floor entry \eqref{eq:floor} moves
 toward zero or stays put, whether or not the classifier changed, as long as the indicators involved
-remain nondegenerate. The authors sweep $\alpha$ over four values and present the dependence as a
-feature.
+remain nondegenerate. The authors sweep $\alpha$ over $\set{0.3, 0.2, 0.1, 0.05}$ and present the dependence as a feature,
+their Benefit~3 in Section~5.
 
 \begin{lemma}[Identification of the inclusion rates]\label{lem:ident}
 Suppose every prediction set has at most one element and at least three classes have inclusion rate
@@ -569,8 +574,9 @@ $-\rho_{jk}$, which is nonzero since $o_j, o_k > 0$. The map $o \mapsto o/(1+o)$
 $p \mapsto p/(1-p)$.
 \end{proof}
 
-The authors argue that the matrix is privacy preserving because it ``only contains probabilities''
-and so ``does not leak information on the size and composition'' of a client's data. Correlations
+The authors argue in their Benefit~4 that the matrix is privacy preserving because it ``only contains
+probabilities; hence, it does not leak information on the size and composition of the local
+datasets''. Correlations
 can be negative, so the matrix does not contain probabilities. A row-normalized confusion matrix
 does contain only probabilities, and does not directly disclose counts either.
 
@@ -606,8 +612,9 @@ threat model, mechanism or leakage bound is given.
 
 \section{What the coverage guarantee constrains}\label{sec:coverage}
 
-The authors state that ``for a given input sample'' the set ``is guaranteed to contain the correct
-class'' with probability close to $1-\alpha$. The guarantee \eqref{eq:coverage} is marginal. It does not imply coverage conditional on the input, on a class or on a client. In distribution-free regression with nonatomic covariates, exact pointwise conditional coverage forces essentially
+The authors state in their Section~3.2 that ``for a given input sample $x$ CP will construct a random
+a prediction set $\mathcal{C}(x)$ such that it is guaranteed to contain the correct class lies in
+with a probability close to $1-\alpha$'', quoted with its typographical errors. The guarantee \eqref{eq:coverage} is marginal. It does not imply coverage conditional on the input, on a class or on a client. In distribution-free regression with nonatomic covariates, exact pointwise conditional coverage forces essentially
 trivial prediction sets of infinite expected length \citep{barber2021}. The client and class
 example below makes the classification point directly.
 
@@ -617,12 +624,13 @@ clients, nine with coverage one and one with coverage zero. Pooled coverage is e
 meets a nominal $1 - \alpha = 0.9$, and the tenth client has no protection at all. The same
 arithmetic applies to a class with a tenth of the data that is missed every time.
 
-The authors also write the upper coverage term as $1/(n-1)$. For the randomized procedure with
-almost surely distinct scores the term is $1/(n+1)$ \citep{romano2020, lei2018}, so theirs is looser
+The authors also write the upper coverage term as $1/(n-1)$, with $n$ their calibration size. For the
+randomized procedure with almost surely distinct scores the term is $1/(n+1)$ \citep{romano2020, lei2018}, so theirs is looser
 than necessary and probably a typographical error.
 
-The federated experiments compare local matrices computed against a global calibration set across
-clients that are non-identically distributed by construction. Under that mismatch even the marginal
+The federated experiments compare local matrices with ``CCM entries computed with a global
+calibration set'', the caption of their Figure~5, across clients that are non-identically
+distributed by construction. Under that mismatch even the marginal
 guarantee need not hold. No coverage or set sizes are reported for any client.
 
 \section{What to report instead}\label{sec:instead}
@@ -632,15 +640,15 @@ confusion matrix of the ranked prediction, $\Prob(\hat Y = b \mid Y = a)$, which
 evaluation data. A complementary summary of how the classifier allocates probability is the soft
 confusion matrix
 \[
-C_{ab} = \E\big[\, f_b(X) \,\big|\, Y = a \,\big]
+M_{ab} = \E\big[\, f_b(X) \,\big|\, Y = a \,\big]
 \]
 the average probability assigned to class $b$ on inputs of true class $a$. It is directional and
 threshold-free, it needs no calibration set, and like any confusion matrix it needs labeled
 evaluation data.
 
-The matrix $C_{ab}$ is a conditional mean, so it summarizes rather than determines. A model with $f_B(X) = 0.4$ on every input of class $A$ and a model with $f_B(X)$ equal to $0.6$ or $0.2$ with equal
-probability have the same row $(0.6, 0.4)$, and error rates from $A$ to $B$ of zero and one half.
-The confusion matrix of the ranked prediction carries that difference and $C_{ab}$ does not, which is why the two are complements.
+The matrix $M_{ab}$ is a conditional mean, so it summarizes rather than determines. With two classes, a model with $f_B(X) = 0.4$ on every input of class $A$ and a model with $f_B(X)$
+equal to $0.6$ or $0.2$ with equal probability have the same row $(0.6, 0.4)$, and error rates from $A$ to $B$ of zero and one half.
+The confusion matrix of the ranked prediction carries that difference and $M_{ab}$ does not, which is why the two are complements.
 
 If labels are unavailable, the mean pairwise product $\E[f_i(X) f_j(X)]$ is symmetric and needs no labeled calibration or evaluation sample. If sets are the object, because a downstream consumer receives sets and nothing else, then
 the co-occurrence rate $q_{ij}$ is the quantity the abstract describes, and the coverage confusion matrix of \citet{stutz2022}, which stratifies by the true label, is
@@ -651,7 +659,8 @@ input can contribute to several columns.
 In every case the inclusion rates and the set sizes should be reported alongside, since by
 Lemma~\ref{lem:floor} an entry of \eqref{eq:ccm} cannot be read without them.
 
-The authors compare against none of these. Their only comparison is with the hard confusion matrix,
+The authors compare against none of these. Their only comparison, in their Benefits~1 and~2, is with
+the hard confusion matrix,
 which discards the probabilities entirely, so the contrast they draw is soft versus hard rather
 than conformal versus not.
 
@@ -669,7 +678,7 @@ seeds or error bars.
 
 Simulations of Example~\ref{ex:aps}, of Examples~\ref{ex:hard} and \ref{ex:rates}, and of the
 direction blindness of Example~\ref{ex:perfect}, on a synthetic ten class classifier with adaptive
-prediction sets and with $C_{ab}$ and $\E[f_i f_j]$ alongside as $\alpha$ varies, are available at
+prediction sets and with $M_{ab}$ and $\E[f_i f_j]$ alongside as $\alpha$ varies, are available at
 \url{https://conformalprediction.net/demos/32-conformal-correlation.html}. A script that recomputes
 every quantity in this note, exactly where the arithmetic is rational and by simulation for the
 claims about randomized APS, the Beta law of the realized coverage and the Dirichlet variance, is at
@@ -678,7 +687,7 @@ claims about randomized APS, the Beta law of the realized coverage and the Diric
 \section{Conclusion}\label{sec:conclusion}
 
 The conformal correlation matrix is the phi coefficient of APS set membership indicators. By
-Remark~\ref{prop:law} it sees only the law of the sets, by Lemma~\ref{prop:any} the
+Observation~\ref{prop:law} it sees only the law of the sets, by Lemma~\ref{prop:any} the
 marginal coverage lower bound leaves any single entry free among the laws that satisfy it, and by Theorem~\ref{thm:nogo}, over joint laws constrained only by the ranked prediction lying in
 a nonempty set, the law of the sets does not identify the confusion matrix once a set of size at
 least two occurs, with Example~\ref{ex:aps} exhibiting the corresponding failure inside randomized
