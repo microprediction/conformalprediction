@@ -1,0 +1,448 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{example}{Example}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\set}[1]{\{#1\}}
+
+\title{Conformal Correlation Counterexamples}
+\author{Peter Cotton\\\texttt{peter.cotton@microprediction.com}}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The conformal correlation matrix of \citet{perlo2026} is the phi coefficient between indicators of
+class membership in conformal prediction sets, offered as a map of which classes a classifier
+confuses. Seven hand-checkable examples show that it is not: a perfect classifier and a perfectly
+wrong one share a matrix, a zero entry coexists with 99\% directional confusion, and pooling two
+clients with zero correlation on each produces an entry of $\pm 0.64$. The reason is that the matrix
+depends only on the law of the prediction set, while confusion depends on the joint law of the set,
+the true label and the ranked prediction. Two lemmas give every entry for classes that never share a
+set as a function of the inclusion rates alone, and recover every inclusion rate exactly from three
+entries when sets are singletons, which bears on the privacy claim made for the matrix.
+\end{abstract}
+
+\section{The statistic}\label{sec:statistic}
+
+There are $H$ classes. A classifier maps an input $X$ to a probability vector $p(X)$ and to a
+prediction set $C(X) \subseteq \set{1, \dots, H}$ built by split conformal prediction
+\citep{vovk2005, lei2018}, in the paper by the adaptive prediction sets of \citet{romano2020}. The
+true label is $Y$ and the class the classifier ranks first is $\hat Y$. For each class $h$ define the
+membership indicator
+\[
+z_h = \mathbf{1}\set{h \in C(X)},
+\]
+and write $p_h = \E[z_h]$ for the inclusion rate of class $h$ and $q_{ij} = \E[z_i z_j]$ for the
+co-occurrence rate of classes $i$ and $j$. The conformal correlation matrix (CCM) of
+\citet{perlo2026} has entries
+\begin{equation}\label{eq:ccm}
+\rho_{ij} = \frac{\E[z_i z_j] - \E[z_i]\,\E[z_j]}{\sqrt{\Var(z_i)\,\Var(z_j)}}
+          = \frac{q_{ij} - p_i p_j}{\sqrt{p_i(1-p_i)\,p_j(1-p_j)}},
+\end{equation}
+which is the Pearson correlation of two Bernoulli variables, also called the phi coefficient
+\citep{yule1912}. In practice the expectations are sample averages over a test set.
+
+The authors attach three readings to the entries. Their Remark~1 says that intrinsically similar
+classes ``might be expected to exhibit high positive correlation''. Their Remark~2 says that pairs of
+dissimilar classes ``are expected to display strong negative correlation''. Their Remark~3 says that
+classes ``unrelated or independent with respect to the classifier representation are expected to
+yield correlation coefficients close to zero''. On the strength of these readings they conclude that
+a positive entry between two classes means the classifier ``is much more likely to misclassify'' one
+as the other, that the matrix ``contains a superset of the information conveyed by the confusion
+matrix'', and that it ``captures the likelihood of class pairs co-occurring within conformal
+prediction sets''. Each of these statements is false, and the examples below show it.
+
+\section{What the matrix can and cannot see}\label{sec:organizing}
+
+Everything below follows from one observation.
+
+\begin{proposition}\label{prop:law}
+The conformal correlation matrix is a functional of the law of the prediction set $C(X)$ alone.
+Two situations with the same law of $C(X)$ have the same matrix, whatever the joint law of $(C(X),
+Y, \hat Y)$.
+\end{proposition}
+
+\begin{proof}
+Every quantity in \eqref{eq:ccm} is an expectation of a function of the vector $(z_1, \dots, z_H)$,
+and that vector is a function of $C(X)$.
+\end{proof}
+
+Confusion is a different object. The confusion matrix has entries $\Prob(Y = a, \hat Y = b)$, which
+depend on the joint law of the true label and the ranked prediction. The set $C(X)$ can be held
+fixed while $Y$ or $\hat Y$ is changed freely, subject only to whatever coverage constraint is
+imposed, and by Proposition~\ref{prop:law} the matrix cannot notice.
+
+The coverage constraint is weak. Split conformal prediction guarantees, under exchangeability of
+calibration and test data,
+\begin{equation}\label{eq:coverage}
+\Prob(z_Y = 1) = \sum_{y} \Prob(Y = y,\; z_y = 1) \;\ge\; 1 - \alpha,
+\end{equation}
+which is one scalar. It says nothing about $q_{ij}$, which mixes the true class with a wrong class,
+two wrong classes, and different true classes on different inputs.
+
+\begin{proposition}\label{prop:any}
+For every $\rho \in [-1, 1]$ there is a classifier with coverage one and accuracy one whose matrix
+has an off-diagonal entry equal to $\rho$.
+\end{proposition}
+
+\begin{proof}
+Let the true label always be $T$, always in the set and always ranked first, so coverage and
+accuracy are one. Let two other labels $A$ and $B$ be added to the set according to
+\begin{align*}
+\Prob(z_A = 0, z_B = 0) &= \Prob(z_A = 1, z_B = 1) = \frac{1+\rho}{4}, \\
+\Prob(z_A = 1, z_B = 0) &= \Prob(z_A = 0, z_B = 1) = \frac{1-\rho}{4}.
+\end{align*}
+Then $p_A = p_B = \tfrac{1+\rho}{4} + \tfrac{1-\rho}{4} = \tfrac12$, so each variance is
+$\tfrac14$, and $q_{AB} = \tfrac{1+\rho}{4}$. Substituting into \eqref{eq:ccm},
+\[
+\rho_{AB} = \frac{(1+\rho)/4 - 1/4}{1/4} = \rho. \qedhere
+\]
+\end{proof}
+
+So the whole correlation scale is available with no classification problem between $A$ and $B$ at
+all. The examples that follow are less abstract than this, and each contradicts a specific sentence
+in the paper.
+
+\section{Seven examples}\label{sec:examples}
+
+Each example needs only the inclusion rates $p_i$ and the co-occurrence rates $q_{ij}$, substituted
+into \eqref{eq:ccm}. We order them from the simplest to refute and the most absurd result downward.
+In every example coverage is one, so the certificate is satisfied with room to spare.
+
+\begin{example}[A perfect classifier and a perfectly wrong one share a matrix]\label{ex:perfect}
+Three classes $A$, $B$, $C$ with equal frequency, and sets that always contain the true class and one
+neighbor.
+
+\begin{center}
+\begin{tabular}{llcc}
+\toprule
+True class & Prediction set & Good model ranks first & Bad model ranks first \\
+\midrule
+$A$ & $\set{A, B}$ & $A$ & $B$ \\
+$B$ & $\set{B, C}$ & $B$ & $C$ \\
+$C$ & $\set{C, A}$ & $C$ & $A$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Each label is in two of the three sets, so every $p_i = 2/3$ and every variance is $2/9$. Each pair
+shares exactly one of the three sets, so every $q_{ij} = 1/3$. Every off-diagonal entry is
+\[
+\rho_{ij} = \frac{1/3 - (2/3)(2/3)}{2/9} = -\tfrac12 .
+\]
+The good model has accuracy one. The bad model has accuracy zero. The labels, the sets and therefore
+the matrix are identical for both. The confusion matrix of the good model is the identity and that
+of the bad model has an empty diagonal, so the matrix does not contain ``a superset of the
+information conveyed by the confusion matrix''.
+\end{example}
+
+\begin{example}[Zero correlation with 99\% directional confusion]\label{ex:zero}
+Three classes and a small number $\varepsilon$, say $0.01$. Inputs arrive in four kinds.
+
+\begin{center}
+\begin{tabular}{lllc}
+\toprule
+Probability & True class & Prediction set & Ranked first \\
+\midrule
+$(1-\varepsilon)/2$ & $A$ & $\set{A, B}$ & $B$ \\
+$\varepsilon/2$     & $A$ & $\set{A}$    & $A$ \\
+$(1-\varepsilon)/2$ & $B$ & $\set{B}$    & $B$ \\
+$\varepsilon/2$     & $C$ & $\set{C}$    & $C$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+$A$ is in the sets of the first two kinds, so $p_A = (1-\varepsilon)/2 + \varepsilon/2 = 1/2$. $B$ is
+in the sets of the first and third kinds, so $p_B = 1 - \varepsilon$. They appear together only in
+the first kind, so $q_{AB} = (1-\varepsilon)/2 = p_A p_B$. The numerator of \eqref{eq:ccm} is zero,
+so
+\[
+\rho_{AB} = 0 .
+\]
+Among inputs whose true class is $A$, the classifier ranks $B$ first with probability
+$1-\varepsilon$, which is 99\% at $\varepsilon = 0.01$. The authors' Remark~3 reads a zero entry as
+classes ``unrelated or independent with respect to the classifier representation''.
+\end{example}
+
+\begin{example}[Perfect correlation with one in a million co-occurrence]\label{ex:rare}
+Every set contains the true class $T$, ranked first. Two other labels $A$ and $B$ are added to the set
+together with probability $\varepsilon$, and otherwise neither is added. Then $z_A = z_B$ on every
+input, so
+\[
+\rho_{AB} = 1 \qquad \text{for every } 0 < \varepsilon < 1,
+\]
+while the probability that $A$ and $B$ appear together in a set is $q_{AB} = \varepsilon$, which may be
+$0.4$, or $0.01$, or one in a million. The abstract of the paper says the matrix ``captures the
+likelihood of class pairs co-occurring''. The likelihood is $\varepsilon$. The entry is one
+regardless.
+\end{example}
+
+\begin{example}[Every pair positive from difficulty alone]\label{ex:hard}
+Three classes with equal frequency. Half the inputs are hard and receive the set of all three
+classes. The other half are easy and receive the singleton set of their true class. The true class is
+ranked first in both cases, so accuracy is one. Each label is in every hard set and in a third of
+the easy sets, so
+\[
+p_i = \tfrac12 \cdot 1 + \tfrac12 \cdot \tfrac13 = \tfrac23, \qquad p_i(1-p_i) = \tfrac29 .
+\]
+Two labels appear together only in hard sets, so $q_{ij} = 1/2$ for every pair, and
+\[
+\rho_{ij} = \frac{1/2 - (2/3)(2/3)}{2/9} = \tfrac14 .
+\]
+Every pair is positively correlated and the classifier is perfect. The correlation has one cause,
+whether the input was hard, and says nothing about any pair. The authors' Remark~1 reads a positive
+entry as ``intrinsically similar classes''.
+\end{example}
+
+\begin{example}[Pooling two clients creates a strong correlation from nothing]\label{ex:pool}
+Every set contains the true class $T$, ranked first. On client~1 the labels $A$ and $B$ are each
+added to the set independently with probability $0.9$. On client~2 they are each added independently
+with probability $0.1$. The clients contribute equally to the pooled data. Within each client $z_A$
+and $z_B$ are independent, so $\rho_{AB} = 0$ on each. Pooled, $p_A = p_B = (0.9 + 0.1)/2 = 1/2$, each
+variance is $1/4$, and
+\[
+q_{AB} = \tfrac12 (0.9 \times 0.9) + \tfrac12 (0.1 \times 0.1) = 0.41, \qquad
+\rho_{AB} = \frac{0.41 - 1/4}{1/4} = 0.64 .
+\]
+Reverse the rates on one client, so that client~1 adds $A$ with probability $0.9$ and $B$ with
+probability $0.1$ and client~2 does the opposite. Then $q_{AB} = \tfrac12(0.09) + \tfrac12(0.09) =
+0.09$ and $\rho_{AB} = (0.09 - 0.25)/0.25 = -0.64$. The paper computes matrices across clients that
+are non identically distributed by construction and reads the entries as properties of the
+classifier. A strong entry of either sign is produced here by the mixture of clients alone.
+\end{example}
+
+\begin{example}[Two classes the model never confuses get different entries]\label{ex:rates}
+Three classes, cat, dog and plane, with equal frequency. The classifier returns the same set for every
+input of a given class.
+
+\begin{center}
+\begin{tabular}{llccc}
+\toprule
+True class & Prediction set & $z_{\text{cat}}$ & $z_{\text{dog}}$ & $z_{\text{plane}}$ \\
+\midrule
+cat   & $\set{\text{cat}, \text{dog}}$ & 1 & 1 & 0 \\
+dog   & $\set{\text{dog}}$             & 0 & 1 & 0 \\
+plane & $\set{\text{plane}}$           & 0 & 0 & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A third of the inputs are cats, so $p_{\text{cat}} = 1/3$, and likewise $p_{\text{dog}} = 2/3$ and
+$p_{\text{plane}} = 1/3$. Each variance is $2/9$. Cat and dog appear together on the cat inputs, so
+$q_{\text{cat},\text{dog}} = 1/3$, and plane never appears with either, so the other two co-occurrence
+rates are zero. Substituting,
+\begin{align*}
+\rho_{\text{cat},\text{dog}} &= \frac{1/3 - (1/3)(2/3)}{2/9} = \tfrac12, \\
+\rho_{\text{cat},\text{plane}} &= \frac{0 - (1/3)(1/3)}{2/9} = -\tfrac12, \\
+\rho_{\text{dog},\text{plane}} &= \frac{0 - (2/3)(1/3)}{2/9} = -1 .
+\end{align*}
+The authors' Remark~2 reads this as dog and plane being strongly dissimilar and cat and plane half
+as dissimilar. But the classifier treats plane identically with respect to both. It never puts plane
+in a set with either. The two entries differ only because dog is in twice as many sets as cat.
+Lemma~\ref{lem:floor} gives the general statement.
+\end{example}
+
+\begin{example}[One relocated observation moves an entry from one to almost zero]\label{ex:move}
+There are $n$ test inputs, and two rare labels $A$ and $B$ each appear in exactly one set. If they
+appear in the same set then $z_A = z_B$ and $\rho_{AB} = 1$. If $B$ appears in a different set then
+$p_A = p_B = 1/n$, $q_{AB} = 0$, and
+\[
+\rho_{AB} = \frac{0 - 1/n^2}{(1/n)(1-1/n)} = -\frac{1}{n-1},
+\]
+which at $n = 1000$ is about $-0.001$. The paper presents heat maps of entries with no uncertainty
+attached. For rare labels a single observation moves an entry across its whole range.
+\end{example}
+
+\section{Two lemmas}\label{sec:lemmas}
+
+Write $o_i = p_i/(1-p_i)$ for the odds of inclusion of class $i$.
+
+\begin{lemma}[The floor, and the attainable range]\label{lem:floor}
+If classes $i$ and $j$ never share a set, then
+\begin{equation}\label{eq:floor}
+\rho_{ij} = -\sqrt{o_i\, o_j} = -\sqrt{\frac{p_i\, p_j}{(1-p_i)(1-p_j)}} .
+\end{equation}
+With $H$ classes of equal inclusion rate and singleton sets this equals $-1/(H-1)$. More generally,
+for fixed inclusion rates $p_i \le p_j$ the entry $\rho_{ij}$ ranges over
+\[
+\Big[\, -\sqrt{o_i o_j},\ \sqrt{o_i / o_j}\, \Big] \quad \text{if } p_i + p_j \le 1, \qquad
+\Big[\, -1/\sqrt{o_i o_j},\ \sqrt{o_i / o_j}\, \Big] \quad \text{if } p_i + p_j > 1 .
+\]
+\end{lemma}
+
+\begin{proof}
+If $q_{ij} = 0$ then \eqref{eq:ccm} reads
+\[
+\rho_{ij} = \frac{-p_i p_j}{\sqrt{p_i(1-p_i)p_j(1-p_j)}}
+          = -\sqrt{\frac{p_i^2 p_j^2}{p_i(1-p_i)p_j(1-p_j)}}
+          = -\sqrt{\frac{p_i p_j}{(1-p_i)(1-p_j)}} .
+\]
+With singleton sets every pair has $q_{ij} = 0$, and with equal inclusion rates $p_i = 1/H$, so
+$o_i = 1/(H-1)$ and $\rho_{ij} = -1/(H-1)$.
+
+For the range, $q_{ij}$ is the probability of the intersection of two events with probabilities $p_i
+\le p_j$, so by the Fr\'echet bounds $\max(0, p_i + p_j - 1) \le q_{ij} \le p_i$. At the upper bound
+the numerator of \eqref{eq:ccm} is $p_i - p_i p_j = p_i(1-p_j)$ and
+\[
+\rho_{ij} = \frac{p_i(1-p_j)}{\sqrt{p_i(1-p_i)p_j(1-p_j)}} = \sqrt{\frac{p_i(1-p_j)}{(1-p_i)p_j}} = \sqrt{o_i/o_j} .
+\]
+At the lower bound, if $p_i + p_j \le 1$ then $q_{ij} = 0$ and \eqref{eq:floor} applies. If
+$p_i + p_j > 1$ then $q_{ij} = p_i + p_j - 1$, the numerator is $p_i + p_j - 1 - p_i p_j =
+-(1-p_i)(1-p_j)$, and
+\[
+\rho_{ij} = \frac{-(1-p_i)(1-p_j)}{\sqrt{p_i(1-p_i)p_j(1-p_j)}} = -\sqrt{\frac{(1-p_i)(1-p_j)}{p_i p_j}} = -1/\sqrt{o_i o_j} . \qedhere
+\]
+\end{proof}
+
+Two consequences. First, an entry reads $+1$ only when $p_i = p_j$, so a rare class and a common
+class have a lower ceiling than two common classes, and entries for pairs with different inclusion
+rates are not on a common scale. Second, as $\alpha$ grows the sets shrink, every $p_i$ falls, and
+every floor entry \eqref{eq:floor} moves toward zero whether or not the classifier changed. The paper
+sweeps $\alpha$ over four values and presents the dependence as a feature.
+
+\begin{lemma}[Identification of the inclusion rates]\label{lem:ident}
+Suppose every prediction set is a singleton and at least three classes have inclusion rate strictly
+between zero and one. Then for any three distinct such classes $i$, $j$, $k$,
+\begin{equation}\label{eq:ident}
+o_i = -\frac{\rho_{ij}\,\rho_{ik}}{\rho_{jk}}, \qquad p_i = \frac{o_i}{1 + o_i} .
+\end{equation}
+The off-diagonal entries of the matrix therefore determine every inclusion rate exactly.
+\end{lemma}
+
+\begin{proof}
+With singleton sets no two classes ever share a set, so \eqref{eq:floor} holds for every pair, and
+$\rho_{ij}\rho_{ik} = \sqrt{o_i o_j}\sqrt{o_i o_k} = o_i \sqrt{o_j o_k} = -o_i \rho_{jk}$. Divide by
+$-\rho_{jk}$, which is nonzero since $o_j, o_k > 0$. The map $o \mapsto o/(1+o)$ inverts
+$p \mapsto p/(1-p)$.
+\end{proof}
+
+The paper argues that the matrix is privacy preserving because it ``only contains probabilities''
+and so ``does not leak information on the size and composition'' of a client's data. Correlations
+can be negative, so the matrix does not contain probabilities. A row normalized confusion matrix
+does, and reveals no counts either. And in the singleton regime, which is the regime of an accurate
+classifier at moderate $\alpha$, Lemma~\ref{lem:ident} recovers the inclusion rates, which for an
+accurate classifier are the predicted class frequencies, which approximate the label histogram. The
+matrix is offered as useful precisely because it exposes how a client's data differs from the
+others. No threat model, mechanism or leakage bound is given.
+
+\section{What the coverage guarantee constrains}\label{sec:coverage}
+
+The paper states that ``for a given input sample'' the set ``is guaranteed to contain the correct
+class'' with probability close to $1-\alpha$. The guarantee \eqref{eq:coverage} is marginal, not
+conditional on the input, and distribution free conditional coverage is impossible in finite samples
+\citep{barber2021}. The distinction matters here because the authors go on to interpret individual
+class pairs and individual federated clients as if validity transferred to them. It does not
+transfer to a client or a class either. Take ten equally weighted clients, nine with coverage one and
+one with coverage zero. Pooled coverage is exactly $0.9$, which meets a nominal $1 - \alpha = 0.9$,
+and the tenth client has no protection at all. The same arithmetic applies to a class with a tenth of
+the data that is missed every time.
+
+The paper also writes the upper coverage term as $1/(n-1)$, which is looser than the standard
+$1/(n+1)$ \citep{lei2018, stutz2022} and probably a typographical error. And the federated
+experiments compare local matrices computed against a global calibration set across clients that are
+non identically distributed by construction. Under that mismatch even the marginal guarantee need not
+hold, and no coverage or set sizes are reported for any client.
+
+\section{What to report instead}\label{sec:instead}
+
+If the question is which classes the classifier confuses, the probabilities answer it directly. The
+soft confusion matrix
+\[
+C_{ab} = \E\big[\, p_b(X) \,\big|\, Y = a \,\big]
+\]
+is the average probability assigned to class $b$ on inputs of true class $a$. It is directional, it
+sees near misses at every resolution, and it needs no calibration set and no threshold. It needs
+labeled evaluation data, as any confusion matrix does. If labels are unavailable, the mean pairwise
+product $\E[p_i(X) p_j(X)]$ is symmetric and label free. If sets are genuinely the object, because a
+downstream consumer receives sets and nothing else, then the co-occurrence rate $q_{ij}$ is the
+quantity the abstract describes, and the coverage confusion matrix of \citet{stutz2022}, which
+conditions on the true label, is directional. In every case the inclusion rates and the set sizes
+should be reported alongside, since by Lemma~\ref{lem:floor} an entry of \eqref{eq:ccm} cannot be
+read without them. The paper compares against none of these. Its only comparison is with the hard
+confusion matrix, which discards the probabilities entirely, so the contrast it draws is soft versus
+hard rather than conformal versus not.
+
+The paper's client selection experiment does not bear on any of this, but we note that it selects
+the clients with the highest entries for two critical classes while the centralized section reads a
+falling entry as the classifier learning to separate them, that its Figures~6 and~7 are captioned as
+matrix entries while their axes are class accuracy, and that its Table~1 reports overall CIFAR-100
+accuracy falling from $0.511$ to $0.493$ under a heading of no effect, without repetitions, seeds or
+error bars.
+
+Simulations that exhibit Examples~\ref{ex:hard}, \ref{ex:rates} and the direction blindness of
+Example~\ref{ex:perfect} on a synthetic ten class classifier with adaptive prediction sets, and that
+compare the matrix with $C_{ab}$ and $\E[p_i p_j]$ as $\alpha$ varies, are available at
+\url{https://conformalprediction.net/demos/32-conformal-correlation.html}.
+
+\section{Conclusion}\label{sec:conclusion}
+
+The conformal correlation matrix is the phi coefficient of a thresholded softmax. By
+Proposition~\ref{prop:law} it sees only the law of the sets, and by Proposition~\ref{prop:any} the
+coverage guarantee leaves every entry free. The seven examples show that each reading the authors
+attach to an entry, positive for similar, negative for dissimilar, zero for unrelated, fails on a
+three class problem with perfect coverage. Lemma~\ref{lem:floor} shows that the entries the authors
+read as dissimilarity are functions of the inclusion rates alone, and Lemma~\ref{lem:ident} shows that
+in the regime of an accurate classifier those rates can be read off the matrix exactly. None of this
+is repaired by the certificate, which concerns the true label and says nothing about which other
+labels sit beside it.
+
+\bibliographystyle{plainnat}
+\begin{thebibliography}{9}
+
+\bibitem[Barber et~al.(2021)]{barber2021}
+R.~F. Barber, E.~J. Cand\`es, A. Ramdas, and R.~J. Tibshirani.
+\newblock The limits of distribution-free conditional predictive inference.
+\newblock \emph{Information and Inference}, 10(2):455--482, 2021.
+
+\bibitem[Lei et~al.(2018)]{lei2018}
+J. Lei, M. G'Sell, A. Rinaldo, R.~J. Tibshirani, and L. Wasserman.
+\newblock Distribution-free predictive inference for regression.
+\newblock \emph{Journal of the American Statistical Association}, 113(523):1094--1111, 2018.
+
+\bibitem[Perlo et~al.(2026)]{perlo2026}
+A. Perlo, C.~F. Chiasserini, G. De~Veciana, and F. Malandrino.
+\newblock Characterizing the performance of classification models through conformal correlation
+matrices.
+\newblock \emph{Computer Communications}, 247:108398, 2026.
+
+\bibitem[Romano et~al.(2020)]{romano2020}
+Y. Romano, M. Sesia, and E.~J. Cand\`es.
+\newblock Classification with valid and adaptive coverage.
+\newblock In \emph{Advances in Neural Information Processing Systems}, volume~33, pages 3581--3591,
+2020.
+
+\bibitem[Stutz et~al.(2022)]{stutz2022}
+D. Stutz, K. Dvijotham, A.~T. Cemgil, and A. Doucet.
+\newblock Learning optimal conformal classifiers.
+\newblock In \emph{International Conference on Learning Representations}, 2022.
+
+\bibitem[Vovk et~al.(2005)]{vovk2005}
+V. Vovk, A. Gammerman, and G. Shafer.
+\newblock \emph{Algorithmic Learning in a Random World}.
+\newblock Springer, 2005.
+
+\bibitem[Yule(1912)]{yule1912}
+G.~U. Yule.
+\newblock On the methods of measuring association between two attributes.
+\newblock \emph{Journal of the Royal Statistical Society}, 75(6):579--652, 1912.
+
+\end{thebibliography}
+
+\end{document}
