@@ -279,9 +279,12 @@ matrix.
 The loss can be measured. Fix the threshold and choose between the two models by a fair coin $D$.
 The set law does not depend on $D$, so $I(D; C) = 0$. But when $Y = A$, model~1 produces $\set{C}$
 or $\set{A, C}$ and model~2 produces $\set{B}$ or $\set{A, B}$, and likewise for the other two
-classes, so the set together with its true label identifies $D$ and $I(D; Y \mid C) = \log 2$. The
-sets alone carry no information about the direction of confusion. The sets with their labels carry
-one full bit. The matrix is computed from the sets alone.
+classes, so the set together with its true label identifies $D$ and $I(D; Y \mid C) = \log 2$. The sets alone carry no information about the direction of confusion. The sets with their labels
+carry one full bit. The matrix is computed from the sets alone. The loss is of the same kind as the
+one priced in \citet{cotton2026}, where pooling a conditional residual law into one marginal law
+costs exactly the mutual information between residual and input. There the pooled object is the
+residual law and the cost is a forecasting regret. Here the pooled object is the joint law of set,
+label and ranked prediction, reduced to the law of the set, and the cost is a diagnostic one.
 \end{example}
 
 \begin{example}[A perfect classifier and a perfectly wrong one share a matrix]\label{ex:perfect}
@@ -634,6 +637,11 @@ randomized APS a perfect classifier's matrix reveals the class proportions. None
 R.~F. Barber, E.~J. Cand\`es, A. Ramdas, and R.~J. Tibshirani.
 \newblock The limits of distribution-free conditional predictive inference.
 \newblock \emph{Information and Inference}, 10(2):455--482, 2021.
+
+\bibitem[Cotton(2026)]{cotton2026}
+P. Cotton.
+\newblock Marginally useful: an information-gap identity in conformal prediction.
+\newblock arXiv:2608.07479, 2026.
 
 \bibitem[Lei et~al.(2018)]{lei2018}
 J. Lei, M. G'Sell, A. Rinaldo, R.~J. Tibshirani, and L. Wasserman.
