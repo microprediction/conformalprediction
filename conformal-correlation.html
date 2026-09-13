@@ -338,8 +338,8 @@
   <p>which at \(n = 1000\) is about \(-0.001\).</p>
 
   <p><strong>What it shows.</strong> The authors present heat maps of entries with no uncertainty attached.
-  For rare labels moving a single label occurrence from one row to another moves an entry across
-  the whole range.</p>
+  For rare labels moving a single label occurrence from one row to another moves an entry from 1 to about 0, half of its
+  range.</p>
 
   <h2>What is computed</h2>
 
@@ -467,15 +467,21 @@
   <p>The privacy argument compares the CCM, which &ldquo;only contains probabilities,&rdquo; with a raw
   count confusion matrix, whose row sums reveal the size and class composition of a client&rsquo;s
   data. Correlations can be negative, so the CCM does not contain probabilities at all. A row
-  normalized confusion matrix does, and does not directly disclose counts. And when every set is a
-  singleton and at least three classes have \(0 < p < 1\), the CCM identifies every inclusion rate
-  exactly. Write \(o_i = p_i/(1-p_i)\). Then
+  normalized confusion matrix does, and does not directly disclose counts. And when every set has at
+  most one element and at least three classes have \(0 < p < 1\), the CCM identifies every inclusion
+  rate exactly. Write \(o_i = p_i/(1-p_i)\). Then
   \(\rho_{ij} = -\sqrt{o_i o_j}\), so for any three distinct such classes</p>
 
   $$o_i = -\frac{\rho_{ij}\,\rho_{ik}}{\rho_{jk}}, \qquad p_i = \frac{o_i}{1 + o_i}.$$
 
-  <p>When every set is the singleton of the ranked prediction, the inclusion rates are the predicted
-  class frequencies, which for an accurate classifier approximate the label histogram. There is no threat model, no privacy mechanism and no leakage bound.
+  <p>Inside randomized APS this recovers a client's class proportions exactly. Take a perfect
+  classifier that assigns the ranked probabilities \(0.6, 0.3, 0.1\) with the true class first, and
+  class proportions \(\pi_1, \pi_2, \pi_3\). Every calibration score is \(0.6 - 0.6u\), so the
+  threshold \(\tau\) is below 0.6, the top class is kept with probability \(r = \tau/0.6\), and no
+  other class is ever included. The set is \(\{Y\}\) with probability \(r\) and empty otherwise,
+  so \(p_i = r\pi_i\). The formula above recovers every \(p_i\), and then
+  \(\pi_i = p_i / \sum_j p_j\). For an empirical matrix the same algebra recovers the empirical
+  inclusion frequencies, from which the proportions are estimated rather than read off. There is no threat model, no privacy mechanism and no leakage bound.
   The defensible claim is that the CCM does not transmit raw counts.</p>
 
   <h2>The experiment</h2>
