@@ -35,9 +35,10 @@ randomized adaptive prediction sets, exactly as specified, produce the same law 
 and the same matrix while confusing classes in opposite directions, so the matrix does not
 determine the confusion matrix. The reason is that the matrix depends only on the law of the
 prediction set, while confusion depends on the joint law of the set, the true label and the ranked
-prediction. Two lemmas give every entry for classes that never share a set as a function of the
-inclusion rates alone, and recover every inclusion rate exactly from three entries when sets are
-singletons, which bears on the privacy claim made for the matrix.
+prediction. Two lemmas give every entry for classes that never share a
+set as a function of the inclusion rates alone, and recover every inclusion rate exactly from three
+entries when sets have at most one element. Inside randomized APS the second lemma recovers the
+class proportions of a client exactly, which bears on the privacy claim made for the matrix.
 \end{abstract}
 
 \section{The statistic}\label{sec:statistic}
@@ -58,9 +59,11 @@ s(x, y, u) = S_{r(x,y)}(x) - u\, p_y(x), \qquad u \sim \mathrm{Unif}(0, 1),
 the mass at and above $y$ in the ranking, less a uniform share of the mass of $y$ itself.
 
 The score is turned into a set by calibration. Given $m$ labeled calibration pairs $(x_i, y_i)$
-with independent uniforms $u_i$, let $\tau$ be the $\lceil (m+1)(1-\alpha) \rceil$-th smallest of
-the calibration scores $s(x_i, y_i, u_i)$. The prediction set at a new input $x$, with a fresh
-uniform $U$, is
+with independent uniforms $u_i$, let $k = \lceil (m+1)(1-\alpha) \rceil$ and let $\tau$ be the
+$k$-th smallest of the calibration scores $s(x_i, y_i, u_i)$. If $\alpha < 1/(m+1)$ then
+$k = m+1$ and no such score exists, in which case $\tau = +\infty$ and the set is every class. We
+assume $\alpha \ge 1/(m+1)$ throughout, so that $k \le m$. The prediction set at a new input $x$,
+with a fresh uniform $U$, is
 \begin{equation}\label{eq:apsset}
 C(x) = \set{\, y : s(x, y, U) \le \tau \,}.
 \end{equation}
@@ -169,9 +172,9 @@ Proposition~\ref{prop:law} the law of the sets is all the matrix depends on, so 
 example needs to specify.
 
 In those examples coverage is one, meaning that every set contains the true class. Any marginal
-coverage lower bound is then met. We do not claim that randomized APS produces these laws. It
-cannot produce coverage one, since with distinct scores its coverage is at most
-$1 - \alpha + 1/(m+1)$.
+coverage lower bound is then met. We do not claim that randomized APS produces these laws. When
+$\alpha > 1/(m+1)$ it cannot produce coverage one, since with distinct scores its coverage is at
+most $1 - \alpha + 1/(m+1) < 1$.
 
 Therefore Examples~\ref{ex:perfect} through \ref{ex:move} refute the authors' readings of the
 matrix as claims about laws of prediction sets that meet the coverage bound. A claim restricted to
@@ -208,8 +211,21 @@ $0.6 - 0.6U \le \tau$ and is always included. The second has score $0.9 - 0.3U$,
 $\tau$ exactly when $U \ge (0.9 - \tau)/0.3$, an event of probability $r$. The third has score
 $1 - 0.1U > 0.9 > \tau$ and is never included. Under either model, therefore, each singleton
 $\set{A}$, $\set{B}$, $\set{C}$ occurs with probability $(1-r)/3$ and each pair $\set{A, B}$,
-$\set{B, C}$, $\set{C, A}$ with probability $r/3$. The same law of sets gives the same matrix, and
-the same coverage $r$, whose average over calibration draws is at least $1 - \alpha$.
+$\set{B, C}$, $\set{C, A}$ with probability $r/3$. The same law of sets gives the same matrix. For
+the record, $p_i = (1+r)/3$ and $q_{ij} = r/3$ for every class and pair, so every off-diagonal
+entry is
+\[
+\rho_{ij} = \frac{r/3 - (1+r)^2/9}{(1+r)(2-r)/9} = -\frac{r^2 - r + 1}{(1+r)(2-r)},
+\]
+the same for both models and negative for every $r$.
+
+Coverage is the same for both models too, and it is worth stating carefully. Conditional on the
+calibration sample, coverage equals $r$ exactly. Since $\tau$ is the $k$-th smallest of $m$ uniforms
+on $(0.6, 0.9)$, the variable $r$ is the $k$-th smallest of $m$ uniforms on $(0, 1)$, which has the
+$\mathrm{Beta}(k, m+1-k)$ law with mean $k/(m+1) \ge 1 - \alpha$. So on a given calibration sample
+$r$ can fall below $1 - \alpha$, and its average over calibration samples meets the marginal
+guarantee, as in Theorem~1 of \citet{romano2020}. The equality of the two set laws holds for every
+realized $\tau$.
 
 The two models confuse classes in opposite directions. Model 1 labels every $A$ as $C$, every $B$
 as $A$ and every $C$ as $B$. Model 2 runs the cycle the other way. Their confusion matrices are
@@ -380,7 +396,8 @@ in a different set then $p_A = p_B = 1/n$, $q_{AB} = 0$, and
 which at $n = 1000$ is about $-0.001$.
 
 The authors present heat maps of entries with no uncertainty attached. For rare labels, moving a
-single label occurrence from one row to another moves an entry across its whole range.
+single label occurrence from one row to another moves an entry from one to about zero, half of
+its range.
 \end{example}
 
 \section{Two lemmas}\label{sec:lemmas}
@@ -435,8 +452,8 @@ remain nondegenerate. The authors sweep $\alpha$ over four values and present th
 feature.
 
 \begin{lemma}[Identification of the inclusion rates]\label{lem:ident}
-Suppose every prediction set is a singleton and at least three classes have inclusion rate strictly
-between zero and one. Then for any three distinct such classes $i$, $j$, $k$,
+Suppose every prediction set has at most one element and at least three classes have inclusion rate
+strictly between zero and one. Then for any three distinct such classes $i$, $j$, $k$,
 \begin{equation}\label{eq:ident}
 o_i = -\frac{\rho_{ij}\,\rho_{ik}}{\rho_{jk}}, \qquad p_i = \frac{o_i}{1 + o_i} .
 \end{equation}
@@ -444,7 +461,8 @@ The off-diagonal entries of the matrix therefore determine every inclusion rate 
 \end{lemma}
 
 \begin{proof}
-With singleton sets no two classes ever share a set, so \eqref{eq:floor} holds for every pair, and
+With sets of at most one element no two classes ever share a set, so \eqref{eq:floor} holds for
+every pair, and
 $\rho_{ij}\rho_{ik} = \sqrt{o_i o_j}\sqrt{o_i o_k} = o_i \sqrt{o_j o_k} = -o_i \rho_{jk}$. Divide by
 $-\rho_{jk}$, which is nonzero since $o_j, o_k > 0$. The map $o \mapsto o/(1+o)$ inverts
 $p \mapsto p/(1-p)$.
@@ -455,9 +473,26 @@ and so ``does not leak information on the size and composition'' of a client's d
 can be negative, so the matrix does not contain probabilities. A row normalized confusion matrix
 does contain only probabilities, and does not directly disclose counts either.
 
-Lemma~\ref{lem:ident} says more. When every set is a singleton, the off-diagonal entries recover
-every inclusion rate. When every set is the singleton of the ranked prediction, those rates are the
-predicted class frequencies, which for an accurate classifier approximate the label histogram.
+Lemma~\ref{lem:ident} says more. When every set has at most one element, the off-diagonal entries
+recover every inclusion rate. Inside randomized APS that is enough to recover the class proportions
+exactly.
+
+\begin{example}[The matrix reveals the class proportions, within randomized APS]\label{ex:privacy}
+Take a perfect classifier that assigns the ranked probabilities $(0.6, 0.3, 0.1)$ with the true
+class always first, and let the true class proportions be $\pi_1, \pi_2, \pi_3$, all positive. By
+\eqref{eq:aps} every calibration score is $0.6 - 0.6u$, so $\tau \in (0, 0.6)$. At a test input the
+top class has score $0.6 - 0.6U \le \tau$ exactly when $U \ge 1 - \tau/0.6$, an event of
+probability $r = \tau/0.6$, and the second has score $0.9 - 0.3U > 0.6 > \tau$ and is never
+included. So the set is $\set{Y}$ with probability $r$ and empty otherwise, every set has at most
+one element, and $p_i = r\,\pi_i \in (0, 1)$. Lemma~\ref{lem:ident} recovers every $p_i$ from the
+off-diagonal entries, and then
+\[
+\pi_i = \frac{p_i}{\sum_j p_j} .
+\]
+The population matrix determines the true class proportions exactly. For an empirical matrix the
+same algebra recovers the empirical inclusion frequencies exactly, from which the proportions are
+estimated rather than read off.
+\end{example}
 
 The matrix is offered as useful because it exposes how a client's data differs from the others. No
 threat model, mechanism or leakage bound is given.
@@ -530,13 +565,16 @@ The conformal correlation matrix is the phi coefficient of a thresholded softmax
 Proposition~\ref{prop:law} it sees only the law of the sets, and by Proposition~\ref{prop:any} the
 marginal coverage lower bound leaves any single entry free among the laws that satisfy it.
 
-The eight examples show that each reading the authors attach to an entry, positive for similar,
-negative for dissimilar, zero for unrelated, fails on a three class problem that meets that bound,
-and Example~\ref{ex:aps} shows the failure inside randomized APS itself. Lemma~\ref{lem:floor}
-shows that for pairs that never share a set the entry is a function of the inclusion rates alone,
-and Lemma~\ref{lem:ident} shows that when every set is a singleton those rates can be read off the
-matrix exactly. None of this is repaired by the certificate, which concerns the true label and says
-nothing about which other labels sit beside it.
+Example~\ref{ex:aps} shows, inside randomized APS itself, that the matrix does not determine the
+confusion matrix. Examples~\ref{ex:perfect} through \ref{ex:move} concern laws of sets that meet the
+coverage bound. Among them, Example~\ref{ex:zero} disproves the converse of the authors' Remark~3,
+Example~\ref{ex:rare} shows that an entry does not determine the co-occurrence probability, and
+Examples~\ref{ex:hard} and \ref{ex:pool} show positive entries with no pairwise confusion.
+Lemma~\ref{lem:floor} shows that for pairs that never share a set the entry is a function of the
+inclusion rates alone, and Lemma~\ref{lem:ident} with Example~\ref{ex:privacy} shows that inside
+randomized APS a perfect classifier's matrix reveals the class proportions. None of this is repaired
+by the certificate, which concerns the true label and says nothing about which other labels sit
+beside it.
 
 \bibliographystyle{plainnat}
 \begin{thebibliography}{9}
