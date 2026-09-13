@@ -30,18 +30,21 @@
 \maketitle
 
 \begin{abstract}
-Conformal prediction sets are a coarsening of a classifier's probabilities, and a statistic computed
-from the sets alone inherits nothing from the coverage guarantee and sees neither the true label nor
-the ranked prediction. \citet{perlo2026} correlate the membership indicators of prediction sets and
-read the result as a map of which classes a classifier confuses. It is not. Two classifiers built inside
-randomized adaptive prediction sets, exactly as specified, produce the same law of sets and the same
-matrix while confusing every class in opposite directions, and a short theorem shows that no
-statistic of the sets determines the confusion matrix once any set of size two occurs. Seven further
-hand calculations give a zero entry beside 99\% directional confusion, an entry of one beside one in
-a million co-occurrence, and an entry of $\pm 0.64$ from pooling two clients with zero correlation on
-each. For classes that never share a set the entry is a function of the inclusion rates alone, and
-when sets have at most one element the matrix reveals a client's class proportions exactly, which
-undoes the privacy claim made for it.
+Conformal prediction has recently been extended to the diagnosis of classifiers and the selection
+of federated clients, with the prediction sets themselves treated as data from which class
+similarity, confusion and client quality are read off, without heed to the warning in
+\citet{cotton2026} that a marginal conformal object costs exactly the conditional information it
+discards. We give a specific caution in the form of a no-go theorem and a one bit calculation: no
+statistic of the prediction sets determines the confusion matrix once a set of size two occurs,
+because the sets are computed without the true label or the ranked prediction. We illustrate with
+the conformal correlation matrix of \citet{perlo2026}, the phi coefficient between set membership
+indicators, a natural construction that is likely to be reinvented. Two classifiers built inside
+randomized adaptive prediction sets, exactly as specified, produce the same matrix while confusing
+every class in opposite directions, and seven further hand calculations give a zero entry beside
+99\% directional confusion, an entry of one beside one in a million co-occurrence, and an entry of
+$\pm 0.64$ from pooling two clients with zero correlation on each. For classes that never share a
+set the entry is a function of the inclusion rates alone, and when sets have at most one element the
+matrix reveals a client's class proportions exactly, which undoes the privacy claim made for it.
 \end{abstract}
 
 \section{The statistic}\label{sec:statistic}
