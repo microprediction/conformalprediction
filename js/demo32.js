@@ -348,9 +348,10 @@ function pipeline(seed, pi, G, margin, alpha, randomize, hard = 0) {
     const preCal = prep(cal.P), preTest = prep(test.P);
     const scores = apsScores(preCal, cal.ys, st.randomize, rng2);
     const xs = [], pair = [], other = [], form = [];
+    // the same auxiliary uniforms at every alpha, so the realized sets are nested in alpha
     for (let a = 0.02; a <= 0.5001; a += 0.02) {
       const q = conformalQ(scores, a);
-      const Z = apsSets(preTest, q, st.randomize, rng2);
+      const Z = apsSets(preTest, q, st.randomize, mulberry32(seed + 101));
       const mm = ccm(Z);
       let s = 0, f = 0, k = 0;
       for (let i = 0; i < H; i++) for (let j = i + 1; j < H; j++) {
@@ -492,7 +493,7 @@ function pipeline(seed, pi, G, margin, alpha, randomize, hard = 0) {
     const Sn = S.map((v) => v / smax);
     const rSoft = spearman(g, S);
     const q = conformalQ(scores, st.alpha);
-    const Z = apsSets(preTest, q, st.randomize, rng);
+    const Z = apsSets(preTest, q, st.randomize, mulberry32(seed + 202));
     const m = ccm(Z);
     const R = pairs(m.rho);
     const ok = R.map((v) => isFinite(v));
@@ -502,7 +503,7 @@ function pipeline(seed, pi, G, margin, alpha, randomize, hard = 0) {
     const xs = [], rc = [];
     for (let a = 0.02; a <= 0.5001; a += 0.02) {
       const qq = conformalQ(scores, a);
-      const ZZ = apsSets(preTest, qq, st.randomize, rng);
+      const ZZ = apsSets(preTest, qq, st.randomize, mulberry32(seed + 202));
       const RR = pairs(ccm(ZZ).rho);
       const okk = RR.map((v) => isFinite(v));
       const n = okk.filter(Boolean).length;
