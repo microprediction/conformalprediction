@@ -71,8 +71,6 @@ prediction sets''. Each of these statements is false, and the examples below sho
 
 \section{What the matrix can and cannot see}\label{sec:organizing}
 
-Everything below follows from one observation.
-
 \begin{proposition}\label{prop:law}
 The conformal correlation matrix is a functional of the law of the prediction set $C(X)$ alone.
 Two situations with the same law of $C(X)$ have the same matrix, whatever the joint law of $(C(X),
@@ -189,7 +187,7 @@ input, so
 \rho_{AB} = 1 \qquad \text{for every } 0 < \varepsilon < 1,
 \]
 while the probability that $A$ and $B$ appear together in a set is $q_{AB} = \varepsilon$, which may be
-$0.4$, or $0.01$, or one in a million. The abstract of the paper says the matrix ``captures the
+$0.4$, or $0.01$, or one in a million. The authors write in their abstract that the matrix ``captures the
 likelihood of class pairs co-occurring''. The likelihood is $\varepsilon$. The entry is one
 regardless.
 \end{example}
@@ -223,8 +221,8 @@ q_{AB} = \tfrac12 (0.9 \times 0.9) + \tfrac12 (0.1 \times 0.1) = 0.41, \qquad
 \]
 Reverse the rates on one client, so that client~1 adds $A$ with probability $0.9$ and $B$ with
 probability $0.1$ and client~2 does the opposite. Then $q_{AB} = \tfrac12(0.09) + \tfrac12(0.09) =
-0.09$ and $\rho_{AB} = (0.09 - 0.25)/0.25 = -0.64$. The paper computes matrices across clients that
-are non identically distributed by construction and reads the entries as properties of the
+0.09$ and $\rho_{AB} = (0.09 - 0.25)/0.25 = -0.64$. The authors compute matrices across clients that
+are non identically distributed by construction and read the entries as properties of the
 classifier. A strong entry of either sign is produced here by the mixture of clients alone.
 \end{example}
 
@@ -266,7 +264,7 @@ $p_A = p_B = 1/n$, $q_{AB} = 0$, and
 \[
 \rho_{AB} = \frac{0 - 1/n^2}{(1/n)(1-1/n)} = -\frac{1}{n-1},
 \]
-which at $n = 1000$ is about $-0.001$. The paper presents heat maps of entries with no uncertainty
+which at $n = 1000$ is about $-0.001$. The authors present heat maps of entries with no uncertainty
 attached. For rare labels a single observation moves an entry across its whole range.
 \end{example}
 
@@ -314,8 +312,8 @@ $p_i + p_j > 1$ then $q_{ij} = p_i + p_j - 1$, the numerator is $p_i + p_j - 1 -
 Two consequences. First, an entry reads $+1$ only when $p_i = p_j$, so a rare class and a common
 class have a lower ceiling than two common classes, and entries for pairs with different inclusion
 rates are not on a common scale. Second, as $\alpha$ grows the sets shrink, every $p_i$ falls, and
-every floor entry \eqref{eq:floor} moves toward zero whether or not the classifier changed. The paper
-sweeps $\alpha$ over four values and presents the dependence as a feature.
+every floor entry \eqref{eq:floor} moves toward zero whether or not the classifier changed. The authors
+sweep $\alpha$ over four values and present the dependence as a feature.
 
 \begin{lemma}[Identification of the inclusion rates]\label{lem:ident}
 Suppose every prediction set is a singleton and at least three classes have inclusion rate strictly
@@ -333,18 +331,18 @@ $-\rho_{jk}$, which is nonzero since $o_j, o_k > 0$. The map $o \mapsto o/(1+o)$
 $p \mapsto p/(1-p)$.
 \end{proof}
 
-The paper argues that the matrix is privacy preserving because it ``only contains probabilities''
+The authors argue that the matrix is privacy preserving because it ``only contains probabilities''
 and so ``does not leak information on the size and composition'' of a client's data. Correlations
 can be negative, so the matrix does not contain probabilities. A row normalized confusion matrix
 does, and reveals no counts either. And in the singleton regime, which is the regime of an accurate
 classifier at moderate $\alpha$, Lemma~\ref{lem:ident} recovers the inclusion rates, which for an
 accurate classifier are the predicted class frequencies, which approximate the label histogram. The
-matrix is offered as useful precisely because it exposes how a client's data differs from the
+matrix is offered as useful because it exposes how a client's data differs from the
 others. No threat model, mechanism or leakage bound is given.
 
 \section{What the coverage guarantee constrains}\label{sec:coverage}
 
-The paper states that ``for a given input sample'' the set ``is guaranteed to contain the correct
+The authors state that ``for a given input sample'' the set ``is guaranteed to contain the correct
 class'' with probability close to $1-\alpha$. The guarantee \eqref{eq:coverage} is marginal, not
 conditional on the input, and distribution free conditional coverage is impossible in finite samples
 \citep{barber2021}. The distinction matters here because the authors go on to interpret individual
@@ -354,7 +352,7 @@ one with coverage zero. Pooled coverage is exactly $0.9$, which meets a nominal 
 and the tenth client has no protection at all. The same arithmetic applies to a class with a tenth of
 the data that is missed every time.
 
-The paper also writes the upper coverage term as $1/(n-1)$, which is looser than the standard
+The authors also write the upper coverage term as $1/(n-1)$, which is looser than the standard
 $1/(n+1)$ \citep{lei2018, stutz2022} and probably a typographical error. And the federated
 experiments compare local matrices computed against a global calibration set across clients that are
 non identically distributed by construction. Under that mismatch even the marginal guarantee need not
@@ -370,16 +368,16 @@ C_{ab} = \E\big[\, p_b(X) \,\big|\, Y = a \,\big]
 is the average probability assigned to class $b$ on inputs of true class $a$. It is directional, it
 sees near misses at every resolution, and it needs no calibration set and no threshold. It needs
 labeled evaluation data, as any confusion matrix does. If labels are unavailable, the mean pairwise
-product $\E[p_i(X) p_j(X)]$ is symmetric and label free. If sets are genuinely the object, because a
+product $\E[p_i(X) p_j(X)]$ is symmetric and label free. If sets are the object, because a
 downstream consumer receives sets and nothing else, then the co-occurrence rate $q_{ij}$ is the
 quantity the abstract describes, and the coverage confusion matrix of \citet{stutz2022}, which
 conditions on the true label, is directional. In every case the inclusion rates and the set sizes
 should be reported alongside, since by Lemma~\ref{lem:floor} an entry of \eqref{eq:ccm} cannot be
-read without them. The paper compares against none of these. Its only comparison is with the hard
+read without them. The authors compare against none of these. Its only comparison is with the hard
 confusion matrix, which discards the probabilities entirely, so the contrast it draws is soft versus
 hard rather than conformal versus not.
 
-The paper's client selection experiment does not bear on any of this, but we note that it selects
+The authors' client selection experiment does not bear on any of this, but we note that it selects
 the clients with the highest entries for two critical classes while the centralized section reads a
 falling entry as the classifier learning to separate them, that its Figures~6 and~7 are captioned as
 matrix entries while their axes are class accuracy, and that its Table~1 reports overall CIFAR-100
