@@ -95,7 +95,7 @@
   co-membership, but conformal coverage supplies no inferential or semantic guarantee for its entries.
   Because the matrix discards the true labels and the prediction rankings, and can be driven by marginal
   inclusion rates and set size, it cannot in general identify directional class confusion or contain a
-  superset of the confusion matrix. Two small examples show this by hand, and
+  superset of the confusion matrix. Seven worked examples show this by hand, and
   <a href="/demos/32-conformal-correlation.html">demonstration 32</a> shows it at scale.</p>
 
   <h2>What is proposed</h2>
@@ -115,59 +115,186 @@
   when the goal is to separate two critical classes. The abstract describes it as capturing &ldquo;the
   likelihood of class pairs co-occurring within conformal prediction sets.&rdquo;</p>
 
-  <h2>Two small examples</h2>
+  <h2>Worked examples</h2>
 
-  <h3>Example 1. Two classes the model never confuses get different entries</h3>
+  <p>One fact organizes everything below. The conformal correlation matrix is computed from the sets
+  alone, so it depends only on the distribution of the set \(C(X)\). Confusion depends on the joint
+  distribution of three things: the set, the true label \(Y\), and the class \(\hat Y\) the model ranks
+  first. Hold the distribution of the sets fixed and change \(Y\) or the ranking, and the matrix cannot
+  notice. In every example the entries are computed from the definition,</p>
 
-  <p>Three classes, cat, dog and plane, with equal numbers of test images, and a classifier whose sets
-  are as follows. Every cat image gets \(\{\text{cat}, \text{dog}\}\). Every dog image gets
-  \(\{\text{dog}\}\). Every plane image gets \(\{\text{plane}\}\). Coverage is 100%.</p>
+  $$\rho_{ij} = \frac{\mathbb{E}[z_i z_j] - p_i p_j}{\sqrt{p_i(1-p_i)\,p_j(1-p_j)}}, \qquad p_i = \mathbb{E}[z_i],$$
 
-  <div class="tablewrap">
-  <table class="phi">
-    <tr><th>Image</th><th>Prediction set</th><th>\(z = (z_{\text{cat}}, z_{\text{dog}}, z_{\text{plane}})\)</th></tr>
-    <tr><td>cat</td><td style="text-align:left">{cat, dog}</td><td>(1, 1, 0)</td></tr>
-    <tr><td>dog</td><td style="text-align:left">{dog}</td><td>(0, 1, 0)</td></tr>
-    <tr><td>plane</td><td style="text-align:left">{plane}</td><td>(0, 0, 1)</td></tr>
-  </table>
-  </div>
+  <p>so each calculation needs only the inclusion rates \(p_i\) and the co-occurrence rates
+  \(\mathbb{E}[z_i z_j]\). The examples are ordered from the simplest to refute and the most absurd
+  result downward.</p>
 
-  <p>Cat appears in a third of the sets, dog in two thirds and plane in a third. Every indicator
-  therefore has variance \(2/9\), and the correlation of two indicators is
-  \(\mathbb{E}[z_i z_j] - p_i p_j\) divided by \(2/9\). Cat and dog share a third of the sets, so</p>
+  <h3>Example 1. A perfect classifier and a perfectly wrong one get the same matrix</h3>
 
-  $$\rho_{\text{cat},\text{dog}} = \frac{1/3 - 2/9}{2/9} = \tfrac12, \qquad
-    \rho_{\text{cat},\text{plane}} = \frac{0 - 1/9}{2/9} = -\tfrac12, \qquad
-    \rho_{\text{dog},\text{plane}} = \frac{0 - 2/9}{2/9} = -1.$$
-
-  <p>The authors would read this as saying that dog and plane are strongly dissimilar and that cat and
-  plane are less so. However, plane images never share a set with either class. The difference between
-  \(-1\) and \(-1/2\) comes entirely from dog appearing in twice as many sets as cat. A negative entry
-  is set by the marginal inclusion rates of the two classes. It does not measure how dissimilar they
-  are.</p>
-
-  <h3>Example 2. Two models with opposite confusions get the same matrix</h3>
-
-  <p>Two classes, cat and dog, with four kinds of image in equal numbers, and two models that return the
-  same sets but rank the classes differently inside them. Call an image misclassified when the class the
-  model ranks first is not its true class.</p>
+  <p><strong>Setup.</strong> Three classes \(A\), \(B\), \(C\) with equal numbers of images, and sets
+  that always contain the true class and one neighbor.</p>
 
   <div class="tablewrap">
   <table class="phi">
-    <tr><th>Image</th><th>Prediction set</th><th>Model A ranks first</th><th>Model B ranks first</th></tr>
-    <tr><td>cat</td><td style="text-align:left">{cat, dog}</td><td>dog</td><td>cat</td></tr>
-    <tr><td>dog</td><td style="text-align:left">{cat, dog}</td><td>dog</td><td>cat</td></tr>
-    <tr><td>cat</td><td style="text-align:left">{cat}</td><td>cat</td><td>cat</td></tr>
-    <tr><td>dog</td><td style="text-align:left">{dog}</td><td>dog</td><td>dog</td></tr>
+    <tr><th>True class</th><th>Prediction set</th><th>Good model ranks first</th><th>Bad model ranks first</th></tr>
+    <tr><td>\(A\)</td><td style="text-align:left">{A, B}</td><td>\(A\)</td><td>\(B\)</td></tr>
+    <tr><td>\(B\)</td><td style="text-align:left">{B, C}</td><td>\(B\)</td><td>\(C\)</td></tr>
+    <tr><td>\(C\)</td><td style="text-align:left">{C, A}</td><td>\(C\)</td><td>\(A\)</td></tr>
   </table>
   </div>
 
-  <p>Under model A half the cats are misclassified as dogs and every dog is correct. Under model B half
-  the dogs are misclassified as cats and every cat is correct. The labels and the sets are identical, so
-  the indicator vectors are identical and the matrix is identical, with
-  \(\rho_{\text{cat},\text{dog}} = -1/3\) in both. Coverage is 100% in both. The matrix cannot see which
-  way the confusion runs, because it consults neither the label nor the ranking. A matrix that is
-  unchanged when the confusion matrix is transposed is not a superset of it.</p>
+  <p><strong>Calculation.</strong> Each label is in two of the three sets, so every \(p_i = 2/3\) and
+  every variance \(p_i(1-p_i)\) is \(2/9\). Each pair shares exactly one of the three sets, so every
+  co-occurrence rate is \(1/3\). Every off diagonal entry is</p>
+
+  $$\rho_{ij} = \frac{1/3 - (2/3)(2/3)}{2/9} = -\tfrac12.$$
+
+  <p>The good model has accuracy 1. The bad model has accuracy 0. Coverage is 100% for both. The
+  labels, the sets and therefore the matrix are identical for both.</p>
+
+  <p><strong>What it shows.</strong> The authors write that the matrix &ldquo;contains a superset of the
+  information conveyed by the confusion matrix.&rdquo; Here the confusion matrix is the identity for one
+  model and has an empty diagonal for the other, and the CCM is the same. The matrix never sees the
+  ranking, so it cannot contain the confusion matrix.</p>
+
+  <h3>Example 2. Zero correlation with 99% directional confusion</h3>
+
+  <p><strong>Setup.</strong> Three classes and a small number \(\varepsilon\), say \(0.01\). Images
+  arrive in four kinds with the probabilities shown.</p>
+
+  <div class="tablewrap">
+  <table class="phi">
+    <tr><th>Probability</th><th>True class</th><th>Prediction set</th><th>Ranked first</th></tr>
+    <tr><td>\((1-\varepsilon)/2\)</td><td>\(A\)</td><td style="text-align:left">{A, B}</td><td>\(B\)</td></tr>
+    <tr><td>\(\varepsilon/2\)</td><td>\(A\)</td><td style="text-align:left">{A}</td><td>\(A\)</td></tr>
+    <tr><td>\((1-\varepsilon)/2\)</td><td>\(B\)</td><td style="text-align:left">{B}</td><td>\(B\)</td></tr>
+    <tr><td>\(\varepsilon/2\)</td><td>\(C\)</td><td style="text-align:left">{C}</td><td>\(C\)</td></tr>
+  </table>
+  </div>
+
+  <p><strong>Calculation.</strong> \(A\) is in the sets of the first two kinds, so
+  \(p_A = (1-\varepsilon)/2 + \varepsilon/2 = 1/2\). \(B\) is in the sets of the first and third kinds,
+  so \(p_B = (1-\varepsilon)/2 + (1-\varepsilon)/2 = 1 - \varepsilon\). They appear together only in the
+  first kind, so \(\mathbb{E}[z_A z_B] = (1-\varepsilon)/2\). That equals \(p_A p_B\), so the numerator
+  of \(\rho_{AB}\) is zero and</p>
+
+  $$\rho_{AB} = 0.$$
+
+  <p>Among images whose true class is \(A\), the model ranks \(B\) first with probability
+  \(1 - \varepsilon\), which is 99% at \(\varepsilon = 0.01\). Coverage is 100%.</p>
+
+  <p><strong>What it shows.</strong> Remark 3 of the paper says an entry near zero means the classes are
+  &ldquo;unrelated or independent with respect to the classifier representation.&rdquo; Here the entry
+  is exactly zero while 99% of the images of one class are labeled as the other.</p>
+
+  <h3>Example 3. Perfect correlation with one in a million co-occurrence</h3>
+
+  <p><strong>Setup.</strong> Every set contains the true class \(T\), ranked first. Two other labels
+  \(A\) and \(B\) are added to the set together with probability \(\varepsilon\), and otherwise neither
+  is added.</p>
+
+  <p><strong>Calculation.</strong> \(z_A = z_B\) on every image, so their correlation is</p>
+
+  $$\rho_{AB} = 1 \quad \text{for every } 0 < \varepsilon < 1,$$
+
+  <p>while the probability that \(A\) and \(B\) appear together in a set is \(\varepsilon\), which can be
+  0.4, or 0.01, or one in a million. Coverage and accuracy are 100%.</p>
+
+  <p><strong>What it shows.</strong> The abstract says the matrix &ldquo;captures the likelihood of class
+  pairs co-occurring within conformal prediction sets.&rdquo; The likelihood is
+  \(\mathbb{E}[z_A z_B] = \varepsilon\). The entry is 1 regardless.</p>
+
+  <h3>Example 4. Every pair becomes positively correlated from difficulty alone</h3>
+
+  <p><strong>Setup.</strong> Three balanced classes. Half the images are hard and get the set of all
+  three classes. The other half are easy and get the singleton set of their true class. The true class
+  is ranked first in both cases, so accuracy and coverage are 100%.</p>
+
+  <p><strong>Calculation.</strong> Each label is in every hard set and in a third of the easy sets, so</p>
+
+  $$p_i = \tfrac12 \cdot 1 + \tfrac12 \cdot \tfrac13 = \tfrac23, \qquad p_i(1-p_i) = \tfrac29.$$
+
+  <p>Two labels appear together only in hard sets, so \(\mathbb{E}[z_i z_j] = 1/2\) for every pair, and</p>
+
+  $$\rho_{ij} = \frac{1/2 - (2/3)(2/3)}{2/9} = \tfrac14.$$
+
+  <p><strong>What it shows.</strong> Remark 1 of the paper says positive entries mark
+  &ldquo;intrinsically similar classes.&rdquo; Here every pair is positively correlated and the
+  classifier is perfect. The correlation comes from one shared cause, whether the image was hard, and
+  says nothing about any pair.</p>
+
+  <h3>Example 5. Pooling two clients creates a strong correlation from nothing</h3>
+
+  <p><strong>Setup.</strong> Every set contains the true class \(T\), ranked first. On client 1 the
+  labels \(A\) and \(B\) are each added to the set independently with probability 0.9. On client 2 they
+  are each added independently with probability 0.1. The two clients contribute equally to the pooled
+  data.</p>
+
+  <p><strong>Calculation.</strong> Within each client \(z_A\) and \(z_B\) are independent, so
+  \(\rho_{AB} = 0\) on client 1 and on client 2. Pooled, each label is in half the sets,
+  \(p_A = p_B = (0.9 + 0.1)/2 = 1/2\), so each variance is \(1/4\). They appear together with
+  probability</p>
+
+  $$\mathbb{E}[z_A z_B] = \tfrac12 (0.9 \times 0.9) + \tfrac12 (0.1 \times 0.1) = 0.41,$$
+
+  <p>and therefore</p>
+
+  $$\rho_{AB} = \frac{0.41 - (1/2)(1/2)}{1/4} = 0.64.$$
+
+  <p>Reverse the rates on one client, so that client 1 adds \(A\) with probability 0.9 and \(B\) with
+  probability 0.1 and client 2 does the opposite. Then \(\mathbb{E}[z_A z_B] = \tfrac12(0.09) +
+  \tfrac12(0.09) = 0.09\) and \(\rho_{AB} = (0.09 - 0.25)/0.25 = -0.64\).</p>
+
+  <p><strong>What it shows.</strong> The paper computes matrices on a global calibration set across
+  non identically distributed clients and reads the entries as properties of the classifier. A strong
+  positive or negative entry can be produced by the mixture of clients alone, with zero correlation on
+  every client and no confusion anywhere.</p>
+
+  <h3>Example 6. Two classes the model never confuses get different entries</h3>
+
+  <p><strong>Setup.</strong> Three classes, cat, dog and plane, with equal numbers of test images. The
+  classifier returns the same set for every image of a given class.</p>
+
+  <div class="tablewrap">
+  <table class="phi">
+    <tr><th>True class</th><th>Prediction set</th><th>\(z_{\text{cat}}\)</th><th>\(z_{\text{dog}}\)</th><th>\(z_{\text{plane}}\)</th></tr>
+    <tr><td>cat</td><td style="text-align:left">{cat, dog}</td><td>1</td><td>1</td><td>0</td></tr>
+    <tr><td>dog</td><td style="text-align:left">{dog}</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><td>plane</td><td style="text-align:left">{plane}</td><td>0</td><td>0</td><td>1</td></tr>
+  </table>
+  </div>
+
+  <p><strong>Calculation.</strong> Every set contains the true class, so coverage is 100%. A third of
+  the images are cats, so \(p_{\text{cat}} = 1/3\), and likewise \(p_{\text{dog}} = 2/3\) and
+  \(p_{\text{plane}} = 1/3\). Each variance \(p(1-p)\) is \(2/9\). Cat and dog appear together on the
+  cat images, so \(\mathbb{E}[z_{\text{cat}} z_{\text{dog}}] = 1/3\). Plane never appears with either,
+  so the other two co-occurrence rates are zero. Substituting,</p>
+
+  $$\rho_{\text{cat},\text{dog}} = \frac{1/3 - (1/3)(2/3)}{2/9} = \tfrac12, \qquad
+    \rho_{\text{cat},\text{plane}} = \frac{0 - (1/3)(1/3)}{2/9} = -\tfrac12, \qquad
+    \rho_{\text{dog},\text{plane}} = \frac{0 - (2/3)(1/3)}{2/9} = -1.$$
+
+  <p><strong>What it shows.</strong> Remark 2 of the paper says dissimilar classes show strong negative
+  correlation. Read that way, dog and plane are strongly dissimilar and cat and plane are half as
+  dissimilar. But the classifier treats plane identically with respect to both: it never puts plane in
+  a set with either. The two entries differ only because dog is in twice as many sets as cat. For any
+  two classes that never share a set, \(\rho_{ij} = -\sqrt{p_i p_j / ((1-p_i)(1-p_j))}\), a function of
+  the inclusion rates and nothing else.</p>
+
+  <h3>Example 7. One relocated observation moves an entry from 1 to almost 0</h3>
+
+  <p><strong>Setup.</strong> There are \(n\) test images, and two rare labels \(A\) and \(B\) each appear
+  in exactly one set.</p>
+
+  <p><strong>Calculation.</strong> If they appear in the same set, \(z_A = z_B\) and \(\rho_{AB} = 1\).
+  If \(B\) appears in a different set, then \(p_A = p_B = 1/n\), the co-occurrence rate is zero, and</p>
+
+  $$\rho_{AB} = \frac{0 - 1/n^2}{(1/n)(1 - 1/n)} = -\frac{1}{n-1},$$
+
+  <p>which at \(n = 1000\) is about \(-0.001\).</p>
+
+  <p><strong>What it shows.</strong> The paper presents heat maps of entries with no uncertainty attached.
+  For rare labels one observation moves an entry across the whole range.</p>
 
   <h2>What is computed</h2>
 
@@ -216,9 +343,13 @@
   than the standard \(1/(n+1)\) and probably a typo. Exchangeability, ties and the APS randomization
   are not stated.</p>
 
-  <p>In the federated experiments the clients are non identically distributed by construction, and
-  local matrices are compared with a global calibration set. Under that mismatch the standard guarantee
-  need not hold, and it is not established. No coverage and no set sizes are reported for any client.</p>
+  <p>The guarantee also does not transfer to a client or a class. Take ten equally weighted clients,
+  nine with coverage 100% and one with coverage 0%. Pooled coverage is exactly 90%, which meets a
+  nominal \(1-\alpha = 0.9\), and the tenth client has no protection at all. The same arithmetic
+  applies to a class with 10% of the data that is missed every time. In the federated experiments the
+  clients are non identically distributed by construction, and local matrices are compared with a
+  global calibration set. Under that mismatch even the marginal guarantee need not hold, and it is not
+  established. No coverage and no set sizes are reported for any client.</p>
 
   <h2>The entries are pinned by inclusion rates</h2>
 
@@ -246,8 +377,9 @@
   inclusion rates are not on a common scale. The abstract promised a likelihood of co-occurrence, which
   is \(\mathbb{E}[z_i z_j]\). The entry \(\rho_{ij}\) is a standardized excess co-occurrence whose
   attainable range depends on \(p_i\) and \(p_j\), so entries cannot be compared as an absolute scale of
-  confusability. <a href="/demos/32-conformal-correlation.html#a">Panel A</a> of the demonstration
-  draws the observed floor and the formula on top of each other.</p>
+  confusability. Example 6 above is the smallest case.
+  <a href="/demos/32-conformal-correlation.html#a">Panel A</a> of the demonstration draws the observed
+  floor and the formula on top of each other.</p>
 
   <p>Remark 1, that positive entries mark &ldquo;intrinsically similar classes,&rdquo; fails from the
   other side. Any input the classifier finds hard produces a large set, and every label in a large set
@@ -264,14 +396,13 @@
 
   <h2>Symmetric object, directional claim</h2>
 
-  <p>The matrix is symmetric, and it consults neither the true label nor the ranking. The four kind
-  example above gives two models with opposite confusions and identical matrices. The authors
-  nevertheless read from a positive entry that the classifier &ldquo;is much more likely to misclassify
-  images of class 91 as class 30 than as class 95,&rdquo; and write that the matrix &ldquo;contains a
-  superset of the information conveyed by the confusion matrix.&rdquo; Neither statement survives the
-  example. <a href="/demos/32-conformal-correlation.html#b">Panel B</a> slides the direction of a
-  confusion from entirely 0 to 1 to entirely 1 to 0. The soft confusion entries cross, and the CCM
-  entry is a curve symmetric about the midpoint.</p>
+  <p>The matrix is symmetric, and it consults neither the true label nor the ranking. Example 1 gives a
+  perfect and a perfectly wrong classifier with the same matrix. Example 2 gives a zero entry with 99%
+  of one class labeled as the other. The authors nevertheless read from a positive entry that the
+  classifier &ldquo;is much more likely to misclassify images of class 91 as class 30 than as class
+  95.&rdquo; <a href="/demos/32-conformal-correlation.html#b">Panel B</a> of the demonstration slides
+  the direction of a confusion from entirely 0 to 1 to entirely 1 to 0. The soft confusion entries
+  cross, and the CCM entry is a curve symmetric about the midpoint.</p>
 
   <h2>Labels and privacy</h2>
 
