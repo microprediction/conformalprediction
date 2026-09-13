@@ -104,8 +104,11 @@ exclude such classes from the matrix.
 
 Nothing below depends on the name or on the paper. The results concern any correlation between
 membership indicators of prediction sets, however the sets were built and whatever the statistic is
-called. The paper is the instance in print, and the move it makes, correlating the indicators and
-reading the result as class similarity, is cheap enough that it will be made again.
+called. The paper is the instance in print, and the move it makes, correlating the indicators and reading
+the result as class similarity, is cheap enough that it will be made again. Raw co-occurrence
+counts of classes in prediction sets already appear as a visualization in \citet{garciaceja2023},
+as counts and as column-normalized proportions with no correlation taken, and the paper does not
+cite that work. The correlation is the paper's addition, and it is where the trouble starts.
 
 The authors attach three readings to the entries. Their Remark~1 says that intrinsically similar
 classes ``might be expected to exhibit high positive correlation''. Their Remark~2 says that pairs of
@@ -535,7 +538,7 @@ With singleton sets every pair has $q_{ij} = 0$, and with equal inclusion rates 
 $o_i = 1/(H-1)$ and $\rho_{ij} = -1/(H-1)$.
 
 For the range, $q_{ij}$ is the probability of the intersection of two events with probabilities $p_i
-\le p_j$, so by the Fr\'echet bounds $\max(0, p_i + p_j - 1) \le q_{ij} \le p_i$. At the upper bound
+\le p_j$, so by the Fr\'echet bounds \citep{frechet1951} $\max(0, p_i + p_j - 1) \le q_{ij} \le p_i$. At the upper bound
 the numerator of \eqref{eq:ccm} is $p_i - p_i p_j = p_i(1-p_j)$ and
 \[
 \rho_{ij} = \frac{p_i(1-p_j)}{\sqrt{p_i(1-p_i)p_j(1-p_j)}} = \sqrt{\frac{p_i(1-p_j)}{(1-p_i)p_j}} = \sqrt{o_i/o_j} .
@@ -549,7 +552,9 @@ $p_i + p_j > 1$ then $q_{ij} = p_i + p_j - 1$, the numerator is $p_i + p_j - 1 -
 \end{proof}
 
 The lemma has two consequences for reading a heat map. The first concerns the scale. An entry can reach $+1$ only when $p_i = p_j$, so the ceiling is below one whenever the two inclusion
-rates differ, and entries for pairs with different inclusion rates are not on a common scale.
+rates differ, and entries for pairs with different inclusion rates are not on a common scale. This
+is the classical $\phi/\phi_{\max}$ problem for $2 \times 2$ tables, reviewed by
+\citet{davenport1991}.
 
 The second concerns $\alpha$. With the model, the calibration data and the auxiliary uniforms fixed, the APS sets are nested in $\alpha$. As $\alpha$ grows no inclusion rate increases, so every floor entry \eqref{eq:floor} moves
 toward zero or stays put, whether or not the classifier changed, as long as the indicators involved
@@ -607,7 +612,10 @@ common fixed $\tau$, $p_i = 5\tau/9$ for every class, hence the same law of sets
 \end{example}
 
 The matrix is offered as useful because it exposes how a client's data differs from the others. No
-threat model, mechanism or leakage bound is given.
+threat model, mechanism or leakage bound is given. Inferring a client's label distribution is a
+recognized attack in federated learning, from gradients \citep{gu2023} or from model behaviour over
+rounds \citep{ma2025}. In the setting of Example~\ref{ex:privacy} the matrix hands the same quantity
+over directly.
 
 \section{What the coverage guarantee constrains}\label{sec:coverage}
 
@@ -716,10 +724,36 @@ P. Cotton.
 \newblock Marginally useful: an information-gap identity in conformal prediction.
 \newblock arXiv:2608.07479v2, 2026.
 
+\bibitem[Davenport and El-Sanhurry(1991)]{davenport1991}
+E.~C. Davenport and N.~A. El-Sanhurry.
+\newblock Phi/phimax: Review and synthesis.
+\newblock \emph{Educational and Psychological Measurement}, 51(4):821--828, 1991.
+
+\bibitem[Fr\'echet(1951)]{frechet1951}
+M. Fr\'echet.
+\newblock Sur les tableaux de corr\'elation dont les marges sont donn\'ees.
+\newblock \emph{Annales de l'Universit\'e de Lyon, Section A}, 14:53--77, 1951.
+
+\bibitem[Garcia-Ceja et~al.(2023)]{garciaceja2023}
+E. Garcia-Ceja, L. Garcia-Banuelos, and N. Jourdan.
+\newblock Conformal prediction in multi-user settings: An evaluation.
+\newblock arXiv:2312.05195, 2023.
+
+\bibitem[Gu and Bai(2023)]{gu2023}
+Y. Gu and Y. Bai.
+\newblock LDIA: Label distribution inference attack against federated learning in edge computing.
+\newblock \emph{Journal of Information Security and Applications}, 74:103475, 2023.
+
 \bibitem[Lei et~al.(2018)]{lei2018}
 J. Lei, M. G'Sell, A. Rinaldo, R.~J. Tibshirani, and L. Wasserman.
 \newblock Distribution-free predictive inference for regression.
 \newblock \emph{Journal of the American Statistical Association}, 113(523):1094--1111, 2018.
+
+\bibitem[Ma et~al.(2025)]{ma2025}
+Z. Ma, H. Gao, J. Huang, and P. Wang.
+\newblock Whispers of data: Unveiling label distributions in federated learning through virtual
+client simulation.
+\newblock arXiv:2504.21436, 2025.
 
 \bibitem[Perlo et~al.(2026)]{perlo2026}
 A. Perlo, C.~F. Chiasserini, G. De~Veciana, and F. Malandrino.
