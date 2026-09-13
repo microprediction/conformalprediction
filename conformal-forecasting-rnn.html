@@ -101,10 +101,11 @@
   The baselines were calibrated for per-horizon coverage and are scored on a joint target. On the
   COVID-19 data the Bonferroni quantile index exceeds the calibration size, so the guarantee is
   vacuous and the code returns the largest calibration error. And neither coverage nor width is a
-  proper score. Under the interval score a rerun of the paper&rsquo;s COVID-19 comparison on English areas reverses: the
-  quantile RNN it reports as failing has the best per-horizon interval, and the calibration-maximum
-  interval loses at the joint level to the quantiles of an online forecaster that sees one area and
-  no training data. On FRED, with the same point forecast and the same calibration window, the
+  proper score. Under the interval score, on a rerun of the COVID-19 experiment on English areas, the quantile RNN
+  the paper reports as failing has the best per-horizon interval on every split, and the online
+  forecaster laplace, which sees one area and no training data, is the worst. At the joint level the
+  calibration-maximum interval beats laplace&rsquo;s quantiles on two splits of three and loses by a
+  wide margin on the third. On FRED, with the same point forecast and the same calibration window, the
   constant width loses to the forecaster&rsquo;s own quantiles on most series.
   <a href="/demos/35-constant-width.html">Demonstration 35</a> shows the mechanism on a synthetic
   series.</p>
@@ -192,37 +193,37 @@
   <h2>Rerun on their COVID-19 data</h2>
 
   <!-- COVID -->
-<p>We reran the COVID-19 experiment with the authors&rsquo; code and hyperparameters, an LSTM with embedding size 20 trained for 1,000 epochs, on daily cases for the 307 English lower-tier local authorities from the UK Health Security Agency API over the same 150-day window, 100 observed days and 50 to forecast, split 162 training, 81 calibration and 64 test areas in the paper&rsquo;s proportions, over 1 random split. The Bonferroni index is \(\lceil 82 \times 0.998 \rceil = 82 > 81\), and on every split every Bonferroni half-width equalled the largest calibration residual. Laplace is run online on each test area&rsquo;s own 100 observed days with no training data, and its 50 predictive distributions are read off at the end. Every interval is scored at the level it claims. </p>
+<p>We reran the COVID-19 experiment with the authors&rsquo; code and hyperparameters, an LSTM with embedding size 20 trained for 1,000 epochs, on daily cases for the 307 English lower-tier local authorities from the UK Health Security Agency API over the same 150-day window, 100 observed days and 50 to forecast, split 162 training, 81 calibration and 64 test areas in the paper&rsquo;s proportions, over 3 random splits. The Bonferroni index is \(\lceil 82 \times 0.998 \rceil = 82 > 81\), and on every split every Bonferroni half-width equalled the largest calibration residual. Laplace is run online on each test area&rsquo;s own 100 observed days with no training data, and its 50 predictive distributions are read off at the end. Every interval is scored at the level it claims. Means over splits, with standard deviations in parentheses.</p>
 <div class="tablewrap">
 <table class="phi">
 <tr><th>Interval, nominal level</th><th>Interval score</th><th>Width, mean</th><th>Coverage per horizon</th><th>Joint coverage over 50 horizons</th></tr>
-<tr><td>CF-RNN, Bonferroni, joint 90% (per horizon 99.8%)</td><td>8,893</td><td>598</td><td>97.9%</td><td>92.2%</td></tr>
-<tr><td>laplace quantiles at the same 99.8% per horizon</td><td>5,055</td><td>1,948</td><td>94.9%</td><td>59.4%</td></tr>
-<tr><td>CF-RNN uncorrected, per horizon 90%</td><td>631</td><td>194</td><td>82.9%</td><td>48.4%</td></tr>
-<tr><td>MQ-RNN, per horizon 90%</td><td>364</td><td>94</td><td>78.1%</td><td>7.8%</td></tr>
-<tr><td>DP-RNN, per horizon 90%</td><td>407</td><td>80</td><td>52.6%</td><td>3.1%</td></tr>
-<tr><td>laplace quantiles, per horizon 90%</td><td>655</td><td>407</td><td>79.5%</td><td>6.2%</td></tr>
+<tr><td>CF-RNN, Bonferroni, joint 90% (per horizon 99.8%)</td><td>3,437 (3,860)</td><td>577</td><td>99.2%</td><td>95.8% (2.7)</td></tr>
+<tr><td>laplace quantiles at the same 99.8% per horizon</td><td>3,548 (1,071)</td><td>1,507</td><td>96.1%</td><td>57.8% (3.4)</td></tr>
+<tr><td>CF-RNN uncorrected, per horizon 90%</td><td>394 (171)</td><td>185</td><td>87.9%</td><td>56.8% (7.0)</td></tr>
+<tr><td>MQ-RNN, per horizon 90%</td><td>238 (90)</td><td>107</td><td>83.6%</td><td>20.3% (11.7)</td></tr>
+<tr><td>DP-RNN, per horizon 90%</td><td>312 (68)</td><td>72</td><td>51.0%</td><td>2.1% (1.5)</td></tr>
+<tr><td>laplace quantiles, per horizon 90%</td><td>513 (101)</td><td>322</td><td>79.1%</td><td>5.2% (1.5)</td></tr>
 </table>
 </div>
-<p>At the joint level, the CF-RNN interval is the calibration maximum at every horizon and reaches 92% joint coverage, above the 90% target, while laplace&rsquo;s 99.8% quantiles from each area&rsquo;s own hundred days reach 59%. By the paper&rsquo;s criterion CF-RNN wins. By the interval score at the level both intervals claim, laplace&rsquo;s intervals score 5,055 against 8,893, 43% lower, with no training data and no other areas. The constant width is wide where the area is quiet and still misses by hundreds of cases where the January wave is steep, and the score charges the misses at \(2/a = 1000\) times their size.</p>
-<p>At the per-horizon level, MQ-RNN, which the paper reports as failing, has the best interval on the table, 364 against 631 for the uncorrected CF-RNN and 655 for laplace. Its coverage is 78% at a 90% target and the score still prefers it, because its misses are small. The dropout RNN at 53% coverage scores 407. The area series are synchronous, every test area&rsquo;s forecast window is the same seven weeks of the January 2021 wave, and a model trained on other areas over the same calendar has seen the shape of the wave. That is real information, it is what the paper&rsquo;s Figure 1 argues for, and the interval score credits the quantile RNN for using it. Laplace, which sees one area and no calendar, is not competitive at this level and we do not claim otherwise. The uncorrected CF-RNN interval adds a constant to the same LSTM point forecast that MQ-RNN refines with two trained quantiles, and the constant is what costs it.</p>
+<p>At the joint level the CF-RNN interval is the calibration maximum at every horizon. It reaches 96% joint coverage on average, above the 90% target, while laplace&rsquo;s 99.8% quantiles from each area&rsquo;s own hundred days reach 58%. By the paper&rsquo;s criterion CF-RNN wins. By the interval score at the level both intervals claim, laplace scores lower on 1 of the 3 splits (5,055 against 8,893, 2,659 against 854, 2,930 against 563). The score at \(a = 0.002\) charges a miss at \(2/a = 1000\) times its size, so it is decided by the few areas where the January wave outruns both intervals, and which interval wins depends on which areas land in the test split. The constant width is wide where the area is quiet and still misses by hundreds of cases where the wave is steep, and laplace&rsquo;s intervals are wider on average.</p>
+<p>At the per-horizon level the picture is stable across splits. MQ-RNN, which the paper reports as failing, has the best interval on the table on 3 of 3 splits: 238 on average against 394 for the uncorrected CF-RNN and 513 for laplace. Its coverage is 84% at a 90% target and the score still prefers it, because its misses are small. The dropout RNN at 51% coverage scores 312. The area series are synchronous, every test area&rsquo;s forecast window is the same seven weeks of the January 2021 wave, and a model trained on other areas over the same calendar has seen the shape of the wave. That is real information, it is what the paper&rsquo;s Figure 1 argues for, and the interval score credits the quantile RNN for using it. Laplace, which sees one area and no calendar, is the worst interval at this level on every split, and we do not claim otherwise. The uncorrected CF-RNN interval adds a constant to the same LSTM point forecast that MQ-RNN refines with two trained quantiles, and the constant is what costs it.</p>
 <!-- /COVID -->
 
   <h2>The same construction on the FRED daily universe</h2>
 
   <!-- FRED -->
-<p>The skaters benchmark harness runs laplace, a zero-dependency online distributional forecaster, on the FRED daily universe of change series. For this study every series gets laplace at horizon \(H = 10\), and at each origin two sets of intervals are built from the same point forecasts, laplace&rsquo;s predictive means. The CF intervals add the CF-RNN quantile of the last 500 resolved absolute residuals at each horizon. The laplace intervals are the quantiles of laplace&rsquo;s own predictive distribution at the same levels. Both are scored at \(a = \alpha/H = 0.01\), the Bonferroni level with joint target 90%, and at \(a = \alpha = 0.1\) per horizon. 193 series, a median of 197 scored origins per series, scored on the most recent 2,000 changes after a 300-step warm-up. Scores are on each series&rsquo; own scale, so the table reports medians over series and the share of series on which each interval scores better.</p>
+<p>The skaters benchmark harness runs laplace, a zero-dependency online distributional forecaster, on the FRED daily universe of change series. For this study every series gets laplace at horizon \(H = 10\), and at each origin two sets of intervals are built from the same point forecasts, laplace&rsquo;s predictive means. The CF intervals add the CF-RNN quantile of the last 500 resolved absolute residuals at each horizon. The laplace intervals are the quantiles of laplace&rsquo;s own predictive distribution at the same levels. Both are scored at \(a = \alpha/H = 0.01\), the Bonferroni level with joint target 90%, and at \(a = \alpha = 0.1\) per horizon. 247 series, a median of 204 scored origins per series, scored on the most recent 2,000 changes after a 300-step warm-up. Scores are on each series&rsquo; own scale, so the table reports medians over series and the share of series on which each interval scores better.</p>
 
 <div class="tablewrap">
 <table class="phi">
 <tr><th>Level</th><th>Interval</th><th>Interval score, median over series</th><th>Width, median over series</th><th>Coverage per horizon</th><th>Joint coverage</th><th>Series where laplace scores better</th><th>Median score ratio CF / laplace</th></tr>
-<tr><td>\(a = 0.01\), joint target 90%</td><td>constant width (CF-RNN)</td><td>0.102</td><td>0.073</td><td>99.0%</td><td>94.0%</td><td rowspan="2">65%</td><td rowspan="2">1.041</td></tr>
-<tr><td></td><td>laplace&rsquo;s own quantiles</td><td>0.105</td><td>0.066</td><td>98.6%</td><td>90.8%</td></tr>
-<tr><td>\(a = 0.1\), per horizon 90%</td><td>constant width (CF-RNN)</td><td>0.046</td><td>0.032</td><td>90.4%</td><td>&nbsp;</td><td rowspan="2">81%</td><td rowspan="2">1.023</td></tr>
-<tr><td></td><td>laplace&rsquo;s own quantiles</td><td>0.047</td><td>0.032</td><td>90.7%</td><td>&nbsp;</td></tr>
+<tr><td>\(a = 0.01\), joint target 90%</td><td>constant width (CF-RNN)</td><td>0.155</td><td>0.115</td><td>98.9%</td><td>93.4%</td><td rowspan="2">68%</td><td rowspan="2">1.049</td></tr>
+<tr><td></td><td>laplace&rsquo;s own quantiles</td><td>0.152</td><td>0.105</td><td>98.7%</td><td>91.1%</td></tr>
+<tr><td>\(a = 0.1\), per horizon 90%</td><td>constant width (CF-RNN)</td><td>0.077</td><td>0.045</td><td>90.1%</td><td>&nbsp;</td><td rowspan="2">80%</td><td rowspan="2">1.025</td></tr>
+<tr><td></td><td>laplace&rsquo;s own quantiles</td><td>0.071</td><td>0.050</td><td>90.7%</td><td>&nbsp;</td></tr>
 </table>
 </div>
-<p>Per horizon at the Bonferroni level, the median score ratio is 1.075 at \(h = 1\) and 1.019 at \(h = 10\). The constant width over-covers at the joint level, 94.0% against a 90% target, because ten Bonferroni intervals that never share a state cannot use the correlation between horizons. Laplace also reports a held-out log score, 3.26 nats per observation on the change scale, and a CRPS of 0.126. The constant-width interval has no density to score.</p>
+<p>Per horizon at the Bonferroni level, the median score ratio is 1.094 at \(h = 1\) and 1.017 at \(h = 10\). The constant width over-covers at the joint level, 93.4% against a 90% target, because ten Bonferroni intervals that never share a state cannot use the correlation between horizons. Laplace also reports a held-out log score, 3.02 nats per observation on the change scale, and a CRPS of 0.105. The constant-width interval has no density to score.</p>
 <!-- /FRED -->
 
   <h2>What survives</h2>
@@ -233,16 +234,17 @@
   carries information a single series does not, and the quantile RNN&rsquo;s score on the COVID-19
   data is that information at work. What does not follow is that the constant-width construction is
   a good interval, or that methods without the guarantee are worse. The guarantee is one number, the average
-  coverage, and once it is met the comparison is a comparison of proper scores. On that comparison
-  the joint-level constant width is the weakest interval on the table, and at the per-horizon level
-  the quantile RNN beats it.</p>
+  coverage, and once it is met the comparison is a comparison of proper scores. On that comparison the constant width is beaten at the per-horizon level by the quantile RNN on
+  every split, and at the joint level the split decides whether it beats an untrained online
+  forecaster.</p>
 
   <div class="takeaway">
     <p>Takeaway. The baselines are scored on joint coverage they were never calibrated for. The
     COVID-19 interval is the calibration maximum and has no finite guarantee. Coverage and width do
-    not rank methods. Under the interval score the quantile RNN the paper dismisses is the best
-    interval on its own data, the joint-level CF-RNN interval loses to an untrained online forecaster,
-    and on FRED the constant width loses to the forecaster&rsquo;s own quantiles at the same coverage.</p>
+    not rank methods. Under the interval score the quantile RNN the paper dismisses is the best per-horizon interval
+    on its own data, the joint-level CF-RNN interval wins or loses against an untrained online forecaster&rsquo;s quantiles
+    depending on the split, and on FRED the constant width loses to the forecaster&rsquo;s own
+    quantiles at the same coverage on most series.</p>
   </div>
 
   <p class="note">The paper is Stankevi&#269;i&#363;t&#279;, Alaa and van der Schaar, <em>Conformal
