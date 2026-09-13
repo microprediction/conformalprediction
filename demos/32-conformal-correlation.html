@@ -183,11 +183,10 @@
 
   <h2 id="b">B. A symmetric object cannot carry a directional claim</h2>
 
-  <p>The authors read from a positive entry that the classifier &ldquo;is much more likely to
-  misclassify images of class 91 as class 30 than as class 95.&rdquo; A correlation matrix is symmetric.
-  This panel puts a fixed total amount of confusion between classes 0 and 1 and slides how much of it
-  runs each way: at \(\theta = 1\) images of class 0 are pulled toward class 1 and images of class 1 are
-  clean, at \(\theta = 0\) the reverse.</p>
+  <p>In this experiment a fixed amount of confusion \(c\) is split between two directions. A share
+  \(\theta\) runs from class 0 to class 1, meaning images of class 0 put probability on class 1, and the
+  rest runs from class 1 to class 0. At \(\theta = 1\) images of class 0 are the only ones confused. At
+  \(\theta = 0\) images of class 1 are the only ones confused.</p>
 
   <div class="demo">
     <div class="canvas-box med"><canvas id="b-plot"></canvas></div>
@@ -195,20 +194,27 @@
     <div class="controls" id="b-controls"></div>
   </div>
 
-  <p>The two soft confusion entries cross: one rises as the other falls, and together they say which way
-  the confusion runs. The conformal correlation entry is a single curve symmetric about one half. It
-  takes the same value at \(\theta\) and at \(1-\theta\), so it cannot distinguish a classifier that
-  mislabels 0 as 1 from one that mislabels 1 as 0. The authors&rsquo; claim to a &ldquo;superset of the
-  information conveyed by the confusion matrix&rdquo; fails on counting alone. The matrix has
-  \(H(H-1)/2\) distinct off diagonal entries and directional confusion has \(H(H-1)\).</p>
+  <p>The soft confusion entries \(C_{01}\) and \(C_{10}\) cross as \(\theta\) moves. Read together they
+  say how much confusion there is and which way it runs. The conformal correlation entry
+  \(\rho_{01}\) is one curve, symmetric about \(\theta = 1/2\). Up to sampling noise it takes the same value at
+  \(\theta\) and at \(1 - \theta\), as the readouts show, so it cannot tell a classifier that mistakes 0 for 1
+  from one that mistakes 1 for 0.</p>
+
+  <p>This is forced by the definition. A correlation matrix is symmetric, so it has \(H(H-1)/2\)
+  distinct off diagonal entries. Directional confusion between class pairs has \(H(H-1)\) numbers.
+  The authors nevertheless read from a positive entry that the classifier &ldquo;is much more likely to
+  misclassify images of class 91 as class 30 than as class 95,&rdquo; and write that the matrix
+  &ldquo;contains a superset of the information conveyed by the confusion matrix.&rdquo; Neither
+  statement can be true of a symmetric matrix.</p>
 
   <h2 id="c">C. Resolution collapses as the sets shrink</h2>
 
-  <p>Now every pair of classes has its own confusion strength, drawn at random and held fixed. The
-  question is whether a statistic can rank the 45 pairs by that hidden truth. Left: the conformal
-  correlation entry against the true strength, at the chosen \(\alpha\). Middle: the mean pairwise
-  product of probabilities \(\mathbb{E}[p_i p_j]\) against the same truth. Right: the rank correlation
-  with the truth as a function of \(\alpha\).</p>
+  <p>In this experiment every pair of classes has its own confusion strength \(G_{ij} = G_{ji}\), drawn
+  at random once and then held fixed. The question is whether a statistic can recover the ordering of
+  the 45 pairs from most to least confusable. The left plot shows the conformal correlation entry for
+  each pair against its true strength, at the chosen \(\alpha\). The middle plot shows the mean pairwise
+  product \(S_{ij} = \mathbb{E}[p_i p_j]\) against the same truth. The right plot shows the rank
+  correlation between each statistic and the truth, as \(\alpha\) varies.</p>
 
   <div class="demo">
     <div class="row3">
@@ -220,14 +226,16 @@
     <div class="controls" id="c-controls"></div>
   </div>
 
-  <p>The soft statistic has no \(\alpha\) to choose and ranks the pairs well at every setting. The
-  conformal statistic sits at the pinned floor from panel A across most of the range of true
-  confusability and separates only the few strongest pairs, so its rank correlation with the truth is
-  lower at every \(\alpha\), and it falls further as \(\alpha\) grows and the sets shrink toward
-  singletons, because singleton sets carry no pairwise information at all. The authors sweep
-  \(\alpha\) over four values and present the dependence as adaptability. It is the statistic recovering, coarsely, what the threshold
-  discarded. The randomization in APS adds noise of its own that a probability based statistic does
-  not have. Untick the box to remove it and watch the sets grow instead.</p>
+  <p>The probability based statistic recovers the ordering well at every \(\alpha\), and it has no
+  \(\alpha\) to choose. The conformal correlation entries sit at the floor from panel A for most pairs
+  and rise only for the few strongest, so their rank correlation with the truth is lower at every
+  \(\alpha\). It falls further as \(\alpha\) grows, because larger \(\alpha\) means smaller sets, and a
+  singleton set says nothing about any pair.</p>
+
+  <p>The authors sweep \(\alpha\) over four values and present the dependence on \(\alpha\) as a
+  feature. The dependence is the statistic recovering, four coarse steps at a time, information that
+  the threshold removed and that the probabilities still contain. The randomization in APS adds noise
+  of its own. Untick the box to remove it, and the sets grow instead.</p>
 
   <div class="takeaway">
     <p>Takeaway. The conformal correlation matrix is the phi coefficient of a thresholded softmax, and
