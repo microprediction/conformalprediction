@@ -156,20 +156,30 @@
     <div class="controls" id="a-controls"></div>
   </div>
 
-  <p>The 44 dissimilar pairs do not read zero. They read a common negative number, and the dashed line
-  shows what that number is: for two indicators that never share a set,
-  \(\rho_{ij} = -\sqrt{p_i p_j / ((1-p_i)(1-p_j))}\), where \(p_i\) is the fraction of sets containing
-  class \(i\). With balanced classes and singleton sets that is \(-1/(H-1)\), one ninth here. Move
-  \(\alpha\) and the whole floor moves, because the inclusion rates move. Add class imbalance and the
-  floor breaks into a pattern that tracks prevalence, with nothing in the classifier having changed.
-  The authors read &ldquo;strong negative correlation&rdquo; as dissimilarity. It is a function of the
-  marginals.</p>
+  <p>In this experiment the classifier separates 44 of the 45 pairs perfectly. Their entries in the
+  conformal correlation matrix are all the same negative number, and that number is set by how often
+  each class is included in a set. It says nothing about the classes.</p>
 
-  <p>Now raise the share of hard inputs. A hard input is one on which the classifier has no margin, so
-  its set is large and admits many classes at once. Every pair of classes becomes positively correlated,
-  including the 44 that the classifier separates perfectly on ordinary inputs. The authors read positive
-  entries as &ldquo;intrinsically similar classes.&rdquo; Here they are a set size effect: labels that
-  enter together on difficult examples, not labels the model confuses.</p>
+  <p>Write \(p_i\) for the fraction of test sets that contain class \(i\). Two classes that never appear
+  in the same set have \(\mathbb{E}[z_i z_j] = 0\), so their entry is</p>
+
+  $$\rho_{ij} = \frac{0 - p_i p_j}{\sqrt{p_i(1-p_i)\,p_j(1-p_j)}}
+             = -\sqrt{\frac{p_i\,p_j}{(1-p_i)(1-p_j)}}.$$
+
+  <p>With ten balanced classes and singleton sets, \(p_i = 1/10\) for every class and every such entry
+  equals \(-1/9\). The dashed line in the lower plot is this formula evaluated at the observed
+  inclusion rates. It lies on top of the blue line, the average of the 44 entries.</p>
+
+  <p>The sliders change the inclusion rates without changing the classifier. Moving \(\alpha\) changes
+  the set sizes, so all 44 entries move together. Adding class imbalance makes common classes appear in
+  more sets than rare ones, so the 44 entries spread out in a pattern that copies the class frequencies.
+  Raising the share of hard inputs, on which the classifier has no margin and so returns a large set,
+  makes all 45 entries positive, including the 44 pairs the classifier still separates perfectly on
+  every other input.</p>
+
+  <p>The authors read a negative entry as dissimilarity and a positive entry as similarity. Here the
+  negative entries are a function of \(\alpha\) and the class frequencies only, and the positive entries
+  are produced by input difficulty with no similarity between the classes at all.</p>
 
   <h2 id="b">B. A symmetric object cannot carry a directional claim</h2>
 
