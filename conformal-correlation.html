@@ -95,8 +95,8 @@
   co-membership, but conformal coverage supplies no inferential or semantic guarantee for its entries.
   Because the matrix discards the true labels and the prediction rankings, and can be driven by marginal
   inclusion rates and set size, it cannot in general identify directional class confusion or contain a
-  superset of the confusion matrix. A three class example shows each point by hand, and
-  <a href="/demos/32-conformal-correlation.html">demonstration 32</a> shows them at scale.</p>
+  superset of the confusion matrix. Two small examples show this by hand, and
+  <a href="/demos/32-conformal-correlation.html">demonstration 32</a> shows it at scale.</p>
 
   <h2>What is proposed</h2>
 
@@ -115,10 +115,12 @@
   when the goal is to separate two critical classes. The abstract describes it as capturing &ldquo;the
   likelihood of class pairs co-occurring within conformal prediction sets.&rdquo;</p>
 
-  <h2>A three class example</h2>
+  <h2>Two small examples</h2>
 
-  <p>Take three classes, cat, dog and plane, with equal numbers of test images, and a classifier whose
-  sets are as follows. Every cat image gets \(\{\text{cat}, \text{dog}\}\). Every dog image gets
+  <h3>Example 1. Two classes the model never confuses get different entries</h3>
+
+  <p>Three classes, cat, dog and plane, with equal numbers of test images, and a classifier whose sets
+  are as follows. Every cat image gets \(\{\text{cat}, \text{dog}\}\). Every dog image gets
   \(\{\text{dog}\}\). Every plane image gets \(\{\text{plane}\}\). Coverage is 100%.</p>
 
   <div class="tablewrap">
@@ -144,8 +146,11 @@
   is set by the marginal inclusion rates of the two classes. It does not measure how dissimilar they
   are.</p>
 
-  <p>Now take cat and dog images only, of four kinds in equal numbers. Call an image misclassified when
-  the class the model ranks first is not its true class.</p>
+  <h3>Example 2. Two models with opposite confusions get the same matrix</h3>
+
+  <p>Two classes, cat and dog, with four kinds of image in equal numbers, and two models that return the
+  same sets but rank the classes differently inside them. Call an image misclassified when the class the
+  model ranks first is not its true class.</p>
 
   <div class="tablewrap">
   <table class="phi">
