@@ -126,8 +126,13 @@
   $$\rho_{ij} = \frac{\mathbb{E}[z_i z_j] - p_i p_j}{\sqrt{p_i(1-p_i)\,p_j(1-p_j)}}, \qquad p_i = \mathbb{E}[z_i],$$
 
   <p>so each calculation needs only the inclusion rates \(p_i\) and the co-occurrence rates
-  \(\mathbb{E}[z_i z_j]\). The examples are ordered from the simplest to refute and the most absurd
-  result downward.</p>
+  \(\mathbb{E}[z_i z_j]\). An entry is defined only for classes with \(0 < p_i < 1\), since otherwise
+  a variance is zero, and the authors give no convention for that case. Each example prescribes the
+  law of the sets directly. Nothing in the definition requires the sets to have come from any
+  particular procedure, and we do not claim that adaptive prediction sets calibrated on a sample
+  produce exactly these laws. Coverage of 100% in an example means only that every set contains the
+  truth, so any coverage guarantee is met. The examples are ordered from the simplest to refute and
+  the most absurd result downward.</p>
 
   <h3>Example 1. A perfect classifier and a perfectly wrong one get the same matrix</h3>
 
@@ -153,8 +158,8 @@
   labels, the sets and therefore the matrix are identical for both.</p>
 
   <p><strong>What it shows.</strong> The authors write that the matrix &ldquo;contains a superset of the
-  information conveyed by the confusion matrix.&rdquo; Here the confusion matrix is the identity for one
-  model and has an empty diagonal for the other, and the CCM is the same. The matrix never sees the
+  information conveyed by the confusion matrix.&rdquo; Here the confusion matrix has all its mass on the diagonal
+  for one model and none there for the other, and the CCM is the same. The matrix never sees the
   ranking, so it cannot contain the confusion matrix.</p>
 
   <h3>Example 2. Zero correlation with 99% directional confusion</h3>
@@ -191,7 +196,8 @@
 
   <p><strong>Setup.</strong> Every set contains the true class \(T\), ranked first. Two other labels
   \(A\) and \(B\) are added to the set together with probability \(\varepsilon\), and otherwise neither
-  is added.</p>
+  is added. Since \(T\) is in every set its own entries are undefined, and the claim concerns
+  \(\rho_{AB}\).</p>
 
   <p><strong>Calculation.</strong> \(z_A = z_B\) on every image, so their correlation is</p>
 
@@ -281,20 +287,22 @@
   two classes that never share a set, \(\rho_{ij} = -\sqrt{p_i p_j / ((1-p_i)(1-p_j))}\), a function of
   the inclusion rates and nothing else.</p>
 
-  <h3>Example 7. One relocated observation moves an entry from 1 to almost 0</h3>
+  <h3>Example 7. Moving one label occurrence between rows moves an entry from 1 to almost 0</h3>
 
   <p><strong>Setup.</strong> There are \(n\) test images, and two rare labels \(A\) and \(B\) each appear
   in exactly one set.</p>
 
   <p><strong>Calculation.</strong> If they appear in the same set, \(z_A = z_B\) and \(\rho_{AB} = 1\).
-  If \(B\) appears in a different set, then \(p_A = p_B = 1/n\), the co-occurrence rate is zero, and</p>
+  If instead the one occurrence of \(B\) is in a different set, then \(p_A = p_B = 1/n\), the
+  co-occurrence rate is zero, and</p>
 
   $$\rho_{AB} = \frac{0 - 1/n^2}{(1/n)(1 - 1/n)} = -\frac{1}{n-1},$$
 
   <p>which at \(n = 1000\) is about \(-0.001\).</p>
 
   <p><strong>What it shows.</strong> The paper presents heat maps of entries with no uncertainty attached.
-  For rare labels one observation moves an entry across the whole range.</p>
+  For rare labels moving a single label occurrence from one row to another moves an entry across
+  the whole range.</p>
 
   <h2>What is computed</h2>
 
@@ -314,8 +322,12 @@
   $$C_{ab} = \mathbb{E}\big[\,p_b \,\big|\, y = a\,\big],$$
 
   <p>the average probability the classifier assigns to class \(b\) over images whose true class is
-  \(a\). It is directional, it sees near misses at every resolution, and it needs no calibration set
-  and no threshold. It does need labeled evaluation data, as any confusion matrix does. A label free
+  \(a\). It is directional and threshold free, and it needs no calibration set. It does need labeled
+  evaluation data, as any confusion matrix does. It is a conditional mean, so it summarizes rather
+  than determines: a model that puts probability 0.4 on \(b\) for every image of class \(a\) and a
+  model that puts 0.6 or 0.2 with equal probability have the same entry and error rates of zero and
+  one half. The confusion matrix of the ranked prediction carries that difference, so the two are
+  complements. A label free
   comparator is the mean pairwise product \(\mathbb{E}[p_i p_j]\), a threshold free soft association
   that is symmetric like the CCM. The authors also cite the coverage confusion matrix of Stutz et al.,
   which conditions on the true label and is directional. None of the three appears in an experiment.
@@ -328,19 +340,21 @@
 
   $$\mathbb{P}(z_Y = 1) = \sum_y \mathbb{P}(Y = y,\; z_y = 1) \;\ge\; 1-\alpha,$$
 
-  <p>averaged over exchangeable draws. It does not constrain \(\mathbb{E}[z_i z_j]\), which mixes the
-  true class with a wrong class, two wrong classes, and different true classes on different images.
-  Therefore coverage supplies no calibration, no confidence interval and no interpretation for
-  \(\rho_{ij}\). The calibration step chose a threshold, and that is the whole contribution of conformal
+  <p>averaged over exchangeable draws. It does not in general determine \(\mathbb{E}[z_i z_j]\), which
+  mixes the true class with a wrong class, two wrong classes, and different true classes on different
+  images, and it never justifies reading that rate as confusion. Coverage therefore supplies no
+  calibration, no confidence interval and no interpretation for \(\rho_{ij}\). The calibration step chose a threshold, and that is the whole contribution of conformal
   prediction to the object. The authors do not say what else it would contribute.</p>
 
   <p>The guarantee is also stated loosely. The authors write that &ldquo;for a given input sample&rdquo;
   the set &ldquo;is guaranteed to contain the correct class&rdquo; with probability close to
-  \(1-\alpha\). Split conformal coverage is marginal, and distribution free conditional coverage is
-  impossible in finite samples (Barber, Cand&egrave;s, Ramdas and Tibshirani 2021). The distinction
+  \(1-\alpha\). Split conformal coverage is marginal. It does not imply coverage conditional on the input, on a
+  class or on a client, and for continuous inputs no nontrivial distribution free procedure delivers
+  coverage conditional on every input (Barber, Cand&egrave;s, Ramdas and Tibshirani 2021). The distinction
   matters here because the authors go on to interpret individual class pairs and individual federated
-  clients as if validity transferred to them. The upper term is written as \(1/(n-1)\), which is looser
-  than the standard \(1/(n+1)\) and probably a typo. Exchangeability, ties and the APS randomization
+  clients as if validity transferred to them. The upper term is written as \(1/(n-1)\). For the randomized
+  procedure with distinct scores the term is \(1/(n+1)\), so theirs is looser than necessary and
+  probably a typo. Exchangeability, ties and the APS randomization
   are not stated.</p>
 
   <p>The guarantee also does not transfer to a client or a class. Take ten equally weighted clients,
