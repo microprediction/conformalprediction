@@ -109,6 +109,6 @@ PyPI API token). You cannot reuse a version number.
 - Keep the balance: applications and methods deserve as much depth as the limitations.
 - Don't add papers you haven't actually checked. Per-paper judgements in the bibliography and
   application lists stay in `data/`. Full close readings of a specific paper go in the Reviews
-  section (`reviews.html`, one card per paper): quote verbatim, verify every claim against the
+  section (`reviews.html`, one card per paper, plus an entry in the Reviews dropdown on every page): quote verbatim, verify every claim against the
   PDF, pair the page with a demo that rebuilds the construction on a case with known truth.
 - Don't commit `benchmark/.venv/`, `dist/`, or build artifacts (they're gitignored).
