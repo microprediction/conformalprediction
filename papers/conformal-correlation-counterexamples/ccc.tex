@@ -2,6 +2,8 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
 \usepackage[round]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{microtype}
@@ -28,18 +30,16 @@
 \maketitle
 
 \begin{abstract}
-The conformal correlation matrix of \citet{perlo2026} is the phi coefficient between indicators of
-class membership in conformal prediction sets. The authors read it as a map of which classes a
-classifier confuses. Eight hand-checkable examples show that it is not. Two classifiers built inside randomized
-adaptive prediction sets, exactly as specified, produce the same law of prediction sets and the same
-matrix while confusing classes in opposite directions, so the matrix does not determine the
-confusion matrix. A short no-go theorem extends this to every statistic of the sets: whenever a set
-of size at least two occurs, no functional of the law of the sets determines the confusion matrix. The reason is that the matrix depends only on the law of the
-prediction set, while confusion depends on the joint law of the set, the true label and the ranked
-prediction. Two lemmas give every entry for classes that never share a
-set as a function of the inclusion rates alone, and recover every inclusion rate exactly from three
-entries when sets have at most one element. Inside randomized APS the second lemma recovers the
-class proportions of a client exactly, which bears on the privacy claim made for the matrix.
+\citet{perlo2026} correlate the membership indicators of conformal prediction sets and read the
+result as a map of which classes a classifier confuses. It is not. Two classifiers built inside
+randomized adaptive prediction sets, exactly as specified, produce the same law of sets and the same
+matrix while confusing every class in opposite directions, and a short theorem shows that no
+statistic of the sets determines the confusion matrix once any set of size two occurs. Seven further
+hand calculations give a zero entry beside 99\% directional confusion, an entry of one beside one in
+a million co-occurrence, and an entry of $\pm 0.64$ from pooling two clients with zero correlation on
+each. For classes that never share a set the entry is a function of the inclusion rates alone, and
+when sets have at most one element the matrix reveals a client's class proportions exactly, which
+undoes the privacy claim made for it.
 \end{abstract}
 
 \section{The statistic}\label{sec:statistic}
@@ -197,6 +197,36 @@ smaller by $\delta_a$. So the second and third confusion matrices differ.
 The conclusion is stronger than the title. Even the entire joint law of $(Y, C(X))$ does not
 determine the confusion matrix, because both constructed laws preserve it. What is lost is the
 information about the rankings, not only the information about the true label.
+Figure~\ref{fig:chain} places the two losses on the chain of coarsenings that leads from the data to
+the matrix.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  node distance=11mm and 26mm,
+  box/.style={draw, rounded corners=2pt, inner sep=4pt, font=\footnotesize, align=center},
+  lab/.style={font=\scriptsize, align=center, inner sep=1pt},
+  arr/.style={-{Latex[length=2mm]}, thick}
+]
+\node[box] (full) {joint law of\\$(Y,\ \hat Y,\ C)$};
+\node[box, right=of full] (yc) {joint law of\\$(Y,\ C)$};
+\node[box, right=of yc] (c) {law of\\$C$};
+\node[box, right=of c] (ccm) {conformal\\correlation matrix};
+\node[box, below=of full] (conf) {confusion matrix\\$\Prob(Y = a,\ \hat Y = b)$};
+\node[box, below=of yc] (cov) {coverage\\$\Prob(z_Y = 1)$};
+\draw[arr] (full) -- node[lab, above] {drop $\hat Y$} node[lab, below] {Theorem~\ref{thm:nogo}} (yc);
+\draw[arr] (yc) -- node[lab, above] {drop $Y$} node[lab, below] {Example~\ref{ex:aps}} (c);
+\draw[arr] (c) -- node[lab, above] {indicators and\\second moments} node[lab, below] {Remark~\ref{prop:law}} (ccm);
+\draw[arr] (full) -- (conf);
+\draw[arr] (yc) -- (cov);
+\end{tikzpicture}
+\caption{The chain of coarsenings from the data to the matrix. The confusion matrix is a function of
+the first object. Theorem~\ref{thm:nogo} shows it is already lost at the first step, where the
+ranked prediction is dropped. Example~\ref{ex:aps} shows a further loss of one bit at the second
+step, where the true label is dropped. The coverage guarantee constrains one scalar of the second
+object. The matrix is a function of the third.}
+\label{fig:chain}
+\end{figure}
 
 Two limits on the theorem. First, its hypothesis is sufficient and not necessary. If every set is a
 singleton and coverage is one, then $\hat Y = Y$ and the confusion matrix is the diagonal matrix of
