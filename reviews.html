@@ -49,6 +49,9 @@
         <span class="drop">
           <a href="/reviews.html">All reviews</a>
           <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
@@ -103,6 +106,47 @@
       <p>A synthetic ten class classifier with known confusability. The pinned floor and the formula drawn
       together, a confusion slid from one direction to the other under a symmetric statistic, and the
       loss of resolution against a probability based statistic as the sets shrink.</p>
+    </a>
+    <a class="card" href="conformal-forecasting-rnn.html">
+      <div class="num">NeurIPS, 2021</div>
+      <h3>Conformal forecasting RNNs</h3>
+      <p>Stankevi&#269;i&#363;t&#279;, Alaa and van der Schaar add one calibration quantile per horizon to
+      an RNN point forecast and compare methods by joint coverage and width alone. Their baselines are
+      judged against a joint target they were never calibrated for, the COVID-19 interval is the largest
+      calibration error and carries no finite guarantee, and under the proper score for an interval a
+      width that follows the state beats one width for every state on their data and on FRED.</p>
+    </a>
+    <a class="card" href="demos/35-constant-width.html">
+      <div class="num">Demonstration 35</div>
+      <h3>Constant-width intervals</h3>
+      <p>The same point forecast with the CF-RNN width and with a width that follows a running scale,
+      on a series with stochastic volatility. Same coverage, different interval score.</p>
+    </a>
+    <a class="card" href="conformal-set-size.html">
+      <div class="num">NeurIPS Datasets and Benchmarks, 2024</div>
+      <h3>Set size as uncertainty</h3>
+      <p>Ye et al. rank language models by mean conformal set size and call it rigorous uncertainty.
+      Rerun from their released logits: the two score functions disagree on the ranking, two of the
+      four headline inversions are APS coverage overshoot, and identical sets are compatible with
+      accuracy 90% and 5%.</p>
+    </a>
+    <a class="card" href="demos/34-set-size-uncertainty.html">
+      <div class="num">Demonstration 34</div>
+      <h3>Set size as uncertainty: the experiments</h3>
+      <p>Temperature moves the set size at fixed accuracy, LAC and APS separate two equal-accuracy
+      models differently, and two models with identical sets have accuracy 90% and 5%.</p>
+    </a>
+    <a class="card" href="conformal-uncertainty-bounds.html">
+      <div class="num">AAAI Summer Symposium, 2023</div>
+      <h3>Certified uncertainty bounds</h3>
+      <p>Karimi and Samavi certify per-input uncertainty bounds from a conformal set size by inserting the
+      marginal coverage guarantee as if it held for each input. The bounds depend on the set size alone,
+      and a two-group classifier with valid marginal coverage puts every input outside them.</p>
+    </a>
+    <a class="card" href="demos/33-certified-uncertainty.html">
+      <div class="num">Demonstration 33</div>
+      <h3>Certified uncertainty bounds: the experiment</h3>
+      <p>The two-group example with sliders: the certified interval is a line and both groups miss it.</p>
     </a>
   </div>
 

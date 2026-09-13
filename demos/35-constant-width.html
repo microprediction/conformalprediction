@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Constant-width intervals — Conformal Prediction</title>
+<meta name="description" content="Stankeviciute, Alaa and van der Schaar add one calibration quantile per horizon to a point forecast, so every input gets the same interval width. On a series whose noise scale moves, the same construction on scaled residuals covers the same and scores better." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  @media (max-width: 720px) { .row2, .row3 { grid-template-columns: 1fr; } }
+  .canvas-box.sq canvas { height: 330px; }
+  table.phi { border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px; margin: 1em 0; }
+  table.phi th, table.phi td { border: 1px solid var(--line); padding: 6px 14px; text-align: right; }
+  table.phi th { background: #f7f6f1; font-weight: 600; }
+  table.phi td:first-child, table.phi th:first-child { text-align: left; }
+  .tablewrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration 35 &middot; Review</p>
+  <h1>Constant-width intervals</h1>
+  <p class="subtitle">Stankevi&#269;i&#363;t&#279;, Alaa and van der Schaar build multi-horizon forecast
+  intervals by adding to a point forecast one calibration quantile per horizon. The half-width is the
+  same for every input. They compare methods by joint coverage and mean width. Here the same point
+  forecast gets two interval constructions on a series whose noise scale moves with time. One width
+  for every state and a width that follows a running scale cover the same and are told apart by the
+  interval score, the proper score for an interval. The
+  <a href="/conformal-forecasting-rnn.html">close reading</a> runs the comparison on their COVID-19
+  data and on the FRED daily universe.</p>
+
+  <h2>Setup</h2>
+
+  <p>The series is an autoregression with stochastic volatility,</p>
+
+  $$y_t = \phi\, y_{t-1} + s_t\, \varepsilon_t, \qquad \log s_t = \rho \log s_{t-1} + 0.8\sqrt{1-\rho^2}\,\eta_t,$$
+
+  <p>with \(\varepsilon_t\) and \(\eta_t\) standard normal. The point forecast at horizon \(h\) from
+  origin \(t\) is the exact conditional mean \(\hat y_{t+h} = \phi^h y_t\), so both interval
+  constructions share the best available location. For each horizon a rolling window of the last
+  \(W\) resolved absolute residuals \(|y_{o+h} - \hat y_{o+h}|\) is kept, and the CF-RNN construction
+  is</p>
+
+  $$\text{CF:}\quad \hat y_{t+h} \pm \hat\varepsilon_h, \qquad
+  \hat\varepsilon_h = \text{the } \lceil (W+1)(1-a) \rceil\text{-th smallest residual in the window},$$
+
+  <p>with \(a = \alpha/H\) for the Bonferroni intervals that target joint coverage \(1-\alpha\), and
+  \(a = \alpha\) for the per-horizon intervals. The alternative keeps a running scale
+  \(\hat\sigma_t\), the square root of an exponentially weighted mean of squared one-step residuals,
+  divides each stored residual by the scale at its origin, and applies the same quantile to the scaled
+  residuals,</p>
+
+  $$\text{scaled:}\quad \hat y_{t+h} \pm \hat\sigma_t\, \hat\varepsilon^{\,\text{s}}_h, \qquad
+  \hat\varepsilon^{\,\text{s}}_h = \text{the same quantile of } |y_{o+h} - \hat y_{o+h}| / \hat\sigma_o .$$
+
+  <p>Both are split conformal quantiles over the same window at the same level. The only difference
+  is whether the width may depend on the state. Each interval is scored at the level it was built for
+  by</p>
+
+  $$\mathrm{IS}_a(l, u; y) = (u - l) + \frac{2}{a}(l - y)_+ + \frac{2}{a}(y - u)_+ ,$$
+
+  <p>which is proper for the pair of quantiles \((a/2, 1-a/2)\): width plus a penalty for each miss in
+  proportion to how far the miss is, and no other construction of the interval has a smaller expected
+  score. Lower is better.</p>
+
+  <div class="demo">
+    <div class="canvas-box med"><canvas id="w-plot"></canvas></div>
+    <div class="readouts" id="w-readouts"></div>
+    <div class="controls" id="w-controls"></div>
+  </div>
+
+  <p>Both constructions reach the target coverage. The constant-width interval is too wide in the
+  quiet stretches and too narrow in the loud ones, and the interval score charges it for both. Setting
+  the volatility persistence to zero makes the noise scale independent from step to step, the running
+  scale has nothing to track, and the two constructions
+  score alike. That is the case the paper&rsquo;s static-noise synthetic experiments are built on.
+  Its time-dependent noise grows with \(t\) in the same way for every sequence, which a running scale
+  tracks as well.</p>
+
+  <p>The paper writes that &ldquo;as long as the coverage rate surpasses target coverage, the intervals
+  should be as efficient (narrow) as possible.&rdquo; The interval score is that criterion made exact,
+  and it ranks by the average of width and miss penalty rather than by the two numbers separately. A
+  method that reaches the coverage target with a constant width has spent its whole budget on the
+  average and has no way to be narrow where the state is calm.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. Coverage is met by both constructions and says nothing about which to prefer. The
+    CF-RNN width is one number per horizon, and on a series whose scale moves the same calibration
+    applied to scaled residuals keeps the coverage and lowers the proper score at every horizon.</p>
+  </div>
+
+  <p class="note">The paper is Stankevi&#269;i&#363;t&#279;, Alaa and van der Schaar, <em>Conformal Time-Series
+  Forecasting</em>, NeurIPS 2021. The interval score is Winkler (1972) and Gneiting and Raftery (2007),
+  equation (43). Source: <code>js/demo35.js</code>.</p>
+
+  <div class="prevnext">
+    <a href="34-set-size-uncertainty.html">&larr; Set size as uncertainty</a>
+    <span class="spacer"></span>
+    <a href="/conformal-forecasting-rnn.html">The close reading &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+<script type="module" src="../js/demo35.js"></script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Certified uncertainty bounds — Conformal Prediction</title>
+<meta name="description" content="A close reading of Karimi and Samavi (2023), who certify upper and lower bounds on a per-input model uncertainty from the size of a conformal prediction set. The bounds insert the marginal coverage guarantee as if it held for each input, and a two-group example puts every input outside them." />
+<meta property="og:title" content="Conformal Prediction — certified uncertainty bounds" />
+<meta property="og:description" content="Per-input uncertainty bounds certified from a conformal set size. The proof uses marginal coverage as if it were conditional, and the bounds pin the uncertainty to a function of the set size alone." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  table.phi { border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px; margin: 1em 0; }
+  table.phi th, table.phi td { border: 1px solid var(--line); padding: 6px 14px; text-align: right; }
+  table.phi th { background: #f7f6f1; font-weight: 600; }
+  table.phi td:first-child, table.phi th:first-child { text-align: left; }
+  .tablewrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Review</p>
+  <h1>Certified uncertainty bounds</h1>
+  <p class="subtitle">Karimi and Samavi take the size of a conformal prediction set for a single input
+  and derive certified upper and lower bounds on a per-input model uncertainty from it. The proof
+  inserts the marginal coverage guarantee, a statement about the average over inputs, as if it held for
+  the input in hand. The bounds that come out depend on the input only through the set size, and their
+  width is at most \(2/(n+1)\), so the theorem pins the uncertainty of every input with the same set
+  size to the same number. A two-group classifier with valid marginal coverage puts every input outside
+  the certified interval. <a href="/demos/33-certified-uncertainty.html">Demonstration 33</a> rebuilds
+  the example with sliders.</p>
+
+  <h2>What is proposed</h2>
+
+  <p>The paper is Karimi and Samavi, &ldquo;Quantifying Deep Learning Model Uncertainty in Conformal
+  Prediction,&rdquo; AAAI Summer Symposium 2023, arXiv:2306.00876. The abstract says the authors
+  &ldquo;provide certified boundaries for the computed uncertainty&rdquo; and the conclusion says they
+  &ldquo;certify upper and lower bounds for the uncertainty quantification.&rdquo; The object is
+  the conformal prediction set \(C(x)\) of a classifier with \(K\) classes at error level
+  \(\delta\), built from \(n\) calibration points, and the quantity is a per-input
+  &ldquo;conformal model uncertainty&rdquo; \(U_C(x) \in [0,1]\).</p>
+
+  <p>Theorem 2 of the paper states the following. Let \(m = |C(x)|\) be the size of the set for the
+  input \(x\). If \(m = 0\) then \(U_C(x) = 1\). If \(0 < m \le K\), define the &ldquo;pure model
+  uncertainty&rdquo;</p>
+
+  $$\hat u_C = \frac{m + \delta - 1}{K},$$
+
+  <p>and then</p>
+
+  $$L_C \;=\; \hat u_C (1-\delta) + \delta - \frac{1}{n+1} \;\le\; U_C(x) \;\le\; \min(H_C, 1),
+  \qquad H_C \;=\; \hat u_C\,\frac{n+2}{n+1} + \delta\,(1-\hat u_C).$$
+
+  <p>The proof defines \(U_C(x)\) through two events for the input \(x\): \(P_1\), that the true label
+  is in the set, and \(P_0\), that it is not. It sets the probability of being uncertain to
+  \(\hat u_C\) when \(P_1\) holds and to one when \(P_0\) holds, so that</p>
+
+  $$U_C(x) \;=\; \hat u_C\, \mathbb{P}(P_1) + \mathbb{P}(P_0). \tag{13}$$
+
+  <p>It then writes, as equations (14) and (15),</p>
+
+  $$1-\delta \;\le\; \mathbb{P}(P_1) \;\le\; 1-\delta+\frac{1}{n+1}, \qquad
+  \delta - \frac{1}{n+1} \;\le\; \mathbb{P}(P_0) \;\le\; \delta,$$
+
+  <p>and substitutes these into (13) to get \(L_C\) and \(H_C\). The two inequalities are the
+  coverage guarantee of split conformal prediction, quoted from Romano, Sesia and Cand&egrave;s and
+  from Vovk, Gammerman and Shafer.</p>
+
+  <h2>The step that fails</h2>
+
+  <p>The coverage guarantee is marginal. It says that if a calibration set and a fresh test pair
+  \((X, Y)\) are drawn exchangeably, then</p>
+
+  $$1-\delta \;\le\; \mathbb{P}\big(Y \in C(X)\big) \;\le\; 1-\delta+\frac{1}{n+1},$$
+
+  <p>where the probability averages over the calibration draw and over the test input. Equation (13)
+  needs \(\mathbb{P}(P_1)\) for the particular input \(x\) whose set has size \(m\). That is the
+  conditional probability \(\mathbb{P}(Y \in C(x) \mid X = x)\), and split conformal prediction
+  constrains it not at all. Vovk (2012), Lei and Wasserman (2014) and Foygel Barber, Cand&egrave;s,
+  Ramdas and Tibshirani (2021) show that for continuously distributed inputs no distribution-free
+  method can control it at a single point without the sets becoming trivial, and nothing in the
+  paper conditions on anything. The paper substitutes the marginal quantity for the conditional
+  one, and everything after that step is arithmetic on the wrong number.</p>
+
+  <p>Because \(\mathbb{P}(P_1)\) has been replaced by a constant, the bounds no longer depend on
+  \(x\) at all except through \(m\). Their width is</p>
+
+  $$H_C - L_C \;=\; \frac{\hat u_C + 1}{n+1} \;\le\; \frac{2}{n+1},$$
+
+  <p>so with a thousand calibration points the certified interval is a point to three decimals. What
+  the theorem says, read literally, is that every input whose set has \(m\) elements has uncertainty</p>
+
+  $$U_C(x) \;\approx\; \delta + \frac{(m+\delta-1)(1-\delta)}{K}.$$
+
+  <p>For \(K = 10\) and \(\delta = 0.1\) this is \(0.109\) for a singleton set and \(0.919\) for the
+  full set. The number is a relabeling of the set size. The paper&rsquo;s Figure 1 plots the bounds against
+  \(m\) and \(\delta\), and its curves are consistent with this formula.</p>
+
+  <h2>A two-group example</h2>
+
+  <p><strong>Setup.</strong> Ten classes with equal frequency, \(\delta = 0.1\), and a calibration
+  set of \(n = 1000\) points. Inputs come from two groups. Group A is three quarters of the
+  population and easy: the classifier puts probability \(0.9\) on the true class and \(0.1/9\) on each
+  other class. Group B is one quarter and hard: the classifier puts probability \(0.65\) on one class
+  and \(0.35/9\) on each other, and its favoured class is the true class with probability \(0.65\).
+  The conformal score is one minus the probability of the true class, the score implied by the
+  paper&rsquo;s equation (3).</p>
+
+  <p><strong>Calculation.</strong> The calibration scores take three values. Group A inputs score
+  \(0.1\), which is 75% of the calibration set. Group B inputs whose favoured class is correct score
+  \(0.35\), which is \(0.25 \times 0.65 \approx 16\%\). Group B inputs whose favoured class is wrong
+  score \(1 - 0.35/9 \approx 0.961\), the remaining 9%. The threshold is the \(\lceil 1001 \times 0.9
+  \rceil = 901\)st smallest score, which lands in the second block, so \(\hat q = 0.35\). The set is
+  every class with probability at least \(1 - \hat q = 0.65\). For a group A input that is the true
+  class alone, since \(0.9 \ge 0.65\) and \(0.1/9 < 0.65\). For a group B input it is the favoured
+  class alone. Every set is a singleton, \(m = 1\) for every input.</p>
+
+  <p>Marginal coverage is \(0.75 \times 1 + 0.25 \times 0.65 = 0.9125\), above \(1 - \delta\), so the
+  guarantee holds and the construction is a legitimate conformal predictor. Conditional coverage is
+  \(1\) in group A and \(0.65\) in group B.</p>
+
+  <p><strong>The theorem.</strong> With \(m = 1\), \(\hat u_C = (1 + 0.1 - 1)/10 = 0.01\), and</p>
+
+  $$L_C = 0.01 \times 0.9 + 0.1 - \tfrac{1}{1001} = 0.1080, \qquad
+  H_C = 0.01 \times \tfrac{1002}{1001} + 0.1 \times 0.99 = 0.1090.$$
+
+  <p>The certified interval for every input is \([0.1080, 0.1090]\). Now evaluate the paper&rsquo;s
+  own definition (13) with each group&rsquo;s actual probability of covering the truth. For a group A
+  input, \(\mathbb{P}(P_1) = 1\) and \(U_C = 0.01 \times 1 + 0 = 0.010\). For a group B input,
+  \(\mathbb{P}(P_1) = 0.65\) and \(U_C = 0.01 \times 0.65 + 0.35 = 0.3565\). Neither is inside the
+  interval. The certified bounds miss on every input, and they miss in both directions.</p>
+
+  <p>A simulation with these parameters gives \(\hat q = 0.350\), marginal coverage \(0.912\), all
+  200,000 test sets of size one, conditional coverage \(1.000\) in group A and \(0.647\) in group B,
+  and the two values of \(U_C\) at \(0.010\) and \(0.360\). The script is
+  <code>data/reviews/karimi_check.py</code>.</p>
+
+  <p>The example also answers the paper&rsquo;s stated purpose, which is to let conformal uncertainty
+  &ldquo;be compared by other uncertainty quantification methods such as Bayesian&rdquo; ones. A group
+  A input is misclassified never and a group B input 35% of the time. Any Bayesian or ensemble method
+  that saw the probability vectors would separate them. The certified number cannot, because it was
+  built from \(m\) and \(m\) is one for both.</p>
+
+  <h2>What the set size does carry</h2>
+
+  <p>The size of a conformal set is a legitimate heuristic. On average over inputs, larger sets go with
+  inputs the score finds harder, and the paper&rsquo;s reading of \(m\) as an ordinal signal is the
+  standard one. The claim under review is stronger: that the coverage guarantee turns the signal into a
+  certified interval for each input. It does not. The guarantee is one scalar, the average coverage,
+  and it is spent entirely on the average. Nothing is left over for a bound at a point. The same
+  observation, that a functional of the sets alone cannot recover per-input or per-class facts the sets
+  do not contain, is the no-go theorem in our
+  <a href="/conformal-correlation.html">review of conformal correlation</a>, and it applies here with
+  \(g(C) = |C|\).</p>
+
+  <p>If a per-group statement is wanted, Mondrian or group-conditional conformal prediction gives one,
+  at the price of naming the groups in advance and calibrating within them. That is a guarantee for the
+  group average, and still not for the input.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. Theorem 2 substitutes the marginal coverage rate for the probability that a particular
+    input is covered. The resulting bounds are a function of the set size alone, of width at most
+    \(2/(n+1)\), and a two-group example with valid marginal coverage puts every input outside them.
+    The certified interval certifies the set size.</p>
+  </div>
+
+  <p class="note">The paper is Karimi and Samavi, <em>Quantifying Deep Learning Model Uncertainty in
+  Conformal Prediction</em>, AAAI 2023 Summer Symposium Series, arXiv:2306.00876v2. Equation numbers
+  are the paper&rsquo;s. The conditional coverage impossibility results are Vovk, <em>Conditional
+  validity of inductive conformal predictors</em> (ACML 2012), Lei and Wasserman, <em>Distribution-free
+  prediction bands for non-parametric regression</em> (JRSS-B 2014), and Foygel Barber, Cand&egrave;s,
+  Ramdas and Tibshirani, <em>The limits of distribution-free conditional predictive inference</em>
+  (Information and Inference 2021).</p>
+
+  <div class="prevnext">
+    <a href="/reviews.html">&larr; All reviews</a>
+    <span class="spacer"></span>
+    <a href="/demos/33-certified-uncertainty.html">Demonstration 33 &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+</body>
+</html>

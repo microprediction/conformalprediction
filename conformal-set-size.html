@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Set size as uncertainty — Conformal Prediction</title>
+<meta name="description" content="A close reading of Ye et al. (NeurIPS 2024), who rank language models by mean conformal set size and call it a statistically rigorous measure of uncertainty. Reproduced from their released logits: the two score functions disagree on the ranking, two of the four headline examples exist under APS only and come from realized coverage of 95 to 99 percent, and identical sets are compatible with accuracy 90% and 5%." />
+<meta property="og:title" content="Conformal Prediction — set size as uncertainty" />
+<meta property="og:description" content="Mean conformal set size as LLM uncertainty. The certificate covers coverage and nothing else, and the size depends on the score function, the logit scale and the coverage overshoot." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  table.phi { border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px; margin: 1em 0; }
+  table.phi th, table.phi td { border: 1px solid var(--line); padding: 6px 14px; text-align: right; }
+  table.phi th { background: #f7f6f1; font-weight: 600; }
+  table.phi td:first-child, table.phi th:first-child { text-align: left; }
+  .tablewrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Review</p>
+  <h1>Set size as uncertainty</h1>
+  <p class="subtitle">Ye, Yang, Pang, Wang, Wong, Yilmaz, Shi and Tu benchmark large language models by
+  the mean size of their conformal prediction sets at nominal 90% coverage, averaged over two score
+  functions. They present conformal prediction as offering &ldquo;a statistically rigorous estimation
+  of uncertainty rather than a heuristic approximation&rdquo; and read the set size as that estimate.
+  The certificate attaches to coverage and to nothing else.
+  Recomputing from the released logits, the two score functions rank the models differently, two of
+  the paper&rsquo;s four headline examples of a more accurate model being more uncertain exist under
+  one score only and are produced by realized coverage of 95% and 99% in place of 90%, and a
+  construction with identical sets under two models gives them accuracy 90% and 5%.
+  <a href="/demos/34-set-size-uncertainty.html">Demonstration 34</a> shows each effect on a synthetic
+  classifier.</p>
+
+  <h2>What is proposed</h2>
+
+  <p>The paper is Ye et al., &ldquo;Benchmarking LLMs via Uncertainty Quantification,&rdquo; NeurIPS
+  2024 Datasets and Benchmarks track, arXiv:2401.12794. Nine model families are evaluated on five
+  multiple-choice tasks with six options each, 10,000 questions per task, half used for calibration
+  and half for testing. Two set constructions from the split conformal literature are used, LAC and
+  APS, each at \(\alpha = 0.1\). The paper reports accuracy, coverage, and the mean set size</p>
+
+  $$\mathrm{SS} = \frac{1}{|D_{\text{test}}|} \sum_{(X_t, Y_t) \in D_{\text{test}}} |C(X_t)|,$$
+
+  <p>&ldquo;which is a primary metric for conformal prediction,&rdquo; and ranks the models by it.
+  Table 1 gives &ldquo;the mean values of LAC and APS,&rdquo; and Appendix C.10 says the analyses
+  average over three prompting strategies as well. The paper argues that because coverage is at
+  least 90%, &ldquo;the size of the prediction set can serve as a reliable indicator of
+  uncertainty,&rdquo; and it draws three findings: more accurate models may be more uncertain, larger
+  models may be more uncertain, and instruction tuning tends to increase uncertainty.</p>
+
+  <h2>What the certificate constrains</h2>
+
+  <p>Split conformal prediction with a score \(s\) and \(n\) calibration points gives, for an
+  exchangeable test pair,</p>
+
+  $$1-\alpha \;\le\; \mathbb{P}\big(Y \in C(X)\big) \;\le\; 1-\alpha + \frac{1}{n+1}.$$
+
+  <p>That is the whole of the guarantee. It is one number, the average coverage, and it holds for
+  every score function. The sets themselves, and therefore their sizes, depend on the score. The mean
+  size is a sum of inclusion rates,</p>
+
+  $$\mathbb{E}|C(X)| = \sum_{y=1}^{K} \mathbb{P}\big(y \in C(X)\big),$$
+
+  <p>and the certificate constrains only the term in which \(y\) is the true label. The other terms
+  are free, and a different score, a different logit scale, or a different amount of overshoot above
+  \(1-\alpha\) changes them without touching the guarantee. The word &ldquo;rigorous&rdquo; in the
+  paper is borrowed from the coverage statement and spent on the size.</p>
+
+  <p>Two consequences follow. The first is that a size comparison across models is a comparison at
+  whatever coverage each model actually realized, which is at least 90% and can be much more. The
+  second is that the mean size is a functional of the law of the sets alone, so the
+  <a href="/conformal-correlation.html">no-go theorem</a> from our review of conformal correlation
+  applies: whenever a set of size two or more occurs, the label the model ranks first can be moved
+  within the set without changing any set, so the same sizes are compatible with different accuracies.
+  Demonstration 34, panel C, does this with LAC sets: two models with the same set on every question,
+  the same mean size and the same coverage, with accuracy 90% and 5%.</p>
+
+  <h2>Reproduction from the released logits</h2>
+
+  <p>The authors released the option logits of every model on every question, with the calibration
+  and test split fixed by a seed in their script. We reran their set constructions from those files.
+  The accuracies in their Table 1 reproduce to the second decimal and the set sizes to within
+  \(0.1\), except for InternLM-7B, whose released logits give sizes about \(0.1\) smaller than the
+  paper&rsquo;s. Scripts are in <code>data/reviews/</code>.</p>
+
+  <div class="tablewrap">
+  <table class="phi">
+    <tr><th>Question answering, Table 1</th><th>Accuracy, paper</th><th>Accuracy, rerun</th><th>SS, paper</th><th>SS, rerun</th></tr>
+    <tr><td>Qwen-14B</td><td>64.25</td><td>64.25</td><td>2.80</td><td>2.80</td></tr>
+    <tr><td>Yi-6B</td><td>57.57</td><td>57.57</td><td>3.20</td><td>3.19</td></tr>
+    <tr><td>Mistral-7B</td><td>60.44</td><td>60.44</td><td>2.80</td><td>2.80</td></tr>
+    <tr><td>Llama-2-13B</td><td>52.52</td><td>52.52</td><td>3.06</td><td>3.06</td></tr>
+    <tr><td>Qwen-7B</td><td>55.21</td><td>55.21</td><td>3.26</td><td>3.26</td></tr>
+    <tr><td>InternLM-7B</td><td>48.37</td><td>48.37</td><td>3.49</td><td>3.39</td></tr>
+    <tr><td>Llama-2-7B</td><td>45.60</td><td>45.60</td><td>3.20</td><td>3.20</td></tr>
+    <tr><td>DeepSeek-7B</td><td>45.65</td><td>45.65</td><td>3.34</td><td>3.30</td></tr>
+    <tr><td>MPT-7B</td><td>29.49</td><td>29.49</td><td>3.53</td><td>3.53</td></tr>
+    <tr><td>Falcon-7B</td><td>23.75</td><td>23.75</td><td>3.90</td><td>3.90</td></tr>
+  </table>
+  </div>
+
+  <h3>The two score functions disagree</h3>
+
+  <p>The paper ranks by the average of the LAC size and the APS size. Ranked separately, the two
+  agree only partly. Kendall&rsquo;s \(\tau\) between the LAC ranking and the APS ranking of the
+  sixteen base models is \(0.63\) on question answering, \(0.58\) on reading comprehension,
+  \(0.70\) on commonsense inference, \(0.88\) on dialogue response selection and \(0.83\) on document
+  summarization. On reading comprehension the two scores order 25 of the 120 model pairs in opposite
+  directions, and on question answering 22. A measurement that reverses when the score changes is a measurement of the score.</p>
+
+  <h3>Realized coverage is not 90%</h3>
+
+  <p>Under LAC the realized coverage on the test half lies between 88.5% and 94.5% for every model and
+  task. Under APS it reaches 97.6% on question answering, 99.6% on reading comprehension and 99.7% on
+  commonsense inference, and it is highest on the most accurate models. APS scores the true label by
+  the cumulative probability down to it, so a sharp model that is confidently wrong on a tenth of the
+  questions has a tenth of its calibration scores near one, the threshold is near one, and nearly every
+  option is admitted. The size of such a set is the size of a set at 99% coverage. The paper compares
+  it with sets at 92% coverage and reads the difference as uncertainty.</p>
+
+  <h3>The headline examples</h3>
+
+  <p>Section 6.3 gives four examples in which &ldquo;the LLM with much higher accuracy exhibits greater
+  uncertainty compared to its counterpart.&rdquo; Recomputed from the released logits, averaged over
+  the three prompts as the paper does, and split by score function:</p>
+
+  <div class="tablewrap">
+  <table class="phi">
+    <tr><th>Task, models</th><th>Accuracy</th><th>SS, average</th><th>SS, LAC</th><th>Coverage, LAC</th><th>SS, APS</th><th>Coverage, APS</th></tr>
+    <tr><td>CI, Qwen-14B</td><td>91.00</td><td>2.02</td><td>1.01</td><td>91.4%</td><td>3.03</td><td>99.2%</td></tr>
+    <tr><td>CI, Yi-6B</td><td>76.50</td><td>1.86</td><td>1.53</td><td>89.8%</td><td>2.19</td><td>94.9%</td></tr>
+    <tr><td>QA, Qwen-7B</td><td>55.21</td><td>3.26</td><td>2.82</td><td>90.5%</td><td>3.70</td><td>95.1%</td></tr>
+    <tr><td>QA, Llama-2-7B</td><td>45.60</td><td>3.20</td><td>3.05</td><td>90.4%</td><td>3.34</td><td>92.3%</td></tr>
+    <tr><td>DS, InternLM-7B</td><td>34.38</td><td>4.29</td><td>4.43</td><td>90.6%</td><td>4.16</td><td>90.5%</td></tr>
+    <tr><td>DS, Falcon-7B</td><td>24.69</td><td>3.92</td><td>3.93</td><td>90.6%</td><td>3.91</td><td>90.8%</td></tr>
+    <tr><td>DRS, InternLM-7B</td><td>43.72</td><td>3.46</td><td>3.54</td><td>90.6%</td><td>3.38</td><td>90.7%</td></tr>
+    <tr><td>DRS, MPT-7B</td><td>24.38</td><td>3.59</td><td>3.62</td><td>90.9%</td><td>3.55</td><td>90.7%</td></tr>
+  </table>
+  </div>
+
+  <p>The Qwen-14B example is the clearest. Under LAC its sets are of size \(1.01\) at 91.4% coverage,
+  the smallest of any model on the task, and Yi-6B&rsquo;s are of size \(1.53\). The reported inversion
+  comes entirely from APS, where Qwen-14B&rsquo;s sets realize 99.2% coverage. The Qwen-7B example is
+  the same: LAC ranks it as less uncertain than Llama-2-7B, and APS at 95.1% coverage reverses it. The
+  document summarization example holds under both scores. The dialogue example does not reproduce from
+  the released InternLM-7B logits under either score. Across all pairs of models within a task, the
+  more accurate model has the larger average size in 66 of 600 cases. Under LAC alone it is 48, and
+  under APS alone it is 110.</p>
+
+  <h3>Temperature</h3>
+
+  <p>Dividing a model&rsquo;s logits by a temperature \(T\) changes no answer and no accuracy. Between
+  \(T = 0.5\) and \(T = 2\) the size ranking of the sixteen base models changes for six to nine of
+  them on each task. This shows that the size responds to the logit scale. It does not, on this
+  data, overturn the rankings on its own: fitting each model&rsquo;s temperature by maximum likelihood
+  on the calibration half and recomputing the sizes on the test half leaves the LAC-plus-APS ranking
+  nearly unchanged, with \(\tau \ge 0.92\) on every task. Rescaling moves the sizes and, at the
+  fitted scales, leaves the order. The score function and the coverage overshoot, not the temperature,
+  are what move the paper&rsquo;s rankings.</p>
+
+  <h3>Accuracy already carries most of it</h3>
+
+  <p>Under LAC the Spearman correlation between accuracy and set size across models is between
+  \(-0.89\) and \(-0.99\) on every task. Under the paper&rsquo;s average it is between \(-0.88\) and
+  \(-0.94\). The new axis of evaluation is, to that extent, accuracy read off a different scale, and
+  the part that is not accuracy is the APS overshoot.</p>
+
+  <h2>What survives</h2>
+
+  <p>At a fixed score function and a matched realized coverage, the mean set size measures how well
+  the score orders the options. Sadinle, Lei and Wasserman show that the smallest sets at a given
+  coverage come from thresholding the true conditional probabilities, so a smaller size at the same
+  coverage means the score is closer to the truth in that ordering sense. That is a property of the
+  model&rsquo;s probabilities and a legitimate thing to report. It is not certified, it is not a measure of
+  uncertainty separate from the score, and it does not see which option the model chose.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. The guarantee is one scalar, the coverage, and the paper spends it on a different
+    quantity. The mean set size depends on the score function, on the logit scale and on how far the
+    realized coverage exceeds the nominal one. On the paper&rsquo;s own logits, two of the four headline
+    inversions are the APS overshoot, the two score functions disagree on a quarter of model pairs, and
+    identical sets are compatible with accuracy 90% and 5%.</p>
+  </div>
+
+  <p class="note">The paper is Ye, Yang, Pang, Wang, Wong, Yilmaz, Shi and Tu, <em>Benchmarking LLMs
+  via Uncertainty Quantification</em>, NeurIPS 2024 Datasets and Benchmarks, arXiv:2401.12794v3, with
+  code and logits at github.com/smartyfh/LLM-Uncertainty-Bench. Rerun scripts:
+  <code>data/reviews/ye_rankings.py</code>, <code>data/reviews/ye_table1.py</code> and
+  <code>data/reviews/ye_temperature.py</code>. The minimal-size result is Sadinle, Lei and
+  Wasserman, <em>Least ambiguous set-valued classifiers with bounded error levels</em>, JASA 2019.</p>
+
+  <div class="prevnext">
+    <a href="/conformal-uncertainty-bounds.html">&larr; Certified uncertainty bounds</a>
+    <span class="spacer"></span>
+    <a href="/demos/34-set-size-uncertainty.html">Demonstration 34 &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+</body>
+</html>
