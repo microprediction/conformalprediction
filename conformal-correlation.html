@@ -94,7 +94,7 @@
   confusion matrix. We read the paper closely and rebuilt the statistic on a classifier with known
   confusability. The construction is a threshold on the softmax followed by second moments. The coverage
   certificate transfers nothing to it, and its entries measure class prevalence more than confusability.
-  Each point below is exhibited live in <a href="/demos/32-conformal-correlation.html">demonstration 32</a>.</p>
+  A three class example shows each flaw by hand, and <a href="/demos/32-conformal-correlation.html">demonstration 32</a> shows them at scale.</p>
 
   <h2>What is proposed</h2>
 
@@ -112,6 +112,49 @@
   discloses less than a confusion matrix in federated training, and that it improves client selection
   when the goal is to separate two critical classes. The abstract describes it as capturing &ldquo;the
   likelihood of class pairs co-occurring within conformal prediction sets.&rdquo;</p>
+
+  <h2>A three class example</h2>
+
+  <p>Take three classes, cat, dog and plane, with equal numbers of test images, and a classifier whose
+  sets are as follows. Every cat image gets \(\{\text{cat}, \text{dog}\}\). Every dog image gets
+  \(\{\text{dog}\}\). Every plane image gets \(\{\text{plane}\}\). Coverage is 100%, so the certificate
+  is satisfied with room to spare.</p>
+
+  <div class="tablewrap">
+  <table class="phi">
+    <tr><th>Image</th><th>Prediction set</th><th>\(z = (z_{\text{cat}}, z_{\text{dog}}, z_{\text{plane}})\)</th></tr>
+    <tr><td>cat</td><td style="text-align:left">{cat, dog}</td><td>(1, 1, 0)</td></tr>
+    <tr><td>dog</td><td style="text-align:left">{dog}</td><td>(0, 1, 0)</td></tr>
+    <tr><td>plane</td><td style="text-align:left">{plane}</td><td>(0, 0, 1)</td></tr>
+  </table>
+  </div>
+
+  <p>Cat appears in a third of the sets, dog in two thirds and plane in a third. Every indicator
+  therefore has variance \(2/9\), and the correlation of two indicators is
+  \(\mathbb{E}[z_i z_j] - p_i p_j\) divided by \(2/9\). Cat and dog share a third of the sets, so</p>
+
+  $$\rho_{\text{cat},\text{dog}} = \frac{1/3 - 2/9}{2/9} = \tfrac12, \qquad
+    \rho_{\text{cat},\text{plane}} = \frac{0 - 1/9}{2/9} = -\tfrac12, \qquad
+    \rho_{\text{dog},\text{plane}} = \frac{0 - 2/9}{2/9} = -1.$$
+
+  <p>The authors would read this matrix as saying that cat and dog are confused, that dog and plane are
+  strongly dissimilar, and that cat and plane are less so. However, the classifier separates planes from
+  cats and from dogs equally and perfectly. The difference between \(-1\) and \(-1/2\) comes entirely
+  from dog appearing in twice as many sets as cat. A negative entry measures how often the two classes
+  are included. It does not measure how dissimilar they are.</p>
+
+  <p>Now change the classifier so that every dog image gets \(\{\text{cat}, \text{dog}\}\) and every cat
+  image gets \(\{\text{cat}\}\). The collection of indicator vectors is the same, so the matrix is the
+  same, entry for entry. In the first classifier cats are being mistaken for dogs. In the second, dogs
+  are being mistaken for cats. The matrix cannot tell the two apart, so a directional reading from it
+  has no basis.</p>
+
+  <p>Finally, keep the sets exactly as in the first classifier but suppose the model ranks dog above cat
+  on every cat image. Every cat is now misclassified. The sets, the coverage and the matrix are all
+  unchanged, because the evaluation never consults a label. A matrix that does not move when the
+  accuracy on a class falls from 100% to 0% is not a superset of the confusion matrix.</p>
+
+  <p>Each of these effects survives at ten classes and at a hundred, with sampling noise on top.</p>
 
   <h2>What is computed</h2>
 
