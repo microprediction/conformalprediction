@@ -166,7 +166,8 @@
   each other, both with accuracy zero. The authors write that the matrix &ldquo;contains a superset of
   the information conveyed by the confusion matrix.&rdquo; It does not determine the confusion matrix
   even when the sets are produced by randomized APS exactly as Romano, Sesia and Cand&egrave;s specify
-  it. The pair survives the non-randomized variant too: with \(u = 0\) every calibration score is 0.9,
+  it. Under the non-randomized score-threshold convention with every uniform set to zero, the pair
+  survives too: every calibration score is 0.9,
   so the threshold is 0.9, the second-ranked class is always included, every set is the pair of the
   top-ranked and the true class, and the two models again share the law of sets with opposite
   confusions.</p>
@@ -232,8 +233,7 @@
   near zero. It is the converse that a reader of a heat map uses, that an entry near zero means the
   classes are unrelated, and the converse fails. Independence of set membership does not imply
   absence of classification confusion. The example also bears on their Remark 1 in its stated
-  direction: \(A\) and \(B\) are as similar as two classes can be in the classifier's own
-  representation, since it confuses them on 99% of the \(A\) images, and the entry is zero.</p>
+  direction: the classifier exhibits 99% directional confusion from \(A\) to \(B\), and the entry is zero.</p>
 
   <h3>Example 4. Perfect correlation with one in a million co-occurrence</h3>
 
