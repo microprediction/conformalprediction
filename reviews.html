@@ -126,10 +126,10 @@
     <a class="card" href="conformal-set-size.html">
       <div class="num">NeurIPS Datasets and Benchmarks, 2024</div>
       <h3>Set size as uncertainty</h3>
-      <p>Ye et al. rank language models by mean conformal set size and call it rigorous uncertainty.
-      Rerun from their released logits: the two score functions disagree on the ranking, two of the
-      four headline inversions are APS coverage overshoot, and identical sets are compatible with
-      accuracy 90% and 5%.</p>
+      <p>Ye et al. rank language models by mean conformal set size. They concede that the size depends on
+      the score function and average two scores to fix it. Rerun from their released logits, the fix
+      fails on their own findings: two of the four headline examples in Section 6.3 survive under one
+      score only, produced by that score covering at 95% and 99% rather than 90%.</p>
     </a>
     <a class="card" href="demos/34-set-size-uncertainty.html">
       <div class="num">Demonstration 34</div>

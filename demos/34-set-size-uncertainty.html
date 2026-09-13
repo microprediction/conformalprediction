@@ -95,10 +95,13 @@
   <h1>Set size as uncertainty</h1>
   <p class="subtitle">Ye, Yang, Pang, Wang, Wong, Yilmaz, Shi and Tu rank large language models by the
   mean size of their conformal prediction sets at nominal 90% coverage and read the size as the
-  model&rsquo;s uncertainty. Three experiments on a synthetic six-option classifier. Dividing the logits
-  by a temperature changes no answer and changes the set size. The two score functions the paper
-  averages rank a sharp model and a soft model of equal accuracy in opposite orders. Two models with
-  identical sets on every input have accuracy 90% and 5%. The
+  model&rsquo;s uncertainty. Three experiments on a synthetic six-option classifier showing the
+  mechanisms behind that. The first two are established results, due to Xi and co-authors and to
+  Kostumov and co-authors, reproduced here in their simplest form: dividing the logits by a
+  temperature changes no answer and changes the set size, and the two score functions the paper
+  averages rank a sharp model and a soft model of equal accuracy in opposite orders. The third is
+  structural and is the one that does not appear in the literature: two models with identical sets on
+  every input have accuracy 90% and 5%. The
   <a href="/conformal-set-size.html">close reading</a> repeats the analysis on the paper&rsquo;s own
   released logits.</p>
 
@@ -159,10 +162,11 @@
     <div class="controls" id="s-controls"></div>
   </div>
 
-  <p>The paper averages LAC and APS before ranking. On its own released logits the two rankings
-  agree with Kendall \(\tau\) between 0.58 and 0.88 across the five tasks, and two of its four headline
-  examples of a more accurate model showing more uncertainty exist under APS only, with APS coverage
-  of 95% and 99% on the more accurate model.</p>
+  <p>The paper averages LAC and APS before ranking, and says so in order to &ldquo;mitigate the
+  influence of different score functions.&rdquo; On its own released logits the two rankings agree with
+  Kendall \(\tau\) between 0.58 and 0.88 across the five tasks, and two of its four headline examples
+  of a more accurate model showing more uncertainty survive under APS only, with APS coverage of 95%
+  and 99% on the more accurate model. The averaging did not remove the dependence.</p>
 
   <h2 id="c">C. Same sets, different accuracy</h2>
 
