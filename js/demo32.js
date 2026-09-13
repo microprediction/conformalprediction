@@ -387,9 +387,9 @@ function pipeline(seed, pi, G, margin, alpha, randomize, hard = 0) {
 {
   const st = { alpha: 0.10, margin: 6, cmax: 5, randomize: true };
   let seed = 37;
-  const scCCM = new Plot(document.getElementById("c-ccm"), { xlim: [0, 1], ylim: [-0.4, 1], xlabel: "true confusability of the pair", ylabel: "CCM entry ρ" });
-  const scSoft = new Plot(document.getElementById("c-soft"), { xlim: [0, 1], ylim: [0, 1], xlabel: "true confusability of the pair", ylabel: "mean p·p′ (rescaled)" });
-  const curve = new Plot(document.getElementById("c-curve"), { xlim: [0, 0.5], ylim: [-0.2, 1], xlabel: "miscoverage α", ylabel: "rank correlation with the truth" });
+  const scCCM = new Plot(document.getElementById("c-ccm"), { xlim: [0, 1], ylim: [-0.4, 1], xlabel: "injected confusion strength", ylabel: "CCM entry ρ" });
+  const scSoft = new Plot(document.getElementById("c-soft"), { xlim: [0, 1], ylim: [0, 1], xlabel: "injected confusion strength", ylabel: "mean p·p′ (rescaled)" });
+  const curve = new Plot(document.getElementById("c-curve"), { xlim: [0, 0.5], ylim: [-0.2, 1], xlabel: "miscoverage α", ylabel: "rank correlation with injected strength" });
   const setRO = readouts(document.getElementById("c-readouts"),
     ["rank correlation, CCM", "rank correlation, soft statistic", "share of singleton sets", "mean set size"]);
   const ctrls = document.getElementById("c-controls");
@@ -458,9 +458,9 @@ function pipeline(seed, pi, G, margin, alpha, randomize, hard = 0) {
   const refresh = () => { run(); draw(); };
   slider(ctrls, { label: "miscoverage α", min: 0.02, max: 0.5, step: 0.01, value: st.alpha, fmt: (v) => fmt(v, 2) }, (v) => { st.alpha = v; refresh(); });
   slider(ctrls, { label: "classifier margin (accuracy)", min: 0, max: 10, step: 0.1, value: st.margin, fmt: (v) => fmt(v, 1) }, (v) => { st.margin = v; refresh(); });
-  slider(ctrls, { label: "spread of true confusabilities", min: 0.5, max: 8, step: 0.1, value: st.cmax, fmt: (v) => fmt(v, 1) }, (v) => { st.cmax = v; refresh(); });
+  slider(ctrls, { label: "spread of injected confusion", min: 0.5, max: 8, step: 0.1, value: st.cmax, fmt: (v) => fmt(v, 1) }, (v) => { st.cmax = v; refresh(); });
   checkbox(ctrls, { label: "randomized APS (Romano et al.)", checked: st.randomize }, (v) => { st.randomize = v; refresh(); });
-  button(ctrls, "new truth", () => { seed += 1; refresh(); });
+  button(ctrls, "new strengths", () => { seed += 1; refresh(); });
   autoResize(scCCM, draw); autoResize(scSoft, draw); autoResize(curve, draw);
   refresh();
 }
