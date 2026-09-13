@@ -313,7 +313,7 @@ Two labels appear together only in hard sets, so $q_{ij} = 1/2$ for every pair, 
 \]
 
 Every pair is positively correlated and the classifier is perfect. The correlation has one cause,
-whether the input was hard, and says nothing about any pair. The authors' Remark~1 reads a positive
+whether the input was hard, and not from any relation between the pair. The authors' Remark~1 reads a positive
 entry as ``intrinsically similar classes''.
 \end{example}
 
@@ -453,7 +453,7 @@ $p \mapsto p/(1-p)$.
 The authors argue that the matrix is privacy preserving because it ``only contains probabilities''
 and so ``does not leak information on the size and composition'' of a client's data. Correlations
 can be negative, so the matrix does not contain probabilities. A row normalized confusion matrix
-does contain only probabilities, and reveals no counts either.
+does contain only probabilities, and does not directly disclose counts either.
 
 Lemma~\ref{lem:ident} says more. When every set is a singleton, the off-diagonal entries recover
 every inclusion rate. When every set is the singleton of the ranked prediction, those rates are the
@@ -501,8 +501,7 @@ probability have the same row $(0.6, 0.4)$, and error rates from $A$ to $B$ of z
 The confusion matrix of the ranked prediction carries that difference and $C_{ab}$ does not, so the
 two are complements.
 
-If labels are unavailable, the mean pairwise product $\E[p_i(X) p_j(X)]$ is symmetric and label
-free. If sets are the object, because a downstream consumer receives sets and nothing else, then
+If labels are unavailable, the mean pairwise product $\E[p_i(X) p_j(X)]$ is symmetric and needs no labeled calibration or evaluation sample. If sets are the object, because a downstream consumer receives sets and nothing else, then
 the co-occurrence rate $q_{ij}$ is the quantity the abstract describes, and the coverage confusion
 matrix of \citet{stutz2022}, which conditions on the true label, is directional.
 
