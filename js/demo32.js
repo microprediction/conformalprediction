@@ -117,20 +117,20 @@ function apsSets(pre, q, randomize, rng) {
 // The conformal correlation matrix, exactly as defined: phi coefficients of
 // the membership indicators. Also returns inclusion rates and co-occurrence rates.
 function ccm(Z) {
-  const n = Z.length;
-  const p = new Float64Array(H);
-  const co = Array.from({ length: H }, () => new Float64Array(H));
+  const n = Z.length, K = Z[0].length;
+  const p = new Float64Array(K);
+  const co = Array.from({ length: K }, () => new Float64Array(K));
   let size = 0;
   for (const z of Z) {
-    for (let i = 0; i < H; i++) {
+    for (let i = 0; i < K; i++) {
       if (!z[i]) continue;
       p[i]++; size++;
-      for (let j = i; j < H; j++) if (z[j]) co[i][j]++;
+      for (let j = i; j < K; j++) if (z[j]) co[i][j]++;
     }
   }
-  for (let i = 0; i < H; i++) { p[i] /= n; for (let j = i; j < H; j++) { co[i][j] /= n; co[j][i] = co[i][j]; } }
-  const rho = Array.from({ length: H }, () => new Float64Array(H).fill(NaN));
-  for (let i = 0; i < H; i++) for (let j = 0; j < H; j++) {
+  for (let i = 0; i < K; i++) { p[i] /= n; for (let j = i; j < K; j++) { co[i][j] /= n; co[j][i] = co[i][j]; } }
+  const rho = Array.from({ length: K }, () => new Float64Array(K).fill(NaN));
+  for (let i = 0; i < K; i++) for (let j = 0; j < K; j++) {
     const v = p[i] * (1 - p[i]) * p[j] * (1 - p[j]);
     rho[i][j] = v > 0 ? (co[i][j] - p[i] * p[j]) / Math.sqrt(v) : NaN;
   }
@@ -189,14 +189,15 @@ function heatmap(canvas, M, opts) {
   const ctx = canvas.getContext("2d");
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
-  const top = 26, left = 22;
-  const cell = Math.floor(Math.min((w - left - 6) / H, (h - top - 6) / H));
-  const x0 = left + Math.max(0, (w - left - cell * H) / 2);
+  const K = M.length, labels = opts.labels || [...Array(K).keys()].map(String);
+  const top = 42, left = 22;
+  const cell = Math.floor(Math.min((w - left - 6) / K, (h - top - 6) / K, 64));
+  const x0 = left + Math.max(0, (w - left - cell * K) / 2);
   ctx.font = "700 13px ui-sans-serif, system-ui, sans-serif";
   ctx.fillStyle = "rgba(0,0,0,0.8)"; ctx.textAlign = "left"; ctx.textBaseline = "top";
   ctx.fillText(opts.title, x0, 4);
   ctx.font = "11px ui-sans-serif, system-ui, sans-serif";
-  for (let i = 0; i < H; i++) for (let j = 0; j < H; j++) {
+  for (let i = 0; i < K; i++) for (let j = 0; j < K; j++) {
     const v = M[i][j];
     const x = x0 + j * cell, y = top + i * cell;
     if (!isFinite(v)) { ctx.fillStyle = "#e5e7eb"; }
@@ -216,9 +217,9 @@ function heatmap(canvas, M, opts) {
     }
   }
   ctx.fillStyle = "rgba(0,0,0,0.55)"; ctx.textAlign = "right"; ctx.textBaseline = "middle";
-  for (let i = 0; i < H; i++) ctx.fillText(String(i), x0 - 4, top + i * cell + cell / 2);
+  for (let i = 0; i < K; i++) ctx.fillText(labels[i], x0 - 4, top + i * cell + cell / 2);
   ctx.textAlign = "center"; ctx.textBaseline = "bottom";
-  for (let j = 0; j < H; j++) ctx.fillText(String(j), x0 + j * cell + cell / 2, top - 1);
+  for (let j = 0; j < K; j++) ctx.fillText(labels[j], x0 + j * cell + cell / 2, top - 4);
   if (opts.highlight) {
     ctx.strokeStyle = "#111"; ctx.lineWidth = 2;
     for (const [i, j] of opts.highlight) ctx.strokeRect(x0 + j * cell - 0.5, top + i * cell - 0.5, cell, cell);
@@ -238,7 +239,80 @@ function pipeline(seed, pi, G, margin, alpha, randomize, hard = 0) {
 }
 
 // =====================================================================
-// Panel A: pinned by prevalence
+// Panel A: two classifiers, one law of sets, inside randomized APS
+// =====================================================================
+// Three classes. Both models assign (0.6, 0.3, 0.1) with the true class always
+// second, in opposite cyclic orders. The APS score of the true label is
+// 0.9 - 0.3u for both, so shared calibration uniforms give the same threshold,
+// and the law of the prediction sets is the same for both models.
+{
+  const st = { alpha: 0.10 };
+  let seed = 51;
+  const LAB = ["A", "B", "C"];
+  const ORDER1 = [[2, 0, 1], [0, 1, 2], [1, 2, 0]]; // true A: C>A>B, true B: A>B>C, true C: B>C>A
+  const ORDER2 = [[1, 0, 2], [2, 1, 0], [0, 2, 1]]; // true A: B>A>C, true B: C>B>A, true C: A>C>B
+  const PROBS = [0.6, 0.3, 0.1];
+  const cv = {
+    ccm1: document.getElementById("d-ccm1"), ccm2: document.getElementById("d-ccm2"),
+    cm1: document.getElementById("d-cm1"), cm2: document.getElementById("d-cm2"),
+  };
+  const setRO = readouts(document.getElementById("d-readouts"),
+    ["largest gap between the two CCMs", "r = (τ − 0.6) / 0.3", "coverage, model 1", "coverage, model 2", "accuracy, both models"]);
+  const ctrls = document.getElementById("d-controls");
+  let sim = null;
+
+  function setsFor(ORDER, ys, Us, q) {
+    const Z = [], cm = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+    let cov = 0, correct = 0;
+    for (let i = 0; i < ys.length; i++) {
+      const y = ys[i], ord = ORDER[y];
+      // include ranks while the mass before them is below q; the boundary rank
+      // is kept with probability (q - mass before) / its mass
+      const z = new Uint8Array(3);
+      let cum = 0, k = 0;
+      while (k < 3 && (k === 0 || cum < q)) { z[ord[k]] = 1; cum += PROBS[k]; k++; }
+      if (k > 1) { const before = cum - PROBS[k - 1]; if (Us[i] > (q - before) / PROBS[k - 1]) z[ord[k - 1]] = 0; }
+      Z.push(z); cm[y][ord[0]] += 1 / ys.length;
+      if (z[y]) cov++; if (ord[0] === y) correct++;
+    }
+    return { Z, cm, cov: cov / ys.length, acc: correct / ys.length };
+  }
+
+  function run() {
+    const rng = mulberry32(seed);
+    const scores = [];
+    for (let i = 0; i < N_CAL; i++) scores.push(0.9 - 0.3 * rng()); // same for both models
+    const q = conformalQ(scores, st.alpha);
+    const ys = [], Us = [];
+    for (let i = 0; i < N_TEST; i++) { ys.push(Math.floor(rng() * 3)); Us.push(rng()); }
+    const s1 = setsFor(ORDER1, ys, Us, q), s2 = setsFor(ORDER2, ys, Us, q);
+    const r1 = ccm(s1.Z), r2 = ccm(s2.Z);
+    let gap = 0;
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) if (i !== j) gap = Math.max(gap, Math.abs(r1.rho[i][j] - r2.rho[i][j]));
+    sim = { r1, r2, cm1: s1.cm, cm2: s2.cm, cov1: s1.cov, cov2: s2.cov, acc: Math.max(s1.acc, s2.acc), gap, r: (q - 0.6) / 0.3 };
+  }
+  function draw() {
+    if (!sim) return;
+    const f2 = (v) => fmt(v, 2);
+    heatmap(cv.ccm1, sim.r1.rho, { title: "CCM, model 1", diverging: true, vmax: 1, fmt: f2, labels: LAB });
+    heatmap(cv.ccm2, sim.r2.rho, { title: "CCM, model 2", diverging: true, vmax: 1, fmt: f2, labels: LAB });
+    heatmap(cv.cm1, sim.cm1, { title: "confusion matrix, model 1", diverging: false, vmax: 1 / 3, fmt: f2, labels: LAB });
+    heatmap(cv.cm2, sim.cm2, { title: "confusion matrix, model 2", diverging: false, vmax: 1 / 3, fmt: f2, labels: LAB });
+    setRO("largest gap between the two CCMs", fmt(sim.gap, 3));
+    setRO("r = (τ − 0.6) / 0.3", fmt(sim.r, 3));
+    setRO("accuracy, both models", pct(sim.acc, 0));
+    setRO("coverage, model 1", pct(sim.cov1, 1));
+    setRO("coverage, model 2", pct(sim.cov2, 1));
+  }
+  const refresh = () => { run(); draw(); };
+  slider(ctrls, { label: "miscoverage α", min: 0.02, max: 0.5, step: 0.01, value: st.alpha, fmt: (v) => fmt(v, 2) }, (v) => { st.alpha = v; refresh(); });
+  button(ctrls, "resample", () => { seed += 1; refresh(); });
+  for (const c of Object.values(cv)) new ResizeObserver(draw).observe(c);
+  refresh();
+}
+
+// =====================================================================
+// Panel B: pinned by inclusion rates
 // =====================================================================
 {
   const st = { alpha: 0.10, kappa: 0, c: 4.5, margin: 6, hard: 0, randomize: true };
@@ -301,7 +375,7 @@ function pipeline(seed, pi, G, margin, alpha, randomize, hard = 0) {
     sweep.vline(st.alpha, { color: "rgba(0,0,0,0.35)", width: 1, dash: [3, 3] });
     sweep.legend([
       { label: "ρ for the one confusable pair", color: COL.pair },
-      { label: "mean ρ over the 44 dissimilar pairs", color: COL.ccm },
+      { label: "mean ρ over the 44 pairs with no injected confusion", color: COL.ccm },
       { label: "−√(p·p′/((1−p)(1−p′))) from inclusion rates", color: COL.formula, dash: [5, 4] },
     ], {});
     setRO("ρ, the confusable pair (0,1)", fmt(sim.m.rho[0][1], 2));
@@ -323,7 +397,7 @@ function pipeline(seed, pi, G, margin, alpha, randomize, hard = 0) {
 }
 
 // =====================================================================
-// Panel B: symmetric object, directional confusion
+// Panel C: symmetric object, directional confusion
 // =====================================================================
 {
   const st = { theta: 1, c: 5, alpha: 0.10, margin: 6, randomize: true };
@@ -382,7 +456,7 @@ function pipeline(seed, pi, G, margin, alpha, randomize, hard = 0) {
 }
 
 // =====================================================================
-// Panel C: resolution. Can the statistic rank pairs by true confusability?
+// Panel D: resolution. Can the statistic rank pairs by injected confusion?
 // =====================================================================
 {
   const st = { alpha: 0.10, margin: 6, cmax: 5, randomize: true };
