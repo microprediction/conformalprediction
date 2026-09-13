@@ -3,6 +3,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
 \usepackage{tikz}
+\usepackage{float}
 \usetikzlibrary{arrows.meta,positioning}
 \usepackage[round]{natbib}
 \usepackage[hidelinks]{hyperref}
@@ -31,14 +32,14 @@
 \begin{abstract}
 Conformal prediction has recently been proposed for the diagnosis of classifiers and the selection
 of federated clients, with the prediction sets themselves treated as data from which class
-similarity, confusion and client quality are read off. We give a specific caution in the form of a no-go theorem and a one bit calculation:
-no statistic of the prediction sets determines the confusion matrix once a set of size at least two
-occurs, because an unordered set need not retain the ranking that built it, and the label enters
-only through calibration. We illustrate with
+similarity, confusion and client quality are read off. We give a specific caution in the form of a no-go theorem and a one-bit calculation. Over the
+class of joint laws constrained only by the ranked prediction lying in a nonempty set, the law of
+the prediction sets does not identify the confusion matrix once a set of size at least two occurs,
+and the corresponding failure inside randomized adaptive prediction sets is exhibited by
+construction. We illustrate with
 the conformal correlation matrix of \citet{perlo2026}, the phi coefficient between set membership
-indicators, a natural construction that is likely to be reinvented. Two classifiers built inside
-randomized adaptive prediction sets, exactly as specified, produce the same matrix while confusing
-every class in opposite directions, and seven further hand calculations give a zero entry beside
+indicators, a natural construction that is likely to be reinvented. Two classifiers built inside randomized adaptive prediction sets, exactly as specified, produce the
+same matrix while confusing every class in opposite directions. Seven further hand calculations give a zero entry beside
 99\% directional confusion, an entry of one beside one in a million co-occurrence, and an entry of
 $\pm 0.64$ from pooling two clients with zero correlation on each. For classes that never share a set the entry is a function of the inclusion rates alone, and for
 a perfect classifier with equal top probabilities inside randomized adaptive prediction sets the
@@ -72,13 +73,12 @@ with a fresh uniform $U$, is
 \begin{equation}\label{eq:apsset}
 C(x) = \set{\, y : s(x, y, U) \le \tau \,}.
 \end{equation}
-In words, the set is the top ranked classes down to the first rank at which the cumulative mass
+In words, the set is the top-ranked classes down to the first rank at which the cumulative mass
 reaches $\tau$, and the class at that boundary rank is kept or dropped according to $U$.
 
 Two coverage bounds hold. Under exchangeability of the calibration pairs and the test pair,
 $\Prob(Y \in C(X)) \ge 1 - \alpha$. When the scores are almost surely distinct, also
-$\Prob(Y \in C(X)) \le 1 - \alpha + 1/(m+1)$ \citep[Theorem~1]{romano2020}. Setting $u = 0$
-throughout gives the non randomized variant, which is conservative. Examples~\ref{ex:aps} and \ref{ex:privacy} use the randomized variant exactly as defined here.
+$\Prob(Y \in C(X)) \le 1 - \alpha + 1/(m+1)$ \citep[Theorem~1]{romano2020}. Examples~\ref{ex:aps} and \ref{ex:privacy} use the randomized variant exactly as defined here.
 Nothing else below depends on APS, beyond the fact that $C(X)$ is a set of classes.
 
 The matrix is built from membership indicators. For each class $h$ define
@@ -201,10 +201,20 @@ smaller by $\delta_a$. So the second and third confusion matrices differ.
 The conclusion is stronger than the title. Even the entire joint law of $(Y, C(X))$ does not
 determine the confusion matrix, because both constructed laws preserve it. What is lost is the
 information about the rankings, not only the information about the true label.
-Figure~\ref{fig:chain} places the two losses on the chain of coarsenings that leads from the data to
-the matrix.
+Figure~\ref{fig:chain} places the two losses on the chain of coarsenings that leads from the data
+to the matrix.
 
-\begin{figure}[t]
+
+
+Two limits on the theorem. First, its hypothesis is sufficient and not necessary. If every set is a
+singleton and coverage is one, then $\hat Y = Y$ and the confusion matrix is the diagonal matrix of
+the class proportions. With two classes, singleton sets and coverage $\kappa$, the row sums, the
+column sums and the trace determine all four entries. The theorem says nothing about cases in which no set of size at least two occurs. Second, the construction changes $\hat Y$ while keeping $C(X)$, and that
+need not be realizable by an APS classifier with its calibration, so the theorem does not establish
+APS realizability for every prescribed set law. Example~\ref{ex:aps} supplies a pair that is
+realized by two randomized APS classifiers.
+
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[
   node distance=11mm and 26mm,
@@ -234,15 +244,9 @@ object. The matrix is a function of the third.}
 \label{fig:chain}
 \end{figure}
 
-Two limits on the theorem. First, its hypothesis is sufficient and not necessary. If every set is a
-singleton and coverage is one, then $\hat Y = Y$ and the confusion matrix is the diagonal matrix of
-the class proportions. With two classes, singleton sets and coverage $\kappa$, the row sums, the
-column sums and the trace determine all four entries. The theorem says nothing about cases in which no set of size at least two occurs. Second, the construction changes $\hat Y$ while keeping $C(X)$, and that
-need not be realizable by an APS classifier with its calibration, so the theorem does not establish
-APS realizability for every prescribed set law. Example~\ref{ex:aps} supplies a pair that is
-realized by two randomized APS classifiers.
-
-The examples that follow are more concrete, and each contradicts a specific sentence in the paper.
+The examples that follow are more concrete. Together they show that the sign and magnitude of an
+entry cannot be used as evidence of similarity, dissimilarity, independence or directional
+confusion.
 
 \section{Eight examples}\label{sec:examples}
 
@@ -258,8 +262,8 @@ coverage lower bound is then met. We do not claim that randomized APS produces t
 $k/(m+1) < 1$, since the rank of the test score among the $m+1$ scores is uniform
 \citep{lei2018, romano2020}.
 
-Therefore Examples~\ref{ex:perfect} through \ref{ex:move} refute the authors' readings of the
-matrix as claims about laws of prediction sets that meet the coverage bound. A claim restricted to
+Therefore Examples~\ref{ex:perfect} through \ref{ex:move} concern laws of prediction sets that
+meet the coverage bound, and show that the readings fail over that class. A claim restricted to
 sets produced by APS needs a counterexample built inside APS. Example~\ref{ex:aps} is that
 counterexample, which is why it comes first. The remaining examples are ordered from the simplest
 to refute and the most absurd result downward.
@@ -289,7 +293,7 @@ $0.9 - 0.3u$ under both models, uniform on $(0.6, 0.9)$. Calibrate both on the s
 Section~\ref{sec:statistic}, and both have the same threshold $\tau \in (0.6, 0.9)$. Write
 $r = (\tau - 0.6)/0.3$.
 
-The two models produce sets with the same law. At a test input the top ranked class has score
+The two models produce sets with the same law. At a test input the top-ranked class has score
 $0.6 - 0.6U \le \tau$ and is always included. The second has score $0.9 - 0.3U$, which is at most
 $\tau$ exactly when $U \ge (0.9 - \tau)/0.3$, an event of probability $r$. The third has score $1 - 0.1U \ge 0.9 > \tau$ and is never included. Under either model, therefore, each singleton
 $\set{A}$, $\set{B}$, $\set{C}$ occurs with probability $(1-r)/3$ and each pair $\set{A, B}$,
@@ -446,7 +450,7 @@ The sign can be reversed. Let client~1 add $A$ with probability $0.9$ and $B$ wi
 $0.1$, and let client~2 do the opposite. Then $q_{AB} = \tfrac12(0.09) + \tfrac12(0.09) = 0.09$ and
 $\rho_{AB} = (0.09 - 0.25)/0.25 = -0.64$.
 
-The authors compute matrices across clients that are non identically distributed by construction
+The authors compute matrices across clients that are non-identically distributed by construction
 and read the entries as properties of the classifier. A strong entry of either sign is produced
 here by the mixture of clients alone, with no confusion anywhere.
 \end{example}
@@ -567,7 +571,7 @@ $p \mapsto p/(1-p)$.
 
 The authors argue that the matrix is privacy preserving because it ``only contains probabilities''
 and so ``does not leak information on the size and composition'' of a client's data. Correlations
-can be negative, so the matrix does not contain probabilities. A row normalized confusion matrix
+can be negative, so the matrix does not contain probabilities. A row-normalized confusion matrix
 does contain only probabilities, and does not directly disclose counts either.
 
 Lemma~\ref{lem:ident} says more. When every set has at most one element, the off-diagonal entries
@@ -591,10 +595,10 @@ provided at least three classes are nondegenerate in the sample and the entries 
 and the proportions are then estimated rather than read off.
 
 The equal top probabilities matter. If class $i$ has top probability $a_i$ and $\tau < \min_i a_i$,
-then $p_i = \pi_i\, \tau / a_i$, so the inclusion rates mix the proportions with class dependent
+then $p_i = \pi_i\, \tau / a_i$, so the inclusion rates mix the proportions with class-dependent
 retention. The proportions $(1/3, 1/3, 1/3)$ with top probabilities $(0.6, 0.6, 0.6)$ and the
-proportions $(5/18, 6/18, 7/18)$ with top probabilities $(0.5, 0.6, 0.7)$ both give $p_i = 5\tau/9$
-for every class, hence the same law of sets and the same matrix.
+proportions $(5/18, 6/18, 7/18)$ with top probabilities $(0.5, 0.6, 0.7)$ both give, conditional on a
+common fixed $\tau$, $p_i = 5\tau/9$ for every class, hence the same law of sets and the same matrix.
 \end{example}
 
 The matrix is offered as useful because it exposes how a client's data differs from the others. No
@@ -603,8 +607,7 @@ threat model, mechanism or leakage bound is given.
 \section{What the coverage guarantee constrains}\label{sec:coverage}
 
 The authors state that ``for a given input sample'' the set ``is guaranteed to contain the correct
-class'' with probability close to $1-\alpha$. The guarantee \eqref{eq:coverage} is marginal. It does not imply coverage conditional on the input, on a class or on a client. In distribution
-free regression with nonatomic covariates, exact pointwise conditional coverage forces essentially
+class'' with probability close to $1-\alpha$. The guarantee \eqref{eq:coverage} is marginal. It does not imply coverage conditional on the input, on a class or on a client. In distribution-free regression with nonatomic covariates, exact pointwise conditional coverage forces essentially
 trivial prediction sets of infinite expected length \citep{barber2021}. The client and class
 example below makes the classification point directly.
 
@@ -619,24 +622,25 @@ almost surely distinct scores the term is $1/(n+1)$ \citep{romano2020, lei2018},
 than necessary and probably a typographical error.
 
 The federated experiments compare local matrices computed against a global calibration set across
-clients that are non identically distributed by construction. Under that mismatch even the marginal
+clients that are non-identically distributed by construction. Under that mismatch even the marginal
 guarantee need not hold. No coverage or set sizes are reported for any client.
 
 \section{What to report instead}\label{sec:instead}
 
-If the question is which classes the classifier confuses, the probabilities answer it directly. The
-soft confusion matrix
+If the question is which classes the classifier confuses, the object that answers it is the
+confusion matrix of the ranked prediction, $\Prob(\hat Y = b \mid Y = a)$, which needs labeled
+evaluation data. A complementary summary of how the classifier allocates probability is the soft
+confusion matrix
 \[
 C_{ab} = \E\big[\, f_b(X) \,\big|\, Y = a \,\big]
 \]
-is the average probability assigned to class $b$ on inputs of true class $a$. It is directional
-and threshold free, and it needs no calibration set. It needs labeled evaluation data, as any
-confusion matrix does.
+the average probability assigned to class $b$ on inputs of true class $a$. It is directional and
+threshold-free, it needs no calibration set, and like any confusion matrix it needs labeled
+evaluation data.
 
 The matrix $C_{ab}$ is a conditional mean, so it summarizes rather than determines. A model with $f_B(X) = 0.4$ on every input of class $A$ and a model with $f_B(X)$ equal to $0.6$ or $0.2$ with equal
 probability have the same row $(0.6, 0.4)$, and error rates from $A$ to $B$ of zero and one half.
-The confusion matrix of the ranked prediction carries that difference and $C_{ab}$ does not, so the
-two are complements.
+The confusion matrix of the ranked prediction carries that difference and $C_{ab}$ does not, which is why the two are complements.
 
 If labels are unavailable, the mean pairwise product $\E[f_i(X) f_j(X)]$ is symmetric and needs no labeled calibration or evaluation sample. If sets are the object, because a downstream consumer receives sets and nothing else, then
 the co-occurrence rate $q_{ij}$ is the quantity the abstract describes, and the coverage confusion matrix of \citet{stutz2022}, which stratifies by the true label, is
@@ -658,9 +662,9 @@ heterogeneity with a symmetric $\mathrm{Dirichlet}(\beta, \dots, \beta)$ and sta
 $\beta$ gives more heterogeneous clients, whereas $\Var(\theta_h) = (H-1)/(H^2(H\beta + 1))$
 decreases in $\beta$. Its Figures~6 and~7 are captioned as matrix entries while their axes are class
 accuracy, and its Table~1 lists six selected CIFAR-10 clients where the text says seven. The same
-table reports accuracy on the non critical classes moving from $0.513$ to $0.494$ on CIFAR-100 and
+table reports accuracy on the noncritical classes moving from $0.513$ to $0.494$ on CIFAR-100 and
 from $0.859$ to $0.856$ on CIFAR-10, and overall CIFAR-100 accuracy from $0.511$ to $0.493$, under
-the conclusion that the method ``does not affect'' non critical performance, without repetitions,
+the conclusion that the method ``does not affect'' noncritical performance, without repetitions,
 seeds or error bars.
 
 Simulations of Example~\ref{ex:aps}, of Examples~\ref{ex:hard} and \ref{ex:rates}, and of the
@@ -675,8 +679,10 @@ claims about randomized APS, the Beta law of the realized coverage and the Diric
 
 The conformal correlation matrix is the phi coefficient of APS set membership indicators. By
 Remark~\ref{prop:law} it sees only the law of the sets, by Lemma~\ref{prop:any} the
-marginal coverage lower bound leaves any single entry free among the laws that satisfy it, and by
-Theorem~\ref{thm:nogo} no statistic of the sets, this one or any other, determines the confusion matrix once a set of size at least two occurs.
+marginal coverage lower bound leaves any single entry free among the laws that satisfy it, and by Theorem~\ref{thm:nogo}, over joint laws constrained only by the ranked prediction lying in
+a nonempty set, the law of the sets does not identify the confusion matrix once a set of size at
+least two occurs, with Example~\ref{ex:aps} exhibiting the corresponding failure inside randomized
+APS.
 
 Example~\ref{ex:aps} shows, inside randomized APS itself, that the matrix does not determine the
 confusion matrix. Examples~\ref{ex:perfect} through \ref{ex:move} concern laws of sets that meet the
@@ -730,7 +736,7 @@ V. Vovk, A. Gammerman, and G. Shafer.
 \bibitem[Yule(1912)]{yule1912}
 G.~U. Yule.
 \newblock On the methods of measuring association between two attributes.
-\newblock \emph{Journal of the Royal Statistical Society}, 75(6):579--642, 1912.
+\newblock \emph{Journal of the Royal Statistical Society}, 75(6):579--652, 1912.
 
 \end{thebibliography}
 
