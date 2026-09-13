@@ -90,13 +90,29 @@
   synthetic classifier with known confusability show what the statistic responds to. The close reading is on the
   <a href="/conformal-correlation.html">critique page</a>.</p>
 
-  <p>The setup is the paper&rsquo;s own. A ten class classifier emits a probability vector for each
-  input. Adaptive prediction sets (APS) are calibrated on a labeled set of 1,000 and evaluated on a
-  test set of 3,000. For each test input the indicator \(z_h = 1\) if class \(h\) is in the set, and
-  the conformal correlation matrix is the correlation of \(z_i\) with \(z_j\), a phi coefficient.
-  The classifier is synthetic so that the truth is known: logits carry a margin on the true class, a
-  confusion term between chosen pairs, and unit Gaussian noise. Alongside the matrix, each panel
-  computes the statistic the paper never compares against, built directly from the probabilities.</p>
+  <p>We build a classifier whose mistakes we control. There are ten classes. For an image of true class
+  \(y\), the logit of each class \(h\) is a margin \(m\) if \(h = y\), plus a confusion term \(G_{yh}\)
+  that we set by hand, plus unit Gaussian noise. The softmax of the logits is the probability vector the
+  classifier reports. A large margin makes the classifier accurate. A positive \(G_{yh}\) makes images of
+  class \(y\) put probability on class \(h\), so we decide which pairs are confusable and in which
+  direction, and the truth is known exactly.</p>
+
+  <p>From this classifier we draw 1,000 labeled calibration images and 3,000 test images. Prediction sets
+  are the adaptive prediction sets of Romano, Sesia and Cand&egrave;s, which the paper uses. For each
+  image the classes are sorted by probability and included from the top until the cumulative mass
+  reaches a threshold, and the threshold is the conformal quantile of the calibration scores at level
+  \(1-\alpha\). The sets are randomized as in the original, so that coverage is exact.</p>
+
+  <p>For each test image we then write down an indicator per class, \(z_h = 1\) if class \(h\) is in the
+  set and \(0\) otherwise. The conformal correlation matrix is the correlation of \(z_i\) with \(z_j\)
+  across the test images, computed exactly as the authors define it. Because the indicators are zeros
+  and ones, each entry is a phi coefficient.</p>
+
+  <p>Beside the matrix, each panel computes the statistic the authors never compare against, built from
+  the same probability vectors without any thresholding: the soft confusion matrix, which is the mean
+  probability the classifier puts on each class for images of each true class, and the mean pairwise
+  product \(\mathbb{E}[p_i p_j]\). Each panel then changes one thing about the truth and shows how the
+  matrix responds.</p>
 
   <h2 id="a">A. The entries are pinned by inclusion rates</h2>
 
