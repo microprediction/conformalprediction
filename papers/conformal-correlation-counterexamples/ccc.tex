@@ -69,8 +69,8 @@ with independent uniforms $u_i$, let $k = \lceil (m+1)(1-\alpha) \rceil$ and let
 scores $s(x_i, y_i, u_i)$, the sample quantile of \citet{lei2018}.\footnote{Algorithm~1 of
 \citet{romano2020} prints ``largest'' where the proof of their Theorem~1 uses the $(1-\alpha)$
 empirical quantile, which is the $k$-th smallest, and their set drops the boundary class at exact
-equality of score and threshold where \eqref{eq:apsset} keeps it. Neither difference matters here,
-since test scores have a density.} If $\alpha < 1/(m+1)$ then $k = m+1$ and no such score exists,
+equality of score and threshold where \eqref{eq:apsset} keeps it. Neither difference matters for the randomized constructions below, whose test scores have
+densities.} If $\alpha < 1/(m+1)$ then $k = m+1$ and no such score exists,
 in which case $\tau = +\infty$ and the set is every class. We
 assume $\alpha \ge 1/(m+1)$ throughout, so that $k \le m$. The prediction set at a new input $x$,
 with a fresh uniform $U$, is
@@ -330,8 +330,9 @@ guarantee, as in Theorem~1 of \citet{romano2020}. The equality of the two set la
 realized $\tau$.
 
 The two models confuse classes in opposite directions. Model 1 labels every $A$ as $C$, every $B$
-as $A$ and every $C$ as $B$. Model 2 runs the cycle the other way. Their confusion matrices are transposes of each other, both with accuracy zero. The pair survives
-the deterministic variant too: with $u = 0$ every calibration score is $0.9$, so $\tau = 0.9$, the
+as $A$ and every $C$ as $B$. Model 2 runs the cycle the other way. Their confusion matrices are transposes of each other, both with accuracy zero. Under the non-randomized score-threshold convention obtained by setting every uniform to zero in
+\eqref{eq:aps} and \eqref{eq:apsset}, the pair survives too: every calibration score is $0.9$, so
+$\tau = 0.9$, the
 second-ranked class is always included, every set is the pair of the top-ranked and the true class,
 and the two models again share the law of sets with opposite confusions.
 
@@ -416,9 +417,7 @@ with probability $1-\varepsilon$, which is 99\% at $\varepsilon = 0.01$.
 
 The authors' Remark~3 says that unrelated classes give an entry near zero. A reader of a heat map
 uses the converse, that an entry near zero means the classes are unrelated. The converse fails. Independence of set membership does not imply absence of classification
-confusion. The example also bears on their Remark~1 in its stated direction: $A$ and $B$ are as
-similar as two classes can be in the classifier's own representation, since it confuses them on
-99\% of the $A$ inputs, and the entry is zero.
+confusion. The example also bears on their Remark~1 in its stated direction: the classifier exhibits 99\% directional confusion from $A$ to $B$, and the entry is zero.
 \end{example}
 
 \begin{example}[Perfect correlation with one in a million co-occurrence]\label{ex:rare}
@@ -643,8 +642,8 @@ over directly.
 The authors state in their Section~3.2 that ``for a given input sample $x$ CP will construct a random
 a prediction set $\mathcal{C}(x)$ such that it is guaranteed to contain the correct class lies in
 with a probability close to $1-\alpha$'', quoted with its typographical errors. The guarantee \eqref{eq:coverage} is marginal. It does not imply coverage conditional on the input, on a class or on a client. In distribution-free regression, exact pointwise conditional coverage forces prediction intervals
-of infinite expected length at almost every nonatomic point \citep[Proposition~1, restated from Vovk
-2012 and Lei and Wasserman 2014]{barber2021}. The client and class
+of infinite expected length at almost every nonatomic point \citep[Proposition~1]{barber2021},
+restating \citet{vovk2012} and \citet{leiwasserman2014}. The client and class
 example below makes the classification point directly.
 
 The distinction matters here because the authors' own statement of the guarantee is per input, and
@@ -775,6 +774,11 @@ J. Lei, M. G'Sell, A. Rinaldo, R.~J. Tibshirani, and L. Wasserman.
 \newblock Distribution-free predictive inference for regression.
 \newblock \emph{Journal of the American Statistical Association}, 113(523):1094--1111, 2018.
 
+\bibitem[Lei and Wasserman(2014)]{leiwasserman2014}
+J. Lei and L. Wasserman.
+\newblock Distribution-free prediction bands for non-parametric regression.
+\newblock \emph{Journal of the Royal Statistical Society, Series B}, 76(1):71--96, 2014.
+
 \bibitem[Ma et~al.(2025)]{ma2025}
 Z. Ma, H. Gao, J. Huang, and P. Wang.
 \newblock Whispers of data: Unveiling label distributions in federated learning through virtual
@@ -797,6 +801,12 @@ Y. Romano, M. Sesia, and E.~J. Cand\`es.
 D. Stutz, K. Dvijotham, A.~T. Cemgil, and A. Doucet.
 \newblock Learning optimal conformal classifiers.
 \newblock In \emph{International Conference on Learning Representations}, 2022.
+
+\bibitem[Vovk(2012)]{vovk2012}
+V. Vovk.
+\newblock Conditional validity of inductive conformal predictors.
+\newblock In \emph{Proceedings of the Asian Conference on Machine Learning}, volume~25 of
+\emph{Proceedings of Machine Learning Research}, pages 475--490, 2012.
 
 \bibitem[Vovk et~al.(2005)]{vovk2005}
 V. Vovk, A. Gammerman, and G. Shafer.
