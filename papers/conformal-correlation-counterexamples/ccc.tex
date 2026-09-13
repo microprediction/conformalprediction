@@ -34,9 +34,8 @@
 \begin{abstract}
 Conformal prediction has recently been proposed for the diagnosis of classifiers and the selection
 of federated clients, with the prediction sets themselves treated as data from which class
-similarity, confusion and client quality are read off. We give a specific caution in the form of a no-go theorem and a one-bit calculation. Over the
-class of joint laws constrained only by the ranked prediction lying in a nonempty set, the law of
-the prediction sets does not identify the confusion matrix once a set of size at least two occurs,
+similarity, confusion and client quality are read off. We give a specific caution in the form of a no-go theorem and a one-bit calculation. Over the class of joint laws constrained only by $\hat Y \in C(X)$ whenever $C(X) \ne \varnothing$,
+the law of the prediction sets does not identify the confusion matrix once a set of size at least two occurs,
 and the corresponding failure inside randomized adaptive prediction sets is exhibited by
 construction. We illustrate with
 the conformal correlation matrix of \citet{perlo2026}, the phi coefficient between set membership
@@ -637,13 +636,15 @@ guarantee need not hold. No coverage or set sizes are reported for any client.
 
 If the question is which classes the classifier confuses, the object that answers it is the
 confusion matrix of the ranked prediction, $\Prob(\hat Y = b \mid Y = a)$, which needs labeled
-evaluation data. A complementary summary of how the classifier allocates probability is the soft
+evaluation data. Earlier sections used the joint form $\Prob(Y = a, \hat Y = b)$. The two differ by
+the class proportion, which every construction in this note preserves, so the results hold for
+either. A complementary summary of how the classifier allocates probability is the soft
 confusion matrix
 \[
 M_{ab} = \E\big[\, f_b(X) \,\big|\, Y = a \,\big]
 \]
-the average probability assigned to class $b$ on inputs of true class $a$. It is directional and
-threshold-free, it needs no calibration set, and like any confusion matrix it needs labeled
+This is the average probability assigned to class $b$ on inputs of true class $a$. It is directional
+and threshold-free, it needs no calibration set, and like any confusion matrix it needs labeled
 evaluation data.
 
 The matrix $M_{ab}$ is a conditional mean, so it summarizes rather than determines. With two classes, a model with $f_B(X) = 0.4$ on every input of class $A$ and a model with $f_B(X)$
@@ -677,7 +678,7 @@ the conclusion that the method ``does not affect'' noncritical performance, with
 seeds or error bars.
 
 Simulations of Example~\ref{ex:aps}, of Examples~\ref{ex:hard} and \ref{ex:rates}, and of the
-direction blindness of Example~\ref{ex:perfect}, on a synthetic ten class classifier with adaptive
+direction blindness of Example~\ref{ex:perfect}, on a synthetic ten-class classifier with adaptive
 prediction sets and with $M_{ab}$ and $\E[f_i f_j]$ alongside as $\alpha$ varies, are available at
 \url{https://conformalprediction.net/demos/32-conformal-correlation.html}. A script that recomputes
 every quantity in this note, exactly where the arithmetic is rational and by simulation for the
@@ -688,8 +689,8 @@ claims about randomized APS, the Beta law of the realized coverage and the Diric
 
 The conformal correlation matrix is the phi coefficient of APS set membership indicators. By
 Observation~\ref{prop:law} it sees only the law of the sets, by Lemma~\ref{prop:any} the
-marginal coverage lower bound leaves any single entry free among the laws that satisfy it, and by Theorem~\ref{thm:nogo}, over joint laws constrained only by the ranked prediction lying in
-a nonempty set, the law of the sets does not identify the confusion matrix once a set of size at
+marginal coverage lower bound leaves any single entry free among the laws that satisfy it, and by Theorem~\ref{thm:nogo}, over joint laws constrained only by $\hat Y \in C(X)$ whenever $C(X) \ne \varnothing$, the law of the
+sets does not identify the confusion matrix once a set of size at
 least two occurs, with Example~\ref{ex:aps} exhibiting the corresponding failure inside randomized
 APS.
 
@@ -713,7 +714,7 @@ R.~F. Barber, E.~J. Cand\`es, A. Ramdas, and R.~J. Tibshirani.
 \bibitem[Cotton(2026)]{cotton2026}
 P. Cotton.
 \newblock Marginally useful: an information-gap identity in conformal prediction.
-\newblock arXiv:2608.07479, 2026.
+\newblock arXiv:2608.07479v2, 2026.
 
 \bibitem[Lei et~al.(2018)]{lei2018}
 J. Lei, M. G'Sell, A. Rinaldo, R.~J. Tibshirani, and L. Wasserman.
