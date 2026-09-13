@@ -169,7 +169,7 @@
 
   <h3>Example 2. A perfect classifier and a perfectly wrong one get the same matrix</h3>
 
-  <p><strong>Setup.</strong> The same point without the procedure, and with the accuracy gap as wide
+  <p><strong>Setup.</strong> This example makes the same point without the procedure, and with the accuracy gap as wide
   as it can be. Three classes \(A\), \(B\), \(C\) with equal numbers of images, and sets that always
   contain the true class and one neighbor.</p>
 
@@ -224,7 +224,7 @@
   first with probability \(1 - \varepsilon\), which is 99% at \(\varepsilon = 0.01\). Coverage is
   100%.</p>
 
-  <p><strong>What it shows.</strong> Remark 3 of the paper says that unrelated classes give an entry
+  <p><strong>What it shows.</strong> The authors' Remark 3 says that unrelated classes give an entry
   near zero. It is the converse that a reader of a heat map uses, that an entry near zero means the
   classes are unrelated, and the converse fails. Independence of set membership does not imply
   absence of classification confusion.</p>
@@ -261,7 +261,7 @@
 
   $$\rho_{ij} = \frac{1/2 - (2/3)(2/3)}{2/9} = \tfrac14.$$
 
-  <p><strong>What it shows.</strong> Remark 1 of the paper says positive entries mark
+  <p><strong>What it shows.</strong> The authors' Remark 1 says positive entries mark
   &ldquo;intrinsically similar classes.&rdquo; Here every pair is positively correlated and the
   classifier is perfect. The correlation comes from one shared cause, whether the image was hard, and
   says nothing about any pair.</p>
@@ -288,8 +288,8 @@
   probability 0.1 and client 2 does the opposite. Then \(\mathbb{E}[z_A z_B] = \tfrac12(0.09) +
   \tfrac12(0.09) = 0.09\) and \(\rho_{AB} = (0.09 - 0.25)/0.25 = -0.64\).</p>
 
-  <p><strong>What it shows.</strong> The paper computes matrices on a global calibration set across
-  non identically distributed clients and reads the entries as properties of the classifier. A strong
+  <p><strong>What it shows.</strong> The authors compute matrices on a global calibration set across
+  non identically distributed clients and read the entries as properties of the classifier. A strong
   positive or negative entry can be produced by the mixture of clients alone, with zero correlation on
   every client and no confusion anywhere.</p>
 
@@ -317,7 +317,7 @@
     \rho_{\text{cat},\text{plane}} = \frac{0 - (1/3)(1/3)}{2/9} = -\tfrac12, \qquad
     \rho_{\text{dog},\text{plane}} = \frac{0 - (2/3)(1/3)}{2/9} = -1.$$
 
-  <p><strong>What it shows.</strong> Remark 2 of the paper says dissimilar classes show strong negative
+  <p><strong>What it shows.</strong> The authors' Remark 2 says dissimilar classes show strong negative
   correlation. Read that way, dog and plane are strongly dissimilar and cat and plane are half as
   dissimilar. But the classifier treats plane identically with respect to both: it never puts plane in
   a set with either. The two entries differ only because dog is in twice as many sets as cat. For any
@@ -337,7 +337,7 @@
 
   <p>which at \(n = 1000\) is about \(-0.001\).</p>
 
-  <p><strong>What it shows.</strong> The paper presents heat maps of entries with no uncertainty attached.
+  <p><strong>What it shows.</strong> The authors present heat maps of entries with no uncertainty attached.
   For rare labels moving a single label occurrence from one row to another moves an entry across
   the whole range.</p>
 
@@ -421,7 +421,7 @@
   </table>
   </div>
 
-  <p>Remark 2 of the paper says dissimilar classes are &ldquo;expected to display strong negative
+  <p>The authors' Remark 2 says dissimilar classes are &ldquo;expected to display strong negative
   correlation.&rdquo; They display a number set by the marginal inclusion rates, which rise with class
   frequency and with \(1-\alpha\). The same marginals bound the entries from above. The phi coefficient
   of two indicators cannot reach \(+1\) unless \(p_i = p_j\), so entries for pairs with different
@@ -527,7 +527,7 @@
 
   <p>If the goal is a picture of which classes the model cannot tell apart, use the probabilities. The
   soft confusion matrix is directional and threshold free. If labels are unavailable,
-  \(\mathbb{E}[p_i p_j]\) is symmetric and label free. If sets are genuinely the object, because a
+  \(\mathbb{E}[p_i p_j]\) is symmetric and label free. If sets are the object, because a
   downstream consumer receives sets and nothing else, then report the co-membership rate
   \(\mathbb{E}[z_i z_j]\) or the coverage confusion matrix of Stutz et al., and say plainly that the
   certificate covers the true class and nothing about the neighbors. In every case report the inclusion
