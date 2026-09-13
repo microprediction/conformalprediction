@@ -82,9 +82,8 @@
   <h1>Conformal correlation</h1>
   <p class="subtitle">A recent paper proposes correlating class membership across conformal prediction
   sets and reading the result as a map of which classes a classifier confuses. Three experiments on a
-  synthetic classifier with known confusability show what the statistic actually responds to. The
-  <a href="/conformal-correlation.html">critique page</a> has the close reading; this page has the
-  evidence.</p>
+  synthetic classifier with known confusability show what the statistic responds to. The close reading is on the
+  <a href="/conformal-correlation.html">critique page</a>.</p>
 
   <p>The setup is the paper&rsquo;s own. A ten class classifier emits a probability vector for each
   input. Adaptive prediction sets (APS) are calibrated on a labeled set of 1,000 and evaluated on a
@@ -97,7 +96,7 @@
   <h2 id="a">A. The entries are pinned by inclusion rates</h2>
 
   <p>Here exactly one pair of classes, 0 and 1, is genuinely confusable. Every other pair is cleanly
-  separated. The left heat map is the conformal correlation matrix at the chosen \(\alpha\); the right
+  separated. The left heat map is the conformal correlation matrix at the chosen \(\alpha\). The right
   is the soft confusion matrix, the mean probability the classifier puts on each column class for
   images of each row class.</p>
 
@@ -117,18 +116,18 @@
   class \(i\). With balanced classes and singleton sets that is \(-1/(H-1)\), one ninth here. Move
   \(\alpha\) and the whole floor moves, because the inclusion rates move. Add class imbalance and the
   floor breaks into a pattern that tracks prevalence, with nothing in the classifier having changed.
-  The paper reads &ldquo;strong negative correlation&rdquo; as dissimilarity. It is a function of the
+  The authors read &ldquo;strong negative correlation&rdquo; as dissimilarity. It is a function of the
   marginals.</p>
 
   <p>Now raise the share of hard inputs. A hard input is one on which the classifier has no margin, so
   its set is large and admits many classes at once. Every pair of classes becomes positively correlated,
-  including the 44 that the classifier separates perfectly on ordinary inputs. The paper reads positive
+  including the 44 that the classifier separates perfectly on ordinary inputs. The authors read positive
   entries as &ldquo;intrinsically similar classes.&rdquo; Here they are a set size effect: labels that
   enter together on difficult examples, not labels the model confuses.</p>
 
   <h2 id="b">B. A symmetric object cannot carry a directional claim</h2>
 
-  <p>The paper reads from a positive entry that the classifier &ldquo;is much more likely to
+  <p>The authors read from a positive entry that the classifier &ldquo;is much more likely to
   misclassify images of class 91 as class 30 than as class 95.&rdquo; A correlation matrix is symmetric.
   This panel puts a fixed total amount of confusion between classes 0 and 1 and slides how much of it
   runs each way: at \(\theta = 1\) images of class 0 are pulled toward class 1 and images of class 1 are
@@ -143,8 +142,8 @@
   <p>The two soft confusion entries cross: one rises as the other falls, and together they say which way
   the confusion runs. The conformal correlation entry is a single curve symmetric about one half. It
   takes the same value at \(\theta\) and at \(1-\theta\), so it cannot distinguish a classifier that
-  mislabels 0 as 1 from one that mislabels 1 as 0. The paper&rsquo;s claim to a &ldquo;superset of the
-  information conveyed by the confusion matrix&rdquo; fails on counting alone: the matrix has
+  mislabels 0 as 1 from one that mislabels 1 as 0. The authors&rsquo; claim to a &ldquo;superset of the
+  information conveyed by the confusion matrix&rdquo; fails on counting alone. The matrix has
   \(H(H-1)/2\) distinct off diagonal entries and directional confusion has \(H(H-1)\).</p>
 
   <h2 id="c">C. Resolution collapses as the sets shrink</h2>
@@ -169,23 +168,20 @@
   conformal statistic sits at the pinned floor from panel A across most of the range of true
   confusability and separates only the few strongest pairs, so its rank correlation with the truth is
   lower at every \(\alpha\), and it falls further as \(\alpha\) grows and the sets shrink toward
-  singletons, because singleton sets carry no pairwise information at all. The paper sweeps
-  \(\alpha\) over four values and presents the dependence as adaptability. It is the statistic recovering, coarsely, what the threshold
+  singletons, because singleton sets carry no pairwise information at all. The authors sweep
+  \(\alpha\) over four values and present the dependence as adaptability. It is the statistic recovering, coarsely, what the threshold
   discarded. The randomization in APS adds noise of its own that a probability based statistic does
-  not have; untick the box to remove it and watch the sets grow instead.</p>
+  not have. Untick the box to remove it and watch the sets grow instead.</p>
 
   <div class="takeaway">
-    <p>Takeaway. The conformal correlation matrix is the phi coefficient of a thresholded softmax. Its
-    negative entries are set by inclusion rates, its positive entries can be set by input difficulty,
-    it is symmetric where confusion is directional, and its resolution falls with the size of the sets.
-    None of that is repaired by the coverage guarantee, which concerns the true label and says nothing
-    about which other labels sit beside it. The probabilities the sets were cut from answer the
-    paper&rsquo;s question better at every setting of every slider.</p>
+    <p>Takeaway. The conformal correlation matrix is the phi coefficient of a thresholded softmax, and
+    the coverage guarantee concerns the true label alone. The probabilities the sets were cut from answer
+    the authors&rsquo; question better at every setting of every slider.</p>
   </div>
 
   <p class="note">The paper is Perlo, Chiasserini, De Veciana and Malandrino, <em>Computer
   Communications</em> 247 (2026) 108398. APS sets and scores follow Romano, Sesia and Cand&egrave;s (NeurIPS
-  2020), randomized as in the original and as the paper states it uses; untick the box to see the non randomized sets, which are much larger on a confident classifier. Source: <code>js/demo32.js</code>.</p>
+  2020), randomized as in the original. Untick the box to see the non randomized sets, which are much larger on a confident classifier. Source: <code>js/demo32.js</code>.</p>
 
   <div class="prevnext">
     <a href="31-two-worlds.html">&larr; Two worlds</a>

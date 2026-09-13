@@ -85,12 +85,11 @@
   <p class="tag">Critique</p>
   <h1>Conformal correlation</h1>
   <p class="subtitle">A 2026 paper in <em>Computer Communications</em> correlates class membership across
-  conformal prediction sets and offers the result as a rigorous, privacy preserving successor to the
-  confusion matrix. Read closely, the construction is a threshold on the softmax followed by second
-  moments, the coverage certificate does not transfer to anything it reports, and its entries measure
-  class prevalence more than confusability. It is a clean specimen of a common habit: taking the
-  conformal set as the object because the packaging says that is where the rigor lives. Each flaw
-  below is exhibited live in <a href="/demos/32-conformal-correlation.html">demonstration 32</a>.</p>
+  conformal prediction sets and offers the result as a rigorous and privacy preserving successor to the
+  confusion matrix. We read the paper closely and rebuilt the statistic on a classifier with known
+  confusability. The construction is a threshold on the softmax followed by second moments. The coverage
+  certificate transfers nothing to it, and its entries measure class prevalence more than confusability.
+  Each point below is exhibited live in <a href="/demos/32-conformal-correlation.html">demonstration 32</a>.</p>
 
   <h2>What is proposed</h2>
 
@@ -102,57 +101,56 @@
   $$\rho_{ij} = \frac{\mathbb{E}[z_i z_j] - \mathbb{E}[z_i]\,\mathbb{E}[z_j]}
   {\sqrt{\operatorname{Var}(z_i)\,\operatorname{Var}(z_j)}}.$$
 
-  <p>Positive entries are read as classes the model confuses, negative entries as classes it keeps apart,
-  and entries near zero as unrelated. The matrix is claimed to see potential errors where the confusion
-  matrix sees only realized ones, to be estimable from unlabeled data, to disclose less than a confusion
-  matrix in federated training, and to improve client selection when the goal is separating two critical
-  classes. The abstract describes it as capturing &ldquo;the likelihood of class pairs co-occurring within
-  conformal prediction sets.&rdquo;</p>
+  <p>The authors read positive entries as classes the model confuses, negative entries as classes it
+  keeps apart, and entries near zero as unrelated. They claim that the matrix sees potential errors where
+  the confusion matrix sees only realized ones, that it can be estimated from unlabeled data, that it
+  discloses less than a confusion matrix in federated training, and that it improves client selection
+  when the goal is to separate two critical classes. The abstract describes it as capturing &ldquo;the
+  likelihood of class pairs co-occurring within conformal prediction sets.&rdquo;</p>
 
   <h2>What is computed</h2>
 
-  <p>Strip the vocabulary. An APS set is the softmax vector sorted, cumulated, and cut at one scalar
-  threshold. The threshold is the \((1-\alpha)\) quantile of the calibration scores, but any number in
-  \([0,1]\) would produce a set of the same kind. Everything in the matrix is therefore a function of the
-  classifier&rsquo;s probability vectors and one cutoff. The probabilities already hold, at full
-  resolution, what the indicator vector reports at one bit per class.</p>
+  <p>An APS set is the softmax vector sorted, cumulated, and cut at one scalar threshold. The threshold
+  is the \((1-\alpha)\) quantile of the calibration scores, but any number in \([0,1]\) would produce a set
+  of the same kind. Therefore everything in the matrix is a function of the classifier&rsquo;s
+  probability vectors and one cutoff. The probabilities already hold, at full resolution, what the
+  indicator vector reports at one bit per class.</p>
 
-  <p>The paper says the entries &ldquo;incorporate the entire distribution of predicted
+  <p>The authors write that the entries &ldquo;incorporate the entire distribution of predicted
   probabilities.&rdquo; They incorporate one threshold of it. The authors then sweep \(\alpha\) over four
-  values and list the sweep as a benefit, since the operator &ldquo;can specify how near the near misses
-  have to be.&rdquo; The sweep is recovering, in four coarse steps, what the threshold discarded. Taken
-  to its limit, the family of CCMs over all \(\alpha\) is a function of the softmax ranks and cumulative
-  masses, which is to say a coarsening of the probabilities you started with.</p>
+  values and list the sweep as a benefit, because the operator &ldquo;can specify how near the near
+  misses have to be.&rdquo; The sweep recovers, in four coarse steps, what the threshold discarded.</p>
 
-  <p>The natural comparators are older than conformal prediction. The soft confusion matrix, the mean
-  probability vector assigned to images of each true class, sees near misses at every resolution and
-  needs no calibration set. The expected pairwise product \(\mathbb{E}[p_i p_j]\) is the threshold free
-  version of \(\mathbb{E}[z_i z_j]\). The paper cites the coverage confusion matrix of Stutz et al. (ICLR
-  2022) in its related work. None of the three appears in an experiment. The only comparison offered is
-  with the hard confusion matrix, which discards the probabilities entirely, so the contrast being drawn
-  is soft versus hard, not conformal versus not.</p>
+  <p>The natural comparators are older than conformal prediction. The soft confusion matrix is the mean
+  probability vector assigned to images of each true class. It sees near misses at every resolution and
+  needs no calibration set. The mean pairwise product \(\mathbb{E}[p_i p_j]\) is the threshold free
+  version of \(\mathbb{E}[z_i z_j]\). The authors cite the coverage confusion matrix of Stutz et al.
+  (ICLR 2022) in their related work. None of the three appears in an experiment. The only comparison
+  offered is with the hard confusion matrix, which discards the probabilities entirely, so the contrast
+  being drawn is soft versus hard rather than conformal versus not.</p>
 
   <h2>The certificate does not travel</h2>
 
   <p>The one theorem in play says the true class lands in the set at rate at least \(1-\alpha\),
   averaged over exchangeable draws. It constrains a single row of the co-membership structure, the row
-  for the true label, and it says nothing about which wrong classes accompany the true one. The matrix
-  is entirely about the wrong classes. So the word &ldquo;conformal&rdquo; in the name certifies nothing
-  about the numbers in the matrix, and the paper makes no attempt to say what it would certify. The
-  calibration step chose a threshold. That is the whole contribution of conformal prediction to the
+  for the true label. It says nothing about which wrong classes accompany the true one, and the matrix
+  is entirely about the wrong classes. Therefore the word &ldquo;conformal&rdquo; in the name certifies
+  nothing about the numbers in the matrix, and the authors do not say what it would certify. The
+  calibration step chose a threshold, and that is the whole contribution of conformal prediction to the
   object.</p>
 
-  <p>The guarantee is also misstated. The paper says that &ldquo;for a given input sample&rdquo; the set
-  &ldquo;is guaranteed to contain the correct class&rdquo; with probability close to \(1-\alpha\). Split
-  conformal coverage is marginal, not conditional on the input, and distribution free conditional
-  coverage is impossible in finite samples (Barber, Cand&egrave;s, Ramdas and Tibshirani 2021). The
-  distinction matters here because the paper goes on to interpret individual class pairs and individual
-  federated clients as if validity transferred to them. The upper bound is written as \(1/(n-1)\); the
-  standard term is \(1/(n+1)\). Exchangeability, the tie convention, and the randomization in APS are
-  not stated. In the federated experiments the clients are constructed to be non identically
-  distributed, and local matrices are compared against a global calibration set, which is exactly the
-  mismatch under which the marginal guarantee fails. No empirical coverage and no set sizes are reported
-  for any client.</p>
+  <p>The guarantee is also misstated. The authors write that &ldquo;for a given input sample&rdquo; the
+  set &ldquo;is guaranteed to contain the correct class&rdquo; with probability close to \(1-\alpha\).
+  Split conformal coverage is marginal. It is not conditional on the input, and distribution free
+  conditional coverage is impossible in finite samples (Barber, Cand&egrave;s, Ramdas and Tibshirani
+  2021). The distinction matters here because the authors go on to interpret individual class pairs and
+  individual federated clients as if validity transferred to them. The upper bound is written as
+  \(1/(n-1)\), where the standard term is \(1/(n+1)\). Exchangeability, the tie convention and the
+  randomization in APS are not stated.</p>
+
+  <p>In the federated experiments the clients are constructed to be non identically distributed, and
+  local matrices are compared against a global calibration set. That is the mismatch under which the
+  marginal guarantee fails. No empirical coverage and no set sizes are reported for any client.</p>
 
   <h2>The entries measure prevalence</h2>
 
@@ -162,7 +160,7 @@
 
   $$\rho_{ij} = -\sqrt{\frac{p_i\, p_j}{(1-p_i)(1-p_j)}}.$$
 
-  <p>On a ten class problem with a decent classifier, each class sits in roughly a tenth of the sets, and
+  <p>On a ten class problem with a decent classifier each class sits in roughly a tenth of the sets, and
   every &ldquo;hard to confuse&rdquo; pair reads the same number. With balanced inclusion rates and
   singleton sets the number is exactly \(-1/(H-1)\).</p>
 
@@ -176,64 +174,61 @@
   </table>
   </div>
 
-  <p>The paper&rsquo;s Remark 2 says dissimilar classes are &ldquo;expected to display strong negative
+  <p>Remark 2 of the paper says dissimilar classes are &ldquo;expected to display strong negative
   correlation.&rdquo; They display a negative number whose size is set by how often each class is
-  included, which rises with the class&rsquo;s prevalence and with \(1-\alpha\), and has nothing to do
-  with how dissimilar the classes are. The same pinning acts at the top: the phi coefficient cannot reach
+  included. That rises with the class&rsquo;s prevalence and with \(1-\alpha\), and it has nothing to do
+  with how dissimilar the classes are. The same pinning acts at the top. The phi coefficient cannot reach
   \(+1\) unless the two marginals are equal, so a rare class and a common class have a lower attainable
-  ceiling than two common classes. Entries for pairs with different inclusion rates are not on a common
-  scale, and a heat map of them is a heat map of prevalence with confusability painted on top.
-  <a href="/demos/32-conformal-correlation.html#a">Panel A</a> of the demonstration draws the floor and
-  the formula on top of each other.</p>
+  ceiling than two common classes. Entries for pairs with different inclusion rates are therefore not on
+  a common scale. <a href="/demos/32-conformal-correlation.html#a">Panel A</a> of the demonstration
+  draws the observed floor and the formula on top of each other.</p>
 
   <p>Remark 1, that positive entries mark &ldquo;intrinsically similar classes,&rdquo; fails from the
   other side. Any input the classifier finds hard produces a large set, and every label in a large set is
   positively correlated with every other. Raise the share of hard inputs in panel A and all 45 pairs
-  turn positive, including the 44 the classifier separates perfectly. That is a set size effect, not
-  similarity, and the paper offers no adjustment for it. The statistic is also undefined whenever a
-  class is always or never included, since its variance is zero, and no convention is given.</p>
+  turn positive, including the 44 the classifier separates perfectly. That is a set size effect, and
+  the authors offer no adjustment for it. The statistic is also undefined whenever a class is always or
+  never included, since its variance is zero, and no convention is given.</p>
 
   <p>The abstract promised a likelihood of co-occurrence. The co-occurrence rate \(\mathbb{E}[z_i z_j]\) is
-  a likelihood. Dividing it by the marginals is what introduced the prevalence dependence, and the
-  \(\alpha\) dependence the paper then presents as a feature is in part this mechanical effect: at higher
+  a likelihood. Dividing it by the marginals is what introduced the prevalence dependence. The
+  \(\alpha\) dependence the authors present as a feature is in part this mechanical effect: at higher
   \(\alpha\) the sets shrink, every \(p_i\) falls, and every negative entry drifts toward zero whether or
   not the classifier changed. <a href="/demos/32-conformal-correlation.html#c">Panel C</a> shows the
-  other cost: as the sets shrink toward singletons the matrix loses the ability to rank pairs by their
+  other cost. As the sets shrink toward singletons the matrix loses the ability to rank pairs by their
   true confusability, while the probability based statistic keeps it at every \(\alpha\).</p>
 
   <h2>Symmetric object, directional claim</h2>
 
   <p>The confusion matrix is asymmetric. It can say that images of class 91 are labeled 30 while images of
   class 30 are never labeled 91. The CCM is a correlation matrix and is symmetric by construction. The
-  paper nevertheless reads from it that the classifier &ldquo;is much more likely to misclassify images of
-  class 91 as class 30 than as class 95,&rdquo; and later that the matrix &ldquo;contains a superset of the
-  information conveyed by the confusion matrix.&rdquo; Neither can be true. A symmetric matrix has
-  \(H(H-1)/2\) distinct off diagonal entries; directional confusion between class pairs needs
+  authors nevertheless read from it that the classifier &ldquo;is much more likely to misclassify images
+  of class 91 as class 30 than as class 95,&rdquo; and later that the matrix &ldquo;contains a superset of
+  the information conveyed by the confusion matrix.&rdquo; Neither can be true. A symmetric matrix has
+  \(H(H-1)/2\) distinct off diagonal entries, and directional confusion between class pairs needs
   \(H(H-1)\). The evaluation never sees a label, so nothing in it can distinguish a set \(\{1, 2\}\)
-  produced for a true 1, a correct prediction, from the same set produced for a true 2, an error. The
-  two cases give identical matrices and can both have perfect coverage.
+  produced for a true 1, which is a correct prediction, from the same set produced for a true 2, which
+  is an error. The two cases give identical matrices and can both have perfect coverage.
   <a href="/demos/32-conformal-correlation.html#b">Panel B</a> slides the direction of a confusion from
-  entirely 0 to 1 to entirely 1 to 0: the soft confusion entries cross, and the CCM entry is a curve
+  entirely 0 to 1 to entirely 1 to 0. The soft confusion entries cross, and the CCM entry is a curve
   symmetric about the midpoint.</p>
 
   <h2>Labels and privacy</h2>
 
-  <p>The paper claims the matrix &ldquo;can be estimated entirely from unlabeled samples.&rdquo; The test
-  set is unlabeled. The calibration set that sets the threshold is not, and in the federated experiments
-  it is a tenth of every client&rsquo;s local data. A softmax statistic needs labels at no step, so the
-  claim distinguishes the CCM from the confusion matrix, but in the wrong direction from the obvious
-  alternative.</p>
+  <p>The authors claim the matrix &ldquo;can be estimated entirely from unlabeled samples.&rdquo; The
+  test set is unlabeled. The calibration set that sets the threshold is not, and in the federated
+  experiments it is a tenth of every client&rsquo;s local data. A softmax statistic needs labels at no
+  step.</p>
 
   <p>The privacy argument compares a correlation matrix, which &ldquo;only contains probabilities,&rdquo;
   with a raw count confusion matrix, whose row sums reveal the size and class composition of a
-  client&rsquo;s data. A row normalized confusion matrix also only contains probabilities. And the CCM is
-  not free of composition either: by the formula above, the off diagonal entries of a well trained
+  client&rsquo;s data. A row normalized confusion matrix also only contains probabilities. The CCM is not
+  free of composition either. By the formula above, the off diagonal entries of a well trained
   classifier are near \(-\sqrt{p_i p_j/((1-p_i)(1-p_j))}\), which is a function of the inclusion rates,
   which track the class frequencies. The client that sends its CCM has sent a blurred copy of its label
   histogram. There is no threat model, no privacy mechanism, no leakage bound and no inference attack
-  evaluated, and the matrix is being recommended precisely because it exposes how a client&rsquo;s data
-  differs from the others. The defensible sentence is that the CCM does not transmit raw counts.
-  &ldquo;Privacy preserving&rdquo; is not that sentence.</p>
+  evaluated. The matrix is recommended precisely because it exposes how a client&rsquo;s data differs
+  from the others. The defensible claim is that the CCM does not transmit raw counts.</p>
 
   <h2>The experiment</h2>
 
@@ -241,21 +236,22 @@
   high entry means two classes are hard to distinguish, and the entry falling with training is read as
   the classifier learning to separate them. In the federated section the stated goal is &ldquo;to make
   the corresponding CCMs to be as high as possible,&rdquo; and the rule selects &ldquo;the 7 clients with
-  the highest CCM entries for the critical classes,&rdquo; immediately followed by the rationale that a
-  client &ldquo;unable to distinguish the critical classes&rdquo; is unlikely to help. By the
-  paper&rsquo;s own reading, the highest entries belong to exactly those clients. The sign flips
-  without explanation.</p>
+  the highest CCM entries for the critical classes.&rdquo; The rationale that follows is that a client
+  &ldquo;unable to distinguish the critical classes&rdquo; is unlikely to help. By the authors&rsquo; own
+  reading, the highest entries belong to exactly those clients. The sign flips without explanation.</p>
 
-  <p>The rest of the section does not hold together either. The heterogeneity is generated with a
-  Dirichlet whose concentration is described as producing more heterogeneous clients as it grows; for
-  the symmetric Dirichlet it is the reverse. Figures 6 and 7 are captioned &ldquo;CCM entries for the
-  critical classes,&rdquo; and their vertical axes are labeled class accuracy. The text selects three
-  clients per round from a pool of seven; the table reports the number selected as six or seven.
-  &ldquo;Significant&rdquo; is used throughout with one run, no seeds, and no error bars. And there is no
-  baseline that could attribute anything to the conformal step: no random selection with the same pool
-  size, no selection by confusion matrix, by class counts, by local loss, by co-membership rate, or by
-  soft probability. A client whose data contains more of the two focus classes will have a larger local
-  entry for that pair, so the rule may be selecting on class composition and nothing else.</p>
+  <p>The rest of the section has similar problems. The heterogeneity is generated with a Dirichlet whose
+  concentration is described as producing more heterogeneous clients as it grows. For the symmetric
+  Dirichlet it is the reverse. Figures 6 and 7 are captioned &ldquo;CCM entries for the critical
+  classes,&rdquo; and their vertical axes are labeled class accuracy. The text selects three clients per
+  round from a pool of seven, and the table reports the number selected as six or seven.
+  &ldquo;Significant&rdquo; is used throughout with one run, no seeds and no error bars.</p>
+
+  <p>There is no baseline that could attribute anything to the conformal step. Random selection with the
+  same pool size, selection by confusion matrix, by class counts, by local loss, by co-membership rate
+  or by soft probability are all absent. A client whose data contains more of the two focus classes will
+  have a larger local entry for that pair, so the rule may be selecting on class composition and nothing
+  else.</p>
 
   <p>The conclusion says the method improves the critical classes &ldquo;without hurting the overall
   classification performance&rdquo; and &ldquo;does not affect the performance for non-critical
@@ -276,41 +272,39 @@
 
   <p>That is a redistribution of accuracy toward the weaker focus class, paid for by the stronger one and,
   on CIFAR-100, by every other class. It might be a defensible trade for an application that cares about
-  one class above all others. The paper does not present it as a trade, and with one run it cannot say
+  one class above all others. The authors do not present it as a trade, and with one run they cannot say
   whether any of the differences would survive a second seed.</p>
 
-  <p>Two smaller points. APS sets are randomized to hit exact coverage, so the indicators carry noise
-  from the randomization that a softmax statistic does not. And no uncertainty is attached to any entry
-  of any matrix: the coverage guarantee says nothing about sampling error in a correlation estimated
-  from a few hundred local test images, and the paper does not either.</p>
+  <p>No uncertainty is attached to any entry of any matrix. The coverage guarantee says nothing about
+  sampling error in a correlation estimated from a few hundred local test images, and neither do the
+  authors. APS sets are also randomized to hit exact coverage, so the indicators carry noise from the
+  randomization that a softmax statistic does not.</p>
 
   <h2>What a fair version would look like</h2>
 
-  <p>If the goal is a picture of which classes the model cannot tell apart, use the probabilities. Report
-  the soft confusion matrix, which is directional, threshold free, and label free. If pairwise structure
-  is wanted, report \(\mathbb{E}[p_i p_j]\), or the correlation of the log probabilities across test
-  images, which does not suffer the Bernoulli pinning. If sets are genuinely the object, because a
-  downstream consumer receives sets and nothing else, then report the co-membership rate
-  \(\mathbb{E}[z_i z_j]\), or the coverage confusion matrix of Stutz et al., which is directional because
-  it conditions on the true label, and say plainly that the certificate covers the true class and nothing
-  about the neighbors. Report the inclusion rates and set sizes beside whatever is reported, since the
-  reader cannot interpret a phi coefficient without them. Any of these would have made the same figures, with the same
-  qualitative story, and without the borrowed rigor.</p>
+  <p>If the goal is a picture of which classes the model cannot tell apart, use the probabilities. The
+  soft confusion matrix is directional, threshold free and label free. If pairwise structure is wanted,
+  \(\mathbb{E}[p_i p_j]\) or the correlation of log probabilities across test images does not suffer the
+  Bernoulli pinning. If sets are genuinely the object, because a downstream consumer receives sets and
+  nothing else, then report the co-membership rate \(\mathbb{E}[z_i z_j]\) or the coverage confusion
+  matrix of Stutz et al., which is directional because it conditions on the true label. In either case
+  say plainly that the certificate covers the true class and nothing about the neighbors, and report
+  the inclusion rates and set sizes beside whatever is reported, since a phi coefficient cannot be
+  interpreted without them.</p>
 
-  <h2>Why it is on this site</h2>
+  <h2>The habit</h2>
 
-  <p>This page is not here because the paper is unusually weak. It is here because the paper is
-  unusually clear about a habit the whole field shares. The authors did not stop at the conformal step.
-  They went past it, into a second order statistic, which is exactly the move
-  <a href="/demos/30-past-the-stop.html">this site argues for</a>. But they took the set as the object,
-  and threw away the probabilities to get it, because the packaging teaches that the set is the certified
-  thing and so anything built on the set inherits the certificate. Nothing was inherited. What traveled
-  was a threshold, chosen by a procedure whose one theorem concerns a quantity the matrix ignores.</p>
+  <p>The authors did not stop at the conformal step. They went past it, into a second order statistic,
+  which is the move <a href="/demos/30-past-the-stop.html">this site argues for</a>. However, they took
+  the set as the object and threw away the probabilities to get it. The packaging teaches that the set
+  is the certified thing, and so anything built on the set is assumed to inherit the certificate.
+  Nothing was inherited. What traveled was a threshold, chosen by a procedure whose one theorem concerns
+  a quantity the matrix ignores.</p>
 
-  <p>The conformal step is <a href="/demos/29-just-a-transform.html">a univariate transform</a>. Used as a
-  transform, its output is a coordinate that can be modeled further. Used as a coarsening, it is a lossy
-  binarization with a certificate attached to the one bit that the downstream analysis then discards.
-  The paper chose the second use and called it the first.</p>
+  <p>The conformal step is <a href="/demos/29-just-a-transform.html">a univariate transform</a>. Used as
+  a transform, its output is a coordinate that can be modeled further. Used as a coarsening, it is a
+  lossy binarization with a certificate attached to the one bit that the downstream analysis then
+  discards.</p>
 
   <div class="refs">
     <h3>Sources</h3>
@@ -320,11 +314,11 @@
     open access. Quotations above are verbatim from the published version. Romano, Sesia and
     Cand&egrave;s, &ldquo;Classification with valid and adaptive coverage&rdquo; (NeurIPS 2020), for the
     APS score. Stutz, Dvijotham, Cemgil and Doucet, &ldquo;Learning optimal conformal
-    classifiers&rdquo; (ICLR 2022), for the coverage confusion matrix the paper cites and does not compare
-    against. Barber, Cand&egrave;s, Ramdas and Tibshirani, &ldquo;The limits of distribution-free conditional
-    predictive inference&rdquo; (Information and Inference, 2021), for why coverage is marginal. On the
-    phi coefficient&rsquo;s dependence on the marginals, any text on measures of association for
-    2&times;2 tables; Yule&rsquo;s 1912 discussion is the original.</p>
+    classifiers&rdquo; (ICLR 2022), for the coverage confusion matrix the authors cite and do not compare
+    against. Barber, Cand&egrave;s, Ramdas and Tibshirani, &ldquo;The limits of distribution-free
+    conditional predictive inference&rdquo; (Information and Inference, 2021), for why coverage is
+    marginal. On the phi coefficient&rsquo;s dependence on the marginals, any text on measures of
+    association for 2&times;2 tables. Yule&rsquo;s 1912 discussion is the original.</p>
     <p>On the stopping habit generally: the <a href="/demos/29-just-a-transform.html">just a transform</a>
     and <a href="/demos/30-past-the-stop.html">past the stop</a> demonstrations, and the grammar paper on
     the <a href="/papers/">papers page</a>.</p>
