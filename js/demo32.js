@@ -104,8 +104,10 @@ function apsSets(pre, q, randomize, rng) {
     const z = new Uint8Array(H);
     let k = 0;
     while (k < H && (k === 0 || s.cum[k - 1] < q)) { z[s.ord[k]] = 1; k++; }
-    if (randomize && k > 1) {
-      const L = k - 1, before = s.cum[L - 1], pL = s.cum[L] - before;
+    // the boundary rank is kept with probability (q - mass before) / its mass;
+    // when the top ranked class is itself the boundary the set can be empty
+    if (randomize && k > 0) {
+      const L = k - 1, before = L === 0 ? 0 : s.cum[L - 1], pL = s.cum[L] - before;
       if (rng() > (q - before) / pL) z[s.ord[L]] = 0;
     }
     return z;
@@ -271,7 +273,7 @@ function pipeline(seed, pi, G, margin, alpha, randomize, hard = 0) {
       const z = new Uint8Array(3);
       let cum = 0, k = 0;
       while (k < 3 && (k === 0 || cum < q)) { z[ord[k]] = 1; cum += PROBS[k]; k++; }
-      if (k > 1) { const before = cum - PROBS[k - 1]; if (Us[i] > (q - before) / PROBS[k - 1]) z[ord[k - 1]] = 0; }
+      if (k > 0) { const before = cum - PROBS[k - 1]; if (Us[i] > (q - before) / PROBS[k - 1]) z[ord[k - 1]] = 0; }
       Z.push(z); cm[y][ord[0]] += 1 / ys.length;
       if (z[y]) cov++; if (ord[0] === y) correct++;
     }

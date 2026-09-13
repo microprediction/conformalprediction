@@ -263,8 +263,8 @@
 
   <p><strong>What it shows.</strong> The authors' Remark 1 says positive entries mark
   &ldquo;intrinsically similar classes.&rdquo; Here every pair is positively correlated and the
-  classifier is perfect. The correlation comes from one shared cause, whether the image was hard, and
-  says nothing about any pair.</p>
+  classifier is perfect. The correlation comes from one shared cause across images, whether the image was hard, and
+  not from any relation between the pair.</p>
 
   <h3>Example 6. Pooling two clients creates a strong correlation from nothing</h3>
 
@@ -364,8 +364,7 @@
   than determines: a model that puts probability 0.4 on \(b\) for every image of class \(a\) and a
   model that puts 0.6 or 0.2 with equal probability have the same entry and error rates of zero and
   one half. The confusion matrix of the ranked prediction carries that difference, so the two are
-  complements. A label free
-  comparator is the mean pairwise product \(\mathbb{E}[p_i p_j]\), a threshold free soft association
+  complements. A comparator that needs no labeled evaluation sample is the mean pairwise product \(\mathbb{E}[p_i p_j]\), a threshold free soft association
   that is symmetric like the CCM. The authors also cite the coverage confusion matrix of Stutz et al.,
   which conditions on the true label and is directional. None of the three appears in an experiment.
   The only comparison offered is with the hard confusion matrix, so the contrast being drawn is soft
@@ -422,8 +421,7 @@
   </div>
 
   <p>The authors' Remark 2 says dissimilar classes are &ldquo;expected to display strong negative
-  correlation.&rdquo; They display a number set by the marginal inclusion rates, which rise with class
-  frequency and with \(1-\alpha\). The same marginals bound the entries from above. The phi coefficient
+  correlation.&rdquo; They display a number set by the marginal inclusion rates, which depend on the class frequencies, on \(\alpha\) and on the classifier. The same marginals bound the entries from above. The phi coefficient
   of two indicators cannot reach \(+1\) unless \(p_i = p_j\), so entries for pairs with different
   inclusion rates are not on a common scale. The abstract promised a likelihood of co-occurrence, which
   is \(\mathbb{E}[z_i z_j]\). The entry \(\rho_{ij}\) is a standardized excess co-occurrence whose
@@ -433,8 +431,8 @@
   floor and the formula on top of each other.</p>
 
   <p>Remark 1, that positive entries mark &ldquo;intrinsically similar classes,&rdquo; fails from the
-  other side. Any input the classifier finds hard produces a large set, and every label in a large set
-  is positively correlated with every other. Raise the share of hard inputs in panel B and all 45 pairs
+  other side. A share of hard inputs, on which the classifier returns large sets, induces positive correlation
+  between every pair of labels across images. Raise the share of hard inputs in panel B and all 45 pairs
   turn positive, including the 44 with no injected confusion. That is a set size effect, and the
   authors offer no adjustment for it. The statistic is also undefined whenever a class is always or
   never included, since its variance is zero, and no convention is given.</p>
@@ -463,15 +461,16 @@
   The calculation ignores the test labels, but the threshold comes from a labeled calibration set. In
   the centralized experiment that set is a tenth of the data. For the federated experiment the
   calibration protocol at the client level is not described. The soft confusion matrix needs labeled
-  evaluation data, as any confusion matrix does, and \(\mathbb{E}[p_i p_j]\) needs no labels at any
-  step.</p>
+  evaluation data, as any confusion matrix does, and \(\mathbb{E}[p_i p_j]\) needs no labeled calibration or
+  evaluation sample.</p>
 
   <p>The privacy argument compares the CCM, which &ldquo;only contains probabilities,&rdquo; with a raw
   count confusion matrix, whose row sums reveal the size and class composition of a client&rsquo;s
   data. Correlations can be negative, so the CCM does not contain probabilities at all. A row
-  normalized confusion matrix does, and reveals no counts. And in the singleton regime the CCM
-  identifies every inclusion rate exactly. Write \(o_i = p_i/(1-p_i)\). Then
-  \(\rho_{ij} = -\sqrt{o_i o_j}\), so for any three distinct classes</p>
+  normalized confusion matrix does, and does not directly disclose counts. And when every set is a
+  singleton and at least three classes have \(0 < p < 1\), the CCM identifies every inclusion rate
+  exactly. Write \(o_i = p_i/(1-p_i)\). Then
+  \(\rho_{ij} = -\sqrt{o_i o_j}\), so for any three distinct such classes</p>
 
   $$o_i = -\frac{\rho_{ij}\,\rho_{ik}}{\rho_{jk}}, \qquad p_i = \frac{o_i}{1 + o_i}.$$
 
@@ -492,13 +491,13 @@
   <p>The heterogeneity is generated with a Dirichlet whose concentration is described as producing more
   heterogeneous clients as it grows. For the symmetric Dirichlet it is the reverse. Figures 6 and 7 are
   captioned &ldquo;CCM entries for the critical classes,&rdquo; and their vertical axes are labeled
-  class accuracy. The table reports the number of clients selected as six or seven, where the text says
-  three. &ldquo;Significant&rdquo; is used throughout, and no repetitions, seeds, intervals or error
+  class accuracy. The table reports the number of clients selected as six or
+  seven, which the text does not explain. &ldquo;Significant&rdquo; is used throughout, and no repetitions, seeds, intervals or error
   bars are reported.</p>
 
   <p>There is no baseline that could attribute anything to the conformal step. Random selection with the
   same pool size, selection by confusion matrix, by class counts, by local loss, by co-membership rate
-  or by soft probability are all absent. A client whose data contains more of the two focus classes will
+  or by soft probability are all absent. A client whose data contains more of the two focus classes may
   have a larger local entry for that pair, so the rule may be selecting on class composition.</p>
 
   <p>The conclusion says the method improves the critical classes &ldquo;without hurting the overall
@@ -511,6 +510,7 @@
     <tr><td>CIFAR-10</td><td>overall</td><td>0.789</td><td>0.801</td><td>+0.012</td></tr>
     <tr><td>CIFAR-10</td><td>focus class A</td><td>0.808</td><td>0.742</td><td>&minus;0.066</td></tr>
     <tr><td>CIFAR-10</td><td>focus class B</td><td>0.211</td><td>0.423</td><td>+0.212</td></tr>
+    <tr><td>CIFAR-10</td><td>other classes</td><td>0.859</td><td>0.856</td><td>&minus;0.003</td></tr>
     <tr><td>CIFAR-100</td><td>overall</td><td>0.511</td><td>0.493</td><td>&minus;0.018</td></tr>
     <tr><td>CIFAR-100</td><td>focus class A</td><td>0.630</td><td>0.570</td><td>&minus;0.060</td></tr>
     <tr><td>CIFAR-100</td><td>focus class B</td><td>0.200</td><td>0.330</td><td>+0.130</td></tr>
@@ -519,7 +519,7 @@
   </div>
 
   <p>That is a redistribution of accuracy toward the weaker focus class, paid for by the stronger one
-  and, on CIFAR-100, by every other class. It might be a defensible trade for an application that cares
+  and, on CIFAR-100, by the average over the other classes. It might be a defensible trade for an application that cares
   about one class above all others. The authors do not present it as a trade, and without repetitions
   they cannot say whether any of the differences would survive a second seed.</p>
 
@@ -527,7 +527,7 @@
 
   <p>If the goal is a picture of which classes the model cannot tell apart, use the probabilities. The
   soft confusion matrix is directional and threshold free. If labels are unavailable,
-  \(\mathbb{E}[p_i p_j]\) is symmetric and label free. If sets are the object, because a
+  \(\mathbb{E}[p_i p_j]\) is symmetric and needs no labeled calibration or evaluation sample. If sets are the object, because a
   downstream consumer receives sets and nothing else, then report the co-membership rate
   \(\mathbb{E}[z_i z_j]\) or the coverage confusion matrix of Stutz et al., and say plainly that the
   certificate covers the true class and nothing about the neighbors. In every case report the inclusion
