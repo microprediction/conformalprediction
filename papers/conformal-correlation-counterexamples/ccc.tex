@@ -30,8 +30,10 @@
 \maketitle
 
 \begin{abstract}
-\citet{perlo2026} correlate the membership indicators of conformal prediction sets and read the
-result as a map of which classes a classifier confuses. It is not. Two classifiers built inside
+Conformal prediction sets are a coarsening of a classifier's probabilities, and a statistic computed
+from the sets alone inherits nothing from the coverage guarantee and sees neither the true label nor
+the ranked prediction. \citet{perlo2026} correlate the membership indicators of prediction sets and
+read the result as a map of which classes a classifier confuses. It is not. Two classifiers built inside
 randomized adaptive prediction sets, exactly as specified, produce the same law of sets and the same
 matrix while confusing every class in opposite directions, and a short theorem shows that no
 statistic of the sets determines the confusion matrix once any set of size two occurs. Seven further
