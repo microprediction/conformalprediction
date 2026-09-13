@@ -95,10 +95,12 @@
   <p class="subtitle">Karimi and Samavi take the size of a conformal prediction set for a single input
   and derive certified upper and lower bounds on a per-input model uncertainty from it. The proof
   inserts the marginal coverage guarantee, a statement about the average over inputs, as if it held for
-  the input in hand. The bounds that come out depend on the input only through the set size, and their
-  width is at most \(2/(n+1)\), so the theorem pins the uncertainty of every input with the same set
-  size to the same number. A two-group classifier with valid marginal coverage puts every input outside
-  the certified interval. <a href="/demos/33-certified-uncertainty.html">Demonstration 33</a> rebuilds
+  the input in hand. The bounds that come out depend on the input only through the set size, and their width is at
+  most \(2/(n+1)\), so the theorem pins the uncertainty of every input with the same set size to the
+  same number. A two-group classifier with valid marginal coverage puts every input outside the
+  certified interval, and it is built on two atoms, where conditional coverage is attainable, so the
+  bounds fail in the easiest case rather than a contrived one. Two papers criticise the set size as
+  an uncertainty measure and neither examines the proof, which is set out below with sources. <a href="/demos/33-certified-uncertainty.html">Demonstration 33</a> rebuilds
   the example with sliders.</p>
 
   <h2>What is proposed</h2>
@@ -137,6 +139,25 @@
   coverage guarantee of split conformal prediction, quoted from Romano, Sesia and Cand&egrave;s and
   from Vovk, Gammerman and Shafer.</p>
 
+  <h2>What has already been said</h2>
+
+  <p>Two papers criticise this one. Chau, Zargarbashi, Sale and Caprio (2026) reject the set size as
+  a measure of epistemic uncertainty: &ldquo;the CPR size at a fixed level \(\alpha\) characterises
+  uncertainty about the predicted region itself, rather than the uncertainty encountered when
+  producing that prediction.&rdquo; They also note, in passing, the observation that drives the
+  section after next, that the construction is a relabeling of the set size, since the normalisation
+  &ldquo;preserves the instance-wise ranking induced solely by CPR sizes.&rdquo; Silva and co-authors
+  (2026) report that the estimates &ldquo;don&rsquo;t vary significantly for large retrieval
+  databases.&rdquo; Neither examines the proof of Theorem 2, and of the paper&rsquo;s thirty
+  citations only four engage with its content at all.</p>
+
+  <p>Theorem 2 was also revised. The arXiv version of January 2024, which is the one the AAAI
+  proceedings carry, redefines \(\hat u_C\) from \(m/K\) to \((m+\delta-1)/K\), drops a case,
+  caps the upper bound at one, and adds a sentence conceding that &ldquo;this heuristic notion of
+  uncertainty is arbitrarily devised and can be replaced by any other heuristic and reasonable
+  uncertainty quantification.&rdquo; There is no erratum and no note of the change. Equations 13 to
+  17, which contain the error, are identical in both versions.</p>
+
   <h2>The step that fails</h2>
 
   <p>The coverage guarantee is marginal. It says that if a calibration set and a fresh test pair
@@ -147,11 +168,26 @@
   <p>where the probability averages over the calibration draw and over the test input. Equation (13)
   needs \(\mathbb{P}(P_1)\) for the particular input \(x\) whose set has size \(m\). That is the
   conditional probability \(\mathbb{P}(Y \in C(x) \mid X = x)\), and split conformal prediction
-  constrains it not at all. Vovk (2012), Lei and Wasserman (2014) and Foygel Barber, Cand&egrave;s,
-  Ramdas and Tibshirani (2021) show that for continuously distributed inputs no distribution-free
-  method can control it at a single point without the sets becoming trivial, and nothing in the
-  paper conditions on anything. The paper substitutes the marginal quantity for the conditional
-  one, and everything after that step is arithmetic on the wrong number.</p>
+  constrains it not at all. The paper substitutes the marginal quantity for the conditional one, and
+  everything after that step is arithmetic on the wrong number. Theorem 2 even carries the word: it
+  offers &ldquo;the following marginal lower bound \(L_C\) and upper bound \(H_C\)&rdquo; for a
+  quantity the same sentence attaches to a single \(x_{\text{val}}\).</p>
+
+  <p>How hard the conditional quantity is to control depends on the input distribution, and the
+  distinction matters for what follows. For a continuously distributed input, Vovk (2012) and Foygel
+  Barber, Cand&egrave;s, Ramdas and Tibshirani (2021) show that conditional coverage forces trivial
+  sets: Barber and co-authors prove the expected interval length is infinite &ldquo;at almost all
+  points \(x\) aside from the atoms of \(P_X\).&rdquo; Both results exempt atoms, and Vovk says why
+  the exemption is real. &ldquo;Of course, the condition that \(x\) be a non-atom is essential: if
+  \(P_X(\{x\}) > 0\), an inductive conformal predictor that ignores all examples with objects
+  different from \(x\) will have \(1-\epsilon\) object conditional validity and can give narrow
+  predictions if the training set is big enough.&rdquo;</p>
+
+  <p>The example below is deliberately built on atoms, where that escape is available. Two groups,
+  each with positive probability, and calibrating within each group would deliver exact coverage for
+  both. So the bounds are not failing because the conditional quantity is out of reach. They fail in
+  the one setting where it is within reach, because substituting an average for a conditional is
+  wrong wherever it is done.</p>
 
   <p>Because \(\mathbb{P}(P_1)\) has been replaced by a constant, the bounds no longer depend on
   \(x\) at all except through \(m\). Their width is</p>
@@ -237,11 +273,16 @@
 
   <p class="note">The paper is Karimi and Samavi, <em>Quantifying Deep Learning Model Uncertainty in
   Conformal Prediction</em>, AAAI 2023 Summer Symposium Series, arXiv:2306.00876v2. Equation numbers
-  are the paper&rsquo;s. The conditional coverage impossibility results are Vovk, <em>Conditional
-  validity of inductive conformal predictors</em> (ACML 2012), Lei and Wasserman, <em>Distribution-free
-  prediction bands for non-parametric regression</em> (JRSS-B 2014), and Foygel Barber, Cand&egrave;s,
-  Ramdas and Tibshirani, <em>The limits of distribution-free conditional predictive inference</em>
-  (Information and Inference 2021).</p>
+  are the paper&rsquo;s. The conditional coverage impossibility results are Vovk,
+  <em>Conditional validity of inductive conformal predictors</em> (ACML 2012, arXiv:1209.2673),
+  Lei and Wasserman, <em>Distribution-free prediction bands for non-parametric regression</em>
+  (JRSS-B 2014), and Foygel Barber, Cand&egrave;s, Ramdas and Tibshirani, <em>The limits of
+  distribution-free conditional predictive inference</em> (Information and Inference 2021,
+  arXiv:1903.04684), whose Proposition 1 and Theorem 2 both exclude the atoms of \(P_X\). The prior
+  criticism is Chau, Zargarbashi, Sale and Caprio, <em>Quantifying Epistemic Predictive Uncertainty
+  in Conformal Prediction</em> (arXiv:2602.01667), and Silva, Bernardino and co-authors,
+  <em>Conformal Aerial Geo-Localization Through Visual Place Recognition</em> (ICUAS 2026). Version
+  differences are between arXiv:2306.00876v1 and v2.</p>
 
   <div class="prevnext">
     <a href="/reviews.html">&larr; All reviews</a>

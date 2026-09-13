@@ -146,10 +146,12 @@
   one and \(U_C = 0.01\), still outside their interval.</p>
 
   <div class="takeaway">
-    <p>Takeaway. The coverage guarantee is an average over inputs. Theorem 2 spends it as if it were a
-    statement about each input, and the bounds that result depend on nothing but the set size. The
+    <p>Takeaway. The coverage guarantee is an average over inputs. Theorem 2 spends it as if it were
+    a statement about each input, and the bounds that result depend on nothing but the set size. The
     example is a valid split conformal predictor at 91% marginal coverage in which no input satisfies
-    the certified bounds.</p>
+    the certified bounds. The two groups are atoms, so calibrating within each would give both exact
+    coverage. The bounds fail where the conditional quantity is attainable, not only where it is
+    not.</p>
   </div>
 
   <p class="note">The paper is Karimi and Samavi, <em>Quantifying Deep Learning Model Uncertainty in
