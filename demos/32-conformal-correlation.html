@@ -92,7 +92,7 @@
   <h1>Conformal correlation</h1>
   <p class="subtitle">A recent paper proposes correlating class membership across conformal prediction
   sets and reading the result as a map of which classes a classifier confuses. Four experiments, one
-  inside randomized APS exactly as specified and three on a synthetic classifier with known confusability show what the statistic responds to. The close reading is on the
+  inside randomized APS exactly as specified and three on a synthetic classifier with known injected logit perturbations show what the statistic responds to. The close reading is on the
   <a href="/conformal-correlation.html">critique page</a>.</p>
 
   <p>The question the authors want the matrix to answer is which classes the classifier confuses. The
@@ -229,7 +229,8 @@
   makes all 45 entries positive, including the 44 pairs with no injected confusion.</p>
 
   <p>The authors read a negative entry as dissimilarity and a positive entry as similarity. Here the
-  negative entries are a function of \(\alpha\) and the class frequencies only, and the positive entries
+  negative entries are set by the inclusion rates, which here move with \(\alpha\) and the class
+  frequencies while the classifier is unchanged, and the positive entries
   are produced by input difficulty with no similarity between the classes at all.</p>
 
   <h2 id="c">C. A symmetric object cannot carry a directional claim</h2>
@@ -280,8 +281,9 @@
   <p>The probability based statistic recovers the ordering well at every \(\alpha\), and it has no
   \(\alpha\) to choose. The conformal correlation entries sit at the floor from panel B for most pairs
   and rise only for the few strongest, so their rank correlation with the injected strengths is
-  lower at every \(\alpha\). It falls further as \(\alpha\) grows, because larger \(\alpha\) means smaller sets, and a
-  singleton set says nothing about any pair.</p>
+  lower at every \(\alpha\). It falls further as \(\alpha\) grows, because larger \(\alpha\) means smaller sets, and singleton
+  sets contain no pairwise co-occurrence, which leaves the entries determined by the marginal
+  inclusion rates.</p>
 
   <p>The authors sweep \(\alpha\) over four values and present the dependence on \(\alpha\) as a
   feature. The dependence is the statistic recovering, four coarse steps at a time, information that
