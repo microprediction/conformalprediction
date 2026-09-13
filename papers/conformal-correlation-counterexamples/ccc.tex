@@ -57,7 +57,9 @@ co-occurrence rate of classes $i$ and $j$. The conformal correlation matrix (CCM
           = \frac{q_{ij} - p_i p_j}{\sqrt{p_i(1-p_i)\,p_j(1-p_j)}},
 \end{equation}
 which is the Pearson correlation of two Bernoulli variables, also called the phi coefficient
-\citep{yule1912}. In practice the expectations are sample averages over a test set.
+\citep{yule1912}. In practice the expectations are sample averages over a test set. The entry is
+defined only when $0 < p_i < 1$ and $0 < p_j < 1$, since otherwise a variance is zero. The authors
+give no convention for that case, and we exclude such classes from the matrix.
 
 The authors attach three readings to the entries. Their Remark~1 says that intrinsically similar
 classes ``might be expected to exhibit high positive correlation''. Their Remark~2 says that pairs of
@@ -92,8 +94,12 @@ calibration and test data,
 \begin{equation}\label{eq:coverage}
 \Prob(z_Y = 1) = \sum_{y} \Prob(Y = y,\; z_y = 1) \;\ge\; 1 - \alpha,
 \end{equation}
-which is one scalar. It says nothing about $q_{ij}$, which mixes the true class with a wrong class,
-two wrong classes, and different true classes on different inputs.
+which is one scalar. It does not in general determine $q_{ij}$, which mixes the true class with a
+wrong class, two wrong classes, and different true classes on different inputs, and it never
+justifies reading $q_{ij}$ as confusion. There are special cases where it does constrain
+$q_{ij}$. With only two classes and coverage one the set is never empty, so
+$0 = \Prob(C = \varnothing) = 1 - p_A - p_B + q_{AB}$ and $q_{AB} = p_A + p_B - 1$ is forced. With
+three or more classes it is not, as the next proposition shows for a single entry.
 
 \begin{proposition}\label{prop:any}
 For every $\rho \in [-1, 1]$ there is a classifier with coverage one and accuracy one whose matrix
@@ -102,7 +108,8 @@ has an off-diagonal entry equal to $\rho$.
 
 \begin{proof}
 Let the true label always be $T$, always in the set and always ranked first, so coverage and
-accuracy are one. Let two other labels $A$ and $B$ be added to the set according to
+accuracy are one. Since $z_T \equiv 1$ the entries involving $T$ are undefined, and the claim
+concerns $\rho_{AB}$. Let two other labels $A$ and $B$ be added to the set according to
 \begin{align*}
 \Prob(z_A = 0, z_B = 0) &= \Prob(z_A = 1, z_B = 1) = \frac{1+\rho}{4}, \\
 \Prob(z_A = 1, z_B = 0) &= \Prob(z_A = 0, z_B = 1) = \frac{1-\rho}{4}.
@@ -122,7 +129,16 @@ in the paper.
 
 Each example needs only the inclusion rates $p_i$ and the co-occurrence rates $q_{ij}$, substituted
 into \eqref{eq:ccm}. We order them from the simplest to refute and the most absurd result downward.
-In every example coverage is one, so the certificate is satisfied with room to spare.
+
+Each example prescribes the law of the prediction sets directly. By Proposition~\ref{prop:law} that
+law is all the matrix depends on, and nothing in \eqref{eq:ccm} requires the sets to have come from
+any particular procedure. We do not claim that adaptive prediction sets calibrated on a sample
+produce exactly these laws. Randomized APS with almost surely distinct scores and $m$ calibration
+points has coverage at most $1 - \alpha + 1/(m+1)$ \citep[Theorem~1]{romano2020}, so the coverage of
+one in the examples means only that every set contains the truth and any coverage guarantee is met.
+The examples refute readings of the matrix. They say nothing about the procedure that produced the
+sets. In Examples~\ref{ex:rare} and \ref{ex:pool} a label $T$ is in every set, so its own entries are
+undefined under the convention of Section~\ref{sec:statistic} and the claims concern $\rho_{AB}$.
 
 \begin{example}[A perfect classifier and a perfectly wrong one share a matrix]\label{ex:perfect}
 Three classes $A$, $B$, $C$ with equal frequency, and sets that always contain the true class and one
@@ -146,9 +162,9 @@ shares exactly one of the three sets, so every $q_{ij} = 1/3$. Every off-diagona
 \rho_{ij} = \frac{1/3 - (2/3)(2/3)}{2/9} = -\tfrac12 .
 \]
 The good model has accuracy one. The bad model has accuracy zero. The labels, the sets and therefore
-the matrix are identical for both. The confusion matrix of the good model is the identity and that
-of the bad model has an empty diagonal, so the matrix does not contain ``a superset of the
-information conveyed by the confusion matrix''.
+the matrix are identical for both. The confusion matrix $\Prob(Y = a, \hat Y = b)$ of the good model has all its mass on the
+diagonal and that of the bad model has none there, so the matrix does not contain ``a superset of
+the information conveyed by the confusion matrix''.
 \end{example}
 
 \begin{example}[Zero correlation with 99\% directional confusion]\label{ex:zero}
@@ -257,15 +273,17 @@ in a set with either. The two entries differ only because dog is in twice as man
 Lemma~\ref{lem:floor} gives the general statement.
 \end{example}
 
-\begin{example}[One relocated observation moves an entry from one to almost zero]\label{ex:move}
+\begin{example}[Moving one label occurrence between rows moves an entry from one to almost zero]\label{ex:move}
 There are $n$ test inputs, and two rare labels $A$ and $B$ each appear in exactly one set. If they
-appear in the same set then $z_A = z_B$ and $\rho_{AB} = 1$. If $B$ appears in a different set then
+appear in the same set then $z_A = z_B$ and $\rho_{AB} = 1$. If instead the one occurrence of $B$ is
+in a different set then
 $p_A = p_B = 1/n$, $q_{AB} = 0$, and
 \[
 \rho_{AB} = \frac{0 - 1/n^2}{(1/n)(1-1/n)} = -\frac{1}{n-1},
 \]
 which at $n = 1000$ is about $-0.001$. The authors present heat maps of entries with no uncertainty
-attached. For rare labels a single observation moves an entry across its whole range.
+attached. For rare labels moving a single label occurrence from one row to another moves an entry across its
+whole range.
 \end{example}
 
 \section{Two lemmas}\label{sec:lemmas}
@@ -334,8 +352,8 @@ $p \mapsto p/(1-p)$.
 The authors argue that the matrix is privacy preserving because it ``only contains probabilities''
 and so ``does not leak information on the size and composition'' of a client's data. Correlations
 can be negative, so the matrix does not contain probabilities. A row normalized confusion matrix
-does, and reveals no counts either. And in the singleton regime, which is the regime of an accurate
-classifier at moderate $\alpha$, Lemma~\ref{lem:ident} recovers the inclusion rates, which for an
+does, and reveals no counts either. And when every set is a singleton, which an accurate classifier
+at moderate $\alpha$ approaches, Lemma~\ref{lem:ident} recovers the inclusion rates, which for an
 accurate classifier are the predicted class frequencies, which approximate the label histogram. The
 matrix is offered as useful because it exposes how a client's data differs from the
 others. No threat model, mechanism or leakage bound is given.
@@ -343,8 +361,9 @@ others. No threat model, mechanism or leakage bound is given.
 \section{What the coverage guarantee constrains}\label{sec:coverage}
 
 The authors state that ``for a given input sample'' the set ``is guaranteed to contain the correct
-class'' with probability close to $1-\alpha$. The guarantee \eqref{eq:coverage} is marginal, not
-conditional on the input, and distribution free conditional coverage is impossible in finite samples
+class'' with probability close to $1-\alpha$. The guarantee \eqref{eq:coverage} is marginal. It
+does not imply coverage conditional on the input, on a class or on a client, and for continuous
+inputs no nontrivial distribution free procedure delivers coverage conditional on every input
 \citep{barber2021}. The distinction matters here because the authors go on to interpret individual
 class pairs and individual federated clients as if validity transferred to them. It does not
 transfer to a client or a class either. Take ten equally weighted clients, nine with coverage one and
@@ -352,8 +371,9 @@ one with coverage zero. Pooled coverage is exactly $0.9$, which meets a nominal 
 and the tenth client has no protection at all. The same arithmetic applies to a class with a tenth of
 the data that is missed every time.
 
-The authors also write the upper coverage term as $1/(n-1)$, which is looser than the standard
-$1/(n+1)$ \citep{lei2018, stutz2022} and probably a typographical error. And the federated
+The authors also write the upper coverage term as $1/(n-1)$. For the randomized procedure with
+almost surely distinct scores the term is $1/(n+1)$ \citep{romano2020, lei2018}, so theirs is looser
+than necessary and probably a typographical error. And the federated
 experiments compare local matrices computed against a global calibration set across clients that are
 non identically distributed by construction. Under that mismatch even the marginal guarantee need not
 hold, and no coverage or set sizes are reported for any client.
@@ -365,9 +385,13 @@ soft confusion matrix
 \[
 C_{ab} = \E\big[\, p_b(X) \,\big|\, Y = a \,\big]
 \]
-is the average probability assigned to class $b$ on inputs of true class $a$. It is directional, it
-sees near misses at every resolution, and it needs no calibration set and no threshold. It needs
-labeled evaluation data, as any confusion matrix does. If labels are unavailable, the mean pairwise
+is the average probability assigned to class $b$ on inputs of true class $a$. It is directional
+and threshold free, and it needs no calibration set. It needs labeled evaluation data, as any
+confusion matrix does. It is a conditional mean, so it summarizes rather than determines. A model
+with $p_B(X) = 0.4$ on every input of class $A$ and a model with $p_B(X)$ equal to $0.6$ or $0.2$
+with equal probability have the same row $(0.6, 0.4)$ and error rates from $A$ to $B$ of zero and
+one half. The confusion matrix of the ranked prediction carries that difference and $C_{ab}$ does
+not, so the two are complements. If labels are unavailable, the mean pairwise
 product $\E[p_i(X) p_j(X)]$ is symmetric and label free. If sets are the object, because a
 downstream consumer receives sets and nothing else, then the co-occurrence rate $q_{ij}$ is the
 quantity the abstract describes, and the coverage confusion matrix of \citet{stutz2022}, which
@@ -393,11 +417,11 @@ compare the matrix with $C_{ab}$ and $\E[p_i p_j]$ as $\alpha$ varies, are avail
 
 The conformal correlation matrix is the phi coefficient of a thresholded softmax. By
 Proposition~\ref{prop:law} it sees only the law of the sets, and by Proposition~\ref{prop:any} the
-coverage guarantee leaves every entry free. The seven examples show that each reading the authors
+coverage guarantee leaves any single entry free. The seven examples show that each reading the authors
 attach to an entry, positive for similar, negative for dissimilar, zero for unrelated, fails on a
-three class problem with perfect coverage. Lemma~\ref{lem:floor} shows that the entries the authors
-read as dissimilarity are functions of the inclusion rates alone, and Lemma~\ref{lem:ident} shows that
-in the regime of an accurate classifier those rates can be read off the matrix exactly. None of this
+three class problem with perfect coverage. Lemma~\ref{lem:floor} shows that for pairs that never share a
+set the entry is a function of the inclusion rates alone, and Lemma~\ref{lem:ident} shows that when
+every set is a singleton those rates can be read off the matrix exactly. None of this
 is repaired by the certificate, which concerns the true label and says nothing about which other
 labels sit beside it.
 
