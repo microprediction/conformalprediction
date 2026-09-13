@@ -111,4 +111,10 @@ PyPI API token). You cannot reuse a version number.
   application lists stay in `data/`. Full close readings of a specific paper go in the Reviews
   section (`reviews.html`, one card per paper, plus an entry in the Reviews dropdown on every page): quote verbatim, verify every claim against the
   PDF, pair the page with a demo that rebuilds the construction on a case with known truth.
+  **Sweep the citing literature before writing a word.** Pull the citing papers (Semantic
+  Scholar citation contexts, the arXiv listings, the repo's issues) and find out which
+  objections are already published. Credit them by name with verified quotations, then say
+  plainly what is left. A review that rediscovers a known result and presents it as new is
+  worse than no review. This was learned the hard way on the CF-RNN page, where two of three
+  objections turned out to date from 2022.
 - Don't commit `benchmark/.venv/`, `dist/`, or build artifacts (they're gitignored).

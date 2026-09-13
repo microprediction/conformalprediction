@@ -96,9 +96,12 @@
   <p class="subtitle">Stankevi&#269;i&#363;t&#279;, Alaa and van der Schaar build multi-horizon forecast
   intervals by adding to a point forecast one calibration quantile per horizon. The half-width is the
   same for every input. They compare methods by joint coverage and mean width. Here the same point
-  forecast gets two interval constructions on a series whose noise scale moves with time. One width
-  for every state and a width that follows a running scale cover the same and are told apart by the
-  interval score, the proper score for an interval. The
+  forecast gets two interval constructions on a series whose noise scale moves with time. One width for every state and a width that follows a running scale cover the same and are told
+  apart by the interval score, the proper score for an interval. That these intervals are
+  inefficient is established: Lin, Trivedi and Sun (TMLR 2022) and Sun and Yu (ICLR 2024) both say
+  so, the latter cutting the width by a third with a copula in place of the Bonferroni correction.
+  This panel isolates a different cause, holding the point forecast and the calibration fixed and
+  varying only whether the width may depend on the state. The
   <a href="/conformal-forecasting-rnn.html">close reading</a> runs the comparison on their COVID-19
   data and on the FRED daily universe.</p>
 

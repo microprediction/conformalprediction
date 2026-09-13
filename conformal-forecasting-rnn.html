@@ -95,19 +95,17 @@
   <p class="subtitle">Stankevi&#269;i&#363;t&#279;, Alaa and van der Schaar train an LSTM to issue
   \(H\)-step point forecasts and add to each horizon one calibration quantile of the absolute
   residual, Bonferroni-corrected so that the \(H\) intervals cover jointly with probability at least
-  \(1-\alpha\). The half-width is one number per horizon for every input. They compare the result
-  with a quantile RNN and a dropout RNN by joint coverage and mean width only, and conclude that the
-  baselines &ldquo;fail to achieve target coverage.&rdquo; Three things are wrong with the comparison.
-  The baselines were calibrated for per-horizon coverage and are scored on a joint target. On the
-  COVID-19 data the Bonferroni quantile index exceeds the calibration size, so the guarantee is
-  vacuous and the code returns the largest calibration error. And neither coverage nor width is a
-  proper score. Under the interval score, on a rerun of the COVID-19 experiment on English areas, the quantile
-  RNN the paper reports as failing has the best interval on every split, and even the dropout RNN
-  covering half the time scores better than the uncorrected CF-RNN on two splits of three. On the
-  FRED daily universe, with the same point forecast and the same calibration window, the constant
-  width loses to the forecaster&rsquo;s own predictive quantiles on most series.
-  <a href="/demos/35-constant-width.html">Demonstration 35</a> shows the mechanism on a synthetic
-  series.</p>
+  \(1-\alpha\). The half-width is one number per horizon for every input. Two of the objections
+  below are already in the literature, and we set them out with their sources before adding anything.
+  What we have not found stated anywhere is the flaw in the comparison itself. The baselines are
+  calibrated for per-horizon coverage and then graded on a joint criterion that only CF-RNN was
+  widened to meet, and the paper&rsquo;s own uncorrected results show the gap is that widening rather
+  than the method. Neither coverage nor width is a proper score, and rerunning the paper&rsquo;s
+  COVID-19 experiment with one reverses its conclusion: the quantile RNN it reports as failing has
+  the best interval on every split, and the dropout RNN that covers half the time still beats the
+  uncorrected CF-RNN on two splits of three.
+  <a href="/demos/35-constant-width.html">Demonstration 35</a> shows the width mechanism on a
+  synthetic series.</p>
 
   <h2>What is proposed</h2>
 
@@ -135,6 +133,36 @@
   makes them less useful in high stakes real-world applications,&rdquo; and that &ldquo;CF-RNN adapts
   its prediction interval widths to reliably match the required target coverage.&rdquo;</p>
 
+  <h2>What has already been said</h2>
+
+  <p>Lin, Trivedi and Sun raise the vacuous Bonferroni quantile twice. The appendix of
+  <em>Conformal Prediction with Temporal Quantile Adjustments</em> (NeurIPS 2022) states that under
+  the correction &ldquo;the PI will always by [sic] infinitely wide if \(\alpha/T \le 1/(N+1)\),&rdquo;
+  and that &ldquo;the original paper implemented the split-conformal incorrectly by ignoring
+  \(v_{N+1}\), which is why this issue did not appear.&rdquo; Their companion paper, <em>Conformal
+  Prediction Intervals with Temporal Dependence</em> (TMLR 2022), names the dataset: &ldquo;The
+  authors performed an incorrect split-conformal experiment, which is why the COVID19 dataset still
+  has finite width in Stankevi&#269;i&#363;t&#279; et al. (2021).&rdquo; Everything in our section on the
+  COVID-19 guarantee below is a confirmation of theirs, with two details added: the cap that rescues
+  it is visible in the released code, and under the paper&rsquo;s own split sizes the vacuity hits the
+  COVID-19 experiment alone, since MIMIC-III at \(H = 2\) and EEG at \(H = 10\) have calibration
+  sets large enough for the corrected index to exist.</p>
+
+  <p>The efficiency objection is also established. The same TMLR paper writes that CF-RNN
+  &ldquo;leads to unbalanced coverage (i.e. some TS receives poor coverage longitudinally while
+  others high) and inefficient PIs.&rdquo; Sun and Yu make it quantitative in <em>Copula Conformal
+  Prediction for Multi-step Time Series Forecasting</em> (ICLR 2024): &ldquo;We show that their
+  method of applying Bonferroni correction produces inefficient confidence regions, especially for
+  multidimensional data or long prediction horizons.&rdquo; Replacing the correction with an
+  estimated copula cuts the width by 33% on the same COVID-19 data and gives &ldquo;a 40% sharper
+  confidence region&rdquo; on trajectory prediction, where they observe that &ldquo;the confidence
+  region produced CF-RNN is uninformatively large, as it covers all the lanes.&rdquo; Cleaveland and
+  co-authors (AAAI 2024) and at least two later papers repeat the conservativeness point in passing.
+  Demonstration 35 illustrates the same conclusion by a different route, holding the point forecast
+  and the calibration window fixed and varying only whether the width may depend on the state.</p>
+
+  <p>We have not found the next two objections anywhere in the citing literature.</p>
+
   <h2>The baselines are scored on a target they did not aim at</h2>
 
   <p>MQ-RNN is trained to produce, at every horizon, an interval whose per-horizon coverage is 90%.
@@ -147,7 +175,7 @@
   baselines were never asked for joint coverage and CF-RNN was, and that widening any per-horizon
   interval by the same Bonferroni factor would produce the same comparison in reverse.</p>
 
-  <h2>The COVID-19 interval has no finite guarantee</h2>
+  <h2>Confirming the COVID-19 guarantee is vacuous</h2>
 
   <p>The COVID-19 experiment uses \(m = 100\) calibration sequences and \(H = 50\) horizons at
   \(\alpha = 0.1\). The Bonferroni index is</p>
@@ -235,16 +263,20 @@
   paper&rsquo;s own data.</p>
 
   <div class="takeaway">
-    <p>Takeaway. The baselines are scored on joint coverage they were never calibrated for. The
-    COVID-19 interval is the calibration maximum and has no finite guarantee. Coverage and width do
-    not rank methods. Under the interval score the quantile RNN the paper dismisses is the best interval on its own
+    <p>Takeaway. That the COVID-19 guarantee is vacuous and the intervals inefficient was
+    established by others in 2022 and 2024. What appears to be new is that the comparison itself is
+    decided by a target mismatch, since the baselines are graded on joint coverage they were never
+    calibrated for, and that coverage and width do not rank methods. Under the interval score the quantile RNN the paper dismisses is the best interval on its own
     data on every split, and on FRED the constant width loses to the forecaster&rsquo;s own quantiles
     at the same coverage on most series.</p>
   </div>
 
   <p class="note">The paper is Stankevi&#269;i&#363;t&#279;, Alaa and van der Schaar, <em>Conformal
-  Time-Series Forecasting</em>, NeurIPS 2021, code at github.com/kamilest/conformal-rnn. The interval
-  score is Winkler (1972) and Gneiting and Raftery (2007), equation (43). The FRED study is
+  Time-Series Forecasting</em>, NeurIPS 2021, code at github.com/kamilest/conformal-rnn. The prior criticism is Lin, Trivedi and Sun, <em>Conformal Prediction with
+  Temporal Quantile Adjustments</em> (NeurIPS 2022, arXiv:2205.09940) and <em>Conformal Prediction
+  Intervals with Temporal Dependence</em> (TMLR 2022, arXiv:2205.12940), and Sun and Yu, <em>Copula
+  Conformal Prediction for Multi-step Time Series Forecasting</em> (ICLR 2024, arXiv:2212.03281).
+  The interval score is Winkler (1972) and Gneiting and Raftery (2007), equation (43). The FRED study is
   <code>benchmarks/cfrnn_study.py</code> in the skaters repository, and the COVID-19 rerun script is
   <code>data/reviews/run_covid.py</code> here. The UK Health Security Agency dashboard API supplies
   daily cases by specimen date for English lower-tier local authorities, where the paper&rsquo;s code reads a 24 May 2021 snapshot of cases by
