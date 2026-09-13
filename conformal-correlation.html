@@ -95,7 +95,7 @@
   co-membership, but conformal coverage supplies no inferential or semantic guarantee for its entries.
   Because the matrix discards the true labels and the prediction rankings, and can be driven by marginal
   inclusion rates and set size, it cannot in general identify directional class confusion or contain a
-  superset of the confusion matrix. Seven worked examples show this by hand, and
+  superset of the confusion matrix. Eight worked examples show this by hand, and
   <a href="/demos/32-conformal-correlation.html">demonstration 32</a> shows it at scale.</p>
 
   <h2>What is proposed</h2>
@@ -131,13 +131,47 @@
   law of the sets directly. Nothing in the definition requires the sets to have come from any
   particular procedure, and we do not claim that adaptive prediction sets calibrated on a sample
   produce exactly these laws. Coverage of 100% in an example means only that every set contains the
-  truth, so any coverage guarantee is met. The examples are ordered from the simplest to refute and
-  the most absurd result downward.</p>
+  truth, so the marginal coverage lower bound is met. Example 1 is the exception. It builds two
+  classifiers inside randomized APS exactly as the paper specifies, and we lead with it. The rest are
+  ordered from the simplest to refute and the most absurd result downward.</p>
 
-  <h3>Example 1. A perfect classifier and a perfectly wrong one get the same matrix</h3>
+  <h3>Example 1. Opposite confusions, the same matrix, within randomized APS</h3>
 
-  <p><strong>Setup.</strong> Three classes \(A\), \(B\), \(C\) with equal numbers of images, and sets
-  that always contain the true class and one neighbor.</p>
+  <p><strong>Setup.</strong> Three classes with equal frequency. Two classifiers assign the
+  probabilities \((0.6, 0.3, 0.1)\) to the classes in the orders shown, so the true class is always
+  ranked second.</p>
+
+  <div class="tablewrap">
+  <table class="phi">
+    <tr><th>True class</th><th>Model 1 order</th><th>Model 2 order</th></tr>
+    <tr><td>\(A\)</td><td>\(C > A > B\)</td><td>\(B > A > C\)</td></tr>
+    <tr><td>\(B\)</td><td>\(A > B > C\)</td><td>\(C > B > A\)</td></tr>
+    <tr><td>\(C\)</td><td>\(B > C > A\)</td><td>\(A > C > B\)</td></tr>
+  </table>
+  </div>
+
+  <p><strong>Calculation.</strong> The randomized APS score of a label is the probability mass at
+  and above it in the ranking, less a uniform share \(u\) of its own mass. The true label is always
+  second, so its score is \(0.9 - 0.3u\) under both models, uniform on \((0.6, 0.9)\). With the same
+  calibration inputs and uniforms both models get the same threshold \(\tau\) in \((0.6, 0.9)\).
+  Write \(r = (\tau - 0.6)/0.3\). At a test input the top class has score \(0.6 - 0.6U \le \tau\)
+  and is always included. The second has score \(0.9 - 0.3U\), at most \(\tau\) exactly when
+  \(U \ge (0.9 - \tau)/0.3\), an event of probability \(r\). The third has score
+  \(1 - 0.1U > 0.9\) and is never included. Under either model each singleton \(\{A\}\), \(\{B\}\),
+  \(\{C\}\) occurs with probability \((1-r)/3\) and each pair \(\{A,B\}\), \(\{B,C\}\), \(\{C,A\}\)
+  with probability \(r/3\). Same law of sets, so same matrix, and the same coverage \(r\).</p>
+
+  <p><strong>What it shows.</strong> Model 1 labels every \(A\) as \(C\), every \(B\) as \(A\) and every
+  \(C\) as \(B\). Model 2 runs the cycle the other way. Their confusion matrices are transposes of
+  each other, both with accuracy zero. The authors write that the matrix &ldquo;contains a superset of
+  the information conveyed by the confusion matrix.&rdquo; It does not determine the confusion matrix
+  even when the sets are produced by randomized APS exactly as the paper specifies.</p>
+
+  <h3>Example 2. A perfect classifier and a perfectly wrong one get the same matrix</h3>
+
+  <p><strong>Setup.</strong> The same point without the procedure, and with the accuracy gap as wide
+  as it can be. Three classes \(A\), \(B\), \(C\) with equal numbers of images, and sets that always
+  contain the true class and one neighbor.</p>
 
   <div class="tablewrap">
   <table class="phi">
@@ -162,7 +196,7 @@
   for one model and none there for the other, and the CCM is the same. The matrix never sees the
   ranking, so it cannot contain the confusion matrix.</p>
 
-  <h3>Example 2. Zero correlation with 99% directional confusion</h3>
+  <h3>Example 3. Zero correlation with 99% directional confusion</h3>
 
   <p><strong>Setup.</strong> Three classes and a small number \(\varepsilon\), say \(0.01\). Images
   arrive in four kinds with the probabilities shown.</p>
@@ -185,14 +219,17 @@
 
   $$\rho_{AB} = 0.$$
 
-  <p>Among images whose true class is \(A\), the model ranks \(B\) first with probability
-  \(1 - \varepsilon\), which is 99% at \(\varepsilon = 0.01\). Coverage is 100%.</p>
+  <p>For indicators that are not constant, zero correlation is independence, so \(z_A\) and
+  \(z_B\) are independent here. Yet among images whose true class is \(A\), the model ranks \(B\)
+  first with probability \(1 - \varepsilon\), which is 99% at \(\varepsilon = 0.01\). Coverage is
+  100%.</p>
 
-  <p><strong>What it shows.</strong> Remark 3 of the paper says an entry near zero means the classes are
-  &ldquo;unrelated or independent with respect to the classifier representation.&rdquo; Here the entry
-  is exactly zero while 99% of the images of one class are labeled as the other.</p>
+  <p><strong>What it shows.</strong> Remark 3 of the paper says that unrelated classes give an entry
+  near zero. It is the converse that a reader of a heat map uses, that an entry near zero means the
+  classes are unrelated, and the converse fails. Independence of set membership does not imply
+  absence of classification confusion.</p>
 
-  <h3>Example 3. Perfect correlation with one in a million co-occurrence</h3>
+  <h3>Example 4. Perfect correlation with one in a million co-occurrence</h3>
 
   <p><strong>Setup.</strong> Every set contains the true class \(T\), ranked first. Two other labels
   \(A\) and \(B\) are added to the set together with probability \(\varepsilon\), and otherwise neither
@@ -210,10 +247,10 @@
   pairs co-occurring within conformal prediction sets.&rdquo; The likelihood is
   \(\mathbb{E}[z_A z_B] = \varepsilon\). The entry is 1 regardless.</p>
 
-  <h3>Example 4. Every pair becomes positively correlated from difficulty alone</h3>
+  <h3>Example 5. Every pair becomes positively correlated from difficulty alone</h3>
 
-  <p><strong>Setup.</strong> Three balanced classes. Half the images are hard and get the set of all
-  three classes. The other half are easy and get the singleton set of their true class. The true class
+  <p><strong>Setup.</strong> Three balanced classes, with difficulty independent of the true class.
+  Half the images are hard and get the set of all three classes. The other half are easy and get the singleton set of their true class. The true class
   is ranked first in both cases, so accuracy and coverage are 100%.</p>
 
   <p><strong>Calculation.</strong> Each label is in every hard set and in a third of the easy sets, so</p>
@@ -229,7 +266,7 @@
   classifier is perfect. The correlation comes from one shared cause, whether the image was hard, and
   says nothing about any pair.</p>
 
-  <h3>Example 5. Pooling two clients creates a strong correlation from nothing</h3>
+  <h3>Example 6. Pooling two clients creates a strong correlation from nothing</h3>
 
   <p><strong>Setup.</strong> Every set contains the true class \(T\), ranked first. On client 1 the
   labels \(A\) and \(B\) are each added to the set independently with probability 0.9. On client 2 they
@@ -256,7 +293,7 @@
   positive or negative entry can be produced by the mixture of clients alone, with zero correlation on
   every client and no confusion anywhere.</p>
 
-  <h3>Example 6. Two classes the model never confuses get different entries</h3>
+  <h3>Example 7. Two classes the model never confuses get different entries</h3>
 
   <p><strong>Setup.</strong> Three classes, cat, dog and plane, with equal numbers of test images. The
   classifier returns the same set for every image of a given class.</p>
@@ -287,7 +324,7 @@
   two classes that never share a set, \(\rho_{ij} = -\sqrt{p_i p_j / ((1-p_i)(1-p_j))}\), a function of
   the inclusion rates and nothing else.</p>
 
-  <h3>Example 7. Moving one label occurrence between rows moves an entry from 1 to almost 0</h3>
+  <h3>Example 8. Moving one label occurrence between rows moves an entry from 1 to almost 0</h3>
 
   <p><strong>Setup.</strong> There are \(n\) test images, and two rare labels \(A\) and \(B\) each appear
   in exactly one set.</p>
@@ -391,7 +428,7 @@
   inclusion rates are not on a common scale. The abstract promised a likelihood of co-occurrence, which
   is \(\mathbb{E}[z_i z_j]\). The entry \(\rho_{ij}\) is a standardized excess co-occurrence whose
   attainable range depends on \(p_i\) and \(p_j\), so entries cannot be compared as an absolute scale of
-  confusability. Example 6 above is the smallest case.
+  confusability. Example 7 above is the smallest case.
   <a href="/demos/32-conformal-correlation.html#a">Panel A</a> of the demonstration draws the observed
   floor and the formula on top of each other.</p>
 
@@ -402,17 +439,19 @@
   authors offer no adjustment for it. The statistic is also undefined whenever a class is always or
   never included, since its variance is zero, and no convention is given.</p>
 
-  <p>As \(\alpha\) grows the sets shrink, the inclusion rates fall, and the zero co-occurrence floor
-  moves toward zero whether or not the classifier changed. The authors present the dependence on
+  <p>With the model and calibration data fixed the sets are nested in \(\alpha\), so as \(\alpha\)
+  grows no inclusion rate increases and the zero co-occurrence floor moves toward zero or stays put,
+  whether or not the classifier changed. The authors present the dependence on
   \(\alpha\) as a feature. <a href="/demos/32-conformal-correlation.html#c">Panel C</a> shows the
   cost. As the sets approach singletons the matrix loses the ability to rank pairs by their injected
   confusion strength, while the soft statistic keeps it.</p>
 
   <h2>Symmetric object, directional claim</h2>
 
-  <p>The matrix is symmetric, and it consults neither the true label nor the ranking. Example 1 gives a
-  perfect and a perfectly wrong classifier with the same matrix. Example 2 gives a zero entry with 99%
-  of one class labeled as the other. The authors nevertheless read from a positive entry that the
+  <p>The matrix is symmetric, and it consults neither the true label nor the ranking. Example 1 gives two
+  classifiers inside randomized APS with opposite confusions and the same matrix, and Example 2 does
+  the same for a perfect and a perfectly wrong classifier. Example 3 gives a zero entry with 99% of one
+  class labeled as the other. The authors nevertheless read from a positive entry that the
   classifier &ldquo;is much more likely to misclassify images of class 91 as class 30 than as class
   95.&rdquo; <a href="/demos/32-conformal-correlation.html#b">Panel B</a> of the demonstration slides
   the direction of a confusion from entirely 0 to 1 to entirely 1 to 0. The soft confusion entries
@@ -436,8 +475,8 @@
 
   $$o_i = -\frac{\rho_{ij}\,\rho_{ik}}{\rho_{jk}}, \qquad p_i = \frac{o_i}{1 + o_i}.$$
 
-  <p>For an accurate classifier the inclusion rates are the predicted class frequencies, which
-  approximate the label histogram. There is no threat model, no privacy mechanism and no leakage bound.
+  <p>When every set is the singleton of the ranked prediction, the inclusion rates are the predicted
+  class frequencies, which for an accurate classifier approximate the label histogram. There is no threat model, no privacy mechanism and no leakage bound.
   The defensible claim is that the CCM does not transmit raw counts.</p>
 
   <h2>The experiment</h2>
