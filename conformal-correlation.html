@@ -169,9 +169,13 @@
   values and list the sweep as a benefit, because the operator &ldquo;can specify how near the near
   misses have to be.&rdquo; The sweep recovers, in four coarse steps, what the threshold discarded.</p>
 
-  <p>The natural comparators are older than conformal prediction. The soft confusion matrix is the mean
-  probability vector assigned to images of each true class. It sees near misses at every resolution and
-  needs no calibration set. The mean pairwise product \(\mathbb{E}[p_i p_j]\) is the threshold free
+  <p>The natural comparator is older than conformal prediction. The soft confusion matrix is</p>
+
+  $$C_{ab} = \mathbb{E}\big[\,p_b \,\big|\, y = a\,\big],$$
+
+  <p>the average probability the classifier assigns to class \(b\) over images whose true class is
+  \(a\). It is directional, it sees near misses at every resolution, and it needs no calibration set
+  and no threshold. The mean pairwise product \(\mathbb{E}[p_i p_j]\) is the threshold free
   version of \(\mathbb{E}[z_i z_j]\). The authors cite the coverage confusion matrix of Stutz et al.
   (ICLR 2022) in their related work. None of the three appears in an experiment. The only comparison
   offered is with the hard confusion matrix, which discards the probabilities entirely, so the contrast
