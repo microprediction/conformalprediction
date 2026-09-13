@@ -133,8 +133,8 @@ of predicted probabilities''. At a fixed $\alpha$, any change to the probability
 the sets unchanged is invisible to the matrix. The sets are a function of the probabilities and one
 threshold, and the matrix sees the sets.
 
-The only thing that ties $C(X)$ to $Y$ is coverage. Under exchangeability of calibration and test
-data, split conformal prediction guarantees
+The marginal coverage guarantee ties $C(X)$ to $Y$ through one scalar constraint, and a construction may
+impose more. Under exchangeability of calibration and test data, split conformal prediction guarantees
 \begin{equation}\label{eq:coverage}
 \Prob(z_Y = 1) = \sum_{y} \Prob(Y = y,\; z_y = 1) \;\ge\; 1 - \alpha .
 \end{equation}
@@ -175,16 +175,16 @@ The same reasoning gives a no-go result that covers the conformal correlation ma
 statistic computed from the prediction sets.
 
 \begin{theorem}[No statistic of the sets determines the confusion matrix]\label{thm:nogo}
-Suppose some set of size at least two occurs with positive probability. Then for every functional
-$g$ of the law of $C(X)$ there are two joint laws of $(Y, \hat Y, C(X))$ with the same law of sets,
-the same class proportions and the same coverage, hence the same value of $g$, whose confusion
-matrices differ.
+Consider joint laws of $(Y, \hat Y, C(X))$ in which $\hat Y \in C(X)$ whenever the set is nonempty,
+as under APS. Suppose some set of size at least two occurs with positive probability. Then there are
+two such joint laws with the same joint law of $(Y, C(X))$, hence the same law of sets, the same class
+proportions, the same coverage and the same value of every functional $g$ of the law of sets, whose
+confusion matrices differ.
 \end{theorem}
 
 \begin{proof}
 Let $S$ be a set with $|S| \ge 2$ and $\Prob(C(X) = S) = \delta > 0$, and let $b \ne b'$ be two of
-its elements. Take any joint law of $(Y, \hat Y, C(X))$ with the given law of sets in which $\hat Y
-\in C(X)$ whenever the set is nonempty, as under APS. Define a second joint law that agrees with the
+its elements. Take any admissible joint law of $(Y, \hat Y, C(X))$ with the given law of sets. Define a second joint law that agrees with the
 first except on the event $\set{C(X) = S}$, where it sets $\hat Y = b$, and a third that agrees with
 the first except on that event, where it sets $\hat Y = b'$. The three laws have the same joint law
 of $(Y, C(X))$, hence the same law of sets, the same class proportions, the same coverage
@@ -194,10 +194,17 @@ $\Prob(Y = a, \hat Y = b)$ larger by $\delta_a$ than the third, and entry $\Prob
 smaller by $\delta_a$. So the second and third confusion matrices differ.
 \end{proof}
 
-The hypothesis cannot simply be dropped. If every set is a singleton and coverage is one, then
-$\hat Y = Y$ and the confusion matrix is the diagonal matrix of the class proportions. With two
-classes, singleton sets and coverage $\kappa$, the row sums, the column sums and the trace determine
-all four entries. Outside such cases the theorem applies, and Example~\ref{ex:aps} exhibits such a pair of laws
+The conclusion is stronger than the title. Even the entire joint law of $(Y, C(X))$ does not
+determine the confusion matrix, because both constructed laws preserve it. What is lost is the
+information about the rankings, not only the information about the true label.
+
+Two limits on the theorem. First, its hypothesis is sufficient and not necessary. If every set is a
+singleton and coverage is one, then $\hat Y = Y$ and the confusion matrix is the diagonal matrix of
+the class proportions. With two classes, singleton sets and coverage $\kappa$, the row sums, the
+column sums and the trace determine all four entries. The theorem says nothing about cases in which
+no set of size two occurs. Second, the construction changes $\hat Y$ while keeping $C(X)$, and that
+need not be realizable by an APS classifier with its calibration, so the theorem does not establish
+APS realizability for every prescribed set law. Example~\ref{ex:aps} supplies a pair that is
 realized by two randomized APS classifiers.
 
 The examples that follow are more concrete, and each contradicts a specific sentence in the paper.
