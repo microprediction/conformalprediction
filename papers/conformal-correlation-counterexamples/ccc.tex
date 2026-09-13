@@ -113,11 +113,11 @@ false, and the examples below show it.
 
 \section{The matrix depends only on the law of the sets}\label{sec:organizing}
 
-\begin{proposition}\label{prop:law}
+\begin{remark}\label{prop:law}
 The conformal correlation matrix is a functional of the law of the prediction set $C(X)$ alone.
 Two situations with the same law of $C(X)$ have the same matrix, whatever the joint law of $(C(X),
 Y, \hat Y)$.
-\end{proposition}
+\end{remark}
 
 \begin{proof}
 Every quantity in \eqref{eq:ccm} is an expectation of a function of the vector $(z_1, \dots, z_H)$,
@@ -126,9 +126,9 @@ and that vector is a function of $C(X)$.
 
 Confusion is a different object. The confusion matrix has entries $\Prob(Y = a, \hat Y = b)$, which
 depend on the joint law of the true label and the ranked prediction. Hold the law of $C(X)$ fixed
-and change $Y$ or $\hat Y$, and by Proposition~\ref{prop:law} the matrix cannot notice.
+and change $Y$ or $\hat Y$, and by Remark~\ref{prop:law} the matrix cannot notice.
 
-The proposition also disposes of the claim that the entries ``incorporate the entire distribution
+The remark also disposes of the claim that the entries ``incorporate the entire distribution
 of predicted probabilities''. At a fixed $\alpha$, any change to the probability vectors that leaves
 the sets unchanged is invisible to the matrix. The sets are a function of the probabilities and one
 threshold, and the matrix sees the sets.
@@ -145,13 +145,13 @@ the true class with a wrong class, two wrong classes, and different true classes
 inputs, and coverage never justifies reading it as confusion. There is one special case worth
 stating. With only two classes and coverage one the set is never empty, so
 $0 = \Prob(C = \varnothing) = 1 - p_A - p_B + q_{AB}$ and $q_{AB} = p_A + p_B - 1$ is forced. With
-three or more classes nothing of the kind holds, as the next proposition shows for a single entry.
+three or more classes nothing of the kind holds, as the next lemma shows for a single entry.
 
-\begin{proposition}\label{prop:any}
+\begin{lemma}\label{prop:any}
 Among laws of prediction sets that satisfy the marginal coverage lower bound \eqref{eq:coverage},
 for every $\rho \in [-1, 1]$ there is one with coverage one and accuracy one whose matrix has an
 off-diagonal entry equal to $\rho$.
-\end{proposition}
+\end{lemma}
 
 \begin{proof}
 Let the true label always be $T$, always in the set and always ranked first, so coverage and
@@ -208,7 +208,7 @@ Each example needs only the inclusion rates $p_i$ and the co-occurrence rates $q
 into \eqref{eq:ccm}.
 
 Examples~\ref{ex:perfect} through \ref{ex:move} prescribe a law of prediction sets directly. By
-Proposition~\ref{prop:law} the law of the sets is all the matrix depends on, so a law is all an
+Remark~\ref{prop:law} the law of the sets is all the matrix depends on, so a law is all an
 example needs to specify.
 
 In those examples coverage is one, meaning that every set contains the true class. Any marginal
@@ -615,7 +615,7 @@ prediction sets and with $C_{ab}$ and $\E[f_i f_j]$ alongside as $\alpha$ varies
 \section{Conclusion}\label{sec:conclusion}
 
 The conformal correlation matrix is the phi coefficient of APS set membership indicators. By
-Proposition~\ref{prop:law} it sees only the law of the sets, by Proposition~\ref{prop:any} the
+Remark~\ref{prop:law} it sees only the law of the sets, by Lemma~\ref{prop:any} the
 marginal coverage lower bound leaves any single entry free among the laws that satisfy it, and by
 Theorem~\ref{thm:nogo} no statistic of the sets, this one or any other, determines the confusion matrix once a set of size at least two occurs.
 
