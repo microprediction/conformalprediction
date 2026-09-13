@@ -90,6 +90,16 @@
   synthetic classifier with known confusability show what the statistic responds to. The close reading is on the
   <a href="/conformal-correlation.html">critique page</a>.</p>
 
+  <p>The question the authors want the matrix to answer is which classes the classifier confuses. The
+  direct answer is the soft confusion matrix,</p>
+
+  $$C_{ab} = \mathbb{E}\big[\,p_b \,\big|\, y = a\,\big],$$
+
+  <p>the average probability the classifier assigns to class \(b\) over images whose true class is
+  \(a\). It is directional, it uses the probabilities at full resolution, and it needs no calibration
+  set and no threshold. The authors never compute it. Every panel below puts the conformal correlation
+  matrix beside the soft confusion matrix on the same data and asks which one answers the question.</p>
+
   <p>We build a classifier whose mistakes we control. There are \(H = 10\) classes. For an image with
   true class \(y\), the classifier&rsquo;s logits and reported probabilities are</p>
 
@@ -124,11 +134,10 @@
   <p>with the expectations taken over the 3,000 test images, exactly as the authors define it. Since the
   \(z_h\) are zeros and ones, each entry is a phi coefficient.</p>
 
-  <p>Beside the matrix, each panel computes two statistics from the same probability vectors with no
-  threshold: the soft confusion matrix \(C_{ab} = \mathbb{E}[\,p_b \mid y = a\,]\), the mean probability
-  put on class \(b\) by images of class \(a\), and the mean pairwise product \(S_{ij} = \mathbb{E}[p_i
-  p_j]\). The authors compare against neither. Each panel then changes one thing about \(G\) or the
-  inputs and shows how the matrix responds.</p>
+  <p>Beside it, each panel computes the soft confusion matrix \(C\) defined above from the same
+  probability vectors. Panel C also uses the symmetric version, the mean pairwise product
+  \(S_{ij} = \mathbb{E}[p_i p_j]\), since the truth there is symmetric. Each panel then changes one thing
+  about \(G\) or the inputs and shows how the two matrices respond.</p>
 
   <h2 id="a">A. The entries are pinned by inclusion rates</h2>
 
