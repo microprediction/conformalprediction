@@ -86,6 +86,11 @@ def main():
             print(f"{name} done {time.time()-t0:.0f}s", flush=True)
             json.dump(out, open(PART, "w"), indent=1)
     # ---- laplace, online on the raw counts of each test sequence ----
+    # NOT REPORTED on the review page, deliberately. The three RNNs above are trained on
+    # 162 other areas whose series are calendar-aligned with the test areas, so they have
+    # seen the January 2021 wave that the test areas are about to go through. laplace sees
+    # one area's own 100 days and nothing else. Comparing them measures the training set,
+    # not the interval construction. Kept here only as a scale reference.
     import pickle
     dpc.get_covid_splits(length=T, horizon=HZ, conformal=True, n_train=NTR, n_calibration=NCAL, n_test=NTE, cached=False, seed=seed)
     Xte_raw, Yte = pickle.load(open("processed_data/covid_test_vis.pkl", "rb"))

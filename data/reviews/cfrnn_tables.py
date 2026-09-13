@@ -22,9 +22,9 @@ def fred_table():
             extra = f'<td rowspan="2">{wins:.0f}%</td><td rowspan="2">{med(ratio):.3f}</td>' if mth == "CF" else ""
             out.append(f'<tr><td>{name if mth=="CF" else ""}</td><td>{label}</td><td>{med([r[f"{mth}_{lv}_is"] for r in rows]):.3f}</td><td>{med([r[f"{mth}_{lv}_width"] for r in rows]):.3f}</td><td>{100*m(f"{mth}_{lv}_cov"):.1f}%</td><td>{joint}</td>{extra}</tr>')
     out.append("</table>\n</div>")
-    lp = m("lap_logpdf"); cr = m("lap_crps")
+    lp = med([r["lap_logpdf"] for r in rows]); cr = med([r["lap_crps"] for r in rows])
     r1 = [r["CF_bonf_is_h1"] / r["LAP_bonf_is_h1"] for r in rows]; r10 = [r[f"CF_bonf_is_h10"] / r[f"LAP_bonf_is_h10"] for r in rows]
-    out.append(f'<p>Per horizon at the Bonferroni level, the median score ratio is {med(r1):.3f} at \\(h = 1\\) and {med(r10):.3f} at \\(h = 10\\). The constant width over-covers at the joint level, {100*m("CF_joint_cov"):.1f}% against a 90% target, because ten Bonferroni intervals that never share a state cannot use the correlation between horizons. Laplace also reports a held-out log score, {lp:.2f} nats per observation on the change scale, and a CRPS of {cr:.3f}. The constant-width interval has no density to score.</p>\n<!-- /FRED -->')
+    out.append(f'<p>Per horizon at the Bonferroni level, the median score ratio is {med(r1):.3f} at \\(h = 1\\) and {med(r10):.3f} at \\(h = 10\\). The constant width over-covers at the joint level, {100*m("CF_joint_cov"):.1f}% against a 90% target, because ten Bonferroni intervals that never share a state cannot use the correlation between horizons. The same run also scores laplace as a density, at a median held-out log score of {lp:.2f} nats per observation. The constant-width interval has no density to score at all.</p>\n<!-- /FRED -->')
     return "\n".join(out)
 
 def covid_table():
@@ -32,30 +32,32 @@ def covid_table():
     R = [json.load(open(f)) for f in files]
     if not R:
         return "<!-- COVID -->\n<p>(pending)</p>\n<!-- /COVID -->"
-    n = len(R); k = R[0]["cfrnn_bonf_k"]; ncal = R[0]["cfrnn_n_cal"]; allmax = all(r["cfrnn_bonf_eps_equals_max_residual"] for r in R)
-    def agg(key, f): 
+    n = len(R); k = R[0]["cfrnn_bonf_k"]; ncal = R[0]["cfrnn_n_cal"]
+    allmax = all(r["cfrnn_bonf_eps_equals_max_residual"] for r in R)
+    def agg(key, f):
         v = [r[key][f] for r in R]; return sum(v) / n, (st.pstdev(v) if n > 1 else 0.0)
-    out = [f'<!-- COVID -->\n<p>We reran the COVID-19 experiment with the authors&rsquo; code and hyperparameters, an LSTM with embedding size 20 trained for 1,000 epochs, on daily cases for the {R[0]["n_areas"]} English lower-tier local authorities from the UK Health Security Agency API over the same 150-day window, 100 observed days and 50 to forecast, split {R[0]["split"][0]} training, {R[0]["split"][1]} calibration and {R[0]["split"][2]} test areas in the paper&rsquo;s proportions, over {n} random split{"s" if n>1 else ""}. The Bonferroni index is \\(\\lceil {ncal+1} \\times 0.998 \\rceil = {k} > {ncal}\\), and on every split every Bonferroni half-width equalled the largest calibration residual{"" if allmax else " (not on every split)"}. Laplace is run online on each test area&rsquo;s own 100 observed days with no training data, and its 50 predictive distributions are read off at the end. Every interval is scored at the level it claims. {"Means over splits, with standard deviations in parentheses." if n > 1 else ""}</p>',
+    g = lambda k_, f: agg(k_, f)[0]
+    per = lambda k_: [r[k_]["IS"] for r in R]
+    q, cm, dp = per("QRNN"), per("CFRNN_marg"), per("DPRNN")
+    q_best = sum(x < min(y, z) for x, y, z in zip(q, cm, dp))
+    dp_beats = sum(x < y for x, y in zip(dp, cm))
+    out = [f'<!-- COVID -->\n<p>We reran the COVID-19 experiment with the authors&rsquo; code and hyperparameters, an LSTM with embedding size 20 trained for 1,000 epochs, on daily cases for the {R[0]["n_areas"]} English lower-tier local authorities from the UK Health Security Agency API over the same 150-day window, 100 observed days and 50 to forecast, split {R[0]["split"][0]} training, {R[0]["split"][1]} calibration and {R[0]["split"][2]} test areas in the paper&rsquo;s proportions, over {n} random split{"s" if n>1 else ""}. All three methods share the architecture, the hyperparameters and the training areas, so the only difference between them is how the interval is built. The Bonferroni index is \\(\\lceil {ncal+1} \\times 0.998 \\rceil = {k} > {ncal}\\), and on every split every Bonferroni half-width equalled the largest calibration residual{"" if allmax else " (not on every split)"}. Every interval is scored at the level it claims. {"Means over splits, with standard deviations in parentheses." if n > 1 else ""}</p>',
            '<div class="tablewrap">\n<table class="phi">\n<tr><th>Interval, nominal level</th><th>Interval score</th><th>Width, mean</th><th>Coverage per horizon</th><th>Joint coverage over 50 horizons</th></tr>']
-    rowsdef = [("CFRNN_bonf", "CF-RNN, Bonferroni, joint 90% (per horizon 99.8%)"), ("laplace_bonf", "laplace quantiles at the same 99.8% per horizon"),
-               ("CFRNN_marg", "CF-RNN uncorrected, per horizon 90%"), ("QRNN", "MQ-RNN, per horizon 90%"), ("DPRNN", "DP-RNN, per horizon 90%"), ("laplace_marg", "laplace quantiles, per horizon 90%")]
+    rowsdef = [("CFRNN_bonf", "CF-RNN, Bonferroni, joint 90% (per horizon 99.8%)"),
+               ("CFRNN_marg", "CF-RNN uncorrected, per horizon 90%"),
+               ("QRNN", "MQ-RNN, per horizon 90%"),
+               ("DPRNN", "DP-RNN, per horizon 90%")]
+    sd = lambda v: f' ({v:,.0f})' if n > 1 else ''
+    sdp = lambda v: f' ({100*v:.1f})' if n > 1 else ''
     for key, label in rowsdef:
         IS, ISs = agg(key, "IS"); W, _ = agg(key, "width"); C, _ = agg(key, "cov"); J, Js = agg(key, "joint")
-        sd = lambda v: f' ({v:,.0f})' if n > 1 else ''
-        sdp = lambda v: f' ({100*v:.1f})' if n > 1 else ''
         out.append(f'<tr><td>{label}</td><td>{IS:,.0f}{sd(ISs)}</td><td>{W:,.0f}</td><td>{100*C:.1f}%</td><td>{100*J:.1f}%{sdp(Js)}</td></tr>')
     out.append("</table>\n</div>")
-    g = lambda k, f: agg(k, f)[0]
-    per = lambda k: [r[k]["IS"] for r in R]
-    lb, cb = per("laplace_bonf"), per("CFRNN_bonf")
-    lap_wins = sum(x < y for x, y in zip(lb, cb))
-    q, cm, lm = per("QRNN"), per("CFRNN_marg"), per("laplace_marg")
-    q_best = sum(x < min(y, z) for x, y, z in zip(q, cm, lm))
-    splits = ", ".join(f"{x:,.0f} against {y:,.0f}" for x, y in zip(lb, cb))
-    out.append(f'<p>At the joint level the CF-RNN interval is the calibration maximum at every horizon. It reaches {100*g("CFRNN_bonf","joint"):.0f}% joint coverage on average, above the 90% target, while laplace&rsquo;s 99.8% quantiles from each area&rsquo;s own hundred days reach {100*g("laplace_bonf","joint"):.0f}%. By the paper&rsquo;s criterion CF-RNN wins. By the interval score at the level both intervals claim, laplace scores lower on {lap_wins} of the {n} split{"s" if n>1 else ""} ({splits}). The score at \\(a = 0.002\\) charges a miss at \\(2/a = 1000\\) times its size, so it is decided by the few areas where the January wave outruns both intervals, and which interval wins depends on which areas land in the test split. The constant width is wide where the area is quiet and still misses by hundreds of cases where the wave is steep, and laplace&rsquo;s intervals are wider on average.</p>')
-    out.append(f'<p>At the per-horizon level the picture is stable across splits. MQ-RNN, which the paper reports as failing, has the best interval on the table on {q_best} of {n} split{"s" if n>1 else ""}: {g("QRNN","IS"):,.0f} on average against {g("CFRNN_marg","IS"):,.0f} for the uncorrected CF-RNN and {g("laplace_marg","IS"):,.0f} for laplace. Its coverage is {100*g("QRNN","cov"):.0f}% at a 90% target and the score still prefers it, because its misses are small. The dropout RNN at {100*g("DPRNN","cov"):.0f}% coverage scores {g("DPRNN","IS"):,.0f}. The area series are synchronous, every test area&rsquo;s forecast window is the same seven weeks of the January 2021 wave, and a model trained on other areas over the same calendar has seen the shape of the wave. That is real information, it is what the paper&rsquo;s Figure 1 argues for, and the interval score credits the quantile RNN for using it. Laplace, which sees one area and no calendar, is the worst interval at this level on every split, and we do not claim otherwise. The uncorrected CF-RNN interval adds a constant to the same LSTM point forecast that MQ-RNN refines with two trained quantiles, and the constant is what costs it.</p>')
+    out.append(f'<p>The first row is the paper&rsquo;s method and it is the calibration maximum at every horizon. It reaches {100*g("CFRNN_bonf","joint"):.0f}% joint coverage against a 90% target, so by the paper&rsquo;s criterion it wins, and it costs an interval score of {g("CFRNN_bonf","IS"):,.0f} to get there.</p>')
+    out.append(f'<p>The lower three rows all target 90% per horizon and can be compared with each other directly. MQ-RNN, which the paper reports as failing, has the best interval on {q_best} of the {n} split{"s" if n>1 else ""}: {g("QRNN","IS"):,.0f} on average against {g("CFRNN_marg","IS"):,.0f} for the uncorrected CF-RNN. Its coverage is {100*g("QRNN","cov"):.0f}% at a 90% target and the score still prefers it, because its misses are small. DP-RNN covers {100*g("DPRNN","cov"):.0f}% of the time, which the paper reads as total failure, and it still scores better than the uncorrected CF-RNN on {dp_beats} of {n} splits. The uncorrected CF-RNN interval adds a constant to the same LSTM point forecast that MQ-RNN refines with two trained quantiles, and the constant is what costs it.</p>')
     out.append("<!-- /COVID -->")
     return "\n".join(out)
+
 
 s = open(PAGE).read()
 for tag, fn in (("FRED", fred_table), ("COVID", covid_table)):
