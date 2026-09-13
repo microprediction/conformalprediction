@@ -237,18 +237,18 @@
   <h2>The same construction on the FRED daily universe</h2>
 
   <!-- FRED -->
-<p>The skaters benchmark harness runs laplace, a zero-dependency online distributional forecaster, on the FRED daily universe of change series. For this study every series gets laplace at horizon \(H = 10\), and at each origin two sets of intervals are built from the same point forecasts, laplace&rsquo;s predictive means. The CF intervals add the CF-RNN quantile of the last 500 resolved absolute residuals at each horizon. The laplace intervals are the quantiles of laplace&rsquo;s own predictive distribution at the same levels. Both are scored at \(a = \alpha/H = 0.01\), the Bonferroni level with joint target 90%, and at \(a = \alpha = 0.1\) per horizon. 422 series, a median of 436 scored origins per series, scored on the most recent 2,000 changes after a 300-step warm-up. Scores are on each series&rsquo; own scale, so the table reports medians over series and the share of series on which each interval scores better.</p>
+<p>The skaters benchmark harness runs laplace, a zero-dependency online distributional forecaster, on the FRED daily universe of change series. For this study every series gets laplace at horizon \(H = 10\), and at each origin two sets of intervals are built from the same point forecasts, laplace&rsquo;s predictive means. The CF intervals add the CF-RNN quantile of the last 500 resolved absolute residuals at each horizon. The laplace intervals are the quantiles of laplace&rsquo;s own predictive distribution at the same levels. Both are scored at \(a = \alpha/H = 0.01\), the Bonferroni level with joint target 90%, and at \(a = \alpha = 0.1\) per horizon. 569 series, a median of 256 scored origins per series, scored on the most recent 2,000 changes after a 300-step warm-up. The universe is every cached daily series that clears the harness&rsquo;s two standing screens, at least 500 changes and no single move dwarfing the series&rsquo; own scale, which is 569 of the 701 cached. Scores are on each series&rsquo; own scale, so the table reports medians over series and the share of series on which each interval scores better.</p>
 
 <div class="tablewrap">
 <table class="phi">
 <tr><th>Level</th><th>Interval</th><th>Interval score, median over series</th><th>Width, median over series</th><th>Coverage per horizon</th><th>Joint coverage</th><th>Series where laplace scores better</th><th>Median score ratio CF / laplace</th></tr>
-<tr><td>\(a = 0.01\), joint target 90%</td><td>constant width (CF-RNN)</td><td>0.141</td><td>0.097</td><td>98.8%</td><td>92.9%</td><td rowspan="2">72%</td><td rowspan="2">1.061</td></tr>
-<tr><td></td><td>laplace&rsquo;s own quantiles</td><td>0.135</td><td>0.096</td><td>98.8%</td><td>91.7%</td></tr>
-<tr><td>\(a = 0.1\), per horizon 90%</td><td>constant width (CF-RNN)</td><td>0.067</td><td>0.041</td><td>89.9%</td><td>&nbsp;</td><td rowspan="2">82%</td><td rowspan="2">1.034</td></tr>
-<tr><td></td><td>laplace&rsquo;s own quantiles</td><td>0.063</td><td>0.046</td><td>90.7%</td><td>&nbsp;</td></tr>
+<tr><td>\(a = 0.01\), joint target 90%</td><td>constant width (CF-RNN)</td><td>0.180</td><td>0.122</td><td>98.8%</td><td>93.0%</td><td rowspan="2">70%</td><td rowspan="2">1.067</td></tr>
+<tr><td></td><td>laplace&rsquo;s own quantiles</td><td>0.167</td><td>0.119</td><td>98.8%</td><td>91.9%</td></tr>
+<tr><td>\(a = 0.1\), per horizon 90%</td><td>constant width (CF-RNN)</td><td>0.079</td><td>0.049</td><td>90.1%</td><td>&nbsp;</td><td rowspan="2">83%</td><td rowspan="2">1.037</td></tr>
+<tr><td></td><td>laplace&rsquo;s own quantiles</td><td>0.074</td><td>0.053</td><td>90.9%</td><td>&nbsp;</td></tr>
 </table>
 </div>
-<p>Per horizon at the Bonferroni level, the median score ratio is 1.133 at \(h = 1\) and 1.010 at \(h = 10\). The constant width over-covers at the joint level, 92.9% against a 90% target, because ten Bonferroni intervals that never share a state cannot use the correlation between horizons. The same run also scores laplace as a density, at a median held-out log score of 3.02 nats per observation. The constant-width interval has no density to score at all.</p>
+<p>Per horizon at the Bonferroni level, the median score ratio is 1.151 at \(h = 1\) and 1.015 at \(h = 10\). The constant width over-covers at the joint level, 93.0% against a 90% target, because ten Bonferroni intervals that never share a state cannot use the correlation between horizons. The same run also scores laplace as a density, at a median held-out log score of 2.87 nats per observation. The constant-width interval has no density to score at all.</p>
 <!-- /FRED -->
 
   <h2>What survives</h2>
