@@ -296,7 +296,8 @@
   <h3>Example 7. Two classes the model never confuses get different entries</h3>
 
   <p><strong>Setup.</strong> Three classes, cat, dog and plane, with equal numbers of test images. The
-  classifier returns the same set for every image of a given class.</p>
+  classifier ranks the true class first on every image and returns the same set for every image of a
+  given class.</p>
 
   <div class="tablewrap">
   <table class="phi">
@@ -326,8 +327,8 @@
 
   <h3>Example 8. Moving one label occurrence between rows moves an entry from 1 to almost 0</h3>
 
-  <p><strong>Setup.</strong> There are \(n\) test images, and two rare labels \(A\) and \(B\) each appear
-  in exactly one set.</p>
+  <p><strong>Setup.</strong> There are \(n\) test images. Every set contains the true class \(T\),
+  ranked first, and two rare labels \(A\) and \(B\) each appear in exactly one set.</p>
 
   <p><strong>Calculation.</strong> If they appear in the same set, \(z_A = z_B\) and \(\rho_{AB} = 1\).
   If instead the one occurrence of \(B\) is in a different set, then \(p_A = p_B = 1/n\), the
@@ -385,8 +386,10 @@
   <p>The guarantee is also stated loosely. The authors write that &ldquo;for a given input sample&rdquo;
   the set &ldquo;is guaranteed to contain the correct class&rdquo; with probability close to
   \(1-\alpha\). Split conformal coverage is marginal. It does not imply coverage conditional on the input, on a
-  class or on a client, and for continuous inputs no nontrivial distribution free procedure delivers
-  coverage conditional on every input (Barber, Cand&egrave;s, Ramdas and Tibshirani 2021). The distinction
+  class or on a client. In distribution free regression with nonatomic covariates, exact pointwise
+  conditional coverage forces essentially trivial prediction sets of infinite expected length
+  (Barber, Cand&egrave;s, Ramdas and Tibshirani 2021), and the ten client example below makes the
+  classification point directly. The distinction
   matters here because the authors go on to interpret individual class pairs and individual federated
   clients as if validity transferred to them. The upper term is written as \(1/(n-1)\). For the randomized
   procedure with distinct scores the term is \(1/(n+1)\), so theirs is looser than necessary and
@@ -437,7 +440,7 @@
   authors offer no adjustment for it. The statistic is also undefined whenever a class is always or
   never included, since its variance is zero, and no convention is given.</p>
 
-  <p>With the model and calibration data fixed the sets are nested in \(\alpha\), so as \(\alpha\)
+  <p>With the model, the calibration data and the auxiliary uniforms fixed the sets are nested in \(\alpha\), so as \(\alpha\)
   grows no inclusion rate increases and the zero co-occurrence floor moves toward zero or stays put,
   whether or not the classifier changed. The authors present the dependence on
   \(\alpha\) as a feature. <a href="/demos/32-conformal-correlation.html#d">Panel D</a> shows the
