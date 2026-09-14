@@ -113,8 +113,19 @@ loose sentence as the singleton case, where set membership and label correctness
 clause, that the reasoning extends to covariate-defined subsets "although the inferential guarantees are
 now asymptotic", matches what the same authors say in the AoAS paper, that the conditional guarantee is
 attainable in the limit though not in finite samples. This is an informal example followed by its
-precise gloss, which is how review articles are written. Attacking it would be a gotcha against authors
-who withdrew the paper that did make the error and who published the correction themselves. Do not.
+precise gloss, which is how review articles are written.
+
+The successor paper settles it. Berk, Kuchibhotla and Tchetgen Tchetgen, "Improving Fairness in
+Criminal Justice Algorithmic Risk Assessments Using Optimal Transport and Conformal Prediction Sets",
+*Sociological Methods and Research* 53(4) 2024, is the published descendant of the withdrawn preprint.
+It deletes the claim and states the opposite: "The enterprise remains group fairness. We have nothing
+to say about whether a given offender is being treated fairly." The phrases "guaranteed to be the true"
+and "individual offender" do not appear in it. Verified against the PDF.
+
+So the full sequence is: wrong claim in a 2020 preprint, correct statement published by the same
+authors in April 2021, preprint withdrawn in May 2021 for "an interpretive error", one loose but
+self-glossing sentence in a 2022 review, and the claim gone from the 2024 journal version. That is a
+complete self-correction. Attacking any part of it would be a gotcha. Do not.
 
 ### What to write instead: the per-patient cluster, with a control
 
