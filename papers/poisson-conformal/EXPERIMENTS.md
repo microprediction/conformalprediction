@@ -89,6 +89,66 @@ dominated by the slow mode, whose eigenfunction is a function of the state, so c
 lagged state removes what the correction was compensating. In the two-state model there is exactly
 one non-unit mode and it is the state, which is why the removal is essentially complete.
 
+## Finding 6. Exact stratification was a degenerate case
+
+Every earlier run used a two-state chain, where there is one non-unit mode and it *is* the state,
+so stratifying removes the dependence by construction. `attack_continuous.py` repeats the contrast
+on an AR(1) log-volatility model, where the state is continuous and stratification must bin.
+n = 1500, nominal eta = 0.05, target is the l-step law from the realized state.
+
+| phi | pooled inflation | bins | stratified, i.i.d. margin | stratified, sigma^2 margin |
+| ---: | ---: | ---: | ---: | ---: |
+| 0.90 | 6.5 | 2 | **0.240** | 0.026 |
+| 0.90 | 6.5 | 5 | **0.037** | 0.000 |
+| 0.90 | 6.5 | 10 | 0.001 | 0.000 |
+| 0.98 | 32.2 | 2 | **0.240** | 0.000 |
+| 0.98 | 32.2 | 5 | **0.091** | 0.000 |
+| 0.98 | 32.2 | 10 | 0.007 | 0.000 |
+
+Coarse stratification fails badly without the correction and the correction repairs it. So
+Finding 4 was too strong: stratification substitutes for the correction only when it is fine enough
+to resolve the state. (The pooled columns in that script are not a fair reading of Theorem 5,
+since they use the nominal level rather than the worst-state protected one. The stratified
+comparison is the clean one.)
+
+## Finding 7. Three separable mechanisms, and thinning is the biggest
+
+Members of a lagged-state stratum sit about M steps apart in time, so their correlation is
+`phi^M`, not `phi`. Stratifying therefore does two things at once, and `attack_thinning.py`
+separates them by adding an arm that thins by M with no conditioning at all. Variance inflation
+over the i.i.d. baseline:
+
+| phi | M | pooled | thinned only | stratified | ratio strat/thin |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0.90 | 8 | 6.02 | 1.48 | 1.03 | 0.70 |
+| 0.90 | 20 | 6.02 | 0.90 | 0.72 | 0.80 |
+| 0.98 | 8 | 26.79 | 4.54 | 1.51 | 0.33 |
+| 0.98 | 20 | 26.79 | 2.07 | 0.80 | 0.39 |
+
+Three readings, all new.
+
+**Thinning does most of the work, and conditioning does the rest.** At phi = 0.98, M = 8, thinning
+alone takes 26.8 down to 4.5 and conditioning takes it from 4.5 to 1.5. At low persistence thinning
+does almost everything and conditioning adds little; at high persistence conditioning is the larger
+factor. The split is a function of the persistence.
+
+**Thinning alone never reaches the i.i.d. baseline.** At phi = 0.98 even M = 40 leaves thinning at
+1.81. Only conditioning gets there.
+
+**Conditioning overshoots below the baseline.** The stratified inflation settles at 0.71 to 0.80,
+under 1. That is the law of total variance: conditioning on the state removes the state-driven part
+of the *marginal* variance as well as the serial dependence, so a within-stratum margin can be
+smaller than an i.i.d. margin, not merely equal to it.
+
+## Finding 8. There is an optimal granularity, set by starvation not by dependence
+
+`attack_optimal_M.py` measures the within-stratum variance directly and uses it in the margin. The
+width-minimising valid bin count is 5 at phi = 0.90 and 8 at phi = 0.98, on n = 1500. The binding
+constraint at large M is not the margin size but stratum exhaustion: the rank stops existing and the
+set goes vacuous on 95% of draws at M = 20. A clean `1/M^2` quantiser prediction for the residual
+inflation is wrong; measured decay is about `M^{-1.2}`, consistent with the two mechanisms of
+Finding 7 operating at different rates.
+
 ## Consequence
 
 The paper's practical proposals do not survive. Theorem 9 is dominated, and the dependence-corrected
@@ -100,6 +160,10 @@ The finding worth writing up is the inversion. Not "dependent calibration needs 
 correction," but "stratifying on the state substitutes for the correction, and the Poisson solution
 says why and by how much." That is a statement about when the correction is unnecessary, which is
 more useful than a correction nobody needs.
+
+**Superseded 2026-09-14 by Findings 6 to 8.** The substitution is conditional, not absolute, and
+the mechanism is two effects rather than one. The paper is rewritten around the earlier version and
+needs a second pass.
 
 **Done 2026-09-14.** The paper is rewritten around this. Theorem 9 is cut to
 Remark 11, which records why indexing the level of a pooled block is dominated. Remark 12 states
