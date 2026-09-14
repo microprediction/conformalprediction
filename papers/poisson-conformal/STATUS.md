@@ -1,14 +1,39 @@
-# Status: on disk for the record, not published
+# Status: adjudicated 2026-09-13. Highest ceiling, most work.
 
-Committed from the unmerged `frozen-floor-note` branch on 2026-09-13 so the source is not lost.
+**Verdict: most original of the four, less mature. Develop seriously. Not yet linked from the site.**
 
-- **Not linked from the site.** No landing page, no entry on the papers index.
-- **Proofs not independently checked.** The companion note in `papers/smoothing-validity/` was
-  restored the same day, promoted on the site, and then withdrawn within the hour when a referee
-  found its central result false. See `papers/smoothing-validity/REFEREE.md`. The failure there was
-  a switch between conditional and marginal validity, which is a live risk for the pooling and local
-  coverage arguments in this programme.
-- **Do not link, cite or circulate** until the proofs have been checked by someone other than the
-  author.
+Ranked second for present publishability and first for intellectual upside, because it advances the
+constructive programme, extracting operational residual corrections from dynamics, rather than
+restating a limitation of conformal prediction.
 
-The LaTeX builds clean in two `pdflatex` passes.
+## What checks out
+
+The identity `P^l (H_q - F(q)) = (P^l - P^{l+1}) chi_q` is exact. The additive-functional martingale
+decomposition is correct, the long-run variance `sigma^2(q) = pi[chi_q^2 - (P chi_q)^2]` is correct,
+the reversible spectral formulas are correct, and the discrete-to-continuous Poisson and cell-problem
+limit is correct. The bundled scripts reproduce these identities and the two-state calculation.
+
+The attractive insight is genuine: one potential `chi_q` describes both the surviving current-state
+information and the effective-sample-size loss caused by persistence. The nearest current work
+separates test-side transport from calibration dependence, or gets Markov mixing bounds, but does not
+appear to formulate this through a shared Poisson potential. Treat that as plausibly novel rather
+than an established priority claim.
+
+## Where it stops short of its own contribution
+
+Theorem 1 is elegant but is essentially standard Poisson-equation algebra. Theorem 5 is a useful
+honest bound but uses worst-case `u*`, `B`, `V` rather than the advertised observed-state correction.
+The state-adaptive procedure that would be the real result is only sketched, and Section 12 concedes
+that the proposed transform is dynamic PIT recalibration rather than an honest conformal procedure.
+
+**To make this the best paper:** prove a state-adaptive Theorem 5 with an estimable lower confidence
+envelope for `b_{l,W_n}(q) = (P^l - P^{l+1}) chi_q(W_n)`, then show it beats the worst-state
+correction while keeping the claimed honesty probability.
+
+## Technical repairs
+
+1. Use the filtering distribution consistently when `W_n` is latent.
+2. Ensure the defining property holds at the infimum `u*`, or use `u* + epsilon`.
+3. Add the regularity needed for the differentiated Bahadur expansion.
+4. Restrict Proposition 2 to finite or pure-point spectrum, or state it with spectral measures.
+5. Ramos et al. and Dai et al. years corrected from 2024 to 2026. **Done 2026-09-13.**

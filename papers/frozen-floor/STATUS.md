@@ -1,14 +1,28 @@
-# Status: on disk for the record, not published
+# Status: adjudicated 2026-09-13. Cannibalize, do not publish as is.
 
-Committed from the unmerged `frozen-floor-note` branch on 2026-09-13 so the source is not lost.
+**Verdict: a good population identity inside an invalid general characterization.**
 
-- **Not linked from the site.** No landing page, no entry on the papers index.
-- **Proofs not independently checked.** The companion note in `papers/smoothing-validity/` was
-  restored the same day, promoted on the site, and then withdrawn within the hour when a referee
-  found its central result false. See `papers/smoothing-validity/REFEREE.md`. The failure there was
-  a switch between conditional and marginal validity, which is a live risk for the pooling and local
-  coverage arguments in this programme.
-- **Do not link, cite or circulate** until the proofs have been checked by someone other than the
-  author.
+## Keep this
 
-The LaTeX builds clean in two `pdflatex` passes.
+A clean population theorem, worth preserving:
+
+    inf_{Q_kappa} E KL( P_{W|X} || Q_{kappa(X)} ) = I(W; X | kappa),   optimizer Q_kappa = P_{W|kappa}
+
+That is an information-projection formulation of the information gap. Reduce it to a two-page lemma
+and fold it into *Marginally Useful* or a larger information-gap paper.
+
+## Discard this
+
+The surrounding characterization does not hold.
+
+1. The empirical score law is discrete, so it has no density and `KL(G_kappa || G_hat_kappa) = infinity`
+   for a continuous score law. `Delta_n -> 0` is false for the estimator actually defined.
+2. Absolute-residual and CQR scores are not increasing bijections in `y`, so `G(A(x,y))` is not a
+   predictive CDF.
+3. Split prediction sets, predictive systems and full conformal cannot all be represented by
+   Definition 1.
+4. Full conformal's calibration scores depend on the candidate `y`, which Section 5 does not resolve.
+5. Most importantly, conformal validity does not prohibit labels from choosing `A` or `kappa` on an
+   independent training fold, so the claimed compulsory label-blind regressogram handicap is false.
+
+As a standalone "mechanical characterization of every conformal scheme" it would be easily refuted.
