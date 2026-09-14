@@ -76,6 +76,42 @@ note: "We found an interpretive error in the method. We are trying now to develo
 approach." The flag was right and the authors got there first. Check publication status before
 writing, not only the abstract.
 
+### What to write instead: the per-patient cluster, with a control
+
+The brain-age paper is a preprint with no journal version and three citations, so it does not carry a
+review page on its own. It is the clearest specimen of a pattern that is in print elsewhere, and the
+right output is one note on the pattern. The prior-art sweep found no criticism of any of these.
+
+*Published instance, and the strongest.* Sreenivasan, Vaivade, Noui, Khoonsari, Burman, Spjuth and
+Kultima, "Conformal prediction enables disease course prediction and allows individualized diagnostic
+uncertainty in multiple sclerosis", npj Digital Medicine 8 (2025), doi 10.1038/s41746-025-01616-z,
+16 citations. The per-patient claim is in the title. The abstract says "conformal prediction was
+implemented at the individual patient level with a confidence of 93%". The words "marginal" and
+"conditional coverage" do not appear anywhere in the paper. Verified against the article HTML.
+
+*Clearest specimen.* The brain-age preprint above, which adds the category error in the verification.
+
+*Further instances, quotes NOT yet verified against the full texts.* Sarica et al., ICeX, Computer
+Methods and Programs in Biomedicine (2026), doi 10.1016/j.cmpb.2025.109140, reported as "Conformal
+Prediction to generate subject-specific prediction intervals"; and a Briefings in Functional Genomics
+review, doi 10.1093/bfgp/elae042, which repeats the individual-level guarantee when summarising the
+brain-age preprint. Verify before citing.
+
+*The control, which makes the note.* Cina, Monzon, Galbusera and Jutzeler, "Quantifying central canal
+stenosis prediction uncertainty in SpineNet with conformal prediction", Scientific Reports (2026),
+doi 10.1038/s41598-026-35343-6. Same year, same clinical imaging setting, and it states the caveat:
+"The coverage is marginal, meaning that, on average, across all samples, the probability is 90%.
+However, it may be lower for specific subgroups of patients as conditional coverage is not
+guaranteed." It then uses class-conditional conformal prediction and reports class-conditional
+coverage per stenosis grade, finding that "while all methods generally achieved the expected marginal
+coverage, their performance varied significantly across different stenosis grades". Verified against
+the article HTML.
+
+The control is what turns this from pedantry into a finding. The correct statement is available, it
+is short, and authors in the same field and the same year are making it. The note can therefore argue
+that the per-patient reading is a choice rather than a convention, and that the fix, calibrating
+within pre-declared groups, is already in use next door.
+
 ## The flags
 
 Confidence is the triage agent's, 3 to 5, where 5 means the abstract alone settles it. **Everything
