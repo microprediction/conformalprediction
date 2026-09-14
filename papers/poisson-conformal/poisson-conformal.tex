@@ -39,8 +39,10 @@ law of the future score. We show one Poisson equation controls both. The realize
 history-conditional coverage of the empirical-quantile threshold decomposes exactly into its
 invariant-law value plus a current-state corrector, and the same corrector supplies the
 martingale representation of the calibration error and its long-run variance. A Freedman
-bound yields a finite-sample, class-uniform honest quantile correction. In the fast-mixing
-limit the discrete corrector converges to a homogenization cell problem.
+bound yields a finite-sample, class-uniform honest quantile correction, and a union bound over a
+finite state space makes that correction state-adaptive at a $\log M$ cost, so the margin is paid
+at the state actually occupied rather than the worst one. In the fast-mixing limit the discrete
+corrector converges to a homogenization cell problem.
 \end{abstract}
 
 \section{The exact object}
@@ -166,8 +168,14 @@ The dependent empirical quantile obeys a Bahadur representation
   \qquad F_n(q) = \frac1n\sum_{i=1}^n \one\{R_i\le q\},
 \end{equation}
 valid under geometric ergodicity with $F$ differentiable at $q_p$ and $f(q_p)>0$
-\citep{glynn2002quantile}. Expanding \eqref{eq:corrector-obs} around $q_p$ and using
-\eqref{eq:bahadur},
+\citep{glynn2002quantile}. The expansion below differentiates the corrector in the threshold, so
+it needs more than \eqref{eq:bahadur} supplies. We assume in addition that, in a neighbourhood of
+$q_p$, the map $q\mapsto b_{\ell,w}(q)$ is continuously differentiable uniformly in $w$, that $F$ is
+continuously differentiable with $f$ bounded away from zero there, and that
+$R_{(k_p)}\to q_p$ in probability, which the same geometric ergodicity gives. For a finite chain
+the first condition reduces to continuous differentiability of each $F_w$ near $q_p$, since
+$b_{\ell,w}$ is then a finite linear combination of the $F_{w'}$. Under these, expanding
+\eqref{eq:corrector-obs} around $q_p$ and using \eqref{eq:bahadur},
 \begin{equation}\label{eq:expansion}
   C_{n,\ell,k_p} - p
   = b_{\ell,W_n}(q_p)
@@ -220,8 +228,11 @@ persistence removes calibration information. For a reversible chain they are the
 coefficients read two ways.
 
 \begin{proposition}[Reversible spectral reading]\label{prop:spectral}
-Let $P$ be reversible with respect to $\pi$, with real spectrum $1=\lambda_1>\lambda_2\ge
-\cdots$ and $\pi$-orthonormal eigenfunctions $\phi_j$. Expand the centered coverage function
+Let $P$ be reversible with respect to $\pi$ and suppose its spectrum is pure point, with real
+eigenvalues $1=\lambda_1>\lambda_2\ge\cdots$ and a $\pi$-orthonormal eigenbasis $\phi_j$ of
+$L^2_0(\pi)$. A finite irreducible aperiodic chain, or any $P$ with compact resolvent, satisfies
+this. For a chain with continuous spectrum, replace the sums below by integrals against the
+spectral measure of $g_q$, which leaves both identities intact in that form. Expand the centered coverage function
 $g_q=H_q-F(q)=\sum_{j\ge2}c_j(q)\phi_j$. Then
 \begin{equation}\label{eq:spectral}
   b_{\ell,w}(q) = \sum_{j\ge2} c_j(q)\,\lambda_j^{\ell}\,\phi_j(w),
@@ -429,6 +440,145 @@ validity is not automatic. It then requires deterministic uniform class bounds, 
 simultaneous confidence set for the dynamics, or a separate estimation block with a valid
 envelope.
 
+\subsection{The state-adaptive correction}\label{sec:adaptive}
+
+Theorem~\ref{thm:honest} protects against the worst current state. That is wasteful whenever the
+chain is usually somewhere cheaper, which is the normal case: a volatility regime that is
+dangerous one day in five still forces the one-day-in-five threshold on the other four. The
+corrector $b_{\ell,w}$ is a function of the state, so the natural procedure reads it at the state
+we are in. The obstacle is that the calibration rank then becomes random, and the Freedman step in
+Theorem~\ref{thm:honest} was applied at a single deterministic level. A union bound over the state
+space repairs this at a cost of $\log M$ inside the deviation.
+
+Fix the observed-state case, so $W_n$ is $\Fcal_n$-measurable and the filter is a point mass, and
+let the state space be finite with $M$ elements. For each state $w$ define the state-specific
+protection level
+\begin{equation}\label{eq:uw}
+  u^\star(w) = \inf\Big\{ u\in[p,1) :\;
+    \inf_{\theta\in\Theta}\ P_\theta^{\ell}H_{\theta,F_\theta^{-1}(u)}(w) \ge p \Big\} ,
+\end{equation}
+which is \eqref{eq:uwc} with the infimum over states removed. Then $u^\star(w)\le u^\star$ for
+every $w$, and $u^\star=\max_w u^\star(w)$.
+
+\begin{assumption}[Attainment]\label{as:attain}
+For each $w$ the infimum in \eqref{eq:uw} is attained, that is
+$\inf_\theta P^\ell_\theta H_{\theta,F_\theta^{-1}(u^\star(w))}(w)\ge p$.
+\end{assumption}
+
+This holds whenever $u\mapsto \inf_\theta P^\ell_\theta H_{\theta,F_\theta^{-1}(u)}(w)$ is right
+continuous, in particular when each $F_\theta$ is continuous and strictly increasing and $\Theta$
+is finite. Without it, replace $u^\star(w)$ by $u^\star(w)+\varepsilon$ throughout for any
+$\varepsilon>0$, and every statement below goes through with that substitution. The same remark
+applies to $u^\star$ in Theorem~\ref{thm:honest}.
+
+\begin{theorem}[State-adaptive honest correction]\label{thm:adaptive}
+Assume the hypotheses of Theorem~\ref{thm:honest} and Assumption~\ref{as:attain}, with $W_n$
+observed and $|\mathcal{W}|=M<\infty$. Write $\delta_{n,\eta/M}$ for \eqref{eq:delta} evaluated at
+failure probability $\eta/M$, suppose $\max_w u^\star(w)+\delta_{n,\eta/M}<1$, and set the
+data-dependent rank
+\begin{equation}\label{eq:kadapt}
+  k(W_n) = \big\lfloor n\big(u^\star(W_n)+\delta_{n,\eta/M}\big)\big\rfloor + 1 ,
+\end{equation}
+with $R_{(k)}=+\infty$ if $k>n$. Then
+\begin{equation}\label{eq:adaptive-guarantee}
+  \inf_{\theta\in\Theta}\ \Prob_\theta\Big\{\, \Prob_\theta\big(R_{n+\ell}\le R_{(k(W_n))}
+    \given \Fcal_n\big) \ge p \,\Big\} \ge 1-\eta ,
+\end{equation}
+and $k(W_n)\le k$ for every realization, with strict inequality whenever
+$u^\star(W_n)<u^\star-(\delta_{n,\eta/M}-\delta_{n,\eta})$.
+\end{theorem}
+
+\begin{proof}
+Fix $\theta\in\Theta$. For each state $w$ the level $u^\star(w)$ is a deterministic constant of the
+class, so $q_w:=F_\theta^{-1}(u^\star(w))$ is deterministic and $g_w=H_{q_w}-u^\star(w)$ is
+centered under $\pi$, because $F_\theta(q_w)=u^\star(w)$. Applying the martingale decomposition
+\eqref{eq:martingale} and Lemma~\ref{lem:freedman} at level $u^\star(w)$ with failure probability
+$\eta/M$ gives, for that single $w$,
+\[
+  \Prob_\theta\big\{ F_n(q_w) > u^\star(w)+\delta_{n,\eta/M} \big\} \;\le\; \eta/M .
+\]
+Union over the $M$ states: on an event $E$ of probability at least $1-\eta$,
+\begin{equation}\label{eq:simul}
+  F_n\big(F_\theta^{-1}(u^\star(w))\big) \;\le\; u^\star(w)+\delta_{n,\eta/M}
+  \qquad\text{simultaneously for every } w\in\mathcal{W} .
+\end{equation}
+The event $E$ does not depend on which state is realized, which is what makes the random rank
+admissible.
+
+Work on $E$ and let $w=W_n$ be the realized state. By \eqref{eq:simul} at that $w$,
+\[
+  n F_n(q_w) \;\le\; n\big(u^\star(w)+\delta_{n,\eta/M}\big) \;<\; k(w) ,
+\]
+so strictly fewer than $k(w)$ calibration scores lie at or below $q_w$, and therefore
+$R_{(k(w))}\ge q_w=F_\theta^{-1}(u^\star(w))$. Since $q\mapsto P_\theta^\ell H_q(w)$ is
+nondecreasing, and using \eqref{eq:corrector-obs} for the realized coverage,
+\[
+  \Prob_\theta\big(R_{n+\ell}\le R_{(k(w))}\given\Fcal_n\big)
+    = P_\theta^{\ell}H_{R_{(k(w))}}(w)
+    \;\ge\; P_\theta^{\ell}H_{F_\theta^{-1}(u^\star(w))}(w)
+    \;\ge\; p ,
+\]
+the last inequality by Assumption~\ref{as:attain}. The chain of inequalities used no property of
+$\theta$ beyond the class hypotheses, so the bound is uniform over $\Theta$. The comparison
+$k(W_n)\le k$ is immediate from $u^\star(W_n)\le u^\star$ once
+$\delta_{n,\eta/M}-\delta_{n,\eta}\le u^\star-u^\star(W_n)$.
+\end{proof}
+
+Two things are worth separating. The procedure is state-adaptive but not model-adaptive: the map
+$w\mapsto u^\star(w)$ is a fixed class constant computed before seeing data, exactly as $u^\star$
+is in Theorem~\ref{thm:honest}, and only its \emph{argument} is read off the realized state. The
+caution at the end of Section~\ref{sec:honest} therefore still applies unchanged. If $P$, $F$ and
+$\chi$ are estimated from the same calibration block, finite-sample validity is not automatic.
+
+\begin{corollary}[When adapting pays]\label{cor:pays}
+The adaptive rank is strictly smaller than the worst-case rank at state $w$ whenever
+\begin{equation}\label{eq:pays}
+  u^\star - u^\star(w) \;>\; \delta_{n,\eta/M}-\delta_{n,\eta}
+  \;=\; \sqrt{\tfrac{2V}{n}}\Big(\sqrt{\log\tfrac{M}{\eta}}-\sqrt{\log\tfrac1\eta}\Big)
+    + \tfrac{2B}{3n}\log M .
+\end{equation}
+The right side is $O(\sqrt{V\log M/n})$ and the left side is a constant of the class, so the
+adaptive procedure is better at every state off the worst case once
+$n \gtrsim V\log M / (u^\star-u^\star(w))^2$, and the expected saving in calibration level tends to
+$\E_\pi[u^\star-u^\star(W)]$.
+\end{corollary}
+
+\paragraph{The two-state model.} Take the illustration of Section~\ref{sec:twostate}, with
+$p=0.9$, $\pi_H=0.2$, $\lambda=0.8$, $\ell=1$, and regime score laws chosen so that
+$F_L(q_p)=0.95$ and $F_H(q_p)=0.70$ at $q_p=1$. Solving \eqref{eq:uw} gives
+\[
+  u^\star(L)=0.9000, \qquad u^\star(H)=0.9724, \qquad u^\star=0.9724 .
+\]
+The low state needs no correction at all, because the invariant threshold already over-covers
+there. In threshold units the worst-case procedure calibrates at $F^{-1}(0.9724)=1.774$ while the
+adaptive procedure calibrates at $F^{-1}(0.9)=1.000$ in the low state, a $44\%$ narrower set, and
+the chain is in the low state $80\%$ of the time. The expected saving in level is
+$\E_\pi[u^\star-u^\star(W)]=0.058$. With the exact conditional increment variance the crossover in
+\eqref{eq:pays} is near $n=55$, so the adaptive rank is the smaller one over the whole practical
+range. A direct simulation of the sampled chain confirms the guarantee
+\eqref{eq:adaptive-guarantee}: at $\eta=0.10$ the realized failure rate of the adaptive procedure
+is $0.000$ at $n\in\{500,2000,8000\}$ against the worst-case procedure's $0.000$ to $0.002$, both
+far inside the nominal level, as Freedman's inequality is conservative
+(Section~\ref{sec:repro}).
+
+The gap is not a refinement of constants. At $n=1000$ the worst-case level
+$u^\star+\delta_{n,\eta}$ exceeds one, so $R_{(k)}=+\infty$ and the worst-case set is vacuous,
+while the adaptive level in the low state is $0.94$ and the set is finite. Adapting to the state
+is what makes the guarantee usable at that sample size.
+
+\begin{remark}[Latent state]\label{rem:latent}
+When $W_n$ is not observed, $\Fcal_n$ determines only the filter
+$\mu_n(\cdot)=\Prob(W_n\in\cdot\given\Fcal_n)$, and \eqref{eq:corrector} rather than
+\eqref{eq:corrector-obs} is the relevant identity. Theorem~\ref{thm:adaptive} does not apply as
+stated, because $u^\star$ would have to be indexed by a point of the simplex rather than by one of
+$M$ states, and the union bound over a continuum is not available without a covering argument and
+a modulus for $\mu\mapsto u^\star(\mu)$. Two honest options remain. Index by the support of the
+filter, using $\max\{u^\star(w):\mu_n(w)>0\}$, which recovers Theorem~\ref{thm:adaptive} when the
+filter is degenerate and Theorem~\ref{thm:honest} when it is fully supported. Or partition the
+simplex into finitely many cells before seeing data, index $u^\star$ by cell, and pay $\log(\text{number
+of cells})$ in \eqref{eq:pays}. We do not pursue the second here.
+\end{remark}
+
 \section{Interpretation}\label{sec:interp}
 
 The corrected empirical quantile level is
@@ -452,7 +602,7 @@ value $x_0$ forces inflation at the local nonparametric modulus $(n g(x_0))^{-s/
 locally indistinguishable alternatives rather than any exchangeability phenomenon. The
 dependent extension is schematic, and we label it as such. For a kernel $K_h$ the relevant
 local object is the weighted long-run variance
-\begin{equation}\label{eq:omega}
+\begin{equation}\label{eq:omegah}
   \Omega_h(x_0) = \sum_{j\in\mathbb{Z}} \Cov\Big(K_h(X_0-x_0)[\one\{R_0\le q_p(x_0)\}-p],\,
     K_h(X_j-x_0)[\one\{R_j\le q_p(x_0)\}-p]\Big),
 \end{equation}
@@ -552,7 +702,10 @@ reversible spectral identities of Proposition~\ref{prop:spectral} (error $\sim10
 the generator limit of Proposition~\ref{prop:homog} (error decaying linearly in $\delta$).
 \texttt{two\_state\_illustration.py} reproduces the $74\%$/$94\%$ conditional coverages, the
 long-run variance $0.17$, and the effective sample fraction $0.53$, and confirms $\sigma_p^2$
-by direct simulation of the sampled chain.
+by direct simulation of the sampled chain. \texttt{state\_adaptive.py} recomputes the
+illustration from the regime score laws, solves \eqref{eq:uw} for $u^\star(L)$, $u^\star(H)$ and
+$u^\star$, checks the guarantee \eqref{eq:adaptive-guarantee} by simulating the sampled chain at
+$n\in\{500,2000,8000\}$ with $\eta=0.10$, and tabulates the crossover in \eqref{eq:pays}.
 
 \section{Conclusion}
 
@@ -560,7 +713,12 @@ The conformal coverage process under Markov dependence admits an exact
 invariant-plus-Poisson decomposition, and one solution family $q\mapsto\chi_q$ determines
 both the current-state coverage bias and the dependence-adjusted honesty margin. State bias
 and effective-sample-size loss are two readings of the same spectrum, one mode in the
-two-state case. In the fast-mixing limit the discrete Poisson solution becomes a
+two-state case. Because the corrector is a function of the state, the honest margin can be read
+at the state actually occupied rather than at the worst one, and
+Theorem~\ref{thm:adaptive} shows a union bound over a finite state space buys that at a
+$\log M$ cost inside the deviation. In the two-state illustration the adaptive threshold is
+$44\%$ narrower than the worst-case threshold in the state the chain occupies four fifths of
+the time, and it is finite at sample sizes where the worst-case set is vacuous. In the fast-mixing limit the discrete Poisson solution becomes a
 homogenization cell problem, the calibration variance becomes a Green--Kubo coefficient, and
 the state correction becomes the fast boundary layer. Placed next to the local sharpness
 modulus, this identifies what dynamical structure can and cannot buy back. It corrects the
