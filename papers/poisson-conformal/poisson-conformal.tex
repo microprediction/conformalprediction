@@ -27,42 +27,38 @@
 \title{Conformal Prediction as an Averaged Limit:\\
 notes on the corrector under Markov dependence}
 \author{Peter Cotton\\\texttt{peter.cotton@microprediction.com}}
-\date{August 2026, substantially revised September 2026}
+\date{September 2026}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-These are technical notes, not a contributions paper. Pooling calibration residuals averages a
-fast variable over its invariant law, which is the averaged limit of homogenization, so split
-conformal prediction is correct to leading order exactly when the fast variable is fast relative to
-the forecast horizon. The gap it leaves is a corrector, and for a Markov chain that corrector solves
-a Poisson equation whose solution also generates the calibration variance. On GARCH at the
-persistence the finance literature fits, the marginal guarantee holds exactly while conditional
-coverage runs from 98\% to 74\% across volatility deciles, which is the corrector made visible. We
-then record four attempts to turn this into a procedure, all of which failed, and what is already
-in the literature. Section~\ref{sec:failed} is the most useful part of the document.
+Pooling calibration residuals averages a fast variable over its invariant law, which is the
+averaged limit of homogenization. Split conformal prediction is therefore correct to leading order
+when the fast variable is fast relative to the forecast horizon, and the gap it leaves is a
+corrector. For a Markov chain that corrector solves a Poisson equation, and the same solution
+generates the calibration variance. On GARCH at the persistence fitted to daily equities the
+marginal guarantee holds exactly while conditional coverage runs from 98\% to 74\% across
+volatility deciles. Four attempts to convert the corrector into a calibration procedure are
+recorded, with what defeated each.
 \end{abstract}
 
-\section{Status of this document}\label{sec:status}
+\section{Relation to existing work}\label{sec:status}
 
-What follows is a record rather than a proposal. The mathematics in
-Sections~\ref{sec:decomp} to \ref{sec:homog} is correct and checked numerically to machine
-precision. The reading in Section~\ref{sec:garch} is, we think, the useful contribution, and it is
-a way of seeing rather than a theorem. Everything that was once offered here as a procedure has been
-withdrawn, and Section~\ref{sec:failed} says why.
+Three of the quantities below are classical and we claim none of them. Effective sample size for
+autocorrelated data is \citet{bayley1946effective}, in the title. The mean return time to a set is
+Kac's lemma. The clustering of visits to a set is measured by the index of dispersion of counts.
 
-Three things are known and we claim none of them. Effective sample size for autocorrelated data is
-\citet{bayley1946effective}, in the title. The mean return time to a set is Kac's lemma. And the
+The conformal application is also in print. \citet{ramos2024transported} study the
 calibration-conditional coverage of a conformal threshold under stationary mixing, with the
-long-run indicator variance, clustered calibration and an effective sample size, is
-\citet{ramos2024transported}. That paper covers the ground a reader might expect these notes to
-claim, and it does so properly.
+long-run indicator variance, clustered calibration, an effective sample size and Berry--Esseen
+approximations. Anyone wanting a usable dependence correction for conformal calibration should
+start there.
 
-What may remain is narrow: the exact Poisson representation of the realized history-conditional
-coverage in Theorem~\ref{thm:corrector}, and the observation that the same solution family supplies
-the calibration variance. We have not searched the Markov chain literature for the identity itself,
-and it should be assumed to exist until someone does.
+What may be unclaimed is narrow. The exact Poisson representation of realized history-conditional
+coverage in Theorem~\ref{thm:corrector} does not appear in the conformal literature, nor does the
+observation that the same solution family supplies the calibration variance. The Markov chain
+literature has not been searched for the identity itself, so it should be assumed to exist.
 
 \section{The exact object}
 
@@ -83,18 +79,13 @@ perturbations: the transient gap between the current-state and invariant score l
 long-run calibration noise of the dependent empirical quantile. The identity is exact and
 asymptotics-free, and we verify every algebraic claim numerically to machine precision.
 
-\paragraph{Contribution and related work.} Two effects of this kind have been described
-before, and we treat them as background. Transported-beta analyses separate a test-side
-coverage transport from a deformation of the calibration order statistic
-\citep{ramos2024transported}. Distributional conformal prediction for Markov processes
-constructs a conditional probability integral transform from estimated transition CDFs
-\citep{dai2024markov}, and concentration-based penalties quantify coverage loss under
-non-exchangeable and Markovian data \citep{oliveira2024split,zheng2024markovian}. Our narrow
-claim is this: we give a Poisson representation of realized history-conditional coverage and
-use the same solution family to obtain both the transient state correction and a
-finite-sample martingale-based tolerance correction for dependent calibration data. The
-nonparametric price of a fixed-point guarantee is the subject of a companion note
-\citep{cotton2026honest}, whose local modulus reappears in Section~\ref{sec:modulus}.
+\paragraph{Neighbouring work.} Distributional conformal prediction for Markov processes builds a
+conditional probability integral transform from estimated transition CDFs \citep{dai2024markov}, and
+concentration-based penalties quantify coverage loss under non-exchangeable and Markovian data
+\citep{oliveira2024split,zheng2024markovian}. The nonparametric price of a fixed-point guarantee is
+the subject of a companion note \citep{cotton2026honest}, whose local modulus reappears in
+Section~\ref{sec:modulus}. Section~\ref{sec:status} places these notes against
+\citet{ramos2024transported}, which is the nearest work.
 
 \section{The exact coverage decomposition}\label{sec:decomp}
 
@@ -116,7 +107,7 @@ $(w,q)\mapsto\chi_q(w)$ solving the Poisson equation
   (I-P)\chi_q = H_q - F(q), \qquad \pi\chi_q = 0 ,
 \end{equation}
 with $\sup_q\|\chi_q\|_\infty<\infty$ over the quantile range used. For a finite irreducible
-aperiodic chain both hold automatically, and the reader may keep that case in mind.
+aperiodic chain both hold automatically.
 \end{assumption}
 
 Let $R_{(k)}$ be the $k$th order statistic of the calibration scores $R_1,\dots,R_n$, let
@@ -418,13 +409,13 @@ $\alpha+\beta$ & half-life & calmest decile & median decile & most volatile deci
 \end{center}
 
 Deciles are of the current volatility state, nominal coverage is $0.90$, and the last column is the
-marginal rate. Read the rows two ways. The marginal guarantee holds exactly everywhere, so conformal
+marginal rate. The marginal guarantee holds exactly everywhere, so conformal
 does precisely what it promises and no row is evidence of a bug. And the spread across a row is the
 corrector of Theorem~\ref{thm:corrector}: it vanishes as the volatility mixes faster, and at the
 persistence actually fitted to daily equities the same interval delivers $98\%$ coverage in calm
 markets and $74\%$ in volatile ones.
 
-That is the whole reading in one table. Pooling averages the fast variable, averaging is valid when
+Pooling averages the fast variable, averaging is valid when
 the fast variable is fast, and the error is the corrector. The spread grows monotonically with the
 relaxation time and then saturates once the half-life approaches the calibration window, where the
 sample no longer sees the stationary law. We swept persistence by moving both GARCH parameters,
@@ -511,7 +502,7 @@ kernel, so it is not a procedure anyone can run. Four attempts to turn the corre
 recorded here, with what killed each. The scripts are in the repository and
 \texttt{EXPERIMENTS.md} carries the full numbers.
 
-\paragraph{1. Index the calibration level by the observed state.} Keep a pooled calibration block
+\paragraph{Index the calibration level by the observed state.} Keep a pooled calibration block
 and choose, for each state, the smallest level whose invariant quantile is $\ell$-step adequate from
 that state, paying a union bound over states inside \eqref{eq:delta}. This is honest, by
 Theorem~\ref{thm:honest} applied simultaneously at $M$ fixed thresholds. It is also dominated by a
@@ -523,7 +514,7 @@ estimates the $\ell$-step law directly and continues. In the two-state model at 
 indexed scheme has expected threshold $1.155$ against the stratified scheme's $1.002$ and
 over-covers at $0.940$ where stratifying is exact at $0.900$. No sample size we tried reverses it.
 
-\paragraph{2. Claim the sample-size advantage over stratifying.} Stratifying splits the block, so a
+\paragraph{Claim the sample-size advantage over stratifying.} Stratifying splits the block, so a
 stratum holds about $n\pi(w)$ points, while a level-indexed pooled scheme uses all $n$ and pays only
 $\sqrt{\log M}$ in the deviation. This is not a statistical gain. The pooled scheme is handed the
 per-state levels as population objects computed from a known kernel, so it never pays to learn $M$
@@ -531,7 +522,7 @@ quantiles. Minimax lower bounds for conditional conformal coverage over a class 
 scale as $\sqrt{d/n}$, and a scheme estimating the same levels would pay $\sqrt{M/n}$ exactly as
 stratifying does. The apparent saving is the assumption, not the method.
 
-\paragraph{3. Claim that stratifying removes the need for the correction.} In the two-state model
+\paragraph{Claim that stratifying removes the need for the correction.} In the two-state model
 the independent-data margin survives a pooled variance inflation of $223$ once the block is
 stratified, which suggested the correction was redundant. That is an artefact of the model. A
 two-state chain has one non-unit mode and it \emph{is} the state, so stratifying removes the
@@ -541,7 +532,7 @@ fails on $24\%$ of calibration draws against a nominal $5\%$, and the correction
 failure decays as the binning refines and is gone by ten bins. The honest statement is conditional:
 stratifying substitutes for the correction only when it is fine enough to resolve the state.
 
-\paragraph{4. Explain the residual by clustering of stratum visits.} Members of a lagged-state
+\paragraph{Explain the residual by clustering of stratum visits.} Members of a lagged-state
 stratum arrive at return times whose mean is $M$ but whose median is $1$ at high persistence, with
 over half of consecutive members adjacent in time. Since the autocorrelation across a gap is convex,
 Jensen gives $\E[\phi^\tau] > \phi^{\E[\tau]}$, which looked like a clean account of why stratifying
@@ -557,7 +548,7 @@ serial dependence survives within a stratum. The correct object is the long-run 
 coverage indicator, which is classical, and the extremal index is also wrong, being defined only for
 sets of vanishing measure.
 
-\paragraph{What the four have in common.} Each tried to convert an exact description of the
+Each of the four tried to convert an exact description of the
 corrector into a procedure that beats an existing one, and each was beaten by something simpler or
 was measuring an artefact of the two-state cartoon. The description survives. The procedures do not.
 
@@ -623,7 +614,7 @@ The first term is unavoidable over a broad H\"older class. The second and third 
 quantified and corrected under dynamical structure. The fourth must be included for the
 guarantee to be honest.
 
-\section{What homogenization does and does not buy}\label{sec:whatbuys}
+\section{The limits of the parametric gain}\label{sec:whatbuys}
 
 Homogenization does not defeat the sharpness lower bound. It partitions the conformal error
 into unavoidable local ambiguity, correctable dynamical bias, and estimable dependence noise.
@@ -693,27 +684,19 @@ failed at a variance inflation of $223$. \texttt{EXPERIMENTS.md} records the ful
 including a variance bug in an earlier draft: a potential computed on the regime alone drops the
 emission term and understates $V$ by an order of magnitude at low persistence.
 
-\section{Conclusion}
+\section{What would make the reading useful}
 
-Pooling calibration residuals averages a fast variable over its invariant law, which is the averaged
-limit of homogenization. Split conformal prediction is therefore correct to leading order exactly
-when the fast variable is fast relative to the forecast horizon, and the gap it leaves is a
-corrector. For a Markov chain that corrector has an exact Poisson representation, and the same
-solution family supplies the calibration variance, so the transient state bias and the
-effective-sample-size loss are two readings of one spectrum.
+The averaged limit is valid when the fast variable is fast, so the quantity a practitioner needs is
+the volatility relaxation time against the forecast horizon. That ratio is estimable from the same
+data used for calibration, and the GARCH table says roughly what to expect from it: a half-life of
+three days costs six points of spread in conditional coverage, seventeen days costs sixteen, and
+seventy days costs twenty-four. A diagnostic reporting the ratio alongside the coverage rate would
+tell a user whether the pooled interval can be read conditionally, which is the reading most users
+take from it anyway.
 
-The GARCH table is the reading in one place. At the persistence fitted to daily equities the
-marginal guarantee holds exactly and conditional coverage runs from $98\%$ to $74\%$ across
-volatility deciles. The spread is the corrector, and it vanishes in the regime where the averaged
-limit is valid.
-
-We were unable to turn any of this into a procedure. Four attempts are recorded in
-Section~\ref{sec:failed}, and each was dominated by something simpler, rested on an assumption that
-was doing the work, or measured an artefact of a two-state model. Readers looking for a usable
-dependence correction for conformal calibration should go to \citet{ramos2024transported}, which
-treats calibration-conditional coverage under stationary mixing with the long-run indicator
-variance, and to the classical effective-sample-size literature beginning with
-\citet{bayley1946effective}.
+One question is open and matters for how much of this is new. Theorem~\ref{thm:corrector} is an
+identity about occupation functionals of a Markov chain, and identities of that shape are old. We
+have not searched that literature.
 
 \bibliographystyle{plainnat}
 \begin{thebibliography}{9}
