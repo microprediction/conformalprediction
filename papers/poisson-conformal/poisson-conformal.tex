@@ -24,29 +24,45 @@
 \newcommand{\given}{\,|\,}
 \newcommand{\Fcal}{\mathcal{F}}
 
-\title{One Poisson Equation for Conformal Coverage under Dependence:\\
-Exact State Correction and the Honesty Margin}
+\title{Conformal Prediction as an Averaged Limit:\\
+notes on the corrector under Markov dependence}
 \author{Peter Cotton\\\texttt{peter.cotton@microprediction.com}}
-\date{August 2026}
+\date{August 2026, substantially revised September 2026}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Conformal prediction under dependent calibration data has two coupled defects. Dependence
-deforms the law of the order-statistic threshold, and the current dynamical state shifts the
-law of the future score. We show one Poisson equation controls both. The realized
-history-conditional coverage of the empirical-quantile threshold decomposes exactly into its
-invariant-law value plus a current-state corrector, and the same corrector supplies the
-martingale representation of the calibration error and its long-run variance. A Freedman
-bound yields a finite-sample, class-uniform honest quantile correction for a pooled calibration
-block. Simulation then inverts the expected conclusion: the correction is necessary when the block
-is pooled, failing on $41\%$ of draws against a nominal $5\%$ at strong persistence, and redundant
-once the block is stratified on the state, where an independent-data margin survives a variance
-inflation of $112$. Stratification is itself the operation that removes the dependence, and the
-same Poisson solution says why. In the fast-mixing limit the discrete corrector converges to a
-homogenization cell problem.
+These are technical notes, not a contributions paper. Pooling calibration residuals averages a
+fast variable over its invariant law, which is the averaged limit of homogenization, so split
+conformal prediction is correct to leading order exactly when the fast variable is fast relative to
+the forecast horizon. The gap it leaves is a corrector, and for a Markov chain that corrector solves
+a Poisson equation whose solution also generates the calibration variance. On GARCH at the
+persistence the finance literature fits, the marginal guarantee holds exactly while conditional
+coverage runs from 98\% to 74\% across volatility deciles, which is the corrector made visible. We
+then record four attempts to turn this into a procedure, all of which failed, and what is already
+in the literature. Section~\ref{sec:failed} is the most useful part of the document.
 \end{abstract}
+
+\section{Status of this document}\label{sec:status}
+
+What follows is a record rather than a proposal. The mathematics in
+Sections~\ref{sec:decomp} to \ref{sec:homog} is correct and checked numerically to machine
+precision. The reading in Section~\ref{sec:garch} is, we think, the useful contribution, and it is
+a way of seeing rather than a theorem. Everything that was once offered here as a procedure has been
+withdrawn, and Section~\ref{sec:failed} says why.
+
+Three things are known and we claim none of them. Effective sample size for autocorrelated data is
+\citet{bayley1946effective}, in the title. The mean return time to a set is Kac's lemma. And the
+calibration-conditional coverage of a conformal threshold under stationary mixing, with the
+long-run indicator variance, clustered calibration and an effective sample size, is
+\citet{ramos2024transported}. That paper covers the ground a reader might expect these notes to
+claim, and it does so properly.
+
+What may remain is narrow: the exact Poisson representation of the realized history-conditional
+coverage in Theorem~\ref{thm:corrector}, and the observation that the same solution family supplies
+the calibration variance. We have not searched the Markov chain literature for the identity itself,
+and it should be assumed to exist until someone does.
 
 \section{The exact object}
 
@@ -370,6 +386,51 @@ saturation at order $T/\varepsilon$. A slow state $X^\varepsilon_t$ can be added
 frozen-$x$ generator $Q_x$ and its cell problem, with a remainder controlling the drift of
 $x$ over the calibration and test horizons. We do not carry that step here.
 
+\section{GARCH: the corrector made visible}\label{sec:garch}
+
+The two-state model of Section~\ref{sec:twostate} is a cartoon. The reading it illustrates is
+easiest to see on a process practitioners actually fit. Take GARCH(1,1),
+\[
+  r_t = \sigma_t \varepsilon_t, \qquad
+  \sigma_t^2 = \omega + \alpha r_{t-1}^2 + \beta \sigma_{t-1}^2,
+  \qquad \omega = 1-\alpha-\beta ,
+\]
+so the stationary variance is one, with score $R_t = |r_t|$ and a pooled split-conformal threshold
+at level $p=0.9$ from $n=2000$ calibration points. GARCH is convenient here because $\sigma_{t+1}$
+is measurable at time $t$, so the conditional coverage of a threshold $T$ is exactly
+$2\Phi(T/\sigma_{t+1})-1$ with no estimation anywhere. It is also the adversarial case for the
+averaged reading, because daily equity persistence $\alpha+\beta \approx 0.99$ gives a relaxation
+half-life near seventy days against a one-day horizon, which is deep inside the boundary layer.
+
+\begin{center}
+\begin{tabular}{r r r r r r}
+\hline
+$\alpha+\beta$ & half-life & calmest decile & median decile & most volatile decile & marginal \\
+\hline
+0.800 & 3.1   & 0.92 & 0.91 & 0.86 & 0.900 \\
+0.900 & 6.6   & 0.93 & 0.91 & 0.84 & 0.899 \\
+0.960 & 17.0  & 0.96 & 0.91 & 0.80 & 0.900 \\
+0.990 & 69.0  & 0.98 & 0.92 & 0.74 & 0.904 \\
+0.997 & 230.7 & 0.99 & 0.93 & 0.71 & 0.901 \\
+0.999 & 692.8 & 0.99 & 0.93 & 0.72 & 0.896 \\
+\hline
+\end{tabular}
+\end{center}
+
+Deciles are of the current volatility state, nominal coverage is $0.90$, and the last column is the
+marginal rate. Read the rows two ways. The marginal guarantee holds exactly everywhere, so conformal
+does precisely what it promises and no row is evidence of a bug. And the spread across a row is the
+corrector of Theorem~\ref{thm:corrector}: it vanishes as the volatility mixes faster, and at the
+persistence actually fitted to daily equities the same interval delivers $98\%$ coverage in calm
+markets and $74\%$ in volatile ones.
+
+That is the whole reading in one table. Pooling averages the fast variable, averaging is valid when
+the fast variable is fast, and the error is the corrector. The spread grows monotonically with the
+relaxation time and then saturates once the half-life approaches the calibration window, where the
+sample no longer sees the stationary law. We swept persistence by moving both GARCH parameters,
+which also moves the stationary volatility-of-volatility, so the apparent square-root scaling of the
+spread in the half-life should not be quoted without a design that holds the latter fixed.
+
 \section{A finite-sample honest Markov correction}\label{sec:honest}
 
 The expansion motivates a finite-sample theorem. We ask for protection at one invariant
@@ -443,89 +504,62 @@ validity is not automatic. It then requires deterministic uniform class bounds, 
 simultaneous confidence set for the dynamics, or a separate estimation block with a valid
 envelope.
 
-\subsection{Stratifying on the state substitutes for the correction}\label{sec:substitute}
+\section{Four attempts that failed}\label{sec:failed}
 
-Theorem~\ref{thm:honest} is the right answer for a pooled calibration block. It is not the only
-scheme available, and the natural competitor turns out to change the conclusion. Pair each
-calibration score with the state $\ell$ steps earlier and take an ordinary quantile inside each
-lagged-state stratum. That scheme uses no Poisson solution at all. It also, as we now show, does
-not need the dependence correction.
+Theorem~\ref{thm:honest} is correct, but its levels are class constants computed from a known
+kernel, so it is not a procedure anyone can run. Four attempts to turn the corrector into one are
+recorded here, with what killed each. The scripts are in the repository and
+\texttt{EXPERIMENTS.md} carries the full numbers.
 
-\paragraph{Why it should not need it.} The corrector is $b_{\ell,w}(q)=(P^\ell-P^{\ell+1})\chi_q(w)$,
-a function of the state, and the long-run variance is $\sigma^2(q)=\pi[\chi_q^2-(P\chi_q)^2]$,
-built from the same solution. In the spectral form \eqref{eq:spectral} both are sums over the
-non-unit modes, and at high persistence both are dominated by the slow mode $\lambda_2\to1$, whose
-eigenfunction is a function of the state. Conditioning on the lagged state removes exactly the
-part of the coverage indicator that the slow mode carries. What remains inside a stratum is
-emission noise. In the two-state model there is a single non-unit mode and it is the state, so
-stratification removes the serial dependence in the coverage indicator entirely and leaves an
-essentially independent sample. With $M$ states the same argument removes every mode that is a
-function of the state, which for a finite chain is all of them, up to the residual correlation
-induced by nearby indices sharing a trajectory.
+\paragraph{1. Index the calibration level by the observed state.} Keep a pooled calibration block
+and choose, for each state, the smallest level whose invariant quantile is $\ell$-step adequate from
+that state, paying a union bound over states inside \eqref{eq:delta}. This is honest, by
+Theorem~\ref{thm:honest} applied simultaneously at $M$ fixed thresholds. It is also dominated by a
+simpler scheme that needs no Poisson solution at all: pair each calibration score with the state
+$\ell$ steps earlier and take an ordinary quantile within each lagged-state stratum. The indexed
+scheme can only slide along the quantile function of the \emph{invariant} law, so in a state that
+already over-covers its level cannot fall below $p$ and the construction stops, while stratifying
+estimates the $\ell$-step law directly and continues. In the two-state model at $\pi_H=0.2$ the
+indexed scheme has expected threshold $1.155$ against the stratified scheme's $1.002$ and
+over-covers at $0.940$ where stratifying is exact at $0.900$. No sample size we tried reverses it.
 
-\paragraph{What the simulations show.} Take the family of Section~\ref{sec:twostate} with
-$\pi_H=0.5$, $n=800$, $\eta=0.05$, and regime laws giving a large contrast at $q_p$, and vary the
-persistence $\lambda$. Apply the Freedman margin \eqref{eq:delta} twice, once with the independent
-variance $V=p(1-p)$ and once with the long-run variance $V=\sigma^2_p$ of \eqref{eq:lrv}, in each
-of the two schemes. The entries are the fraction of calibration draws on which the realized
-coverage falls below $p$, against a nominal $\eta=0.05$.
+\paragraph{2. Claim the sample-size advantage over stratifying.} Stratifying splits the block, so a
+stratum holds about $n\pi(w)$ points, while a level-indexed pooled scheme uses all $n$ and pays only
+$\sqrt{\log M}$ in the deviation. This is not a statistical gain. The pooled scheme is handed the
+per-state levels as population objects computed from a known kernel, so it never pays to learn $M$
+quantiles. Minimax lower bounds for conditional conformal coverage over a class of dimension $d$
+scale as $\sqrt{d/n}$, and a scheme estimating the same levels would pay $\sqrt{M/n}$ exactly as
+stratifying does. The apparent saving is the assumption, not the method.
 
-\begin{center}
-\begin{tabular}{r r r r r}
-\hline
- & & \multicolumn{2}{c}{pooled} & stratified \\
-$\lambda$ & $\sigma^2_p/p(1-p)$ & $V=p(1-p)$ & $V=\sigma^2_p$ & $V=p(1-p)$ \\
-\hline
-0.00  & 1.0   & 0.001 & 0.001 & 0.000 \\
-0.80  & 1.9   & 0.006 & 0.001 & 0.000 \\
-0.95  & 5.2   & 0.074 & 0.000 & 0.000 \\
-0.99  & 23.0  & 0.266 & 0.000 & 0.000 \\
-0.995 & 45.2  & 0.336 & 0.000 & 0.000 \\
-0.998 & 111.9 & 0.413 & 0.001 & 0.001 \\
-\hline
-\end{tabular}
-\end{center}
+\paragraph{3. Claim that stratifying removes the need for the correction.} In the two-state model
+the independent-data margin survives a pooled variance inflation of $223$ once the block is
+stratified, which suggested the correction was redundant. That is an artefact of the model. A
+two-state chain has one non-unit mode and it \emph{is} the state, so stratifying removes the
+dependence by construction. On a continuous state the stratification must bin, and binning is
+approximate: on an AR(1) log-volatility state at $\phi=0.98$ with two bins the independent margin
+fails on $24\%$ of calibration draws against a nominal $5\%$, and the correction repairs it. The
+failure decays as the binning refines and is gone by ten bins. The honest statement is conditional:
+stratifying substitutes for the correction only when it is fine enough to resolve the state.
 
-Three readings. In the pooled scheme the correction is necessary: the independent margin fails on
-$41\%$ of draws at the strongest persistence, eight times the nominal rate, and the failure grows
-monotonically with the inflation factor. In the pooled scheme the correction is also sufficient,
-holding at every persistence tested. And in the stratified scheme the correction is not needed at
-all, the independent margin surviving a variance inflation of $112$.
+\paragraph{4. Explain the residual by clustering of stratum visits.} Members of a lagged-state
+stratum arrive at return times whose mean is $M$ but whose median is $1$ at high persistence, with
+over half of consecutive members adjacent in time. Since the autocorrelation across a gap is convex,
+Jensen gives $\E[\phi^\tau] > \phi^{\E[\tau]}$, which looked like a clean account of why stratifying
+buys less decorrelation than its sample-size reduction suggests. It is wrong. Kac's lemma forces
+every equal-probability stratum to the same mean return time, so if visit clustering drove the
+within-stratum variance then strata with matching gap statistics would have matching variance.
+At $\phi=0.98$ with eight bins the mean gap varies by a factor $1.03$ across strata and
+$\E[\phi^\tau]$ by $1.05$, while the within-stratum long-run variance of the coverage indicator
+varies by orders of magnitude. What that variance tracks is $p_b(1-p_b)$ at each stratum's own
+conditional coverage, which runs from $1.0000$ in the calmest to $0.4906$ in the most volatile, and
+the ratio of long-run to Bernoulli variance sits near one in six of the eight strata. Almost no
+serial dependence survives within a stratum. The correct object is the long-run covariance of the
+coverage indicator, which is classical, and the extremal index is also wrong, being defined only for
+sets of vanishing measure.
 
-\begin{remark}[The conclusion this inverts]\label{rem:inversion}
-The natural way to read Section~\ref{sec:decomp} is that dependent calibration data require a
-Poisson correction. The table says something narrower and more useful. The correction is required
-when the calibration block is pooled, and it is redundant once the block is stratified on the
-state, because stratification is itself the operation that removes the dependence the correction
-was compensating. The Poisson solution is what explains the substitution and quantifies it: the
-correction one avoids by stratifying is the same $\chi_q$ that generates the variance inflation
-one would otherwise have to pay for.
-\end{remark}
-
-\begin{remark}[Why indexing the invariant quantile does not work]\label{rem:noindex}
-A tempting intermediate scheme keeps a pooled calibration block and indexes only the \emph{level},
-choosing for each state the smallest $u$ whose invariant $u$-quantile is $\ell$-step adequate from
-that state, and paying a union bound over states inside \eqref{eq:delta}. It is honest, by the
-same argument as Theorem~\ref{thm:honest} applied simultaneously at $M$ fixed thresholds. It is
-also dominated. Such a scheme can only slide along the quantile function of the invariant law, so
-in a state that already over-covers the level cannot fall below $p$ and the construction stops
-there, while the stratified scheme estimates the $\ell$-step law directly and continues. In the
-two-state model at $\pi_H=0.2$ the indexed scheme has expected threshold $1.155$ against the
-stratified scheme's $1.002$, and it over-covers at $0.940$ where the stratified scheme is exact at
-$0.900$. The finite-sample comparison does not reverse this at any $n$ we tried. We record the
-construction because the obstruction is informative: the pooled block fixes the shape of the
-attainable thresholds, and no choice of level recovers what conditioning would have given.
-\end{remark}
-
-\begin{remark}[What a sample-size comparison would and would not show]\label{rem:lowerbound}
-Stratifying splits the calibration block, so a stratum holds about $n\pi(w)$ points, whereas a
-level-indexed pooled scheme uses all $n$ and pays only $\sqrt{\log M}$ in the deviation. That
-comparison is not evidence of a statistical gain. The pooled scheme is handed the per-state levels
-as population objects computed from a known kernel, so it never pays to learn $M$ quantiles.
-Minimax lower bounds for conditional conformal coverage over a class of dimension $d$ scale as
-$\sqrt{d/n}$, and a procedure that estimated the same $M$ levels from data would pay $\sqrt{M/n}$
-in the same way the stratified scheme does. The apparent saving is the assumption, not the method.
-\end{remark}
+\paragraph{What the four have in common.} Each tried to convert an exact description of the
+corrector into a procedure that beats an existing one, and each was beaten by something simpler or
+was measuring an artefact of the two-state cartoon. The description survives. The procedures do not.
 
 \section{Interpretation}\label{sec:interp}
 
@@ -650,9 +684,10 @@ reversible spectral identities of Proposition~\ref{prop:spectral} (error $\sim10
 the generator limit of Proposition~\ref{prop:homog} (error decaying linearly in $\delta$).
 \texttt{two\_state\_illustration.py} reproduces the $74\%$/$94\%$ conditional coverages, the
 long-run variance $0.17$, and the effective sample fraction $0.53$, and confirms $\sigma_p^2$
-by direct simulation of the sampled chain. \texttt{mechanism.py} produces the table of
-Section~\ref{sec:substitute}, running both margins in both schemes across the persistence range.
-\texttt{compare\_arms.py} produces the threshold comparison of Remark~\ref{rem:noindex}, and
+by direct simulation of the sampled chain. \texttt{garch.py} produces the table of Section~\ref{sec:garch}.
+\texttt{mechanism.py} runs both margins in both schemes across the persistence range, and
+\texttt{jensen\_audit.py} is the test that retracted the clustering explanation.
+\texttt{compare\_arms.py} produces the threshold comparison of Section~\ref{sec:failed}, and
 \texttt{stress.py} is the attempt to break the independent margin in the stratified scheme, which
 failed at a variance inflation of $223$. \texttt{EXPERIMENTS.md} records the full sequence,
 including a variance bug in an earlier draft: a potential computed on the regime alone drops the
@@ -660,20 +695,25 @@ emission term and understates $V$ by an order of magnitude at low persistence.
 
 \section{Conclusion}
 
-The conformal coverage process under Markov dependence admits an exact
-invariant-plus-Poisson decomposition, and one solution family $q\mapsto\chi_q$ determines
-both the current-state coverage bias and the dependence-adjusted honesty margin. State bias
-and effective-sample-size loss are two readings of the same spectrum, one mode in the
-two-state case. The practical consequence is not the one we expected. Because the slow mode is
-carried by the state, conditioning on the state removes the dependence the correction was built
-for, so the honest margin is necessary for a pooled calibration block and redundant for a
-stratified one. The useful statement is therefore about when the correction can be skipped, and
-the Poisson solution is what identifies that regime rather than what has to be computed in it. In the fast-mixing limit the discrete Poisson solution becomes a
-homogenization cell problem, the calibration variance becomes a Green--Kubo coefficient, and
-the state correction becomes the fast boundary layer. Placed next to the local sharpness
-modulus, this identifies what dynamical structure can and cannot buy back. It corrects the
-transient and dependence terms, it does not remove the nonparametric floor, and honest use
-requires paying for the approximation of the fast--slow model itself.
+Pooling calibration residuals averages a fast variable over its invariant law, which is the averaged
+limit of homogenization. Split conformal prediction is therefore correct to leading order exactly
+when the fast variable is fast relative to the forecast horizon, and the gap it leaves is a
+corrector. For a Markov chain that corrector has an exact Poisson representation, and the same
+solution family supplies the calibration variance, so the transient state bias and the
+effective-sample-size loss are two readings of one spectrum.
+
+The GARCH table is the reading in one place. At the persistence fitted to daily equities the
+marginal guarantee holds exactly and conditional coverage runs from $98\%$ to $74\%$ across
+volatility deciles. The spread is the corrector, and it vanishes in the regime where the averaged
+limit is valid.
+
+We were unable to turn any of this into a procedure. Four attempts are recorded in
+Section~\ref{sec:failed}, and each was dominated by something simpler, rested on an assumption that
+was doing the work, or measured an artefact of a two-state model. Readers looking for a usable
+dependence correction for conformal calibration should go to \citet{ramos2024transported}, which
+treats calibration-conditional coverage under stationary mixing with the long-run indicator
+variance, and to the classical effective-sample-size literature beginning with
+\citet{bayley1946effective}.
 
 \bibliographystyle{plainnat}
 \begin{thebibliography}{9}
@@ -685,6 +725,9 @@ requires paying for the approximation of the fast--slow model itself.
   of the National Academy of Sciences} 118(48).
 \bibitem[Cotton(2026)]{cotton2026honest} Cotton, P. (2026). Locally honest coverage forces
   nonparametric inflation: a sharpness lower bound for prediction sets. Working paper.
+\bibitem[Bayley and Hammersley(1946)]{bayley1946effective} Bayley, G.~V. and Hammersley, J.~M.
+  (1946). The ``effective'' number of independent observations in an autocorrelated time series.
+  \emph{Journal of the Royal Statistical Society, Supplement} 8(2), 184--197.
 \bibitem[Dai et al.(2026)]{dai2024markov} Dai, Wu, and Politis (2026). Distributional
   conformal prediction for Markov processes. Preprint.
 \bibitem[Freedman(1975)]{freedman1975} Freedman, D.~A. (1975). On tail probabilities for
