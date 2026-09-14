@@ -198,6 +198,41 @@ renewal approximation ignores.
 This is a general statement about stratified calibration under dependence, not a property of this
 model: any scheme that conditions on a persistent state samples that state in clusters.
 
+## Finding 11. GARCH: the case where the averaged limit is simply wrong
+
+Pooling calibration residuals averages the fast volatility variable over its invariant law. That
+is the averaged, or naive homogenized, limit, and it is correct to leading order only when the fast
+variable is fast relative to the forecast horizon. GARCH is the adversarial case, because daily
+equity persistence `alpha+beta` is around 0.99, a relaxation half-life near 70 days, so a one-day
+horizon sits deep inside the boundary layer.
+
+`garch.py` runs pooled split conformal on GARCH(1,1) and reports conditional coverage by decile of
+the current volatility, which GARCH makes exactly computable since `sigma_{t+1}` is known at time t.
+Nominal 0.90, n = 2000.
+
+| alpha+beta | half-life | calmest decile | most volatile decile | spread | marginal |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0.800 | 3.1 | 0.92 | 0.86 | 0.06 | 0.900 |
+| 0.900 | 6.6 | 0.93 | 0.84 | 0.09 | 0.899 |
+| 0.960 | 17.0 | 0.96 | 0.80 | 0.16 | 0.900 |
+| 0.990 | 69.0 | 0.98 | 0.74 | **0.24** | 0.904 |
+| 0.997 | 230.7 | 0.99 | 0.71 | 0.28 | 0.901 |
+| 0.999 | 692.8 | 0.99 | 0.72 | 0.27 | 0.896 |
+
+The marginal guarantee holds exactly in every row. Conformal does precisely what it promises. The
+conditional coverage meanwhile runs from 98% to 74% across volatility deciles at realistic equity
+persistence, and the spread grows monotonically with the relaxation time before saturating when the
+half-life approaches the calibration window.
+
+**This is the corrector made visible.** The spread across a row is the homogenization corrector of
+Theorem 1, and it vanishes exactly in the regime where the averaged limit is valid. The row that
+matters for practice is the fourth: a 24-point spread in conditional coverage, on the process the
+finance literature actually fits.
+
+The spread scales roughly as the square root of the half-life before saturating, but both GARCH
+parameters were varied to sweep persistence, which also moves the stationary volatility-of-volatility,
+so that exponent should not be quoted without a cleaner design that holds the latter fixed.
+
 ## Consequence
 
 The paper's practical proposals do not survive. Theorem 9 is dominated, and the dependence-corrected
