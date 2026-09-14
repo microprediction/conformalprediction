@@ -69,12 +69,38 @@ downstream clinical inference, an individual's probability of accelerated brain 
 association with Alzheimer's, bipolar disorder and major depression, rests on the per-subject
 reading.
 
-*Criminal justice (arXiv:2008.11664, Berk and Kuchibhotla), WITHDRAWN, do not review.* The abstract
-does contain "fair forecasts for individual offenders coupled with valid probability guarantees that
-the forecasted outcome is the true outcome". The authors withdrew the paper on 21 May 2021 with the
-note: "We found an interpretive error in the method. We are trying now to develop a better
-approach." The flag was right and the authors got there first. Check publication status before
-writing, not only the abstract.
+*Criminal justice (arXiv:2008.11664, Berk and Kuchibhotla), CLOSED, do not review.* The flagged
+sentence is in the abstract: "fair forecasts for individual offenders coupled with valid probability
+guarantees that the forecasted outcome is the true outcome". The authors withdrew the paper on
+21 May 2021: "We found an interpretive error in the method. We are trying now to develop a better
+approach."
+
+One month before that withdrawal they published the correction themselves. Kuchibhotla and Berk,
+"Nested Conformal Prediction Sets for Classification with Applications to Probation Data"
+(arXiv:2104.09358, 13 April 2021, later *Annals of Applied Statistics* 17(1)), states both halves of
+the objection, in a criminal justice setting, better than we would have:
+
+> "The inferential task in these examples can be formulated in an unconditional manner; one only asks
+> for guarantee on average over all the forecasts. No guarantee is provided for a particular
+> configuration of prediction values."
+
+> "Although each offender is processed one at a time, there is a distribution on the responses even
+> after fixing the predictors to be (26, Male, 5). Nothing specific is offered about a single
+> offender. Still, one has a guarantee for sub-groups of offenders with the same configuration of
+> predictor values."
+
+> "making a distinction between the probability that a given forecasted class is correct and the
+> probability that a 'best' prediction set is correct."
+
+They also cite the impossibility correctly: "Barber et al. (2019a) proved that the conditional
+guarantee (4) is in general impossible to attain in finite samples." All four quotations verified
+against the PDF. Note that the second one states the atom escape hatch as well, a guarantee for
+sub-groups sharing a predictor configuration, which is the same point the Karimi review makes about
+the atoms of P_X.
+
+**These are the best quotations we have for the per-patient note.** "Nothing specific is offered about
+a single offender" is the whole objection in eight words, written by the authors of the paper that got
+it wrong, in the domain where it matters most. Cite them.
 
 ### What to write instead: the per-patient cluster, with a control
 
@@ -125,7 +151,7 @@ unavailable: Semantic Scholar rate-limited the sweep, and 390 of the 686 papers 
 | 2505.13118 | 2025 | R1 | 4 | Shapley attribution of conformal interval width |
 | 2404.13002 | 2024 | R5 | 4 | Ferrous scrap, models ranked "more reliable" by set size |
 | 2302.05304 | 2023 | R2 | 5 | Brain age, per-subject guarantee, verified in the body |
-| 2008.11664 | 2020 | R2 | - | Criminal justice, WITHDRAWN by the authors 2021, do not review |
+| 2008.11664 | 2020 | R2 | - | Criminal justice, WITHDRAWN 2021; authors published the correction themselves |
 | 2306.00876 | 2023 | R1 R5 | 4 | Karimi and Samavi (reviewed, see conformal-uncertainty-bounds.html) |
 | 2608.09612 | 2026 | R2 R3 | 3 | Individual causal effects, localized plus synthetic calibration |
 | 2604.15302 | 2026 | R5 | 3 | LLM judge reliability from set width |
@@ -158,6 +184,11 @@ unavailable: Semantic Scholar rate-limited the sweep, and 390 of the 686 papers 
   weak to weak correlation with human annotations". Already cited on the set-size review.
 - **arXiv:2603.20000**, conformal set size against Bayesian predictive entropy on radio galaxies:
   "only a weak correlation between the measures".
+- **arXiv:2104.09358**, Kuchibhotla and Berk, *Nested Conformal Prediction Sets for Classification
+  with Applications to Probation Data*: "Nothing specific is offered about a single offender."
+- **arXiv:2410.01888**, Cresswell et al., *Conformal Prediction Sets Can Cause Disparate Impact*,
+  ICLR 2025, states the marginal point and challenges the equal-coverage-is-fair consensus. Quote not
+  yet verified.
 - **arXiv:2503.16809**, *Online Selective Conformal Prediction: Errors and Solutions*, refutes CAP
   (arXiv:2403.07728): "despite the claims of Bao et al. (2024a), we demonstrate that the proposed
   method does not, in fact, guarantee selection-conditional coverage."
