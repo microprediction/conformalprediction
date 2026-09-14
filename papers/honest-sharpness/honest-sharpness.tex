@@ -40,8 +40,9 @@ honestly valid procedure must, at a fixed smooth baseline, exceed the oracle thr
 the local modulus $(n g(x_0))^{-s/(2s+d)}$ on a majority of samples. The cause is Le~Cam
 indistinguishability, a testing-power floor, not exchangeability. For fixed $\eta>0$,
 minimax-rate sharpness stays compatible with honesty. Zero excess and adaptation to unknown
-smoothness are not. A plug-in estimate can be sharper because it declines to insure against
-alternatives the data cannot rule out.
+smoothness are not. A plug-in estimate can be narrower, because it declines to insure
+against alternatives the data cannot rule out, though whether narrower is better depends on
+the score being optimized.
 \end{abstract}
 
 \section{Two guarantees, one honest}
@@ -54,8 +55,9 @@ conditional law $\mathcal{L}(R\given X=x)$. Ordinary conformal coverage is
 the probability averaging over the test point $X_{n+1}$ and the calibration sample $D_n$.
 The honesty lower bound below does not follow from marginal validity:
 \citet{lei2014distribution} construct bands with exact finite-sample marginal validity that
-converge to an oracle band at the minimax rate, and localized conformal methods retain
-marginal validity while weighting by proximity. The cost we identify attaches not to
+converge to an oracle band at the minimax rate, and \citet{guan2023localized} weights
+calibration points by proximity to the test point while retaining exact finite-sample marginal
+validity, by adjusting the quantile level rather than using the nominal one. The cost we identify attaches not to
 marginal coverage but to a guarantee at a fixed point, formalized next as honest local
 coverage.
 
@@ -336,7 +338,16 @@ Assumption~\ref{as:design}, $\E\rho_k^{s}\le C'(k/n g(x_0))^{s/d}$, so
 and the stated $k$ balances the two terms at $L^{d/(2s+d)}(n g(x_0))^{-s/(2s+d)}=r_n$.
 \end{proof}
 
-Three points. The construction is a genuine finite-sample, design-conditional honesty
+The two halves of Proposition~\ref{prop:attain} are conditioned differently, and the
+statement should be read with that in mind. Honesty holds conditional on the design
+$X_1,\dots,X_n$, for every $\theta$, exactly and at every $n$: the proof fixes the design and
+the only randomness left is the Gaussian $Z$. The sharpness bound does not hold conditionally.
+It averages over the random design, through $\E\rho_k^{s}\le C'(k/n g(x_0))^{s/d}$ under
+Assumption~\ref{as:design}, and a design whose $k$th nearest neighbour is unusually distant
+carries a correspondingly larger excess. So the guarantee is design-conditional and the rate
+is a design-averaged statement. Nothing here claims a design-conditional rate.
+
+Three further points. The construction is a genuine finite-sample, design-conditional honesty
 statement, not a concentration theorem asserted without proof. It needs $\eta>0$: the
 margin $k^{-1/2}z_{1-\eta}$ diverges as $\eta\to0$. And it uses $s\le1$, where a local
 average has bias $O(L\rho_k^{s})$. For $s>1$ a matching honest construction replaces the
@@ -396,13 +407,24 @@ verbatim and forces $S_{\theta_0}(T_n) \gtrsim L^{d/(2s_0+d)}(n g(x_0))^{-s_0/(2
 even though $\theta_0 \in \Hs[s_1](L)$.
 \end{proof}
 
-This is the honesty--adaptation obstruction familiar from nonparametric confidence bands
-\citep{low1997nonparametric,cai2004adaptation}. A sharp point estimator can read apparent
+Theorem~\ref{thm:adapt} is a specialization, not a new principle. The honesty--adaptation
+obstruction is due to \citet{low1997nonparametric} and \citet{cai2004adaptation}, whose
+adaptation theory for nonparametric confidence intervals supplies the machinery the proof
+uses. What is done here is to instantiate it for a conditional quantile threshold, with the
+prediction-set notion of honesty in Definition~\ref{def:honest}. The same remark applies to
+Theorem~\ref{thm:main}, whose engine is Le~Cam two-point testing. The contribution of this
+note is not a new Le~Cam principle. It is the precise honesty--sharpness boundary for
+prediction sets, and in particular the separation of three requirements that the conformal
+literature does not usually distinguish: marginal conformal validity, fixed-$x_0$ honesty,
+and confidence over the calibration sample.
+
+A sharp point estimator can read apparent
 smoothness off the data and choose a favourable bandwidth. An honest coverage guarantee
 cannot trust apparent smoothness, because a rough local alternative is statistically
 indistinguishable, so it must carry the rougher width. This is the strongest form of the
-thesis: the local estimator is sharper not by a better estimate but by declining to insure
-against what it cannot see.
+thesis: where the local estimator is narrower, it is narrower not by estimating better but by
+declining to insure against what it cannot see. Whether narrower is better depends on the
+score being optimized, and is not settled here.
 
 \begin{remark}[Average validity is weaker; a heuristic]\label{rem:avg}
 If validity means only $\inf_\theta \E_\theta F_{\theta(x_0)}(T_n) \ge 1-\alpha$, averaging
@@ -509,7 +531,8 @@ the predicted $n^{-1/3}$.}
 \section{What it says for conformal prediction}
 
 The obstruction is not exchangeability, weighting, or pooling. Localized conformal sets
-that reweight by proximity are marginally valid and can be sharp. The obstruction is
+that reweight by proximity are marginally valid and can be sharp, provided the quantile level
+is adjusted for the weighting \citep{guan2023localized}. The obstruction is
 indistinguishability under an honesty requirement. Three statements should be kept apart.
 Zero or $o(r_n)$ oracle excess is incompatible with honesty. Minimax-rate sharpness,
 $O(r_n)$ excess at a known smoothness $s$, is compatible with honesty \emph{for fixed
@@ -535,6 +558,8 @@ sharpness it surrenders to insure against the alternatives the data cannot rule 
 \bibitem[Cai and Low(2004)]{cai2004adaptation} Cai, T.~T. and Low, M.~G. (2004). An
   adaptation theory for nonparametric confidence intervals. \emph{Annals of Statistics}
   32(5), 1805--1840.
+\bibitem[Guan(2023)]{guan2023localized} Guan, L. (2023). Localized conformal prediction: a
+  generalized inference framework for conformal prediction. \emph{Biometrika} 110(1), 33--50.
 \bibitem[Lei and Wasserman(2014)]{lei2014distribution} Lei, J. and Wasserman, L. (2014).
   Distribution-free prediction bands for non-parametric regression. \emph{Journal of the
   Royal Statistical Society, Series B} 76(1), 71--96.
