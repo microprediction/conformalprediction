@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Local Residual Smoothing and Exact Conformal Validity — Conformal Prediction</title>
+<link rel="stylesheet" href="../../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/papers/">Papers &amp; notes</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+  <p class="tag">Technical note</p>
+  <h1>Local Residual Smoothing and Exact Conformal Validity</h1>
+  <p class="subtitle">A small-sample separation. Estimating a smoothly varying residual law well
+  means borrowing from neighbouring inputs, and borrowing is exactly what an exact distribution-free
+  guarantee forbids. The two are separated by a quantity of order \(h^s\) in the bandwidth, and the
+  estimation-optimal bandwidth makes that quantity largest precisely when data are scarce.</p>
+
+  <p>
+    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="smoothing-validity.pdf">Read the PDF</a>
+  </p>
+
+  <h2>Abstract</h2>
+
+  <p>Fix any model, and consider the remaining task: estimate the conditional law of its residual at
+  a test point from held-out residuals. When that law varies smoothly with the input, the efficient
+  estimator at a small sample size borrows from neighbours by kernel smoothing, with a bandwidth that
+  widens as data thin. We show that this borrowing is incompatible with an exact, distribution-free,
+  finite-sample coverage guarantee. Any test-centred smoothing incurs a coverage gap of the same
+  order as its bias, so exact coverage forces the bandwidth to its widest, uniform pooling, which is
+  the crudest estimate of the residual law. The two goals, efficient small-sample estimation and an
+  exact guarantee, are separated by a quantity of order \(h^s\) in the bandwidth \(h\), and the
+  estimation-optimal bandwidth makes that quantity largest exactly when data are scarce. The
+  separation vanishes only as the sample grows or when the residual law does not vary with the input.
+  Nothing here concerns the base model, which may be arbitrarily adaptive; the tension is entirely in
+  the pooling step that supplies the guarantee.</p>
+
+  <h2>The setup</h2>
+
+  <p>Grant the strongest version of the standard defence of conformal prediction. The base model may
+  be anything, fit with full access to labels on a training fold, and it is frozen before the analysis
+  starts. It induces a residual \(R = A(X,Y)\), and the only question left is how to turn a held-out
+  sample of residuals into a predictive statement at a fresh input. Write \(\mu_x = \mathcal{L}(R \mid
+  X = x)\) for the conditional residual law. Two assumptions carry the argument, and for the
+  interesting case both hold.</p>
+
+  <p>The first is smoothness: the residual law is H&ouml;lder-\(s\) in total variation, so
+  \(d_{\mathrm{TV}}(\mu_x, \mu_{x'}) \le C\,\rho(x,x')^s\). This is what makes borrowing from
+  neighbours pay, since nearby inputs have nearby residual laws. The second is heterogeneity: the
+  residual law actually depends on the input. That is what makes the problem nontrivial, because
+  without it a single pooled law is correct and there is nothing to estimate locally.</p>
+
+  <h2>The two sides</h2>
+
+  <p>Efficiency wants a narrow bandwidth, and wants it wider as the effective sample count falls. That
+  is the ordinary bias-variance trade for a weighted empirical law, and it gives the minimax rate
+  \(m^{-s/(2s+d)}\).</p>
+
+  <p>Validity wants the opposite. Asking the weighted estimator to carry a guarantee invokes the
+  coverage bound for non-exchangeable weighted conformal prediction of Barber, Cand&egrave;s, Ramdas
+  and Tibshirani: replacing the exchangeable reference by a covariate-weighted one costs, in coverage,
+  the weighted total-variation distance between the calibration and test residual laws. Under
+  smoothness with kernel weights of bandwidth \(h\) that cost is \(\Theta(h^s)\). The kernel weights
+  are informative precisely because they are non-uniform in a way that depends on the test point, and
+  that is exactly what the bound charges for.</p>
+
+  <p>Driving the gap to zero, absent a known covariate-shift tilt, means removing the test-centred
+  dependence of the weights altogether. The endpoint is uniform pooling within a region pre-committed
+  before the test point is seen, which is the widest possible reach and the largest possible bias.</p>
+
+  <h2>The separation</h2>
+
+  <p>Putting the two together, no predictor in this family attains both exact distribution-free
+  coverage and the minimax estimation rate, unless the sample is unbounded or the residual law is
+  input-free. The trade is at one order: a predictor within a constant of the minimax rate has a
+  coverage gap of \(\Theta(m^{-s/(2s+d)})\), and a predictor with zero coverage gap pays the
+  corresponding estimation risk. The efficient thing and the guaranteed thing are the two ends of one
+  bandwidth, and at a small effective sample size they are far apart.</p>
+
+  <h2>What it says in practice</h2>
+
+  <p>With effective sample sizes well below a thousand, a kernel or local-likelihood estimate of the
+  residual law is usually the better forecast, and it does not come with, and is not improved by, an
+  exact conformal wrapper. The wrapper would either localize, and forfeit the exactness that is its
+  entire justification, or pool, and forfeit the estimate. The separation closes only as data
+  accumulate, when a narrow bandwidth is both efficient and nearly exchangeable, or when the residual
+  law does not vary with the input, when there was never a reason to localize. Between those limits,
+  in the small-sample heterogeneous regime that describes most applied forecasting, the guarantee and
+  the estimate pull in opposite directions.</p>
+
+  <p>This is the same pooling cost that <a href="/papers/marginally-useful/">Marginally Useful</a>
+  prices as \(I(R;X)\), reached from the estimation side rather than the information side. There the
+  question is what pooling costs you in log score against an oracle. Here it is what localizing costs
+  you in coverage, and the answer is that the two costs are the same object seen from opposite ends.</p>
+
+  <h2>Building from source</h2>
+
+  <p>The source is <code>papers/smoothing-validity/smoothing-validity.tex</code> in the site
+  repository. It needs only a standard LaTeX installation.</p>
+
+  <pre><code>cd papers/smoothing-validity
+pdflatex smoothing-validity.tex
+pdflatex smoothing-validity.tex</code></pre>
+
+  <p><a href="smoothing-validity.pdf">Open the PDF &rarr;</a></p>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+</body>
+</html>
