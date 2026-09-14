@@ -172,7 +172,7 @@ inflation matches measurement to within a few percent at every M and both persis
 M = 40. This is why the stratified variance sits *below* the i.i.d. baseline: conditioning removes
 the state-explained share of the marginal variance, not just the serial dependence.
 
-## Finding 10. Stratifying is not thinning, and the gap is Jensen
+## Finding 10. RETRACTED 2026-09-14. Stratifying is not thinning, and the gap is Jensen
 
 The first version of the formula used `phi^{kM}` for the stratified arm and underpredicted by 30 to
 40%. The reason is that stratum members do not arrive every M steps. They arrive at return times to
@@ -197,6 +197,45 @@ renewal approximation ignores.
 
 This is a general statement about stratified calibration under dependence, not a property of this
 model: any scheme that conditions on a persistent state samples that state in clusters.
+
+### RETRACTION
+
+**The measurements above are right and the explanation is wrong.** `jensen_audit.py` runs the
+decisive test. Kac's lemma forces every equal-probability stratum to have the same mean return time,
+so if visit clustering drove the within-stratum variance, bins with matching gap statistics would
+have matching variance. They do not. At phi = 0.98 with 8 bins, across the strata:
+
+| quantity | spread across bins |
+| --- | ---: |
+| mean return gap | 1.03x |
+| E[phi^tau] | 1.05x |
+| within-bin long-run variance of the indicator | orders of magnitude |
+
+The gap statistics are flat and the variance is not, so visit clustering cannot be the mechanism.
+What the per-bin table actually shows is that the within-bin variance tracks `p_b(1-p_b)`, the
+Bernoulli variance of the coverage indicator *at that bin's own conditional coverage*, which runs
+from 1.0000 in the calmest stratum to 0.4906 in the most volatile. The ratio of long-run to
+Bernoulli variance is near 1 in six of eight bins, meaning essentially no serial dependence survives
+within a stratum at all, and departs from 1 only in the most volatile bin.
+
+So the earlier "stratified inflation" numbers, formed by averaging per-bin long-run variances and
+dividing by the *pooled* `p(1-p)`, conflated two things: heterogeneity of `p_b` across strata, which
+is the law-of-total-variance term of Finding 9 and dominates, and genuine within-stratum dependence,
+which is small.
+
+**The correct object** is the long-run covariance of the coverage indicator, equivalently the
+integrated autocorrelation time, not any function of the visit-gap distribution. The extremal index
+is also the wrong object: it is defined only in a shrinking-set limit, `mu(U_n) -> 0`, whereas these
+strata have fixed probability `1/M`.
+
+**Prior art, which the paper already cites.** Effective sample size for autocorrelated data is
+Bayley and Hammersley (1946), JRSS-B 8(2). The mean return time is Kac (1947). The clustering measure
+is the index of dispersion, Cox and Lewis (1966). And the conformal application is in
+Ramos, Graziadei and Cabezas, *Conformal Prediction via Transported Beta Laws* (arXiv:2605.19024),
+which the paper cites already: 33 pages, instantiating "scale-shift, clustered, and stationary
+mixing settings", with a section on "Clustered Calibration and Effective Sample Size", a long-run
+variance, Berry-Esseen bounds and AR(1) simulations at phi = 0.9. That is this territory, done
+first and done properly.
 
 ## Finding 11. GARCH: the case where the averaged limit is simply wrong
 
