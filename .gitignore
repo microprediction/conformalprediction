@@ -41,3 +41,7 @@ paper/tmlr/*.aux
 paper/tmlr/*.log
 paper/tmlr/*.out
 paper/tmlr/*.blg
+
+# Local secrets (FRED_API_KEY, s2k, ...)
+.env
+.env.*
