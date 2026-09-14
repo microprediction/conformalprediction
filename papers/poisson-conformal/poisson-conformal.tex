@@ -39,10 +39,13 @@ law of the future score. We show one Poisson equation controls both. The realize
 history-conditional coverage of the empirical-quantile threshold decomposes exactly into its
 invariant-law value plus a current-state corrector, and the same corrector supplies the
 martingale representation of the calibration error and its long-run variance. A Freedman
-bound yields a finite-sample, class-uniform honest quantile correction, and a union bound over a
-finite state space makes that correction state-adaptive at a $\log M$ cost, so the margin is paid
-at the state actually occupied rather than the worst one. In the fast-mixing limit the discrete
-corrector converges to a homogenization cell problem.
+bound yields a finite-sample, class-uniform honest quantile correction for a pooled calibration
+block. Simulation then inverts the expected conclusion: the correction is necessary when the block
+is pooled, failing on $41\%$ of draws against a nominal $5\%$ at strong persistence, and redundant
+once the block is stratified on the state, where an independent-data margin survives a variance
+inflation of $112$. Stratification is itself the operation that removes the dependence, and the
+same Poisson solution says why. In the fast-mixing limit the discrete corrector converges to a
+homogenization cell problem.
 \end{abstract}
 
 \section{The exact object}
@@ -440,143 +443,88 @@ validity is not automatic. It then requires deterministic uniform class bounds, 
 simultaneous confidence set for the dynamics, or a separate estimation block with a valid
 envelope.
 
-\subsection{The state-adaptive correction}\label{sec:adaptive}
+\subsection{Stratifying on the state substitutes for the correction}\label{sec:substitute}
 
-Theorem~\ref{thm:honest} protects against the worst current state. That is wasteful whenever the
-chain is usually somewhere cheaper, which is the normal case: a volatility regime that is
-dangerous one day in five still forces the one-day-in-five threshold on the other four. The
-corrector $b_{\ell,w}$ is a function of the state, so the natural procedure reads it at the state
-we are in. The obstacle is that the calibration rank then becomes random, and the Freedman step in
-Theorem~\ref{thm:honest} was applied at a single deterministic level. A union bound over the state
-space repairs this at a cost of $\log M$ inside the deviation.
+Theorem~\ref{thm:honest} is the right answer for a pooled calibration block. It is not the only
+scheme available, and the natural competitor turns out to change the conclusion. Pair each
+calibration score with the state $\ell$ steps earlier and take an ordinary quantile inside each
+lagged-state stratum. That scheme uses no Poisson solution at all. It also, as we now show, does
+not need the dependence correction.
 
-Fix the observed-state case, so $W_n$ is $\Fcal_n$-measurable and the filter is a point mass, and
-let the state space be finite with $M$ elements. For each state $w$ define the state-specific
-protection level
-\begin{equation}\label{eq:uw}
-  u^\star(w) = \inf\Big\{ u\in[p,1) :\;
-    \inf_{\theta\in\Theta}\ P_\theta^{\ell}H_{\theta,F_\theta^{-1}(u)}(w) \ge p \Big\} ,
-\end{equation}
-which is \eqref{eq:uwc} with the infimum over states removed. Then $u^\star(w)\le u^\star$ for
-every $w$, and $u^\star=\max_w u^\star(w)$.
+\paragraph{Why it should not need it.} The corrector is $b_{\ell,w}(q)=(P^\ell-P^{\ell+1})\chi_q(w)$,
+a function of the state, and the long-run variance is $\sigma^2(q)=\pi[\chi_q^2-(P\chi_q)^2]$,
+built from the same solution. In the spectral form \eqref{eq:spectral} both are sums over the
+non-unit modes, and at high persistence both are dominated by the slow mode $\lambda_2\to1$, whose
+eigenfunction is a function of the state. Conditioning on the lagged state removes exactly the
+part of the coverage indicator that the slow mode carries. What remains inside a stratum is
+emission noise. In the two-state model there is a single non-unit mode and it is the state, so
+stratification removes the serial dependence in the coverage indicator entirely and leaves an
+essentially independent sample. With $M$ states the same argument removes every mode that is a
+function of the state, which for a finite chain is all of them, up to the residual correlation
+induced by nearby indices sharing a trajectory.
 
-\begin{assumption}[Attainment]\label{as:attain}
-For each $w$ the infimum in \eqref{eq:uw} is attained, that is
-$\inf_\theta P^\ell_\theta H_{\theta,F_\theta^{-1}(u^\star(w))}(w)\ge p$.
-\end{assumption}
+\paragraph{What the simulations show.} Take the family of Section~\ref{sec:twostate} with
+$\pi_H=0.5$, $n=800$, $\eta=0.05$, and regime laws giving a large contrast at $q_p$, and vary the
+persistence $\lambda$. Apply the Freedman margin \eqref{eq:delta} twice, once with the independent
+variance $V=p(1-p)$ and once with the long-run variance $V=\sigma^2_p$ of \eqref{eq:lrv}, in each
+of the two schemes. The entries are the fraction of calibration draws on which the realized
+coverage falls below $p$, against a nominal $\eta=0.05$.
 
-This holds whenever $u\mapsto \inf_\theta P^\ell_\theta H_{\theta,F_\theta^{-1}(u)}(w)$ is right
-continuous, in particular when each $F_\theta$ is continuous and strictly increasing and $\Theta$
-is finite. Without it, replace $u^\star(w)$ by $u^\star(w)+\varepsilon$ throughout for any
-$\varepsilon>0$, and every statement below goes through with that substitution. The same remark
-applies to $u^\star$ in Theorem~\ref{thm:honest}.
+\begin{center}
+\begin{tabular}{r r r r r}
+\hline
+ & & \multicolumn{2}{c}{pooled} & stratified \\
+$\lambda$ & $\sigma^2_p/p(1-p)$ & $V=p(1-p)$ & $V=\sigma^2_p$ & $V=p(1-p)$ \\
+\hline
+0.00  & 1.0   & 0.001 & 0.001 & 0.000 \\
+0.80  & 1.9   & 0.006 & 0.001 & 0.000 \\
+0.95  & 5.2   & 0.074 & 0.000 & 0.000 \\
+0.99  & 23.0  & 0.266 & 0.000 & 0.000 \\
+0.995 & 45.2  & 0.336 & 0.000 & 0.000 \\
+0.998 & 111.9 & 0.413 & 0.001 & 0.001 \\
+\hline
+\end{tabular}
+\end{center}
 
-\begin{theorem}[State-adaptive honest correction]\label{thm:adaptive}
-Assume the hypotheses of Theorem~\ref{thm:honest} and Assumption~\ref{as:attain}, with $W_n$
-observed and $|\mathcal{W}|=M<\infty$. Write $\delta_{n,\eta/M}$ for \eqref{eq:delta} evaluated at
-failure probability $\eta/M$, suppose $\max_w u^\star(w)+\delta_{n,\eta/M}<1$, and set the
-data-dependent rank
-\begin{equation}\label{eq:kadapt}
-  k(W_n) = \big\lfloor n\big(u^\star(W_n)+\delta_{n,\eta/M}\big)\big\rfloor + 1 ,
-\end{equation}
-with $R_{(k)}=+\infty$ if $k>n$. Then
-\begin{equation}\label{eq:adaptive-guarantee}
-  \inf_{\theta\in\Theta}\ \Prob_\theta\Big\{\, \Prob_\theta\big(R_{n+\ell}\le R_{(k(W_n))}
-    \given \Fcal_n\big) \ge p \,\Big\} \ge 1-\eta ,
-\end{equation}
-and $k(W_n)\le k$ for every realization, with strict inequality whenever
-$u^\star(W_n)<u^\star-(\delta_{n,\eta/M}-\delta_{n,\eta})$.
-\end{theorem}
+Three readings. In the pooled scheme the correction is necessary: the independent margin fails on
+$41\%$ of draws at the strongest persistence, eight times the nominal rate, and the failure grows
+monotonically with the inflation factor. In the pooled scheme the correction is also sufficient,
+holding at every persistence tested. And in the stratified scheme the correction is not needed at
+all, the independent margin surviving a variance inflation of $112$.
 
-\begin{proof}
-Fix $\theta\in\Theta$. For each state $w$ the level $u^\star(w)$ is a deterministic constant of the
-class, so $q_w:=F_\theta^{-1}(u^\star(w))$ is deterministic and $g_w=H_{q_w}-u^\star(w)$ is
-centered under $\pi$, because $F_\theta(q_w)=u^\star(w)$. Applying the martingale decomposition
-\eqref{eq:martingale} and Lemma~\ref{lem:freedman} at level $u^\star(w)$ with failure probability
-$\eta/M$ gives, for that single $w$,
-\[
-  \Prob_\theta\big\{ F_n(q_w) > u^\star(w)+\delta_{n,\eta/M} \big\} \;\le\; \eta/M .
-\]
-Union over the $M$ states: on an event $E$ of probability at least $1-\eta$,
-\begin{equation}\label{eq:simul}
-  F_n\big(F_\theta^{-1}(u^\star(w))\big) \;\le\; u^\star(w)+\delta_{n,\eta/M}
-  \qquad\text{simultaneously for every } w\in\mathcal{W} .
-\end{equation}
-The event $E$ does not depend on which state is realized, which is what makes the random rank
-admissible.
+\begin{remark}[The conclusion this inverts]\label{rem:inversion}
+The natural way to read Section~\ref{sec:decomp} is that dependent calibration data require a
+Poisson correction. The table says something narrower and more useful. The correction is required
+when the calibration block is pooled, and it is redundant once the block is stratified on the
+state, because stratification is itself the operation that removes the dependence the correction
+was compensating. The Poisson solution is what explains the substitution and quantifies it: the
+correction one avoids by stratifying is the same $\chi_q$ that generates the variance inflation
+one would otherwise have to pay for.
+\end{remark}
 
-Work on $E$ and let $w=W_n$ be the realized state. By \eqref{eq:simul} at that $w$,
-\[
-  n F_n(q_w) \;\le\; n\big(u^\star(w)+\delta_{n,\eta/M}\big) \;<\; k(w) ,
-\]
-so strictly fewer than $k(w)$ calibration scores lie at or below $q_w$, and therefore
-$R_{(k(w))}\ge q_w=F_\theta^{-1}(u^\star(w))$. Since $q\mapsto P_\theta^\ell H_q(w)$ is
-nondecreasing, and using \eqref{eq:corrector-obs} for the realized coverage,
-\[
-  \Prob_\theta\big(R_{n+\ell}\le R_{(k(w))}\given\Fcal_n\big)
-    = P_\theta^{\ell}H_{R_{(k(w))}}(w)
-    \;\ge\; P_\theta^{\ell}H_{F_\theta^{-1}(u^\star(w))}(w)
-    \;\ge\; p ,
-\]
-the last inequality by Assumption~\ref{as:attain}. The chain of inequalities used no property of
-$\theta$ beyond the class hypotheses, so the bound is uniform over $\Theta$. The comparison
-$k(W_n)\le k$ is immediate from $u^\star(W_n)\le u^\star$ once
-$\delta_{n,\eta/M}-\delta_{n,\eta}\le u^\star-u^\star(W_n)$.
-\end{proof}
+\begin{remark}[Why indexing the invariant quantile does not work]\label{rem:noindex}
+A tempting intermediate scheme keeps a pooled calibration block and indexes only the \emph{level},
+choosing for each state the smallest $u$ whose invariant $u$-quantile is $\ell$-step adequate from
+that state, and paying a union bound over states inside \eqref{eq:delta}. It is honest, by the
+same argument as Theorem~\ref{thm:honest} applied simultaneously at $M$ fixed thresholds. It is
+also dominated. Such a scheme can only slide along the quantile function of the invariant law, so
+in a state that already over-covers the level cannot fall below $p$ and the construction stops
+there, while the stratified scheme estimates the $\ell$-step law directly and continues. In the
+two-state model at $\pi_H=0.2$ the indexed scheme has expected threshold $1.155$ against the
+stratified scheme's $1.002$, and it over-covers at $0.940$ where the stratified scheme is exact at
+$0.900$. The finite-sample comparison does not reverse this at any $n$ we tried. We record the
+construction because the obstruction is informative: the pooled block fixes the shape of the
+attainable thresholds, and no choice of level recovers what conditioning would have given.
+\end{remark}
 
-Two things are worth separating. The procedure is state-adaptive but not model-adaptive: the map
-$w\mapsto u^\star(w)$ is a fixed class constant computed before seeing data, exactly as $u^\star$
-is in Theorem~\ref{thm:honest}, and only its \emph{argument} is read off the realized state. The
-caution at the end of Section~\ref{sec:honest} therefore still applies unchanged. If $P$, $F$ and
-$\chi$ are estimated from the same calibration block, finite-sample validity is not automatic.
-
-\begin{corollary}[When adapting pays]\label{cor:pays}
-The adaptive rank is strictly smaller than the worst-case rank at state $w$ whenever
-\begin{equation}\label{eq:pays}
-  u^\star - u^\star(w) \;>\; \delta_{n,\eta/M}-\delta_{n,\eta}
-  \;=\; \sqrt{\tfrac{2V}{n}}\Big(\sqrt{\log\tfrac{M}{\eta}}-\sqrt{\log\tfrac1\eta}\Big)
-    + \tfrac{2B}{3n}\log M .
-\end{equation}
-The right side is $O(\sqrt{V\log M/n})$ and the left side is a constant of the class, so the
-adaptive procedure is better at every state off the worst case once
-$n \gtrsim V\log M / (u^\star-u^\star(w))^2$, and the expected saving in calibration level tends to
-$\E_\pi[u^\star-u^\star(W)]$.
-\end{corollary}
-
-\paragraph{The two-state model.} Take the illustration of Section~\ref{sec:twostate}, with
-$p=0.9$, $\pi_H=0.2$, $\lambda=0.8$, $\ell=1$, and regime score laws chosen so that
-$F_L(q_p)=0.95$ and $F_H(q_p)=0.70$ at $q_p=1$. Solving \eqref{eq:uw} gives
-\[
-  u^\star(L)=0.9000, \qquad u^\star(H)=0.9724, \qquad u^\star=0.9724 .
-\]
-The low state needs no correction at all, because the invariant threshold already over-covers
-there. In threshold units the worst-case procedure calibrates at $F^{-1}(0.9724)=1.774$ while the
-adaptive procedure calibrates at $F^{-1}(0.9)=1.000$ in the low state, a $44\%$ narrower set, and
-the chain is in the low state $80\%$ of the time. The expected saving in level is
-$\E_\pi[u^\star-u^\star(W)]=0.058$. With the exact conditional increment variance the crossover in
-\eqref{eq:pays} is near $n=55$, so the adaptive rank is the smaller one over the whole practical
-range. A direct simulation of the sampled chain confirms the guarantee
-\eqref{eq:adaptive-guarantee}: at $\eta=0.10$ the realized failure rate of the adaptive procedure
-is $0.000$ at $n\in\{500,2000,8000\}$ against the worst-case procedure's $0.000$ to $0.002$, both
-far inside the nominal level, as Freedman's inequality is conservative
-(Section~\ref{sec:repro}).
-
-The gap is not a refinement of constants. At $n=1000$ the worst-case level
-$u^\star+\delta_{n,\eta}$ exceeds one, so $R_{(k)}=+\infty$ and the worst-case set is vacuous,
-while the adaptive level in the low state is $0.94$ and the set is finite. Adapting to the state
-is what makes the guarantee usable at that sample size.
-
-\begin{remark}[Latent state]\label{rem:latent}
-When $W_n$ is not observed, $\Fcal_n$ determines only the filter
-$\mu_n(\cdot)=\Prob(W_n\in\cdot\given\Fcal_n)$, and \eqref{eq:corrector} rather than
-\eqref{eq:corrector-obs} is the relevant identity. Theorem~\ref{thm:adaptive} does not apply as
-stated, because $u^\star$ would have to be indexed by a point of the simplex rather than by one of
-$M$ states, and the union bound over a continuum is not available without a covering argument and
-a modulus for $\mu\mapsto u^\star(\mu)$. Two honest options remain. Index by the support of the
-filter, using $\max\{u^\star(w):\mu_n(w)>0\}$, which recovers Theorem~\ref{thm:adaptive} when the
-filter is degenerate and Theorem~\ref{thm:honest} when it is fully supported. Or partition the
-simplex into finitely many cells before seeing data, index $u^\star$ by cell, and pay $\log(\text{number
-of cells})$ in \eqref{eq:pays}. We do not pursue the second here.
+\begin{remark}[What a sample-size comparison would and would not show]\label{rem:lowerbound}
+Stratifying splits the calibration block, so a stratum holds about $n\pi(w)$ points, whereas a
+level-indexed pooled scheme uses all $n$ and pays only $\sqrt{\log M}$ in the deviation. That
+comparison is not evidence of a statistical gain. The pooled scheme is handed the per-state levels
+as population objects computed from a known kernel, so it never pays to learn $M$ quantiles.
+Minimax lower bounds for conditional conformal coverage over a class of dimension $d$ scale as
+$\sqrt{d/n}$, and a procedure that estimated the same $M$ levels from data would pay $\sqrt{M/n}$
+in the same way the stratified scheme does. The apparent saving is the assumption, not the method.
 \end{remark}
 
 \section{Interpretation}\label{sec:interp}
@@ -702,10 +650,13 @@ reversible spectral identities of Proposition~\ref{prop:spectral} (error $\sim10
 the generator limit of Proposition~\ref{prop:homog} (error decaying linearly in $\delta$).
 \texttt{two\_state\_illustration.py} reproduces the $74\%$/$94\%$ conditional coverages, the
 long-run variance $0.17$, and the effective sample fraction $0.53$, and confirms $\sigma_p^2$
-by direct simulation of the sampled chain. \texttt{state\_adaptive.py} recomputes the
-illustration from the regime score laws, solves \eqref{eq:uw} for $u^\star(L)$, $u^\star(H)$ and
-$u^\star$, checks the guarantee \eqref{eq:adaptive-guarantee} by simulating the sampled chain at
-$n\in\{500,2000,8000\}$ with $\eta=0.10$, and tabulates the crossover in \eqref{eq:pays}.
+by direct simulation of the sampled chain. \texttt{mechanism.py} produces the table of
+Section~\ref{sec:substitute}, running both margins in both schemes across the persistence range.
+\texttt{compare\_arms.py} produces the threshold comparison of Remark~\ref{rem:noindex}, and
+\texttt{stress.py} is the attempt to break the independent margin in the stratified scheme, which
+failed at a variance inflation of $223$. \texttt{EXPERIMENTS.md} records the full sequence,
+including a variance bug in an earlier draft: a potential computed on the regime alone drops the
+emission term and understates $V$ by an order of magnitude at low persistence.
 
 \section{Conclusion}
 
@@ -713,12 +664,11 @@ The conformal coverage process under Markov dependence admits an exact
 invariant-plus-Poisson decomposition, and one solution family $q\mapsto\chi_q$ determines
 both the current-state coverage bias and the dependence-adjusted honesty margin. State bias
 and effective-sample-size loss are two readings of the same spectrum, one mode in the
-two-state case. Because the corrector is a function of the state, the honest margin can be read
-at the state actually occupied rather than at the worst one, and
-Theorem~\ref{thm:adaptive} shows a union bound over a finite state space buys that at a
-$\log M$ cost inside the deviation. In the two-state illustration the adaptive threshold is
-$44\%$ narrower than the worst-case threshold in the state the chain occupies four fifths of
-the time, and it is finite at sample sizes where the worst-case set is vacuous. In the fast-mixing limit the discrete Poisson solution becomes a
+two-state case. The practical consequence is not the one we expected. Because the slow mode is
+carried by the state, conditioning on the state removes the dependence the correction was built
+for, so the honest margin is necessary for a pooled calibration block and redundant for a
+stratified one. The useful statement is therefore about when the correction can be skipped, and
+the Poisson solution is what identifies that regime rather than what has to be computed in it. In the fast-mixing limit the discrete Poisson solution becomes a
 homogenization cell problem, the calibration variance becomes a Green--Kubo coefficient, and
 the state correction becomes the fast boundary layer. Placed next to the local sharpness
 modulus, this identifies what dynamical structure can and cannot buy back. It corrects the

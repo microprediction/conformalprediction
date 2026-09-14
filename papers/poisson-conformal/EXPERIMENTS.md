@@ -3,7 +3,7 @@
 Four scripts, run after Theorem 9 was written. They are adversarial: each was designed to
 break the claim rather than support it, and three of them succeeded.
 
-Run order: `state_adaptive.py`, `compare_arms.py`, `control2.py`, `stress.py`.
+Run order: `state_adaptive.py`, `compare_arms.py`, `control2.py`, `stress.py`, `mechanism.py`.
 (`decisive.py` and `control.py` are superseded, see the variance bug below.)
 
 ## Finding 1. Theorem 9 is dominated by stratifying on the lagged state
@@ -63,6 +63,32 @@ infinite. The dependence correction costs width and buys nothing in this model f
 dependence correction. Conditioning on the state is what decorrelates the scores, so the residual
 dependence within a stratum is second order and the concentration slack absorbs it.
 
+## Finding 5. The mechanism, tested rather than asserted
+
+Findings 3 and 4 were both measured inside the stratified scheme, so "stratification substitutes
+for the correction" was a hypothesis explaining them, not a measurement. `mechanism.py` makes the
+contrast the earlier runs never made: both margins, in both schemes, across the persistence range.
+pi_H = 0.5, n = 800, nominal eta = 0.05, entries are the share of draws below target.
+
+| lambda | inflation | pooled, iid margin | pooled, sigma^2 margin | stratified, iid margin |
+| ---: | ---: | ---: | ---: | ---: |
+| 0.00 | 1.0 | 0.001 | 0.001 | 0.000 |
+| 0.80 | 1.9 | 0.006 | 0.001 | 0.000 |
+| 0.95 | 5.2 | **0.074** | 0.000 | 0.000 |
+| 0.99 | 23.0 | **0.266** | 0.000 | 0.000 |
+| 0.995 | 45.2 | **0.336** | 0.000 | 0.000 |
+| 0.998 | 111.9 | **0.413** | 0.001 | 0.001 |
+
+Pooled with the independent margin fails, and the failure grows monotonically with the inflation,
+reaching eight times the nominal rate. Pooled with the long-run variance holds everywhere. So the
+correction is both necessary and sufficient for a pooled block. Stratified holds without any
+correction at all. The substitution is real and it is now measured.
+
+The spectral explanation: at high persistence both the corrector and the variance inflation are
+dominated by the slow mode, whose eigenfunction is a function of the state, so conditioning on the
+lagged state removes what the correction was compensating. In the two-state model there is exactly
+one non-unit mode and it is the state, which is why the removal is essentially complete.
+
 ## Consequence
 
 The paper's practical proposals do not survive. Theorem 9 is dominated, and the dependence-corrected
@@ -74,3 +100,10 @@ The finding worth writing up is the inversion. Not "dependent calibration needs 
 correction," but "stratifying on the state substitutes for the correction, and the Poisson solution
 says why and by how much." That is a statement about when the correction is unnecessary, which is
 more useful than a correction nobody needs.
+
+**Done 2026-09-14.** The paper is rewritten around this. Theorem 9 is cut to
+Remark 11, which records why indexing the level of a pooled block is dominated. Remark 12 states
+plainly that the apparent sample-size advantage over stratification is an artefact of assuming the
+kernel, since minimax lower bounds for conditional conformal coverage scale as sqrt(d/n) and a
+procedure estimating the same levels would pay the same price. The abstract and conclusion now lead
+with the substitution.
