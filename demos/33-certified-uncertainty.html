@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Certified uncertainty bounds — Conformal Prediction</title>
+<meta name="description" content="Karimi and Samavi certify per-input uncertainty bounds from a conformal set size. A two-group classifier with valid marginal coverage puts every input outside the certified interval." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  @media (max-width: 720px) { .row2, .row3 { grid-template-columns: 1fr; } }
+  .canvas-box.sq canvas { height: 330px; }
+  table.phi { border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px; margin: 1em 0; }
+  table.phi th, table.phi td { border: 1px solid var(--line); padding: 6px 14px; text-align: right; }
+  table.phi th { background: #f7f6f1; font-weight: 600; }
+  table.phi td:first-child, table.phi th:first-child { text-align: left; }
+  .tablewrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration 33 &middot; Review</p>
+  <h1>Certified uncertainty bounds</h1>
+  <p class="subtitle">Karimi and Samavi certify upper and lower bounds on the uncertainty of a single
+  input from the size of its conformal prediction set. The bounds come from substituting the marginal
+  coverage guarantee into a per-input formula. Two groups of inputs with valid marginal coverage and
+  different conditional coverage both land outside the certified interval. The
+  <a href="/conformal-uncertainty-bounds.html">close reading</a> works the same example by hand.</p>
+
+  <h2>Setup</h2>
+
+  <p>Ten classes with equal frequency and a classifier that outputs a probability vector for each
+  input. Inputs come from two groups. A group A input gets probability \(0.9\) on its true class and
+  \(0.1/9\) on each other class. A group B input gets probability \(p\) on one favoured class and
+  \((1-p)/9\) on each other class, and the favoured class is the true class with probability \(p\).
+  The conformal score is \(s(x, y) = 1 - \hat\pi_y(x)\), the paper&rsquo;s equation (3), and the set at
+  error level \(\delta\) is</p>
+
+  $$C(x) = \{\, y : \hat\pi_y(x) \ge 1 - \hat q \,\}, \qquad
+  \hat q = \text{the } \lceil (n+1)(1-\delta) \rceil\text{-th smallest calibration score}.$$
+
+  <p>For an input whose set has \(m\) elements, Theorem 2 of the paper certifies</p>
+
+  $$L_C \le U_C(x) \le H_C, \qquad \hat u_C = \frac{m+\delta-1}{K}, \quad
+  L_C = \hat u_C(1-\delta) + \delta - \frac{1}{n+1}, \quad H_C = \hat u_C \frac{n+2}{n+1} + \delta(1-\hat u_C),$$
+
+  <p>where \(U_C(x) = \hat u_C\,\mathbb{P}(y \in C(x)) + \mathbb{P}(y \notin C(x))\) is the
+  paper&rsquo;s equation (13). The panel draws \(n\) calibration points and 20,000 test points,
+  computes \(\hat q\) and the sets, and evaluates (13) for each group with that group&rsquo;s own
+  probability of covering the truth. The certified interval is drawn as a bar. It has width at most
+  \(2/(n+1)\), so at the default \(n = 1000\) it is a line.</p>
+
+  <div class="demo">
+    <div class="row2">
+      <div class="canvas-box med"><canvas id="k-now"></canvas></div>
+      <div class="canvas-box med"><canvas id="k-sweep"></canvas></div>
+    </div>
+    <div class="readouts" id="k-readouts"></div>
+    <div class="controls" id="k-controls"></div>
+  </div>
+
+  <p>At the defaults every set is a singleton, marginal coverage is 91%, and the certified interval
+  for \(m = 1\) is \([0.108, 0.109]\). A group A input is covered with probability one, so (13) gives
+  \(U_C = 0.01\). A group B input is covered with probability \(0.65\), so (13) gives \(U_C = 0.36\).
+  Both are outside the interval, in opposite directions. The right panel sweeps the group B
+  probability \(p\). The certified bounds do not move with \(p\) except where the threshold jumps and
+  the group B sets change size, because they depend on the input only through \(m\). The uncertainty
+  they are supposed to bound moves the whole way.</p>
+
+  <p>Raising the share of group B or lowering \(p\) eventually pushes marginal coverage below
+  \(1-\delta\) at \(\hat q = 1-p\), and the threshold jumps to the next block of calibration scores.
+  Group B sets then contain all ten classes, their certified interval becomes the one for \(m = 10\),
+  and their conditional coverage becomes one. Group A sets stay singletons with conditional coverage
+  one and \(U_C = 0.01\), still outside their interval.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. The coverage guarantee is an average over inputs. Theorem 2 spends it as if it were
+    a statement about each input, and the bounds that result depend on nothing but the set size. The
+    example is a valid split conformal predictor at 91% marginal coverage in which no input satisfies
+    the certified bounds. The two groups are atoms, so calibrating within each would give both exact
+    coverage. The bounds fail where the conditional quantity is attainable, not only where it is
+    not.</p>
+  </div>
+
+  <p class="note">The paper is Karimi and Samavi, <em>Quantifying Deep Learning Model Uncertainty in
+  Conformal Prediction</em>, AAAI 2023 Summer Symposium Series, arXiv:2306.00876v2. A Python check of
+  the default setting is at <code>data/reviews/karimi_check.py</code>. Source:
+  <code>js/demo33.js</code>.</p>
+
+  <div class="prevnext">
+    <a href="32-conformal-correlation.html">&larr; Conformal correlation</a>
+    <span class="spacer"></span>
+    <a href="/conformal-uncertainty-bounds.html">The close reading &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+<script type="module" src="../js/demo33.js"></script>
+</body>
+</html>

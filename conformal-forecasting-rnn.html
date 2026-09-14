@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Conformal forecasting RNNs — Conformal Prediction</title>
+<meta name="description" content="A close reading of Stankeviciute, Alaa and van der Schaar (NeurIPS 2021), who add one calibration quantile per horizon to an RNN point forecast and compare methods by joint coverage and width. The baselines are judged against a joint target they were not built for, the COVID-19 interval carries no finite guarantee, and under the interval score a state-dependent width beats the constant one on their data and on FRED." />
+<meta property="og:title" content="Conformal Prediction — conformal forecasting RNNs" />
+<meta property="og:description" content="Coverage and width decide nothing between methods. The interval score does, and it goes against the constant width." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  table.phi { border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px; margin: 1em 0; }
+  table.phi th, table.phi td { border: 1px solid var(--line); padding: 6px 14px; text-align: right; }
+  table.phi th { background: #f7f6f1; font-weight: 600; }
+  table.phi td:first-child, table.phi th:first-child { text-align: left; }
+  .tablewrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Review</p>
+  <h1>Conformal forecasting RNNs</h1>
+  <p class="subtitle">Stankevi&#269;i&#363;t&#279;, Alaa and van der Schaar train an LSTM to issue
+  \(H\)-step point forecasts and add to each horizon one calibration quantile of the absolute
+  residual, Bonferroni-corrected so that the \(H\) intervals cover jointly with probability at least
+  \(1-\alpha\). The half-width is one number per horizon for every input. Two of the objections
+  below are already in the literature, and we set them out with their sources before adding anything.
+  What we have not found stated anywhere is the flaw in the comparison itself. The baselines are
+  calibrated for per-horizon coverage and then graded on a joint criterion that only CF-RNN was
+  widened to meet, and the paper&rsquo;s own uncorrected results show the gap is that widening rather
+  than the method. Neither coverage nor width is a proper score, and rerunning the paper&rsquo;s
+  COVID-19 experiment with one reverses its conclusion: the quantile RNN it reports as failing has
+  the best interval on every split, and the dropout RNN that covers half the time still beats the
+  uncorrected CF-RNN on two splits of three.
+  <a href="/demos/35-constant-width.html">Demonstration 35</a> shows the width mechanism on a
+  synthetic series.</p>
+
+  <h2>What is proposed</h2>
+
+  <p>The paper is Stankevi&#269;i&#363;t&#279;, Alaa and van der Schaar, &ldquo;Conformal Time-Series
+  Forecasting,&rdquo; NeurIPS 2021. The data are many exchangeable sequences, each a history
+  \(y_{1:T}\) with an \(H\)-step continuation \(y_{T+1:T+H}\). An LSTM \(M\) trained on some of the
+  sequences issues the \(H\) point forecasts \(\hat y_{T+1:T+H} = M(y_{1:T})\) at once. On \(m\)
+  held-out calibration sequences the per-horizon absolute residuals are recorded, and Algorithm 1
+  sets</p>
+
+  $$\hat\varepsilon_h \;=\; \text{the } \big\lceil (m+1)(1-\alpha/H) \big\rceil\text{-th smallest of }
+  \big\{\, |y^{(i)}_{T+h} - \hat y^{(i)}_{T+h}| : i = 1, \dots, m \,\big\}, \qquad h = 1, \dots, H,$$
+
+  <p>and the interval at horizon \(h\) for a new sequence is \(\hat y_{T+h} \pm \hat\varepsilon_h\).
+  Theorem 1 states that all \(H\) intervals contain the truth with probability at least \(1-\alpha\),
+  by split conformal validity at each horizon and Boole&rsquo;s inequality across horizons. The
+  half-width \(\hat\varepsilon_h\) does not depend on the new sequence.</p>
+
+  <p>The experiments report two numbers per method: the fraction of test sequences whose truth lies
+  inside all \(H\) intervals, and the mean interval width. The baselines are a multi-quantile RNN
+  (MQ-RNN, called QRNN in the code) trained by pinball loss at the 5% and 95% levels, and a Monte Carlo
+  dropout RNN (DP-RNN) whose interval is the sample mean plus or minus \(1.645\) sample standard
+  deviations. The paper writes that the baselines &ldquo;both fail to achieve target coverage,
+  sometimes reporting coverage rates as low as zero,&rdquo; that &ldquo;lack of coverage guarantees
+  makes them less useful in high stakes real-world applications,&rdquo; and that &ldquo;CF-RNN adapts
+  its prediction interval widths to reliably match the required target coverage.&rdquo;</p>
+
+  <h2>What has already been said</h2>
+
+  <p>Lin, Trivedi and Sun raise the vacuous Bonferroni quantile twice. The appendix of
+  <em>Conformal Prediction with Temporal Quantile Adjustments</em> (NeurIPS 2022) states that under
+  the correction &ldquo;the PI will always by [sic] infinitely wide if \(\alpha/T \le 1/(N+1)\),&rdquo;
+  and that &ldquo;the original paper implemented the split-conformal incorrectly by ignoring
+  \(v_{N+1}\), which is why this issue did not appear.&rdquo; Their companion paper, <em>Conformal
+  Prediction Intervals with Temporal Dependence</em> (TMLR 2022), names the dataset: &ldquo;The
+  authors performed an incorrect split-conformal experiment, which is why the COVID19 dataset still
+  has finite width in Stankevi&#269;i&#363;t&#279; et al. (2021).&rdquo; Everything in our section on the
+  COVID-19 guarantee below is a confirmation of theirs, with two details added: the cap that rescues
+  it is visible in the released code, and under the paper&rsquo;s own split sizes the vacuity hits the
+  COVID-19 experiment alone, since MIMIC-III at \(H = 2\) and EEG at \(H = 10\) have calibration
+  sets large enough for the corrected index to exist.</p>
+
+  <p>The efficiency objection is also established. The same TMLR paper writes that CF-RNN
+  &ldquo;leads to unbalanced coverage (i.e. some TS receives poor coverage longitudinally while
+  others high) and inefficient PIs.&rdquo; Sun and Yu make it quantitative in <em>Copula Conformal
+  Prediction for Multi-step Time Series Forecasting</em> (ICLR 2024): &ldquo;We show that their
+  method of applying Bonferroni correction produces inefficient confidence regions, especially for
+  multidimensional data or long prediction horizons.&rdquo; Replacing the correction with an
+  estimated copula cuts the width by 33% on the same COVID-19 data and gives &ldquo;a 40% sharper
+  confidence region&rdquo; on trajectory prediction, where they observe that &ldquo;the confidence
+  region produced CF-RNN is uninformatively large, as it covers all the lanes.&rdquo; Cleaveland and
+  co-authors (AAAI 2024) and at least two later papers repeat the conservativeness point in passing.
+  Demonstration 35 illustrates the same conclusion by a different route, holding the point forecast
+  and the calibration window fixed and varying only whether the width may depend on the state.</p>
+
+  <p>We have not found the next two objections anywhere in the citing literature.</p>
+
+  <h2>The baselines are scored on a target they did not aim at</h2>
+
+  <p>MQ-RNN is trained to produce, at every horizon, an interval whose per-horizon coverage is 90%.
+  DP-RNN&rsquo;s interval is a 90% normal band at each horizon. Neither is corrected for \(H\)
+  horizons. Ten per-horizon 90% intervals cover jointly with probability \(0.9^{10} = 35\%\) if the
+  misses are independent and somewhat more if they cluster, and the paper&rsquo;s own uncorrected
+  CF-RNN, Table 6, has per-horizon coverage between 85.5% and 91.6% on EEG and joint coverage of 59.4%.
+  MQ-RNN&rsquo;s 48% joint coverage on the same task, Table 5, is what a per-horizon 90% method looks
+  like when judged on a joint criterion. The paper reads it as failure. The fair reading is that the
+  baselines were never asked for joint coverage and CF-RNN was, and that widening any per-horizon
+  interval by the same Bonferroni factor would produce the same comparison in reverse.</p>
+
+  <h2>Confirming the COVID-19 guarantee is vacuous</h2>
+
+  <p>The COVID-19 experiment uses \(m = 100\) calibration sequences and \(H = 50\) horizons at
+  \(\alpha = 0.1\). The Bonferroni index is</p>
+
+  $$\big\lceil (m+1)(1-\alpha/H) \big\rceil \;=\; \lceil 101 \times 0.998 \rceil \;=\; 101 \;>\; m ,$$
+
+  <p>so the quantile in Algorithm 1 does not exist and, by the standard convention and by the proof of
+  Theorem 1, \(\hat\varepsilon_h = +\infty\). The released code caps the quantile level at one and
+  returns the largest calibration residual instead. We confirmed on a rerun that every Bonferroni
+  half-width on this task equals the sample maximum. The intervals in Table 5, with a mean width of
+  \(733.95 \pm 582.52\) and joint coverage of \(89.7 \pm 5.3\%\), are the largest error seen in
+  calibration, added to and subtracted from the point forecast. That is a legitimate heuristic. It
+  carries no finite-sample guarantee, and the paper presents it as the only method that
+  &ldquo;empirically achieve[s] the target joint coverage rates.&rdquo; The same index calculation
+  gives \(1733 \le 1823\) on MIMIC-III and \(3803 \le 3840\) on EEG, so the guarantee is real on those
+  two.</p>
+
+  <h2>Coverage and width are not a score</h2>
+
+  <p>The paper states its selection rule: &ldquo;as long as the coverage rate surpasses target
+  coverage, the intervals should be as efficient (narrow) as possible.&rdquo; Two numbers cannot rank
+  methods on their own. A method can hit the coverage target with a width that is far too large on
+  most inputs and too small on the rest, and a second method can hit the same target with a smaller
+  average width and worse intervals. The proper score for an interval at level \(a\) is the interval
+  score of Winkler,</p>
+
+  $$\mathrm{IS}_a(l, u; y) \;=\; (u - l) + \frac{2}{a}(l - y)_+ + \frac{2}{a}(y - u)_+ ,$$
+
+  <p>which is minimized in expectation by the true \(a/2\) and \(1-a/2\) quantiles and by nothing
+  else. It charges width, and it charges each miss in proportion to its size at the rate \(2/a\). The
+  paper&rsquo;s rule is what the interval score becomes if the miss penalty is replaced by a threshold
+  on the average miss rate, and the replacement is what lets a constant width pass.</p>
+
+  <p>The constant width is the point. The information a forecast interval should carry is how far the
+  next value can wander from the point forecast given the state, and on real series that distance
+  moves with the state. CF-RNN&rsquo;s width is one quantile of the pooled residual distribution, so
+  it is the pooled shape, and the loss from pooling is the quantity our
+  <a href="/demos/14-four-readings.html">information gap</a> pages measure. The paper&rsquo;s
+  conclusion names the problem: future work &ldquo;would involve making them more adaptive to
+  individual observations.&rdquo;</p>
+
+  <h2>Rerun on their COVID-19 data</h2>
+
+  <!-- COVID -->
+<p>We reran the COVID-19 experiment with the authors&rsquo; code and hyperparameters, an LSTM with embedding size 20 trained for 1,000 epochs, on daily cases for the 307 English lower-tier local authorities from the UK Health Security Agency API over the same 150-day window, 100 observed days and 50 to forecast, split 162 training, 81 calibration and 64 test areas in the paper&rsquo;s proportions, over 3 random splits. All three methods share the architecture, the hyperparameters and the training areas, so the only difference between them is how the interval is built. The Bonferroni index is \(\lceil 82 \times 0.998 \rceil = 82 > 81\), and on every split every Bonferroni half-width equalled the largest calibration residual. Every interval is scored at the level it claims. Means over splits, with standard deviations in parentheses.</p>
+<div class="tablewrap">
+<table class="phi">
+<tr><th>Interval, nominal level</th><th>Interval score</th><th>Width, mean</th><th>Coverage per horizon</th><th>Joint coverage over 50 horizons</th></tr>
+<tr><td>CF-RNN, Bonferroni, joint 90% (per horizon 99.8%)</td><td>3,437 (3,860)</td><td>577</td><td>99.2%</td><td>95.8% (2.7)</td></tr>
+<tr><td>CF-RNN uncorrected, per horizon 90%</td><td>394 (171)</td><td>185</td><td>87.9%</td><td>56.8% (7.0)</td></tr>
+<tr><td>MQ-RNN, per horizon 90%</td><td>238 (90)</td><td>107</td><td>83.6%</td><td>20.3% (11.7)</td></tr>
+<tr><td>DP-RNN, per horizon 90%</td><td>312 (68)</td><td>72</td><td>51.0%</td><td>2.1% (1.5)</td></tr>
+</table>
+</div>
+<p>The first row is the paper&rsquo;s method and it is the calibration maximum at every horizon. It reaches 96% joint coverage against a 90% target, so by the paper&rsquo;s criterion it wins, and it costs an interval score of 3,437 to get there.</p>
+<p>The lower three rows all target 90% per horizon and can be compared with each other directly. MQ-RNN, which the paper reports as failing, has the best interval on 3 of the 3 splits: 238 on average against 394 for the uncorrected CF-RNN. Its coverage is 84% at a 90% target and the score still prefers it, because its misses are small. DP-RNN covers 51% of the time, which the paper reads as total failure, and it still scores better than the uncorrected CF-RNN on 2 of 3 splits. The uncorrected CF-RNN interval adds a constant to the same LSTM point forecast that MQ-RNN refines with two trained quantiles, and the constant is what costs it.</p>
+<!-- /COVID -->
+
+  <h2>The same construction on the FRED daily universe</h2>
+
+  <!-- FRED -->
+<p>The skaters benchmark harness runs laplace, a zero-dependency online distributional forecaster, on the FRED daily universe of change series. For this study every series gets laplace at horizon \(H = 10\), and at each origin two sets of intervals are built from the same point forecasts, laplace&rsquo;s predictive means. The CF intervals add the CF-RNN quantile of the last 500 resolved absolute residuals at each horizon. The laplace intervals are the quantiles of laplace&rsquo;s own predictive distribution at the same levels. Both are scored at \(a = \alpha/H = 0.01\), the Bonferroni level with joint target 90%, and at \(a = \alpha = 0.1\) per horizon. 569 series, a median of 256 scored origins per series, scored on the most recent 2,000 changes after a 300-step warm-up. The universe is every cached daily series that clears the harness&rsquo;s two standing screens, at least 500 changes and no single move dwarfing the series&rsquo; own scale, which is 569 of the 701 cached. Scores are on each series&rsquo; own scale, so the table reports medians over series and the share of series on which each interval scores better.</p>
+
+<div class="tablewrap">
+<table class="phi">
+<tr><th>Level</th><th>Interval</th><th>Interval score, median over series</th><th>Width, median over series</th><th>Coverage per horizon</th><th>Joint coverage</th><th>Series where laplace scores better</th><th>Median score ratio CF / laplace</th></tr>
+<tr><td>\(a = 0.01\), joint target 90%</td><td>constant width (CF-RNN)</td><td>0.180</td><td>0.122</td><td>98.8%</td><td>93.0%</td><td rowspan="2">70%</td><td rowspan="2">1.067</td></tr>
+<tr><td></td><td>laplace&rsquo;s own quantiles</td><td>0.167</td><td>0.119</td><td>98.8%</td><td>91.9%</td></tr>
+<tr><td>\(a = 0.1\), per horizon 90%</td><td>constant width (CF-RNN)</td><td>0.079</td><td>0.049</td><td>90.1%</td><td>&nbsp;</td><td rowspan="2">83%</td><td rowspan="2">1.037</td></tr>
+<tr><td></td><td>laplace&rsquo;s own quantiles</td><td>0.074</td><td>0.053</td><td>90.9%</td><td>&nbsp;</td></tr>
+</table>
+</div>
+<p>Per horizon at the Bonferroni level, the median score ratio is 1.151 at \(h = 1\) and 1.015 at \(h = 10\). The constant width over-covers at the joint level, 93.0% against a 90% target, because ten Bonferroni intervals that never share a state cannot use the correlation between horizons. The same run also scores laplace as a density, at a median held-out log score of 2.87 nats per observation. The constant-width interval has no density to score at all.</p>
+<!-- /FRED -->
+
+  <h2>What survives</h2>
+
+  <p>Theorem 1 is correct where its index exists. Split conformal quantiles per horizon with a
+  Bonferroni correction give joint coverage over exchangeable sequences, and the paper is right that this holds for any point forecaster. The framing is also a real
+  contribution: a set of independent sequences is exchangeable where the time steps within one
+  series are not, and that is the right way to get a finite-sample guarantee out of a forecasting
+  RNN. What does not follow is that the constant-width construction is a good interval, or that
+  methods without the guarantee are worse. The guarantee is one number, the average
+  coverage, and once it is met the comparison is a comparison of proper scores. On that comparison the constant width is beaten by the quantile RNN on every split of the
+  paper&rsquo;s own data.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. That the COVID-19 guarantee is vacuous and the intervals inefficient was
+    established by others in 2022 and 2024. What appears to be new is that the comparison itself is
+    decided by a target mismatch, since the baselines are graded on joint coverage they were never
+    calibrated for, and that coverage and width do not rank methods. Under the interval score the quantile RNN the paper dismisses is the best interval on its own
+    data on every split, and on FRED the constant width loses to the forecaster&rsquo;s own quantiles
+    at the same coverage on most series.</p>
+  </div>
+
+  <p class="note">The paper is Stankevi&#269;i&#363;t&#279;, Alaa and van der Schaar, <em>Conformal
+  Time-Series Forecasting</em>, NeurIPS 2021, code at github.com/kamilest/conformal-rnn. The prior criticism is Lin, Trivedi and Sun, <em>Conformal Prediction with
+  Temporal Quantile Adjustments</em> (NeurIPS 2022, arXiv:2205.09940) and <em>Conformal Prediction
+  Intervals with Temporal Dependence</em> (TMLR 2022, arXiv:2205.12940), and Sun and Yu, <em>Copula
+  Conformal Prediction for Multi-step Time Series Forecasting</em> (ICLR 2024, arXiv:2212.03281).
+  The interval score is Winkler (1972) and Gneiting and Raftery (2007), equation (43). The FRED study is
+  <code>benchmarks/cfrnn_study.py</code> in the skaters repository, and the COVID-19 rerun script is
+  <code>data/reviews/run_covid.py</code> here. The UK Health Security Agency dashboard API supplies
+  daily cases by specimen date for English lower-tier local authorities, where the paper&rsquo;s code reads a 24 May 2021 snapshot of cases by
+  publication date for United Kingdom local authorities, so the areas and the counts differ from the
+  paper&rsquo;s and the split sizes are scaled to the 307 areas available.</p>
+
+  <div class="prevnext">
+    <a href="/reviews.html">&larr; All reviews</a>
+    <span class="spacer"></span>
+    <a href="/demos/35-constant-width.html">Demonstration 35 &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+</body>
+</html>

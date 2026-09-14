@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Set size as uncertainty — Conformal Prediction</title>
+<meta name="description" content="Ye et al. rank language models by mean conformal set size and read it as model uncertainty. Three experiments: temperature changes the size at fixed accuracy, LAC and APS rank two equal-accuracy models in opposite orders, and two models with identical sets have accuracy 90% and 5%." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  @media (max-width: 720px) { .row2, .row3 { grid-template-columns: 1fr; } }
+  .canvas-box.sq canvas { height: 330px; }
+  table.phi { border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px; margin: 1em 0; }
+  table.phi th, table.phi td { border: 1px solid var(--line); padding: 6px 14px; text-align: right; }
+  table.phi th { background: #f7f6f1; font-weight: 600; }
+  table.phi td:first-child, table.phi th:first-child { text-align: left; }
+  .tablewrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration 34 &middot; Review</p>
+  <h1>Set size as uncertainty</h1>
+  <p class="subtitle">Ye, Yang, Pang, Wang, Wong, Yilmaz, Shi and Tu rank large language models by the
+  mean size of their conformal prediction sets at nominal 90% coverage and read the size as the
+  model&rsquo;s uncertainty. Three experiments on a synthetic six-option classifier showing the
+  mechanisms behind that. The first two are established results, due to Xi and co-authors and to
+  Kostumov and co-authors, reproduced here in their simplest form: dividing the logits by a
+  temperature changes no answer and changes the set size, and the two score functions the paper
+  averages rank a sharp model and a soft model of equal accuracy in opposite orders. The third is
+  structural and is the one that does not appear in the literature: two models with identical sets on
+  every input have accuracy 90% and 5%. The
+  <a href="/conformal-set-size.html">close reading</a> repeats the analysis on the paper&rsquo;s own
+  released logits.</p>
+
+  <h2>Setup</h2>
+
+  <p>Six options, as in the paper&rsquo;s multiple-choice format. A synthetic model produces a logit
+  vector for each question: it puts a margin \(a\) on one chosen option and Gaussian noise of scale
+  \(\sigma\) on every option. The chosen option is the correct one with probability \(\text{acc}_0\)
+  and otherwise a random wrong one, so accuracy is fixed by \(\text{acc}_0\) and does not depend on
+  \(a\) or \(\sigma\). Probabilities are the softmax of the logits. The paper&rsquo;s two set
+  constructions, taken from its released code, are</p>
+
+  $$\text{LAC:}\quad C(x) = \{\, y : \hat\pi_y(x) \ge 1 - \hat q \,\}, \qquad
+  \text{APS:}\quad C(x) = \text{the top options in order, while the cumulative probability} \le \hat q,$$
+
+  <p>with \(\hat q\) the \(\lceil (n+1)(1-\alpha) \rceil\)-th smallest calibration score, the score
+  being \(1 - \hat\pi_y\) for LAC and the cumulative probability down to \(y\) for APS, and an empty
+  set replaced by the top option. The set size statistic is the paper&rsquo;s equation (6),</p>
+
+  $$\mathrm{SS} = \frac{1}{|D_{\text{test}}|} \sum_{(X_t, Y_t) \in D_{\text{test}}} |C(X_t)|.$$
+
+  <p>Each panel calibrates on 2,000 questions and evaluates on 6,000.</p>
+
+  <h2 id="a">A. Temperature</h2>
+
+  <p>Dividing every logit by \(T\) leaves every argmax where it was. Accuracy does not move. The APS set
+  size does, by more than one option across the range at the defaults, and the LAC size moves less
+  because LAC thresholds each option&rsquo;s own probability while APS thresholds a cumulative sum
+  that temperature reshapes. The dashed lines are realized coverage on the right scale. Raising the
+  accuracy slider above 90% takes the LAC sets to singletons and the APS sets stay large.</p>
+
+  <div class="demo">
+    <div class="canvas-box med"><canvas id="t-plot"></canvas></div>
+    <div class="readouts" id="t-readouts"></div>
+    <div class="controls" id="t-controls"></div>
+  </div>
+
+  <p>Under the paper&rsquo;s reading, the model at \(T = 0.5\) and the model at \(T = 2\) have
+  different uncertainty. They answer every question identically. What the set size measures here is
+  the scale of the logits.</p>
+
+  <h2 id="b">B. Score function</h2>
+
+  <p>Two models with the same accuracy, arranged by letting the chosen option beat the best other
+  option by exactly the margin \(a\). The sharp model has a large margin and, when it is wrong, is
+  confidently wrong. The soft model has a small margin. At the default \(\alpha = 0.15\), above the
+  10% of questions both models get wrong, LAC gives both models singleton sets and ranks them equal.
+  APS gives the sharp model the larger sets, because APS admits options while the cumulative
+  probability stays below \(\hat q\), and on a sharp model the options after the first carry so
+  little mass that several fit under the threshold. The same two models, with the same answers on
+  every question, are tied by one score and separated by the other. At \(\alpha = 0.10\), where the
+  wrong fraction equals \(\alpha\), the LAC threshold sits on the boundary between the two blocks of
+  calibration scores and the LAC ranking changes from one resample to the next.</p>
+
+  <div class="demo">
+    <div class="canvas-box med"><canvas id="s-plot"></canvas></div>
+    <div class="readouts" id="s-readouts"></div>
+    <div class="controls" id="s-controls"></div>
+  </div>
+
+  <p>The paper averages LAC and APS before ranking, and says so in order to &ldquo;mitigate the
+  influence of different score functions.&rdquo; On its own released logits the two rankings agree with
+  Kendall \(\tau\) between 0.58 and 0.88 across the five tasks, and two of its four headline examples
+  of a more accurate model showing more uncertainty survive under APS only, with APS coverage of 95%
+  and 99% on the more accurate model. The averaging did not remove the dependence.</p>
+
+  <h2 id="c">C. Same sets, different accuracy</h2>
+
+  <p>Eighty five percent of the questions are &ldquo;medium&rdquo;: the model puts probabilities
+  \((0.5, 0.4, 0.1)\) on three options and zero on the rest. Model 1 puts the \(0.5\) on the correct
+  option and model 2 puts the \(0.4\) on it. The remaining questions are &ldquo;hard&rdquo;:
+  probabilities \((0.4, 0.3, 0.3)\) with the correct option in a uniformly random one of the three
+  slots, identical under both models. The calibration scores under model 1 are \(0.5\) on
+  medium questions and \(0.6\) or \(0.7\) on hard ones, and under model 2 they are \(0.6\) on medium
+  questions and \(0.6\) or \(0.7\) on hard ones. The 90% threshold falls at \(\hat q = 0.6\) under both
+  models whenever fewer than 10% of the calibration questions score \(0.7\), and at \(0.7\) under both
+  otherwise. At \(\hat q = 0.6\) every medium question gets the set \(\{0.5, 0.4\}\) and every hard
+  question gets its top option alone, under either model.</p>
+
+  <div class="demo">
+    <div class="readouts" id="c-readouts"></div>
+    <div class="controls" id="c-controls"></div>
+  </div>
+
+  <p>The sets agree on every question, so the set size and the coverage agree exactly. Model 1 is
+  right 90% of the time and model 2 is right 5% of the time. The size statistic sees the two models as equally uncertain. The mean set size is a functional of the law of the sets,</p>
+
+  $$\mathbb{E}|C(X)| = \sum_{y=1}^{K} \mathbb{P}\big(y \in C(X)\big),$$
+
+  <p>and the <a href="/conformal-correlation.html#nogo">no-go theorem</a> for such functionals says
+  that whenever a set of size two or more occurs, the label the model ranks first can be moved inside
+  the set without changing any of them. Lowering \(\alpha\) enough moves the threshold to the medium
+  block, and the two models then separate, because the score of the correct option differs. The
+  paper&rsquo;s ranking is at a single \(\alpha\).</p>
+
+  <div class="takeaway">
+    <p>Takeaway. Coverage is the only quantity conformal prediction certifies, and it is one number.
+    The mean set size at a nominal coverage is a property of the score function, of the logit scale,
+    and of how far the realized coverage overshoots the nominal one. None of those is the
+    model&rsquo;s uncertainty, and the size cannot see accuracy at all.</p>
+  </div>
+
+  <p class="note">The paper is Ye, Yang, Pang, Wang, Wong, Yilmaz, Shi and Tu, <em>Benchmarking LLMs
+  via Uncertainty Quantification</em>, NeurIPS 2024 Datasets and Benchmarks, arXiv:2401.12794. The set
+  constructions follow the paper&rsquo;s released code. Source: <code>js/demo34.js</code>.</p>
+
+  <div class="prevnext">
+    <a href="33-certified-uncertainty.html">&larr; Certified uncertainty bounds</a>
+    <span class="spacer"></span>
+    <a href="/conformal-set-size.html">The close reading &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+<script type="module" src="../js/demo34.js"></script>
+</body>
+</html>
