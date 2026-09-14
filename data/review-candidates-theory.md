@@ -49,14 +49,32 @@ sampling distribution. The advertised gain, larger and less conservative safe se
 guarantee that was dropped. A note stating that, with the oscillating-allocation counterexample for
 the adaptive-conformal variants, covers the cluster.
 
-**2. Per-subject guarantees in high-stakes domains (R2).** Two of the eight are worth naming on their
-own. A brain-age paper (arXiv:2302.05304) claims "statistical guarantees with respect to
-single-subject uncertainty estimates" and that those guarantees "indeed hold for every participant",
-which is a marginal rate reported as a per-participant guarantee. A criminal justice risk assessment
-(arXiv:2008.11664) promises "fair forecasts for individual offenders coupled with valid probability
-guarantees that the forecasted outcome is the true outcome", which makes two errors at once: the
-guarantee is not per-offender, and it bounds the rate at which the truth lies in the set, not the
-probability that the point forecast is right.
+**2. Per-subject guarantees in high-stakes domains (R2).** Two of the eight were checked against
+the full text on 2026-09-13, with opposite outcomes.
+
+*Brain age (arXiv:2302.05304, Ernsting et al., Munster), CONFIRMED and the best target on this
+docket.* The construction is ordinary split conformal on quantile regression: the interval is
+`[y_{a/2}(x) - q, y_{1-a/2}(x) + q]` for a single calibration constant `q`, so the guarantee is
+marginal. The word "marginal" appears zero times in the paper. The claim is that the approach
+"provides provable, statistical guarantees with respect to single-subject uncertainty estimates" and
+so "enables the calculation of individual probabilities for accelerated brain-aging with guaranteed
+uncertainty bounds", and the per-subject reading is the selling point, since competing methods are
+said to "lack theoretical support and cannot provide statistical guarantees for a single person's
+confidence interval". The sharpest point is the purported verification: the paper reports that "the
+statistical guarantees regarding single-subject uncertainty estimation indeed hold for every
+participant (see Figure S1)", and Figure S1 plots prediction interval coverage probabilities per
+dataset. A coverage rate averaged over participants cannot verify a per-participant guarantee. The
+confusion appears twice, once in the claim and once in the test offered as evidence for it. The
+downstream clinical inference, an individual's probability of accelerated brain aging and its
+association with Alzheimer's, bipolar disorder and major depression, rests on the per-subject
+reading.
+
+*Criminal justice (arXiv:2008.11664, Berk and Kuchibhotla), WITHDRAWN, do not review.* The abstract
+does contain "fair forecasts for individual offenders coupled with valid probability guarantees that
+the forecasted outcome is the true outcome". The authors withdrew the paper on 21 May 2021 with the
+note: "We found an interpretive error in the method. We are trying now to develop a better
+approach." The flag was right and the authors got there first. Check publication status before
+writing, not only the abstract.
 
 ## The flags
 
@@ -70,8 +88,8 @@ unavailable: Semantic Scholar rate-limited the sweep, and 390 of the 686 papers 
 | 2507.15022 | 2025 | R2 R4 | 4 | CPED-NCBFs, conformal replacing SMT/MIP verification |
 | 2505.13118 | 2025 | R1 | 4 | Shapley attribution of conformal interval width |
 | 2404.13002 | 2024 | R5 | 4 | Ferrous scrap, models ranked "more reliable" by set size |
-| 2302.05304 | 2023 | R2 | 4 | Brain age, "guarantees ... for every participant" |
-| 2008.11664 | 2020 | R2 | 4 | Criminal justice, "valid probability guarantees" per offender |
+| 2302.05304 | 2023 | R2 | 5 | Brain age, per-subject guarantee, verified in the body |
+| 2008.11664 | 2020 | R2 | - | Criminal justice, WITHDRAWN by the authors 2021, do not review |
 | 2306.00876 | 2023 | R1 R5 | 4 | Karimi and Samavi (reviewed, see conformal-uncertainty-bounds.html) |
 | 2608.09612 | 2026 | R2 R3 | 3 | Individual causal effects, localized plus synthetic calibration |
 | 2604.15302 | 2026 | R5 | 3 | LLM judge reliability from set width |

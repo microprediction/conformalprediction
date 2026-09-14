@@ -116,5 +116,6 @@ PyPI API token). You cannot reuse a version number.
   objections are already published. Credit them by name with verified quotations, then say
   plainly what is left. A review that rediscovers a known result and presents it as new is
   worse than no review. This was learned the hard way on the CF-RNN page, where two of three
-  objections turned out to date from 2022.
+  objections turned out to date from 2022. Check publication status too: one high-stakes
+  candidate turned out to have been withdrawn by its own authors for the error we flagged.
 - Don't commit `benchmark/.venv/`, `dist/`, or build artifacts (they're gitignored).
