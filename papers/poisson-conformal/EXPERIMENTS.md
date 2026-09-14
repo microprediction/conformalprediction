@@ -149,6 +149,55 @@ set goes vacuous on 95% of draws at M = 20. A clean `1/M^2` quantiser prediction
 inflation is wrong; measured decay is about `M^{-1.2}`, consistent with the two mechanisms of
 Finding 7 operating at different rates.
 
+## Finding 9. The decomposition, derived from the spectrum
+
+For the AR(1) log-volatility state the transition operator is Ornstein-Uhlenbeck: eigenvalues
+`phi^k` with Hermite eigenfunctions. Expanding the state-measurable part of the centred coverage
+indicator as `g(x) = F_x(q_p) - p = sum_k b_k He_k(x)/sqrt(k!)`, with emissions conditionally
+independent given the state, everything follows without fitting:
+
+    sigma^2_strat(M) = p(1-p)
+                     - sum_k b_k^2 rho_k(M)                                  [conditioning]
+                     + 2 sum_k b_k^2 (1 - rho_k(M)) E[r_k^tau] / (1 - E[r_k^tau])   [thinning]
+
+where `rho_k(M)` is the fraction of Hermite mode k resolved by M quantile bins, computed by
+quadrature, and `tau` is the return time to a stratum with `r_k = phi^k`.
+
+**Thinning alone is exact.** For evenly spaced sampling the rate is `phi^{kM}` and the predicted
+inflation matches measurement to within a few percent at every M and both persistences
+(`spectral_theory.py`).
+
+**The conditioning limit is exact.** Perfect conditioning leaves `p(1-p) - sum_k b_k^2`, which is
+`0.63` in these units. Measured stratified inflation approaches `0.71` to `0.74` from above at
+M = 40. This is why the stratified variance sits *below* the i.i.d. baseline: conditioning removes
+the state-explained share of the marginal variance, not just the serial dependence.
+
+## Finding 10. Stratifying is not thinning, and the gap is Jensen
+
+The first version of the formula used `phi^{kM}` for the stratified arm and underpredicted by 30 to
+40%. The reason is that stratum members do not arrive every M steps. They arrive at return times to
+the bin, whose mean is M but whose distribution is badly skewed under persistence:
+
+| phi | M | mean gap | P(gap = 1) | median gap | E[phi^tau] | phi^M |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0.90 | 8 | 7.99 | 0.280 | 3 | 0.595 | 0.430 |
+| 0.98 | 8 | 7.83 | **0.536** | **1** | 0.897 | 0.851 |
+| 0.98 | 20 | 19.57 | 0.247 | 5 | 0.781 | 0.668 |
+
+At phi = 0.98 with eight bins, more than half of consecutive stratum members are *adjacent in
+time* and the median gap is one. Since `phi^tau` is convex in tau, Jensen gives
+
+    E[phi^tau]  >=  phi^{E[tau]}  =  phi^M
+
+strictly. **Stratifying costs a factor M in sample size but buys strictly less than a factor M in
+decorrelation**, and the shortfall grows with persistence. Substituting the measured `E[phi^{k tau}]`
+for `phi^{kM}` roughly halves the model error, to about 15% (`spectral_theory3.py`). The residual is
+presumably the correlation between gap lengths and the coverage indicators themselves, which the
+renewal approximation ignores.
+
+This is a general statement about stratified calibration under dependence, not a property of this
+model: any scheme that conditions on a persistent state samples that state in clusters.
+
 ## Consequence
 
 The paper's practical proposals do not survive. Theorem 9 is dominated, and the dependence-corrected
