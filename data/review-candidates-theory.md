@@ -102,6 +102,20 @@ the atoms of P_X.
 a single offender" is the whole objection in eight words, written by the authors of the paper that got
 it wrong, in the domain where it matters most. Cite them.
 
+*The Annual Review passage: checked and rejected as a target.* Berk, Kuchibhotla and Tchetgen Tchetgen,
+"Fair Risk Algorithms", *Annual Review of Statistics and Its Application* 9 (2022), contains a sentence
+that reads like the error: "the single forecasted label for a particular mortgage applicant might be
+default, which is guaranteed to be the true label at, say, a probability of 0.95." Read in context it
+is not. The very next sentence gives the correct version: "Over a large number of cases for which such
+forecasts are made, claims that a prediction set contains the true outcome will be correct about 95% of
+the time." The following paragraph explains that a set may contain more than one label, which fixes the
+loose sentence as the singleton case, where set membership and label correctness coincide. The final
+clause, that the reasoning extends to covariate-defined subsets "although the inferential guarantees are
+now asymptotic", matches what the same authors say in the AoAS paper, that the conditional guarantee is
+attainable in the limit though not in finite samples. This is an informal example followed by its
+precise gloss, which is how review articles are written. Attacking it would be a gotcha against authors
+who withdrew the paper that did make the error and who published the correction themselves. Do not.
+
 ### What to write instead: the per-patient cluster, with a control
 
 The brain-age paper is a preprint with no journal version and three citations, so it does not carry a
@@ -132,6 +146,14 @@ guaranteed." It then uses class-conditional conformal prediction and reports cla
 coverage per stenosis grade, finding that "while all methods generally achieved the expected marginal
 coverage, their performance varied significantly across different stenosis grades". Verified against
 the article HTML.
+
+**Where the error actually lives.** Four candidates were checked against their full texts and four
+died: the CF-RNN objections were published in 2022, most of the Ye objections were published or
+conceded by the authors, the criminal justice paper was withdrawn by its authors, and the Annual
+Review passage is correct in context. The pattern is that the statistics literature polices this well.
+What survives is in applied and clinical venues that import conformal prediction, where the authors are
+not statisticians and no referee supplies the caveat. That is a cleaner thesis than the one the docket
+started with, and it is what the note should argue.
 
 The control is what turns this from pedantry into a finding. The correct statement is available, it
 is short, and authors in the same field and the same year are making it. The note can therefore argue
