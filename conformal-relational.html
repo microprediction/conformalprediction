@@ -222,14 +222,17 @@
   fewer than fifty residuals fall back to the next coarser keying. The keying is chosen on the last
   10% of the calibration slice by the Winkler score, which is how CoRel chooses its checkpoint. All
   numbers are on the paper&rsquo;s test slice at \(\alpha = 0.1\), averaged over sensors and steps as
-  in the paper, with per-sensor coverage added. The first row is a floor: laplace, an online
-  univariate distributional forecaster with nothing trained, run on each sensor&rsquo;s own history at
-  the same 60-minute horizon and scored on the same targets with its own quantiles.</p>
+  in the paper, with per-sensor coverage added. The first two rows are a floor: laplace, an online
+  univariate distributional forecaster with nothing trained, run at the same 60-minute horizon on
+  each sensor&rsquo;s own speed history, and again on the GRU&rsquo;s residual series, scored on the
+  same targets with its own quantiles. Both start at the beginning of the calibration slice, 11,400
+  steps before the first scored target.</p>
 
   <div class="tablewrap">
   <table class="phi">
   <tr><th>Interval on the same residuals</th><th>Coverage gap, points</th><th>Width</th><th>Winkler score</th><th>Sensor coverage, 10th to 90th percentile</th><th>Trained parameters</th></tr>
-  <tr><td>laplace on each sensor&rsquo;s own history, its own quantiles, no point forecaster</td><td>\(+0.4\)</td><td>35.8</td><td>52.4</td><td>89% to 93%</td><td>0</td></tr>
+  <tr><td>laplace on each sensor&rsquo;s own speed history, its own quantiles, no point forecaster</td><td>\(+0.4\)</td><td>35.8</td><td>52.4</td><td>89% to 93%</td><td>0</td></tr>
+  <tr><td>laplace on each sensor&rsquo;s GRU residuals, its own quantiles</td><td>\(+0.7\)</td><td>32.3</td><td>49.9</td><td>89% to 92%</td><td>0</td></tr>
   <tr><td>Split conformal, two-sided (the paper&rsquo;s SCP)</td><td>\(-1.2\)</td><td>19.5</td><td>46.4</td><td>78% to 98%</td><td>0</td></tr>
   <tr><td>Split conformal per sensor</td><td>\(-1.1\)</td><td>20.9</td><td>41.2</td><td>87% to 91%</td><td>0</td></tr>
   <tr><td>Table by sensor and hour</td><td>\(-1.0\)</td><td>19.2</td><td>29.8</td><td>87% to 91%</td><td>0</td></tr>
@@ -241,11 +244,16 @@
   </table>
   </div>
 
-  <p>The laplace row is the only one that covers at the nominal level, and it scores worst: sixty
+  <p>The laplace rows are the only ones that cover at the nominal level, and they score worst. Warm-up
+  is not the reason: on a 40-sensor subset, starting laplace 135 steps or 27,000 steps before the
+  test slice scores 55 to 57 either way, and its score by week is flat from the first week. Sixty
   minutes ahead, a sensor&rsquo;s own history does not resolve the daily cycle or the current traffic
-  state, so its honest interval is nearly twice the width of split conformal on the GRU residuals,
-  while its median is within a speed unit of the GRU in absolute error, 5.3 against 4.5. Everything
-  below it on the table is what the clock and the current speed buy. The CoRel row reproduces the paper&rsquo;s Table 1 to the first decimal: 23.8 against their 23.78,
+  state, and its median is within a speed unit of the GRU in absolute error, 5.3 against 4.5, so the
+  cost is all in the width. On the residuals the median width is 18.5, at split conformal&rsquo;s 19.5,
+  and the mean is pulled to 32 by wide intervals after large errors: the residual of a twelve-step
+  forecast is a moving average of order eleven, autocorrelation 0.83 at lag one and zero at lag
+  twelve, and a forecaster that carries the short-lag persistence to the horizon fans out after every
+  shock. Everything below these rows on the table is what the clock and the current speed buy. The CoRel row reproduces the paper&rsquo;s Table 1 to the first decimal: 23.8 against their 23.78,
   a gap of \(-0.9\) against their \(-1.29\), width 14.3 against 14.38. CoRNN reproduces too: 30.0
   against their 30.24. The table keyed by sensor and hour, with nothing trained, ties CoRNN, and the
   selected table beats it. Split conformal on our residuals
@@ -306,7 +314,7 @@
   Non-Exchangeability for Conformal Prediction in Graph-Structured Multivariate Time Series</em>,
   arXiv:2605.04957, Table 1. The interval score is Winkler (1972) and Gneiting and Raftery (2007),
   equation (43). The rerun scripts are <code>data/reviews/corel_tables.py</code>,
-  <code>data/reviews/corel_decompose.py</code> and <code>data/reviews/corel_laplace.py</code> here; they read the residual file that the authors&rsquo;
+  <code>data/reviews/corel_decompose.py</code> and <code>data/reviews/corel_laplace*.py</code> here; they read the residual file that the authors&rsquo;
   <code>run_base_model.py</code> writes and the quantile dump added to their <code>run_corel.py</code>.
   Their checkpoint reload needed <code>weights_only=False</code> under torch 2.6, which is a version
   change and not a fault of the code.</p>
