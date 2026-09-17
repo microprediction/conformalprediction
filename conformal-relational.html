@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Relational conformal prediction — Conformal Prediction</title>
+<meta name="description" content="A close reading of Cini, Jenkins, Mandic, Alippi and Bianchi (ICML 2025), who train a graph quantile network on forecast residuals and call the result conformal. There is no conformalization step, every cell of the main table undercovers, and on their METR-LA experiment a lookup table of conformal quantiles keyed by sensor, hour and current speed delivers most of the reported gain with no graph and no training." />
+<meta property="og:title" content="Conformal Prediction — relational conformal prediction" />
+<meta property="og:description" content="A quantile network on residuals with no conformalization step. The gain it reports is conditional quantiles by sensor, hour and traffic state, which a table delivers." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  table.phi { border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px; margin: 1em 0; }
+  table.phi th, table.phi td { border: 1px solid var(--line); padding: 6px 14px; text-align: right; }
+  table.phi th { background: #f7f6f1; font-weight: 600; }
+  table.phi td:first-child, table.phi th:first-child { text-align: left; }
+  .tablewrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+          <a href="/conformal-relational.html">Relational conformal prediction</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+
+<div class="wrap">
+
+  <p class="tag">Review</p>
+  <h1>Relational conformal prediction</h1>
+  <p class="subtitle">Cini, Jenkins, Mandic, Alippi and Bianchi train a graph neural network on the
+  residuals of a pre-trained point forecaster to output residual quantiles, and take the interval to
+  be the point forecast plus the fitted quantiles. Whether that deserves the name conformal was
+  argued at ICML and is settled below in two sentences with sources. The substance is elsewhere. The
+  paper&rsquo;s own synthetic experiment shows the network recovering a term the point forecast left
+  out rather than measuring uncertainty, and a rerun of its METR-LA experiment finds that a lookup
+  table of split-conformal quantiles keyed by sensor, hour of day and current speed, with no graph
+  and nothing trained, takes 85% of the distance from split conformal to the network, and that the
+  network with its graph removed loses half a point. <a href="/demos/36-the-missing-step.html">Demonstration 36</a> rebuilds the construction
+  on a case with known truth.</p>
+
+  <h2>What is proposed</h2>
+
+  <p>The paper is Cini, Jenkins, Mandic, Alippi and Bianchi, &ldquo;Relational Conformal Prediction
+  for Correlated Time Series,&rdquo; ICML 2025. There are \(N\) univariate series observed on a common
+  clock, a point forecaster \(F_\theta\) trained on the first 40% of the record, and residuals
+  \(r^i_t = x^i_t - \hat x^i_t\) on the next 40%, which the paper calls the calibration set. A
+  spatiotemporal graph network \(Q_\psi\) reads a window of recent residuals at every series, plus
+  the series values and time-of-day encodings, passes messages over a learned \(K\)-nearest-neighbour
+  graph, and outputs quantiles of the residual at each series. It is trained on the calibration
+  residuals &ldquo;by minimizing the pinball loss over a discrete set of quantiles,&rdquo; 39 levels
+  from 0.025 to 0.975, and the interval is Eq. 14,</p>
+
+  $$\hat C^{\alpha}_{i,t} \;=\; \big[\, \hat x^i_{t+H} + \hat q^{\,i,\alpha/2}_{t+H},\;\; \hat x^i_{t+H} + \hat q^{\,i,1-\alpha/2}_{t+H} \,\big].$$
+
+  <p>The abstract states that &ldquo;Our approach provides accurate coverage and achieves
+  state-of-the-art uncertainty quantification in relevant benchmarks,&rdquo; and the contributions
+  list &ldquo;A novel, sound, and effective CP method.&rdquo; The theory is Proposition 3.1: coverage
+  is at least \(1-\alpha\) minus the total variation distance between the fitted residual law and the
+  true one. Its proof is two lines, the definition of total variation and the observation that
+  &ldquo;For \(\hat C\) in both Eq. 14 and Eq. 16 we have by construction that
+  \(P_\psi(x \in \hat C) = 1-\alpha\).&rdquo; The experiments report, at \(\alpha = 0.1\), the coverage
+  gap, the mean width and the Winkler score of the intervals on the last 20% of three real datasets
+  and one synthetic one, against split conformal, two weighted variants, SPCI, HopCPT and an
+  ablation called CoRNN, for three base forecasters each.</p>
+
+  <h2>What has already been said</h2>
+
+  <p>The OpenReview record settles the naming question. Reviewer uUN5 wrote that &ldquo;the method
+  lacks a theoretical guarantee of non-asymptotic valid coverage. Therefore, claiming that it falls
+  within the conformal framework is not justified,&rdquo; that &ldquo;Proposition 3.1 follows from the
+  definition of the total variation distance,&rdquo; and that &ldquo;CoREL consistently fails to
+  achieve the targeted marginal coverage across datasets. As a result, it is unclear whether the
+  smaller prediction interval widths (or lower Winkler scores) reflect the superiority of the proposed
+  method or simply stem from its anti-conservativeness.&rdquo; Reviewer oqTA: &ldquo;there is really
+  no guarantees other than &lsquo;let&rsquo;s hope our quantile regression works well&rsquo;.&rdquo;
+  The authors agreed that &ldquo;Without any strong assumption, CP methods for TS forecasting cannot
+  offer non-asymptotic coverage guarantees,&rdquo; the paper was accepted, and their own later paper
+  ResCP describes methods of this kind as ones &ldquo;which must necessarily be updated when
+  time-invariance is lost.&rdquo; The one published head-to-head is Guo and co-authors (2026), whose
+  spectral method beats CoRel on METR-LA by a small margin at three levels. We take all of that as
+  given.</p>
+
+  <h2>The synthetic experiment shows a residual forecaster</h2>
+
+  <p>Section 5.2 simulates a diffusion on a 60-node graph with Gaussian noise of standard deviation
+  0.4 and states that &ldquo;the theoretical optimum PI width to obtain (asymptotically) 90% marginal
+  coverage is 1.315.&rdquo; With a univariate RNN as the base model, split conformal needs width
+  1.67 and CoRel reaches 1.33; with a graph forecaster as the base model, split conformal alone
+  reaches 1.32 and CoRel adds nothing. The paper presents the first pair as CoRel &ldquo;effectively
+  able to capture and leverage existing spatiotemporal dependencies.&rdquo; The second pair says what
+  those dependencies are. The residual of the univariate model contains the neighbours&rsquo;
+  contribution to the next value, which is a predictable term in the conditional mean, and the graph
+  quantile network learns to shift its quantiles by it. That is a second-stage point forecast of the
+  residual with a spread attached, and once the base forecaster knows the graph there is nothing left
+  for it to find. The construction is useful when the base model cannot be retrained. It is not
+  evidence that relational structure carries information about uncertainty, and in this experiment
+  it carries none: the noise is homoscedastic and the optimal interval width is the same constant at
+  every node.</p>
+
+  <h2>One ablation for two designs, and no baseline sees the other series</h2>
+
+  <p>The comparison in Table 1 sets CoRel against methods that each read one series in isolation.
+  The one control that shares information across series is CoRNN, of which the paper says &ldquo;we
+  use the same architecture as CoRel but remove message-passing layers and node embeddings. CoRNN is
+  an ablation of the introduced designs.&rdquo; It removes two designs at once: the learned graph, and
+  the per-series parameters that let the shared network carry a different scale for each sensor.
+  The gap between CoRNN and CoRel, 30.2 against 23.8 on METR-LA with the RNN base, is attributed to
+  the graph. Running the two ablations separately, below, says otherwise. Keeping the message passing and
+  removing the embeddings scores 27.0; keeping the embeddings and removing the message passing
+  scores 24.2, within half a point of the full model. The learned graph on its own is worth three
+  of the six points, the per-sensor parameters are worth all six, and the graph adds under half a
+  point once they are present. SPCI, the closest method in spirit, was run without its retraining, as App. F states:
+  &ldquo;we trained each SPCI model only once on the calibration data, rather than implementing the
+  time-adaptive approach where models are re-trained as new observations become available.&rdquo; No
+  baseline is given the two inputs the quantile network receives alongside the residuals, the hour of
+  day and the current value of the series, and both are strong predictors of how far a traffic
+  forecast can be wrong.</p>
+
+  <h2>How it is calibrated</h2>
+
+  <p>Nothing is held out. The released code splits the calibration residuals 90/10 in time, trains
+  the quantile network on the first part and picks the checkpoint by the Winkler score at the 90%
+  level on the second. The Winkler score at level \(\alpha\) is \(2/\alpha\) times the sum of the two
+  pinball losses at \(\alpha/2\) and \(1-\alpha/2\), so the model is selected on its own training
+  loss and reported on the same score. That is a perfectly good quantile regression benchmark, and
+  it is what the paper is. The reviewers&rsquo; point about coverage is then just what one expects: a
+  fitted quantile sits inside the truth, all nine CoRel cells of Table 1 have a negative gap, from
+  \(-0.9\) on METR-LA to \(-5.0\) on CER-E, Table 4&rsquo;s width-minimising offset widens every gap,
+  and Table 3&rsquo;s adaptation leaves CER-E at \(-2.4\) to \(-3.1\). Conformalizing the fitted
+  quantiles on the slice the code already holds out would fix this at a small cost in score, which
+  <a href="/demos/36-the-missing-step.html">Demonstration 36</a> shows on a case with known truth,
+  but it is not where the paper&rsquo;s result lies.</p>
+
+  <h2>Coverage is pooled over every sensor and every step</h2>
+
+  <p>App. E states that &ldquo;All the metrics are then averaged over all nodes and time steps within
+  the specified set.&rdquo; Section 2.1 defines conditional coverage, Eq. 4, and the guarantee in
+  Proposition 3.1 is stated for one series at one step, conditional on the past. Neither is measured.
+  A single pooled coverage number hides how it is distributed across the 207 sensors, and in our
+  rerun below the pooled split-conformal interval that the paper reports as covering at
+  \(-1.3\) points covers individual sensors anywhere between 71% and 99.8%. That spread is not a
+  property of conformal prediction; it is what pooling does, and one line of bookkeeping removes it.</p>
+
+  <h2>Rerun on METR-LA</h2>
+
+  <!-- RERUN -->
+  <p>We ran the authors&rsquo; code on METR-LA: their GRU point forecaster with their configuration
+  and splits, 60 minutes ahead on 207 sensors, and their CoRel model trained on the residuals of the
+  calibration slice with their early stopping. The point forecaster differs from theirs by its
+  random draw, so the residuals are not the paper&rsquo;s residuals, and every interval below is built
+  on the same ones. Alongside the paper&rsquo;s split-conformal baseline we add intervals that are
+  split conformal within cells of a lookup table: the signed residuals of the calibration slice are
+  binned by sensor, by hour of day, by a weekend flag and by the speed observed at the forecast
+  origin in five bins, the two-sided conformal quantiles are taken within each cell, and cells with
+  fewer than fifty residuals fall back to the next coarser keying. The keying is chosen on the last
+  10% of the calibration slice by the Winkler score, which is how CoRel chooses its checkpoint. All
+  numbers are on the paper&rsquo;s test slice at \(\alpha = 0.1\), averaged over sensors and steps as
+  in the paper, with per-sensor coverage added. The first two rows are a floor: laplace, an online
+  univariate distributional forecaster with nothing trained, run at the same 60-minute horizon on
+  each sensor&rsquo;s own speed history, and again on the GRU&rsquo;s residual series, scored on the
+  same targets with its own quantiles. Both start at the beginning of the calibration slice, 11,400
+  steps before the first scored target.</p>
+
+  <div class="tablewrap">
+  <table class="phi">
+  <tr><th>Interval on the same residuals</th><th>Coverage gap, points</th><th>Width</th><th>Winkler score</th><th>Sensor coverage, 10th to 90th percentile</th><th>Trained parameters</th></tr>
+  <tr><td>laplace on each sensor&rsquo;s own speed history, its own quantiles, no point forecaster</td><td>\(+0.4\)</td><td>35.8</td><td>52.4</td><td>89% to 93%</td><td>0</td></tr>
+  <tr><td>laplace on each sensor&rsquo;s GRU residuals, its own quantiles</td><td>\(+0.7\)</td><td>32.3</td><td>49.9</td><td>89% to 92%</td><td>0</td></tr>
+  <tr><td>Split conformal, two-sided (the paper&rsquo;s SCP)</td><td>\(-1.2\)</td><td>19.5</td><td>46.4</td><td>78% to 98%</td><td>0</td></tr>
+  <tr><td>Split conformal per sensor</td><td>\(-1.1\)</td><td>20.9</td><td>41.2</td><td>87% to 91%</td><td>0</td></tr>
+  <tr><td>Table by sensor and hour</td><td>\(-1.0\)</td><td>19.2</td><td>29.8</td><td>87% to 91%</td><td>0</td></tr>
+  <tr><td>Table by sensor, hour, weekend and speed (selected)</td><td>\(-2.2\)</td><td>16.4</td><td>27.1</td><td>86% to 90%</td><td>0</td></tr>
+  <tr><td>CoRNN, the paper&rsquo;s ablation</td><td>\(-0.7\)</td><td>19.4</td><td>30.0</td><td>85% to 93%</td><td>32,423</td></tr>
+  <tr><td>CoRel without message passing, node embeddings kept</td><td>\(-0.5\)</td><td>15.0</td><td>24.2</td><td>87% to 92%</td><td>84,728</td></tr>
+  <tr><td>CoRel without node embeddings, message passing kept</td><td>\(-1.1\)</td><td>17.7</td><td>27.0</td><td>85% to 92%</td><td>116,680</td></tr>
+  <tr><td>CoRel, the paper&rsquo;s method</td><td>\(-0.9\)</td><td>14.3</td><td>23.8</td><td>86% to 91%</td><td>122,040</td></tr>
+  </table>
+  </div>
+
+  <p>The laplace rows are the only ones that cover at the nominal level, and they score worst. Warm-up
+  is not the reason: on a 40-sensor subset, starting laplace 135 steps or 27,000 steps before the
+  test slice scores 55 to 57 either way, and its score by week is flat from the first week. Sixty
+  minutes ahead, a sensor&rsquo;s own history does not resolve the daily cycle or the current traffic
+  state, and its median is within a speed unit of the GRU in absolute error, 5.3 against 4.5, so the
+  cost is all in the width. On the residuals the median width is 18.5, at split conformal&rsquo;s 19.5,
+  and the mean is pulled to 32 by wide intervals after large errors: the residual of a twelve-step
+  forecast is a moving average of order eleven, autocorrelation 0.83 at lag one and zero at lag
+  twelve, and a forecaster that carries the short-lag persistence to the horizon fans out after every
+  shock. Everything below these rows on the table is what the clock and the current speed buy. The CoRel row reproduces the paper&rsquo;s Table 1 to the first decimal: 23.8 against their 23.78,
+  a gap of \(-0.9\) against their \(-1.29\), width 14.3 against 14.38. CoRNN reproduces too: 30.0
+  against their 30.24. The table keyed by sensor and hour, with nothing trained, ties CoRNN, and the
+  selected table beats it. Split conformal on our residuals
+  is worse than on theirs, 46.4 against 40.8, so our point forecaster has heavier tails, and the
+  comparison that matters is within the table. The lookup table takes 85% of the distance from
+  split conformal to CoRel. Keying by sensor and hour alone takes 74%. What the network adds on top
+  of a table is real and small, and it comes with a coverage gap of the same sign. The two clean
+  ablations settle what the network&rsquo;s own gain is made of. With the graph kept and the 207 node
+  embeddings removed it scores 27.0, the same as the table. With the embeddings kept and the graph
+  removed it scores 24.2. The distance from CoRNN to CoRel that the paper credits to relational
+  structure is the per-sensor parameters, which is what keying a table by sensor supplies for free,
+  and the graph, on top of them, is worth under half a point.</p>
+
+  <p>The dumped quantiles say where the network&rsquo;s gain lives. Its median shifts the interval
+  centre by 2.6 speed units on average against a split-conformal width of 19.5. Taking its width
+  alone, centred at zero, moves the score from 46.4 to 34.4; taking its centre alone with the
+  split-conformal width moves it to 39.7; both together, with the asymmetry the two quantiles carry,
+  give 23.8. Roughly half the gain is a width that follows sensor, hour and traffic state, a third is
+  a centre that the point forecaster missed, and the rest is asymmetry. The residual has an
+  autocorrelation of \(-0.05\) at the forecast horizon, so none of this is read from residual history:
+  it is read from the speed at the origin and the clock, which the network receives as covariates
+  and which the table keys on.</p>
+
+  <p>Two more numbers. Pooled split conformal covers the 10% least-covered sensors at 78% or less
+  and the 10% best-covered at 98% or more, against a nominal 90%; every construction keyed by sensor
+  puts that spread inside 86% to 91%, CoRel included. And the shift to both ends of CoRel&rsquo;s
+  interval that would bring its test coverage to 90%, computed after the fact for scale, is 0.12
+  on a width of 14.3, under one percent. The conformalization the paper omits would have cost that.</p>
+  <!-- /RERUN -->
+
+  <h2>What survives</h2>
+
+  <p>The engineering is sound and the code is clean. A shared quantile network across many series
+  with a learned sparse graph is a sensible way to model residual quantiles when the base model is
+  fixed, it trains in minutes where SPCI takes days, and the paper is right that most conformal
+  time-series methods ignore the other series. Proposition 3.1 is true. The Winkler score is the
+  right way to compare intervals, and the paper is more careful on that point than most of the
+  literature it cites. What does not survive is the word in the title. The intervals are the output
+  of a quantile regression, their coverage is whatever that regression happens to achieve, the
+  paper&rsquo;s own tables show it achieving less than the target everywhere, and the guarantee that
+  would make it conformal costs one held-out slice the pipeline already has.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. The interval is a fitted quantile regression, which the ICML reviewers said and the
+    authors accepted. What matters is what the regression has learned. On the paper&rsquo;s synthetic
+    graph it learns the point forecast&rsquo;s missing term, and on its flagship dataset a lookup
+    table of split-conformal quantiles keyed by sensor, hour and current speed takes 85% of the
+    distance from split conformal to the graph network, with nothing trained and no graph, and the
+    graph itself, removed from the network, is worth half a point.</p>
+  </div>
+
+  <p class="note">The paper is Cini, Jenkins, Mandic, Alippi and Bianchi, <em>Relational Conformal
+  Prediction for Correlated Time Series</em>, ICML 2025, arXiv:2502.09443v2, code at
+  github.com/andreacini/corel; quotations are from the arXiv v2 text, the OpenReview forum
+  wwYDQ1vXcZ, and the repository as of its single commit of July 2025. Conformalized quantile
+  regression is Romano, Patterson and Cand&egrave;s, NeurIPS 2019. ResCP is Neglia, Cini, Bronstein and
+  Bianchi, arXiv:2510.05060. The head-to-head is Guo, Han, Luo, Liu, Gong and Wang, <em>Delving into
+  Non-Exchangeability for Conformal Prediction in Graph-Structured Multivariate Time Series</em>,
+  arXiv:2605.04957, Table 1. The interval score is Winkler (1972) and Gneiting and Raftery (2007),
+  equation (43). The rerun scripts are <code>data/reviews/corel_tables.py</code>,
+  <code>data/reviews/corel_decompose.py</code> and <code>data/reviews/corel_laplace*.py</code> here; they read the residual file that the authors&rsquo;
+  <code>run_base_model.py</code> writes and the quantile dump added to their <code>run_corel.py</code>.
+  Their checkpoint reload needed <code>weights_only=False</code> under torch 2.6, which is a version
+  change and not a fault of the code.</p>
+
+  <div class="prevnext">
+    <a href="/reviews.html">&larr; All reviews</a>
+    <span class="spacer"></span>
+    <a href="/demos/36-the-missing-step.html">Demonstration 36 &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+</body>
+</html>

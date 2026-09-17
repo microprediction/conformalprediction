@@ -52,6 +52,7 @@
           <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
           <a href="/conformal-set-size.html">Set size as uncertainty</a>
           <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+          <a href="/conformal-relational.html">Relational conformal prediction</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
@@ -122,6 +123,25 @@
       <h3>Constant-width intervals</h3>
       <p>The same point forecast with the CF-RNN width and with a width that follows a running scale,
       on a series with stochastic volatility. Same coverage, different interval score.</p>
+    </a>
+    <a class="card" href="conformal-relational.html">
+      <div class="num">ICML, 2025</div>
+      <h3>Relational conformal prediction</h3>
+      <p>Cini, Jenkins, Mandic, Alippi and Bianchi train a graph quantile network on forecast residuals
+      and read the interval off the fitted quantiles. That nothing is conformalized and that the
+      intervals undercover throughout was said by the ICML reviewers and is set out here with sources.
+      What appears to be new: the code calibrates by early stopping on the reported score, the
+      synthetic experiment shows a residual forecaster rather than an uncertainty model, and on
+      METR-LA a lookup table of conformal quantiles keyed by sensor, hour and current speed takes 85%
+      of the distance from split conformal to the network, with no graph and nothing trained.</p>
+    </a>
+    <a class="card" href="demos/36-the-missing-step.html">
+      <div class="num">Demonstration 36</div>
+      <h3>The missing step</h3>
+      <p>Relational quantile regression on the residuals of a univariate forecaster, read directly and
+      conformalized on held-out residuals, on a ring of coupled series with known truth. The direct
+      read undercovers, the correction costs a few percent of score, and an oracle point forecast with
+      one conformal quantile shows what the relational model is recovering.</p>
     </a>
     <a class="card" href="conformal-set-size.html">
       <div class="num">NeurIPS Datasets and Benchmarks, 2024</div>
