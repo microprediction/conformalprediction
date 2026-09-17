@@ -101,7 +101,8 @@
   paper&rsquo;s own synthetic experiment shows the network recovering a term the point forecast left
   out rather than measuring uncertainty, and a rerun of its METR-LA experiment finds that a lookup
   table of split-conformal quantiles keyed by sensor, hour of day and current speed, with no graph
-  and nothing trained, takes 85% of the distance from split conformal to the network. <a href="/demos/36-the-missing-step.html">Demonstration 36</a> rebuilds the construction
+  and nothing trained, takes 85% of the distance from split conformal to the network, and that the
+  network with its graph removed loses half a point. <a href="/demos/36-the-missing-step.html">Demonstration 36</a> rebuilds the construction
   on a case with known truth.</p>
 
   <h2>What is proposed</h2>
@@ -171,7 +172,9 @@
   an ablation of the introduced designs.&rdquo; It removes two designs at once: the learned graph, and
   the per-series parameters that let the shared network carry a different scale for each sensor.
   The gap between CoRNN and CoRel, 30.2 against 23.8 on METR-LA with the RNN base, is attributed to
-  the graph. SPCI, the closest method in spirit, was run without its retraining, as App. F states:
+  the graph. Running the two ablations separately, below, says otherwise: CoRel with its message
+  passing removed and its node embeddings kept scores 24.2, within half a point of the full model.
+  The gap is the embeddings. SPCI, the closest method in spirit, was run without its retraining, as App. F states:
   &ldquo;we trained each SPCI model only once on the calibration data, rather than implementing the
   time-adaptive approach where models are re-trained as new observations become available.&rdquo; No
   baseline is given the two inputs the quantile network receives alongside the residuals, the hour of
@@ -227,6 +230,10 @@
   <tr><td>Table by sensor and hour</td><td>\(-1.0\)</td><td>19.2</td><td>29.8</td><td>87% to 91%</td><td>0</td></tr>
   <tr><td>Table by sensor, hour, weekend and speed (selected)</td><td>\(-2.2\)</td><td>16.4</td><td>27.1</td><td>86% to 90%</td><td>0</td></tr>
   <tr><td>CoRNN, the paper&rsquo;s ablation</td><td>\(-0.7\)</td><td>19.4</td><td>30.0</td><td>85% to 93%</td><td>32,423</td></tr>
+  <tr><td>CoRel without message passing, node embeddings kept</td><td>\(-0.5\)</td><td>15.0</td><td>24.2</td><td>87% to 92%</td><td>84,728</td></tr>
+  <!-- GRAPHONLY -->
+  <tr><td>CoRel without node embeddings, message passing kept</td><td colspan="5">pending</td></tr>
+  <!-- /GRAPHONLY -->
   <tr><td>CoRel, the paper&rsquo;s method</td><td>\(-0.9\)</td><td>14.3</td><td>23.8</td><td>86% to 91%</td><td>122,040</td></tr>
   </table>
   </div>
@@ -238,7 +245,11 @@
   is worse than on theirs, 46.4 against 40.8, so our point forecaster has heavier tails, and the
   comparison that matters is within the table. The lookup table takes 85% of the distance from
   split conformal to CoRel. Keying by sensor and hour alone takes 74%. What the network adds on top
-  of a table is real and small, and it comes with a coverage gap of the same sign.</p>
+  of a table is real and small, and it comes with a coverage gap of the same sign. The two clean
+  ablations settle what the network&rsquo;s own gain is made of: with message passing removed and the
+  207 node embeddings kept it scores 24.2, so the learned graph is worth under half a point, and the
+  distance from CoRNN to CoRel that the paper credits to relational structure is the per-sensor
+  parameters, which is what keying a table by sensor supplies for free.</p>
 
   <p>The dumped quantiles say where the network&rsquo;s gain lives. Its median shifts the interval
   centre by 2.6 speed units on average against a split-conformal width of 19.5. Taking its width
@@ -274,7 +285,8 @@
     authors accepted. What matters is what the regression has learned. On the paper&rsquo;s synthetic
     graph it learns the point forecast&rsquo;s missing term, and on its flagship dataset a lookup
     table of split-conformal quantiles keyed by sensor, hour and current speed takes 85% of the
-    distance from split conformal to the graph network, with nothing trained and no graph.</p>
+    distance from split conformal to the graph network, with nothing trained and no graph, and the
+    graph itself, removed from the network, is worth half a point.</p>
   </div>
 
   <p class="note">The paper is Cini, Jenkins, Mandic, Alippi and Bianchi, <em>Relational Conformal
