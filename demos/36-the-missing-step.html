@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>The missing step — Conformal Prediction</title>
+<meta name="description" content="Cini, Jenkins, Mandic, Alippi and Bianchi fit a graph quantile network to forecast residuals and read the interval off the fitted quantiles with no conformalization step. On a ring of coupled series with known truth, the directly read quantiles undercover, the same regression conformalized on held-out residuals covers, and the oracle point forecast with a split-conformal quantile matches it." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  @media (max-width: 720px) { .row2, .row3 { grid-template-columns: 1fr; } }
+  .canvas-box.sq canvas { height: 330px; }
+  table.phi { border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px; margin: 1em 0; }
+  table.phi th, table.phi td { border: 1px solid var(--line); padding: 6px 14px; text-align: right; }
+  table.phi th { background: #f7f6f1; font-weight: 600; }
+  table.phi td:first-child, table.phi th:first-child { text-align: left; }
+  .tablewrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+
+<div class="wrap">
+
+  <p class="tag">Demonstration 36 &middot; Review</p>
+  <h1>The missing step</h1>
+  <p class="subtitle">Cini, Jenkins, Mandic, Alippi and Bianchi train a graph neural network on the
+  residuals of a pre-trained point forecaster to predict the residual quantiles, and the interval is
+  the point forecast plus the fitted \(\alpha/2\) and \(1-\alpha/2\) quantiles. The calibration set is
+  the training set of the quantile model and nothing is held out to correct it. Here the construction
+  is rebuilt on a ring of coupled series with known truth. The directly read quantiles undercover,
+  the same regression conformalized on held-out residuals covers at a small cost in score, and the
+  true point forecast with one split-conformal quantile per scaled residual does about as well. The
+  <a href="/conformal-relational.html">close reading</a> reruns the paper&rsquo;s own METR-LA
+  experiment with zero-parameter baselines.</p>
+
+  <h2>Setup</h2>
+
+  <p>Twenty-four series sit on a ring and each is hit one step later by its two neighbours&rsquo;
+  shocks,</p>
+
+  $$x_{i,t+1} = a\, x_{i,t} + \sigma_i\, \varepsilon_{i,t+1} + b\,\tfrac{1}{2}\big(\sigma_{i-1}\varepsilon_{i-1,t} + \sigma_{i+1}\varepsilon_{i+1,t}\big),
+  \qquad a = 0.5,$$
+
+  <p>with \(\varepsilon\) standard normal and the scales \(\sigma_i\) spread across series. The point
+  forecaster is a pooled univariate autoregression of order two, fitted by least squares on a training
+  slice. It never sees the neighbours, and their shocks cannot be recovered from its own past, so its
+  residual \(r_{i,t+1} = x_{i,t+1} - \hat x_{i,t+1}\) has a mean that only the neighbours&rsquo; last
+  residuals reveal. This is the situation the paper&rsquo;s method is built for. Four intervals are built on the residuals of a calibration slice of
+  \(n\) steps and scored on a long test stretch.</p>
+
+  <ul>
+    <li><strong>SCP.</strong> One pooled split-conformal quantile of \(|r|\), the same half-width for
+    every series and step.</li>
+    <li><strong>RelQR.</strong> Two linear quantile regressions at levels \(\alpha/2\) and \(1-\alpha/2\)
+    on features observable at forecast time: the mean of the two neighbours&rsquo; last residuals, the
+    series&rsquo; own last value and last residual, a running scale of its residuals, and a one-hot indicator of the series standing in
+    for the paper&rsquo;s node embeddings. Fitted by pinball loss on the whole calibration slice and read
+    directly, which is the paper&rsquo;s Eq. 14.</li>
+    <li><strong>RelQR+C.</strong> The same regressions fitted on the first half of the calibration slice,
+    then corrected on the second half by the conformalized quantile regression score
+    \(E = \max(\hat q_{\alpha/2} - r,\; r - \hat q_{1-\alpha/2})\): both ends move out by the
+    \(\lceil (m+1)(1-\alpha)\rceil\)-th smallest \(E\).</li>
+    <li><strong>Oracle.</strong> The true conditional mean as point forecast, a running scale per series,
+    and one split-conformal quantile of the scaled residual. This is what a base model that already
+    knew the graph would give with plain split conformal, the paper&rsquo;s own STGNN row.</li>
+  </ul>
+
+  <p>Each interval is scored by</p>
+
+  $$\mathrm{IS}_\alpha(l, u; y) = (u - l) + \frac{2}{\alpha}(l - y)_+ + \frac{2}{\alpha}(y - u)_+ ,$$
+
+  <p>the interval score, which the paper calls the Winkler score. Lower is better.</p>
+
+  <div class="demo">
+    <div class="canvas-box med"><canvas id="w-plot"></canvas></div>
+    <div class="readouts" id="w-readouts"></div>
+    <div class="controls" id="w-controls"></div>
+  </div>
+
+  <p>At the default settings, sixty calibration steps of twenty-four series, the directly read
+  regression lands a point or two under the target and the conformalized one lands on it, at a cost of
+  a few percent of score. Over six resamples at the default the direct read covers between 86% and
+  90% and the conformalized read between 88% and 91%, with split conformal and the oracle at 90%.
+  The shortfall of the direct read is modest here, which matches the paper&rsquo;s own METR-LA
+  column, and it grows as the calibration slice shrinks relative to the parameters: at thirty steps
+  the direct read covers 85% to 88%, at ten steps under 80%. The correction does not restore the
+  target on every draw. It is computed on the block of residuals that follows the block the
+  regression was fitted on, and adjacent blocks of a time series are not exchangeable with the
+  future, which is the very point the paper makes about its own residuals. The correction gets the
+  average right where the direct read does not.</p>
+
+  <p>Setting the neighbour coupling to zero removes the predictable part of the residual, and the
+  relational regressions have nothing left to learn beyond the per-series scale. Setting the scale
+  heterogeneity to zero as well leaves all four intervals scoring alike, and the direct read still
+  covers a point or two short: what it has fitted is noise.</p>
+
+  <p>The oracle row is the paper&rsquo;s GPVAR finding made explicit. Their Table 2 shows CoRel on a
+  univariate RNN reaching the width of split conformal on a graph forecaster, 1.33 against 1.32
+  with a theoretical optimum of 1.315. Here the relational regression closes about three quarters of
+  the score gap between split conformal and the oracle, and the oracle is a point forecast that knows
+  the neighbours plus one split-conformal quantile. The relational quantile model is recovering the
+  term the point forecaster left out. That is useful when the base model cannot be retrained, and it
+  is a forecast of the residual&rsquo;s centre, not a statement about its spread.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. A quantile regression on residuals is not conformal until it is conformalized. The
+    paper skips the step and reports undercoverage in every cell of its main table. On a case with
+    known truth the step costs a held-out slice and a few percent of score, and the gain the
+    relational model delivers is mostly the point forecast&rsquo;s missing term.</p>
+  </div>
+
+  <p class="note">The paper is Cini, Jenkins, Mandic, Alippi and Bianchi, <em>Relational Conformal
+  Prediction for Correlated Time Series</em>, ICML 2025, arXiv:2502.09443. Conformalized quantile
+  regression is Romano, Patterson and Cand&egrave;s (NeurIPS 2019). The interval score is Winkler
+  (1972) and Gneiting and Raftery (2007), equation (43). Source: <code>js/demo36.js</code>.</p>
+
+  <div class="prevnext">
+    <a href="35-constant-width.html">&larr; Constant-width intervals</a>
+    <span class="spacer"></span>
+    <a href="/conformal-relational.html">The close reading &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+<script type="module" src="../js/demo36.js"></script>
+</body>
+</html>
