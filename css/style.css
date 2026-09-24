@@ -134,6 +134,17 @@ blockquote p:last-child { margin-bottom: 0; }
   transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
 }
 .card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.05); }
+/* A card that carries a SECOND link cannot itself be an <a>: nesting one
+   anchor in another is invalid, and the parser closes the outer one when it
+   meets the inner, so the body escapes the box. Such a card is a <div>, its
+   heading holds the card's own link, and that link is stretched over the
+   whole box -- so the card stays clickable everywhere while an inner link
+   keeps its own target. */
+.card.has-link { position: relative; }
+.card.has-link h3 a { color: inherit; text-decoration: none; }
+.card.has-link h3 a::after { content: ""; position: absolute; inset: 0;
+  border-radius: 10px; }
+.card.has-link p a { position: relative; z-index: 1; }
 .card .num { font-family: ui-monospace, monospace; color: var(--accent); font-size: 13px; }
 .card h3 { margin: 4px 0 6px; font-size: 1.08rem; }
 .card p { margin: 0; color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
