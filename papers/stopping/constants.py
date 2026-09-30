@@ -224,6 +224,14 @@ def census():
             len(methods), collections.Counter(r["pooling"] for r in methods))
 
 
+def pass_agreement():
+    """Full-text census labels against the independent first-pass labels, in scope."""
+    if not os.path.exists(CENSUS):
+        return (0, 0)
+    rows = [r for r in csv.DictReader(open(CENSUS)) if r["label"] != "OUT_OF_SCOPE"]
+    return (sum(r["label"] == r.get("first_pass_label") for r in rows), len(rows))
+
+
 def agreement():
     """Hand-coded sample against the census on shared papers. Agreement means
     TERMINAL <-> not consumed or composed, and UNCLEAR <-> consumed."""
@@ -288,7 +296,9 @@ def check(res):
                        f"Of {n_meth} papers proposing conformal methods, {lab['STOP']} stop there, "
                        f"{other} replace, retune or pass on the pooled law, and "
                        f"{['no', 'one', 'two', 'three'][lab['COMPOSE']]} model its output",
-                       f"agree on {agreement()[0]} of them"):
+                       f"agree on {agreement()[0]} of them",
+                       f"agree on {pass_agreement()[0]} of the {pass_agreement()[1]} papers",
+                       f"disagree on {pass_agreement()[1] - pass_agreement()[0]} of the {pass_agreement()[1]}"):
             if phrase.replace("\n", " ") not in " ".join(tex.split()):
                 failures.append(f"census: '{phrase}' not in tex")
     sv = survey100()

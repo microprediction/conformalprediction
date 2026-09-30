@@ -38,8 +38,8 @@
 We prove that conformal calibration cannot exploit forecastability. The proof rests
 on a new identity, the conformal information gap, fixing the excess log score before
 calibration. Split conformal prediction ends where its calibration begins: fit a
-model, pool its held-out residuals, quote their quantiles, stop. Of 608 papers
-proposing conformal methods, 456 stop there, 150 replace, retune or pass on the
+model, pool its held-out residuals, quote their quantiles, stop. Of 624 papers
+proposing conformal methods, 455 stop there, 167 replace, retune or pass on the
 pooled law, and two model its output. On 17{,}364 economic series, stopping costs
 0.40 to 0.48 nats after a null-control adjustment, composing past the pooled law
 recovers a third to a half, and coverage detects none of it.
@@ -157,14 +157,17 @@ We checked the claim against the literature instead of relying on an impression 
 it. We took every arXiv paper with ``conformal prediction'' in the title as of
 20 August 2026, 686 records. Six concern molecular or protein conformation and were
 matched by the title search in error, which leaves the remaining 680 papers. Language-model
-readers (Claude Sonnet) coded each paper against a written rubric, working blind to
-any earlier labels. They read the abstract, the introduction and the method passages
-of the full text, and recorded the sentence that places the paper. We then read the
-method sections of every paper coded as composing, and of the copula-based papers
-nearest to composing, and settled their labels. The
+readers (Claude Sonnet) coded each paper against a written rubric, recording the
+sentence that places it. The coding was done twice. A first pass read the abstract,
+the introduction and the method passages. A second pass, blind to the first, read the
+body of every paper from its first line to its reference list, and its labels are
+the ones reported. The two passes agree on 602 of the 680 papers. Four papers have no
+PDF on arXiv and were coded from their abstracts. We then read the method sections of
+every paper coded as composing, and of the copula-based papers nearest to composing,
+and settled their labels. The
 rubric and the per-paper labels, with their quoted evidence, are in the repository.
 
-Of the 680 papers, 456 stop, 79 consume, 39 replace, 32 tune, and 72 propose no
+Of the 680 papers, 455 stop, 77 consume, 49 replace, 41 tune, and 56 propose no
 method. Two compose, and both in a narrow sense. \citet{messoudi2021copula}, in one of
 three variants, fit a one-parameter Gumbel copula to the outputs of the per-target empirical maps in a
 multi-target regression, and \citet{park2024semiparametric} fit a nonparametric vine
@@ -174,7 +177,9 @@ Fitting the copula costs \citet{park2024semiparametric} the finite-sample guaran
 and their exact variant uses the empirical copula instead, which stops.
 \citet{sun2024copula} apply the empirical-copula construction across forecast
 horizons, and they also stop. No paper fits a model to the rank stream of a single
-outcome, and none carries a fitted law back as a forecast.
+outcome, and none carries a fitted law back as a forecast. The one other paper that
+fits a model to conformal output does so to test, not to forecast:
+\citet{lardy2024anytime} fit densities to conformal ranks to drive a test martingale.
 
 Distributional conformal prediction \citep{chernozhukov2021distributional} is the
 nearest single-outcome case. It conditions \emph{before} the map, and its answer is
@@ -183,7 +188,7 @@ kept the empirical map, applied it to scores, and fitted a model on the transfor
 stream. Reweighting the empirical law, conditioning upstream and adapting the level
 do not count.
 
-The 79 papers that consume the conformal output use prediction sets or conformal
+The 77 papers that consume the conformal output use prediction sets or conformal
 $p$-values as inputs to selection, active learning, planning and similar procedures. Using the sets as data
 has its own limit. The law of the prediction sets does not identify a classifier's
 confusion matrix once a set of size two or more occurs, and a conformal correlation
@@ -206,9 +211,9 @@ models \citep{chenfan2006}, and autoregressive transformation models
 \citep{rugamer2023} all apply an empirical marginal map and keep modelling in
 the transformed coordinates.
 
-The readers also recorded how each method pools calibration scores. Of the 608 papers
-that propose a method, 490 pool all scores together, 43 pool within fixed strata, and
-75 let the weights depend on the test point, through kernel localization,
+The readers also recorded how each method pools calibration scores. Of the 624 papers
+that propose a method, 454 pool all scores together, 76 pool within fixed strata, and
+94 let the weights depend on the test point, through kernel localization,
 covariate-shift likelihood ratios or a sampling design. An earlier reading of the nine
 smooth-weighting papers that claim exact validity found that each obtains it by
 marginal recalibration, a stated coverage gap, a known covariate-shift tilt, or added
@@ -613,10 +618,10 @@ average inflates the threshold for classical testing-power reasons
 pooled shape a defence. None of them concerns the stop.
 
 \paragraph{Limitations.} The census labels were assigned by
-language-model readers from the abstract, introduction and method passages of each
-paper, and we read the method sections ourselves only where a label could change
-the conclusion. The boundary between stopping and consuming
-involves judgment. The hand-coded random sample agrees with the readers on 61 of the
+language-model readers, and we read the method sections ourselves only where a label
+could change the conclusion. The boundaries between stopping, replacing and consuming
+involve judgment, and the two reading passes disagree on 78 of the 680 papers,
+mostly at those boundaries. The hand-coded random sample agrees with the readers on 61 of the
 62 papers the two share. The prices are
 measured on one base forecaster and one economic corpus plus a synthetic
 control. The deep tier and the matched-window ablation of
@@ -707,7 +712,7 @@ Section~\ref{sec:floor} are \texttt{check\_gap.py} beside this paper. Study decl
 repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md}).
 
 \bibliographystyle{plainnat}
-\begin{thebibliography}{36}
+\begin{thebibliography}{37}
 \bibitem[Barber et al.(2021)]{barber2021limits} Barber, R.~F., Cand\`es, E.~J.,
   Ramdas, A., and Tibshirani, R.~J. (2021). The limits of distribution-free
   conditional predictive inference. \emph{Information and Inference} 10(2).
@@ -764,6 +769,9 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
 \bibitem[Izbicki et al.(2022)]{izbicki2022} Izbicki, R., Shimizu, G., and Stern,
   R.~B. (2022). CD-split and HPD-split: efficient conformal regions in high
   dimensions. \emph{JMLR} 23(87), 1--32.
+\bibitem[Lardy and P\'erez-Ortiz(2024)]{lardy2024anytime} Lardy, T. and
+  P\'erez-Ortiz, M.~F. (2024). Anytime-valid tests of group invariance through
+  conformal prediction. arXiv:2401.15461.
 \bibitem[Lei and Wasserman(2014)]{lei2014distribution} Lei, J. and Wasserman,
   L. (2014). Distribution-free prediction bands for non-parametric regression.
   \emph{JRSS-B} 76(1), 71--96.
