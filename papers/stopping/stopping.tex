@@ -99,8 +99,9 @@ give the pooled shape a defence. None of them concerns the stop. The base foreca
 
 \section{How often published methods stop at the pooled law}\label{sec:count}
 
-We classified every arXiv paper with ``conformal prediction'' in the title as of
-20 August 2026, 686 papers. A keyword screen assigned the labels, and we read in
+Our claim concerns what published work does, so we checked it against the
+literature instead of relying on an impression of it. We classified every arXiv
+paper with ``conformal prediction'' in the title as of 20 August 2026, 686 papers. A keyword screen assigned the labels, and we read in
 full every paper whose label could change the conclusion. The classifier, the
 frame and the per-paper verdicts are in the repository.
 
@@ -116,7 +117,7 @@ decision such as screening pseudo-labels. It \emph{composes} if it keeps the map
 and fits a model to its output.
 
 Of 686 papers, 599 stop, 16 replace, 28 tune, 38 consume, and 5 propose no
-method. One compose candidate was flagged by the screen: distributional
+method. None composes. One compose candidate was flagged by the screen: distributional
 conformal prediction \citep{chernozhukov2021distributional}, which uses an
 estimated conditional distribution as its score. Read in full, it conditions
 \emph{before} the map, and its answer is the empirical quantile of the resulting
@@ -131,6 +132,9 @@ prediction papers and labelled them without reference to the screen. We find tha
 93 of the 100 treat the conformal step as terminal. The remaining 7 are unclear
 because they pass its output downstream as a filter or a feature. None fits a
 further law on the transformed scale and carries it back as a forecast.
+
+The argument of this paper does not depend on the exact count. We report it
+because the uniformity it shows is alarming.
 
 Outside conformal prediction the composing move is routine. The normal quantile
 transform in hydrological forecasting \citep{bogner2012}, copula time-series
