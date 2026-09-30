@@ -89,22 +89,25 @@ much of that cost composing a model past the pooled law recovers
 
 \section{How often published methods stop at the pooled law}\label{sec:count}
 
-Our claim concerns what published work does, so we checked it against the
-literature instead of relying on an impression of it. We classified every arXiv
-paper with ``conformal prediction'' in the title as of 20 August 2026, 686 papers. A keyword screen assigned the labels, and we read in
-full every paper whose label could change the conclusion. The classifier, the
-frame and the per-paper verdicts are in the repository.
+We ask what published conformal methods do with the map of
+Section~\ref{sec:intro}, the empirical distribution function of the calibration
+scores. We call it the \emph{empirical map}. A method \emph{stops} if the output of
+the map, its quantiles, its $p$-values or its intervals, is the answer. It
+\emph{composes} if it keeps the map and fits a model to its output. Our claim is
+that published methods stop.
 
-The object classified is the \emph{empirical map}: the step turning the multiset
-of held-out errors into a distribution, concretely the empirical cumulative
-distribution of the calibration scores. A paper \emph{stops} if the output of
-that map, its quantiles, its $p$-values, or its intervals, is the answer. A paper \emph{replaces} if it
-substitutes a conditional estimate for the pooled quantile, as SPCI fits a quantile
-regression to recent residuals \citep{xu2023spci}. It \emph{tunes} if it keeps the
-map and adapts the level online, as adaptive conformal inference does
-\citep{gibbs2021adaptive}. It \emph{consumes} if it feeds the output to a downstream
-decision such as screening pseudo-labels. It \emph{composes} if it keeps the map
-and fits a model to its output.
+Methods that neither stop nor compose fall into three further classes. A method
+\emph{replaces} if it substitutes a conditional estimate for the pooled quantile, as
+SPCI fits a quantile regression to recent residuals \citep{xu2023spci}. It
+\emph{tunes} if it keeps the map and adapts the level online, as adaptive conformal
+inference does \citep{gibbs2021adaptive}. It \emph{consumes} if it feeds the output
+to a downstream decision such as screening pseudo-labels.
+
+We checked the claim against the literature instead of relying on an impression of
+it. We classified every arXiv paper with ``conformal prediction'' in the title as of
+20 August 2026, 686 papers. A keyword screen assigned the labels, and we read in
+full every paper whose label could change the conclusion. The classifier, the frame
+and the per-paper verdicts are in the repository.
 
 Of 686 papers, 599 stop, 16 replace, 28 tune, 38 consume, and 5 propose no
 method. None composes. One compose candidate was flagged by the screen: distributional
