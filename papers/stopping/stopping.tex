@@ -277,8 +277,11 @@ following result, which to our knowledge has not been stated before.
 \begin{proposition}[Conformal information gap identity]\label{prop:floor}
 Fix the training fold and the calibration sample, so $(A,\kappa,\widehat
 G_\kappa)$ are deterministic, let $(X,Y)$ be a test pair independent of both,
-and assume the laws below admit densities with finite divergences. Then the
-excess log loss of the conformal predictor decomposes exactly as
+and let $W=A(X,Y)$ have conditional density $p_W(\cdot\given x)$ given $X=x$ and
+pooled density $g_\kappa$ given the stratum. Assume $\E|\log p_W(W\given X)|$,
+$\E|\log g_{\kappa(X)}(W)|$ and $\E|\log\widehat g_{\kappa(X)}(W)|$ are finite, so that
+every term below is finite. Then the excess log loss of the conformal predictor
+decomposes exactly as
 \[
 L(\widehat F) - H(Y\given X)
 \;=\; \I(W;X\given\kappa)
@@ -390,7 +393,7 @@ The input can also return through the score. Distributional conformal prediction
 floor is therefore $\I(W;X)$ for that rank, which is zero when the estimated
 conditional law is the true one. It closes the gap through the estimate and then stops.
 Density-based, histogram, localized and quantile constructions
-\citep{izbicki2020,izbicki2022,sesia2021,guan2023localized,romano2019conformalized}
+\citep{izbicki2020,izbicki2022,sesia2021,guan2023localized,romano2019conformalized,cauchois2021}
 likewise lower the floor by what their conditioning retains, and calibration lowers it
 in none of them. The folded absolute residual can be read as a symmetric predictive
 with density $h_{\mathrm{sym}}(z)=\tfrac12(p_R(z)+p_R(-z))$. The same computation then
@@ -591,7 +594,9 @@ positive floor cannot be ruled out.
 Because every calibration choice moves only the estimation term, a better
 calibrator cannot help. We recommend treating the empirical map as a coordinate
 change with a certificate attached at its position, and continuing to model on its
-output. The composed arm is one instance. In the sense of
+output. The distribution can come from any model, a Bayesian posterior predictive
+included, with conformal calibration attached as a certificate at the position where
+it is wanted. The composed arm is one instance. In the sense of
 Remark~\ref{rem:usecase} it is conformal prediction with the modelling finished,
 and its scored calibration stream measures whether the modelling was in fact
 finished.
@@ -702,7 +707,7 @@ Section~\ref{sec:floor} are \texttt{check\_gap.py} beside this paper. Study decl
 repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md}).
 
 \bibliographystyle{plainnat}
-\begin{thebibliography}{35}
+\begin{thebibliography}{36}
 \bibitem[Barber et al.(2021)]{barber2021limits} Barber, R.~F., Cand\`es, E.~J.,
   Ramdas, A., and Tibshirani, R.~J. (2021). The limits of distribution-free
   conditional predictive inference. \emph{Information and Inference} 10(2).
@@ -717,6 +722,10 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
   \emph{Annals of Statistics} 32(5), 1805--1840.
 \bibitem[Catt(2026)]{catt2026} Catt, P.~M. (2026). Forecastability as an
   information-theoretic limit on prediction. arXiv:2603.27074.
+\bibitem[Cauchois et al.(2021)]{cauchois2021} Cauchois, M., Gupta, S., and Duchi,
+  J.~C. (2021). Knowing what you know: valid and validated confidence sets in
+  multiclass and multilabel prediction. \emph{Journal of Machine Learning Research}
+  22(81), 1--42.
 \bibitem[Chen and Fan(2006)]{chenfan2006} Chen, X. and Fan, Y. (2006).
   Estimation of copula-based semiparametric time series models. \emph{Journal
   of Econometrics} 130(2), 307--335.
