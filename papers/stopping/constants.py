@@ -208,6 +208,36 @@ SURVEY100 = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                          "..", "teaching-letter", "survey100.csv")
 
 
+CENSUS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                      "census", "census_labels.csv")
+
+
+def census():
+    """Full-text census: label counts in scope and pooling among method papers."""
+    if not os.path.exists(CENSUS):
+        return None
+    with open(CENSUS, newline="") as fh:
+        rows = list(csv.DictReader(fh))
+    scope = [r for r in rows if r["label"] != "OUT_OF_SCOPE"]
+    methods = [r for r in scope if r["label"] != "NA"]
+    return (len(rows), len(scope), collections.Counter(r["label"] for r in scope),
+            len(methods), collections.Counter(r["pooling"] for r in methods))
+
+
+def agreement():
+    """Hand-coded sample against the census on shared papers. Agreement means
+    TERMINAL <-> not consumed or composed, and UNCLEAR <-> consumed."""
+    sv, cs_path = SURVEY100, CENSUS
+    if not (os.path.exists(sv) and os.path.exists(cs_path)):
+        return (0, 0)
+    cen = {r["arxiv_id"].split("v")[0]: r["label"] for r in csv.DictReader(open(cs_path))}
+    hand = {r["arxiv_id"].split("v")[0]: r["label"] for r in csv.DictReader(open(sv))}
+    shared = [k for k in hand if k in cen]
+    agree = sum((hand[k] == "UNCLEAR") == (cen[k] == "CONSUME") and cen[k] != "COMPOSE"
+                for k in shared)
+    return (agree, len(shared))
+
+
 def survey100():
     """Hand-coded random validation sample: label counts."""
     if not os.path.exists(SURVEY100):
@@ -245,6 +275,22 @@ def check(res):
                 if phrase in tex:
                     failures.append(f"tex claims '{phrase}' but {closest} "
                                     "is closest to target")
+    cs = census()
+    if cs:
+        total, n_scope, lab, n_meth, pool = cs
+        other = lab["CONSUME"] + lab["REPLACE"] + lab["TUNE"]
+        for phrase in (f"{total} records", f"remaining {n_scope} papers",
+                       f"Of the {n_scope} papers, {lab['STOP']} stop, {lab['CONSUME']} consume, "
+                       f"{lab['REPLACE']} replace, {lab['TUNE']} tune, and {lab['NA']} propose no method",
+                       f"Of the {n_meth} papers that propose a method, {pool['POOLED']} pool",
+                       f"{pool['STRATIFIED']} pool within fixed strata",
+                       f"{pool['SMOOTH']} let the weights",
+                       f"Of {n_meth} papers proposing conformal methods, {lab['STOP']} stop there, "
+                       f"{other} replace, retune or pass on the pooled law, and "
+                       f"{['no', 'one', 'two', 'three'][lab['COMPOSE']]} model its output",
+                       f"agree on {agreement()[0]} of them"):
+            if phrase.replace("\n", " ") not in " ".join(tex.split()):
+                failures.append(f"census: '{phrase}' not in tex")
     sv = survey100()
     if sv:
         n, c = sv
@@ -259,6 +305,13 @@ def check(res):
 if __name__ == "__main__":
     res = compute()
     report(res)
+    cs = census()
+    if cs:
+        total, n_scope, lab, n_meth, pool = cs
+        print(f"\nagreement with hand sample: {agreement()}")
+        print(f"\n===== census =====\n  records={total} in_scope={n_scope} "
+              + " ".join(f"{k}={v}" for k, v in sorted(lab.items()))
+              + f"\n  method papers={n_meth} " + " ".join(f"{k}={v}" for k, v in sorted(pool.items())))
     sv = survey100()
     if sv:
         n, c = sv
