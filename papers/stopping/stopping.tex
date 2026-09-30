@@ -18,7 +18,7 @@
 
 \title{Conformal Prediction is Early Stopping}
 \author{Peter Cotton\\\texttt{peter.cotton@microprediction.com}}
-\date{August 2026 (draft; constants from a study still enlarging, tags in \S\ref{sec:repro})}
+\date{August 2026 (draft)}
 
 \begin{document}
 \maketitle
@@ -29,20 +29,22 @@ its held-out residuals, quote the pooled quantiles, stop. Of 686 arXiv papers
 with conformal prediction in the title, 599 stop at that empirical map, and the
 one candidate for continuing past it, on reading, also stops. We show the stop
 is the expensive part. An identity pins the irreducible excess log score of a
-frozen scheme to its score and stratification; on 15{,}022 economic series,
-stopping costs 0.15 to 0.18 nats net of estimation, composing past the map
-recovers 40 to 75 percent, and coverage detects none of it.
+frozen scheme to its score and stratification; on 17{,}364 economic series,
+stopping costs 0.40 to 0.48 nats after a null-control adjustment, composing
+past the map recovers a third to a half, and empirical coverage
+detects none of it.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
 
 Conformal prediction attaches a guarantee to any point forecaster by a recipe.
-Fit a model however you like. On held-out data, compute a scalar error for each
-point, for instance the absolute residual. Take the 90th percentile of those
-errors and quote the model's prediction plus or minus that percentile. If the
-held-out data and the future point are exchangeable, meaning their joint law is
-unchanged by shuffling, the quoted interval contains the truth 90\% of the time,
-at any sample size, with no assumption on the model or the data distribution.
+Fit a model however you like. On $n$ held-out points, compute a scalar error
+for each, for instance the absolute residual. Sort the errors, take the
+$\lceil (n+1)\,0.9\rceil$-th smallest, and quote the model's prediction plus or
+minus that value. If the held-out data and the future point are exchangeable,
+meaning their joint law is unchanged by shuffling, the quoted interval contains
+the truth at least 90\% of the time, at any sample size, with no assumption on
+the model or the data distribution.
 
 The recipe ends with the percentile. Nothing is ever fitted to the output of the
 pooled-error step: the interval it produces is the answer. In machine learning,
@@ -78,11 +80,11 @@ The paper has three components.
   where the empirical map is one invertible step among peers, we hold one
   forecaster and one empirical object fixed and move only the object's
   position: last, as the convention has it, or interior, with modelling
-  continuing on its output. On 15{,}022 economic series, stopping costs 0.15
-  to 0.18 nats net of estimation; the interior placement recovers 40 to 75
-  percent of that depending on how much history the pooled window discards;
-  and empirical coverage of the stopped arm is the best in the table, so the
-  certificate is blind to the entire loss.
+  continuing on its output. On 17{,}364 economic series, stopping costs 0.40
+  to 0.48 nats after a null-control adjustment; the interior placement
+  recovers a third to a half of that; and the
+  stopped arm's empirical coverage sits nearer the nominal target than the
+  unconstrained base's, so coverage monitoring is blind to the entire loss.
 \end{enumerate}
 
 Section~\ref{sec:discussion} states the recommendation: keep the map, keep the
@@ -172,24 +174,30 @@ emitted law must have a density, so let $\widehat G_\kappa$ be an absolutely
 continuous estimate of the pooled score law (a kernel-smoothed or interpolated
 empirical law; the raw empirical measure is atomic and scores $-\infty$). Write
 $W=A(X,Y)$, let $G_\kappa$ be the population pooled law, and let the benchmark
-be the conditional oracle, whose expected log score is the conditional entropy
-$H(Y\given X)$.
+be the conditional oracle, whose expected negative log score is the conditional
+entropy $H(Y\given X)$. Throughout, $L(\widehat F)=\E[-\log \widehat f_X(Y)]$
+is the expected log loss of the conformal predictive, so an excess is positive
+and smaller is better.
 
 \begin{proposition}[The floor, exactly]\label{prop:floor}
-Fix the training fold, so $(A,\kappa)$ is deterministic, and assume the laws
-below admit densities with finite divergences. Then the excess log score of the
-conformal predictor decomposes exactly as
+Fix the training fold and the calibration sample, so $(A,\kappa,\widehat
+G_\kappa)$ are deterministic, let $(X,Y)$ be a test pair independent of both,
+and assume the laws below admit densities with finite divergences. Then the
+excess log loss of the conformal predictor decomposes exactly as
 \[
 L(\widehat F) - H(Y\given X)
 \;=\; \I(W;X\given\kappa)
 \;+\; \E_{\kappa}\,\KLop\!\big(G_{\kappa}\,\|\,\widehat G_{\kappa}\big),
 \]
 where $\I(W;X\given\kappa)$ is the conditional mutual information between score
-and input given the stratum. The second term is nonnegative and is the only
-part any calibration choice, estimator, quantile convention, randomization, or
-level, can affect; it vanishes only under KL-consistent estimation of the
-pooled law with growing calibration mass per stratum, which is an assumption on
-the estimator, not a consequence of the setup.
+and input given the stratum. (Unconditionally, take the outer expectation over
+the calibration sample; the first term is unchanged.) The second term is
+nonnegative and is the only part any calibration choice, estimator, quantile
+convention, randomization, or level, can affect. At a fixed calibration sample
+it vanishes if and only if $\widehat G_\kappa=G_\kappa$ almost everywhere;
+KL-consistent estimation of the pooled law with growing calibration mass per
+stratum drives it to zero asymptotically, which is an assumption on the
+estimator, not a consequence of the setup.
 \end{proposition}
 
 The proof is a change of variables in which the Jacobian of $A$ cancels between
@@ -203,19 +211,25 @@ between the model's error and its input.
 
 \begin{remark}\label{rem:usecase}
 The floor is zero exactly when the frozen pair renders the score independent of
-the input within strata, that is, when the modelling was finished before the
-conformal step. Conformal calibration is deployed precisely when one is
-unwilling to assume that. The method's stated reason for existing is its lower
-bound.
+the input within strata: $\I(W;X\given\kappa)=0$ iff $W\perp X\given\kappa$.
+When $X$ carries the full information set available downstream, that is the
+statement that the modelling was finished before the conformal step. Conformal
+calibration is especially valuable when one is unwilling to assume that; but
+its guarantee does not diagnose whether the floor is zero, and one may deploy
+it on perfectly finished residuals purely for finite-sample validity. What the
+identity rules out is the middle ground: whenever the floor is positive, no
+calibration choice recovers any of it.
 \end{remark}
 
 The floor explains what stopping protects: the certificate, which concerns the
 marginal rank of the test score and is genuinely exact at its position. It also
-says what stopping abandons: everything in $\I(W;X\given\kappa)$, plus whatever
-a downstream model could extract from the map's output stream. The published
-results cited in Section~\ref{sec:intro} defend the pooling constraint inside
-the certificate. No result defends ending the pipeline. Whether ending it is
-expensive is a measurement question, taken up next.
+says what stopping abandons: $\I(W;X\given\kappa)$, the conditional information
+the frozen score discarded. A downstream model consuming the map's output,
+together with the input, is one means of recovering part of that quantity, not
+an additional source of loss beyond it. The published results cited in
+Section~\ref{sec:intro} defend the pooling constraint inside the certificate.
+No result defends ending the pipeline. Whether ending it is expensive is a
+measurement question, taken up next.
 
 \section{The price}\label{sec:price}
 
@@ -254,11 +268,25 @@ In this laboratory the conformal habit is one configuration among two:
   conformal scheme of the covered type, so Proposition~\ref{prop:floor}
   applies with floor $\I(R;X)$.
 \item[compose-after.] Install the identical empirical object as the terminal
-  leaf \emph{inside} the chain: the candidate pool still weights it against
-  alternatives, the tail splice still repairs its extremes, and the transform
-  chain still inverts it to the observation coordinate. This arm carries no
-  coverage certificate. It is the move the floor identity permits, a change of
-  representation, executed after the map rather than before it.
+  leaf of \emph{every} candidate chain. Writing $R^c_t$ for chain $c$'s
+  residual and $\widehat G^c_t$ for the pooled empirical law of that chain's
+  own residual stream, the arm's predictive is
+  \[
+  \widehat F_t \;=\; \sum_c w^c_t \,\big(T^c_t\big)^{-1}_{\#}\widehat G^c_t,
+  \]
+  where $(T^c_t)^{-1}_{\#}$ pushes the map's law back through chain $c$'s
+  inverse transform and the weights $w^c_t$ are likelihood weights fitted
+  online to the realized densities the maps assign, that is, a mixture model
+  fitted on the maps' output stream. Every predictive path passes through an
+  empirical map: the leaf override replaces the terminal leaf of every
+  candidate chain in the implementation, so the pool weights transform chains
+  against each other, never the map against a parametric alternative, and no
+  weight can route around it. The one exception is the generalized Pareto tail
+  splice, which replaces the density beyond a frozen tail region; it acts on
+  the extremes of the composed predictive and is shared with the base arm.
+  This arm carries no coverage certificate. It is the move the floor identity
+  permits, a change of representation, executed after the map rather than
+  before it.
 \end{description}
 
 Both positions run flat and recency-weighted (exponential weights, half-life
@@ -269,106 +297,129 @@ Both positions run flat and recency-weighted (exponential weights, half-life
 The corpus is FRED economic change series (differences of rates, production,
 employment and similar), non-price, with two tiers. The \emph{breadth} tier
 uses 256 observations of history per forecast origin and every qualifying
-series: 15{,}022 at this draft (daily and monthly arms complete, weekly still
-filling). The \emph{deep} tier uses 1{,}024 observations and series with at
+series: 17{,}364. The \emph{deep} tier uses 1{,}024 observations and series with at
 least 1{,}100, so the 400-residual window is a strict subset of the history it
-could have used; its current panel is 212 series and is being enlarged. Twelve
+could have used: about 6{,}400 series. Twelve
 rolling origins per series, horizons 1, 6 and 12. Because origins within a
 series overlap, all intervals are bootstrap over series, not rows.
 
 A control corpus of synthetic independent draws (Gaussian, Student-$t_3$,
 Laplace) runs under the identical protocol at matched context. On the control
-the residual law does not depend on the state, pooling is correct, and a
-constrained arm should lose nothing; what it loses there is the cost of
-estimating a 41-node empirical law rather than a parametric scale, and that
-estimation cost is subtracted from every headline number below.
+there is no state to condition on, so what a constrained arm loses there is
+finite-sample overhead: the cost of estimating a 41-node empirical law rather
+than a parametric scale. That overhead is subtracted from every headline
+number below, and we call the result \emph{null-control-adjusted} rather than
+net of estimation, for two reasons the adjustment cannot fix. The estimation
+term $\KLop(G\,\|\,\widehat G)$ depends on $G$, so its size on three simple
+iid laws is a gauge, not an unbiased estimate of its size on economic
+residuals; and because the base forecaster adapts, its residuals are not
+exactly state-independent even on iid data. Raw deficits, without the
+adjustment, are 0.51, 0.61 and 0.59 nats at horizons 1, 6 and 12 on the
+breadth tier (paired, 208{,}368 rows per horizon): the adjustment removes
+about a fifth of the raw gap, and both versions are reported so no reader
+has to trust the gauge. A
+sharper control, permuting each real series so the marginal residual law is
+preserved while temporal state dependence is destroyed; where the two gauges
+disagree, the permutation control governs.
 
-\subsection{The decomposition, net of estimation}\label{sec:decomp}
+\subsection{The decomposition, null-control-adjusted}\label{sec:decomp}
 
-Breadth tier, 15{,}022 series, control-subtracted, log score deficit against
-the unconstrained base:
+Breadth tier, 17{,}364 series, null-control-adjusted, log score deficit
+against the unconstrained base:
 
 \begin{center}
 \begin{tabular}{lccc}
 \toprule
  & $h{=}1$ & $h{=}6$ & $h{=}12$ \\
 \midrule
-stop, total cost            & 0.147 & 0.166 & 0.181 \\
-\quad of which pooled shape & 0.084 & 0.111 & 0.105 \\
-\quad of which position     & 0.063 & 0.055 & 0.076 \\
+stop, total cost            & 0.397 & 0.475 & 0.462 \\
+\quad of which pooled shape & 0.267 & 0.315 & 0.275 \\
+\quad of which position     & 0.131 & 0.160 & 0.187 \\
 \bottomrule
 \end{tabular}
 \end{center}
 
 Raw per-arm deficits carry series-bootstrap 95\% intervals of about $\pm 0.02$
-throughout. On the deep tier's current 212-series panel the same decomposition
-is 0.58 total with 0.44 from position: when the pooled window is a strict
-subset of a long history, position dominates the shape constraint roughly three
-to one, and when the window already holds every residual (breadth tier),
-position and shape contribute comparably. One sentence organizes both tiers,
-and the enlarged deep tier will test it: \emph{the price of stopping grows with
-how much the pooled window discards}, history it cannot hold and downstream
-machinery it cannot reach.
+throughout. Composing recovers 33\%, 34\% and 40\% of the cost at the three
+horizons. The deep tier gives raw stop
+costs of 0.34 to 0.40 nats with 40 to 55 percent recovered by the interior
+placement.
 
-Per-series win rates sit between 43\% and 51\%: on the median series the arms
-are close, and the mean cost is carried by the minority of series where
-stopping hurts badly. Stopping behaves like the removal of insurance.
+The deep-tier fraction is not yet a pure position effect, and we flag the
+confound rather than interpret past it. Between tiers, three things change at
+once: 256 against 1{,}024 observations of context, the series panels differ,
+and the 400-residual window truncates a 1{,}024-observation history while
+holding all of a 256-observation one.
+Nor is a 400-observation window inherent to stopping; a stopped map may retain
+every residual it has ever seen. The clean separation is a same-series,
+same-context ablation in which only one bit changes at a time: stop arms at
+windows 250, 400, 750 and all history, and composed arms matched window for
+window, on the ctx-1024 panel. Until that ablation
+reports, the hypothesis that \emph{the price of stopping grows with how much
+the pooled window discards} is exactly that, a hypothesis the current tiers
+are consistent with but do not identify.
+
+The arms are close on the median series; the mean cost is carried by a
+minority of series where stopping hurts badly. Stopping behaves like the
+removal of insurance.
 
 Adaptivity does not substitute for position. Recency-weighting the stop arm's
-window recovers 0.02 to 0.07 nats across tiers and horizons, against 0.06 to
-0.44 for moving the map's position; and level adaptation is dispatched by
-Proposition~\ref{prop:floor} directly, since it acts on the pooled scores
-alone.
+window recovers 0.05 to 0.08 nats on the breadth tier, against 0.14 to 0.27
+for moving the map's position, raw in both cases; and level adaptation is
+dispatched by Proposition~\ref{prop:floor} directly, since it acts on the
+pooled scores alone.
 
-On CRPS the tiers currently disagree, and we report that rather than resolve
-it prematurely: on the deep panel the stopped arm degrades CRPS by about 5\%
-while the composed arm improves it by 7 to 8\%, and on the breadth tier both
-positions are within about 1\% of the base. The deep tier at full breadth
-decides whether the sign flip is a long-context phenomenon or a small-panel
-artifact, and until then it appears in no summary of this paper.
+On CRPS the tiers disagree: on the deep tier the stopped arm degrades CRPS
+and the composed arm improves it, while on the breadth tier both positions
+sit within about 1\% of the base. The disagreement is reported, not resolved,
+and CRPS appears in no summary of this paper.
 
-\subsection{The certificate is blind to the loss}\label{sec:blind}
+\subsection{Empirical coverage is blind to the loss}\label{sec:blind}
 
-Coverage is the certificate's own axis, so we measure it directly. For each
-forecast, the 80\% interval is the predictive's 0.1 and 0.9 quantiles;
-empirical coverage is the share of outcomes falling inside, target 0.800.
-Volatility regimes classify each forecast origin by the ratio of recent to
-older realized volatility in its own context, so the classification uses no
-future information. Deep tier:
+Coverage is the axis conformal practice monitors, so we measure it directly,
+with two scope notes. These are economic time series and we assert no
+exchangeability, so what follows is empirical coverage, not the finite-sample
+certificate of Section~\ref{sec:intro}; and the intervals are the 0.1 and 0.9
+quantiles of the kernel-smoothed predictive, which need not coincide with the
+raw conformal order-statistic endpoints. What the table tests is therefore the
+monitoring practice: whether watching interval coverage would reveal the log
+score loss. Breadth tier, paired rows, target 0.800:
 
 \begin{center}
-\begin{tabular}{lccccc}
+\begin{tabular}{lcc}
 \toprule
-arm & overall & falling vol & flat & rising vol & spread \\
+arm & coverage & distance from target \\
 \midrule
-unconstrained  & 0.782 & 0.814 & 0.741 & 0.823 & 0.082 \\
-stop           & 0.819 & 0.863 & 0.782 & 0.789 & 0.080 \\
-compose-after  & 0.810 & 0.867 & 0.785 & 0.801 & 0.082 \\
+unconstrained    & 0.870 & 0.070 \\
+stop             & 0.784 & 0.016 \\
+stop, weighted   & 0.799 & 0.001 \\
+compose-after    & 0.797 & 0.003 \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-We expected the stopped arm to show good overall coverage and poor
-regime-conditional coverage. It shows neither defect: its coverage is the best
-in the table, overall and within every regime, with the same regime spread as
-the other arms. The arm losing the most log score is the best calibrated. No
-claim of miscalibration can be made against the conformal convention here, and
-none is. The certificate tracks the rank of the test score among pooled
-scores; the floor tracks conditional information the frozen score discarded;
-the two move independently, and a practice that monitors only coverage will
-never see the loss.
+We expected the stopped arm to show good overall coverage, and it does, along
+with something the log score column would never suggest: every conformal arm
+sits nearer nominal than the unconstrained base, which overcovers at 0.870.
+On this axis the conformal arms win. On the log score axis the stopped arm
+loses 0.40 to 0.48 nats. Both statements are true at once, which is the
+point: coverage tracks the rank of the outcome in the predictive; the floor
+tracks conditional information the frozen score discarded; the two move
+independently, and a practice that monitors only coverage will never see the
+loss.
 
 \section{Discussion}\label{sec:discussion}
 
 The title is a description. The conformal recipe stops at its empirical map the
 way training stops at an epoch: except that in learning the stop is chosen
 against validation evidence, and here it is chosen against nothing. Measured,
-the stop costs 0.15 to 0.18 nats net of estimation on fifteen thousand series,
-more when the pooled window discards more, and composing an ordinary model past
-the map recovers a large fraction at no cost to empirical coverage. The floor
-identity locates the part of the loss that is fixed before calibration begins,
-and Remark~\ref{rem:usecase} states the uncomfortable corollary: the method is
-deployed exactly when its floor is positive.
+the stop costs 0.40 to 0.48 nats after a null-control adjustment on more than
+seventeen thousand series, and composing an ordinary model past the map
+recovers a third to a half of that at no cost to empirical coverage. The floor identity
+locates the part of the loss that is fixed before calibration begins, and
+Remark~\ref{rem:usecase} states the corollary that matters in practice:
+whenever the floor is positive, and the method is most attractive exactly when
+one cannot rule that out, no calibration choice recovers any of it.
 
 The recommendation is not a better calibrator, since every calibration choice
 moves only the estimation term. It is to treat the empirical map as a
@@ -382,12 +433,18 @@ assumes, whether the modelling ever was.
 verification of every label that could change the conclusion; the 599 stop
 default rests on the screen plus a stated refutation criterion. The prices are
 measured on one base forecaster and one economic corpus plus a synthetic
-control; the weekly arm and the enlarged deep tier are still filling, and every
-constant above carries a store tag so the final version is a substitution, not
-a reanalysis. The composed arm has no coverage guarantee, which is the thing
-being priced, and it is not proposed as a conformal method. The floor
-proposition covers invertible signed scores only; folded and quantile scores
-need their own treatment.
+control; the deep tier and the matched-window ablation of
+Section~\ref{sec:decomp} are incomplete. The null-control adjustment gauges finite-sample overhead on
+simple iid laws and is not an unbiased estimate of the estimation term on
+economic residuals. Scoring floors the log density at $-25$ per observation, which is not a
+proper score where it binds, and it binds unequally: on 1.78\% of stopped-arm
+rows against 0.62\% of base rows (breadth tier, paired). The inequality favours the
+stopped arm, and tightening the floor stepwise from $-25$ to $-10$ shrinks
+the raw stop deficit monotonically from 0.51 to 0.33 nats at horizon 1, so
+every gap reported here is a lower bound on its unclipped value. The composed arm has no coverage
+guarantee, which is the thing being priced, and it is not proposed as a
+conformal method. The floor proposition covers invertible signed scores only;
+folded and quantile scores need their own treatment.
 
 \appendix
 
@@ -415,7 +472,9 @@ $\widehat G_\kappa$ and the second term. \hfill$\square$
 \section{Reproduction}\label{sec:repro}
 
 Every constant regenerates from a tidy store keyed
-\texttt{(task, source, dataset, uid, model, horizon, repr, metric, value)}.
+\texttt{(task, source, dataset, uid, model, horizon, repr, metric, value)};
+the script \texttt{constants.py} beside this paper's source performs the
+regeneration and fails if the manuscript disagrees with the store.
 Breadth tier rows are tagged \texttt{forecast:CONFB:ctx256:\ldots/m6+\textit{hash}},
 deep tier \texttt{CONF:ctx1024}, controls \texttt{CONFNB}/\texttt{CONFNULL};
 the hash covers the harness sources, the tracked diff, and the compiled core.
