@@ -57,9 +57,19 @@ the truth at least 90\% of the time, at any sample size, with no further assumpt
 the model or the data distribution.
 
 The recipe ends with the percentile, and nothing is fitted to the output of the
-pooled-error step. In machine learning, early stopping is a regularizer chosen
-because validation loss says further fitting would hurt. We have found no paper
-that argues for the conformal stop on any such grounds.
+pooled-error step. Conformal prediction is therefore early stopping. As far as we
+know the literature does not discuss it in these terms, and no paper supplies a
+justification for stopping there. We show that the stop carries a steep empirical
+price.
+
+The usual presentation of conformal prediction disguises the fact that it stops
+early, because it presents the method as a new paradigm. We show empirically that
+the conformal step is better viewed as a univariate transform. The transform needs
+repair before it can be used this way, since the raw empirical map is a step
+function. Once repaired, it belongs in a grammar of similar transforms, on an equal
+footing with subtracting a running mean, dividing by a running scale, differencing,
+serial whitening, and the normal quantile transform of hydrological forecasting
+\citep{bogner2012}.
 
 We measure log scores in nats. A forecaster whose average log
 density trails another's by $0.15$ nats assigns the realized outcomes
