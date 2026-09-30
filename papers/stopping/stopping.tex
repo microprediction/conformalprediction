@@ -47,6 +47,14 @@ recovers a third to a half, and coverage detects none of it.
 
 \section{Introduction}\label{sec:intro}
 
+The most any forecast of an outcome $Y$ can gain over the unconditional distribution
+of $Y$, in expected log score, is the mutual information $\I(Y;X)$ between the outcome
+and the information $X$ available to the forecaster \citep{delsole2004}.
+\citet{catt2026} takes this quantity as the definition of the forecastability of $Y$,
+and calls the gain a method actually achieves its exploitability. We ask how much
+forecastability a conformal forecaster exploits, and we prove that conformal
+calibration exploits none of it.
+
 Conformal prediction attaches a guarantee to any point forecaster by a recipe.
 Fit a model however you like. On $n$ held-out points, compute a scalar error
 for each, for instance the absolute residual. Sort the errors, take the
@@ -78,8 +86,7 @@ We make three contributions. We count how often published conformal methods stop
 at the pooled law (Section~\ref{sec:count}). We introduce and prove the conformal
 information gap identity (Proposition~\ref{prop:floor}), which fixes, exactly and at
 a fixed calibration sample, the part of the excess log score that no calibration
-choice can reach. It implies that conformal calibration does not exploit
-forecastability, as defined by \citet{catt2026}. We then measure what stopping costs on economic series, and how
+choice can reach. We then measure what stopping costs on economic series, and how
 much of that cost composing a model past the pooled law recovers
 (Section~\ref{sec:price}).
 
