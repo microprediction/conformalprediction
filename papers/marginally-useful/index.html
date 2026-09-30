@@ -74,7 +74,7 @@
 <div class="wrap">
   <p class="tag">Companion paper</p>
   <h1>Marginally Useful</h1>
-  <p class="subtitle">Formalizing the information gap in conformal prediction. The companion paper to this site, built around one decomposition.</p>
+  <p class="subtitle">Formalizing the information gap in conformal prediction, built around one decomposition.</p>
 
   <p>
     <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="marginally-useful.pdf">Read the PDF</a>
@@ -103,11 +103,6 @@
 
   <h2>Prediction versus verification</h2>
   <p>Conformal prediction verifies a coverage property; it does not model. It is best read as a terminal certification step: it repairs coverage, but any gain in a proper score comes from modeling the conditional spread, quantiles, or residual shape. Practically: conformalize last, and to sharpen, condition on \(x\) rather than tighten the conformal step.</p>
-
-  <h2>Building from source</h2>
-  <p>The paper builds with <a href="https://tectonic-typesetting.github.io/">Tectonic</a> (which fetches packages and runs BibTeX automatically):</p>
-  <p><code>cd paper &amp;&amp; tectonic marginally-useful.tex</code></p>
-  <p class="note">Any standard TeX distribution works too: <code>pdflatex → bibtex → pdflatex → pdflatex</code>.</p>
 
   <div class="prevnext">
     <a href="../../index.html">&larr; Back to overview</a>
