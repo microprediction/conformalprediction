@@ -71,14 +71,6 @@ footing with subtracting a running mean, dividing by a running scale, differenci
 serial whitening, and the normal quantile transform of hydrological forecasting
 \citep{bogner2012}.
 
-We measure log scores in nats. A forecaster whose average log
-density trails another's by $0.15$ nats assigns the realized outcomes
-$e^{0.15}\approx 1.16$ times less probability per observation. Beside it we
-report CRPS, the continuous ranked probability score, which integrates the
-squared difference between the forecast's cumulative distribution and the
-outcome's step function. It is in the units of the data, lower is better, and
-most conformal papers report it.
-
 We make three contributions. We count how often published conformal methods stop
 at the pooled law (Section~\ref{sec:count}). We introduce and prove the conformal
 information gap identity (Proposition~\ref{prop:floor}), which fixes, exactly and at
@@ -409,7 +401,11 @@ uses 256 observations of history per forecast origin and every qualifying
 series: 17{,}364. The \emph{deep} tier uses 1{,}024 observations and series with at
 least 1{,}100, so the 400-residual window is a strict subset of the history it
 could have used: about 6{,}400 series. Each series has twelve rolling origins,
-and we forecast at horizons 1, 6 and 12. Because origins within a
+and we forecast at horizons 1, 6 and 12. We score each forecast by its log density, in nats. A
+deficit of $0.15$ nats means the realized outcomes receive $e^{0.15}\approx1.16$
+times less probability per observation. We also compute CRPS, the continuous ranked
+probability score, which is in the units of the data and which most conformal papers
+report. Because origins within a
 series overlap, all intervals are bootstrap over series, not rows.
 
 A control corpus of synthetic independent draws (Gaussian, Student-$t_3$,
