@@ -507,7 +507,10 @@ reveal the loss.
 \section{Discussion}\label{sec:discussion}
 
 The conformal recipe stops at its empirical map in the way training stops at an
-epoch, except that in learning the stop is chosen on validation evidence. The
+epoch, except that in learning the stop is chosen on validation evidence. In
+conformal prediction the stop is \emph{cultural}. Almost every paper in the survey
+of Section~\ref{sec:count} stops at the pooled law, none continues past it, and
+none justifies stopping there. The
 measured cost of the conformal stop is large, and composing an ordinary model past
 the map recovers a third to a half of it at no cost to empirical coverage. The
 conformal information gap identity locates the part of the loss that is fixed
