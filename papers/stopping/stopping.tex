@@ -38,11 +38,11 @@
 Split conformal prediction ends where its calibration begins: fit a model, pool
 its held-out residuals, quote the pooled quantiles, stop. Of 686 arXiv papers
 titled conformal prediction, 599 stop there. The other 87 replace the pooled law,
-tune its level, feed it to a decision, or propose no method. None models past it.
-The conformal information gap identity fixes the excess log score of a
-conformal scheme before calibration. On 17{,}364 economic series, stopping costs
-0.40 to 0.48 nats after a null-control adjustment, composing past the pooled law
-recovers a third to a half, and coverage detects none of it.
+tune its level, use it downstream, or propose no method. None models past it. We
+introduce and prove the conformal information gap identity, fixing a conformal
+scheme's excess log score before calibration. On 17{,}364 economic series,
+stopping costs 0.40 to 0.48 nats after a null-control adjustment, composing past
+the pooled law recovers a third to a half, and coverage detects none of it.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -101,7 +101,8 @@ Section~\ref{sec:discussion} states the recommendation: keep the map, keep the
 certificate where a certificate is wanted, and keep modelling past it.
 
 \paragraph{What is new and what is borrowed.} The count, the floor and the price
-are this paper's. The floor is a new result about conformal prediction. For the whole
+are this paper's. The floor is given by the conformal information gap identity
+(Proposition~\ref{prop:floor}), which is new. For the whole
 class of frozen conformal schemes, it fixes exactly, at a fixed calibration sample,
 the part of the log score that no calibration choice can reach. Its proof uses one
 standard identity of information theory (Lemma~\ref{lem:chain}), which we state with
