@@ -56,6 +56,16 @@ unchanged by permuting them, the quoted interval contains
 the truth at least 90\% of the time, at any sample size, with no further assumption on
 the model or the data distribution.
 
+The last step of the recipe applies the empirical distribution function of the
+held-out errors. That map sends an error to its rank among them, a number between
+zero and one, and the quoted interval is read off its quantiles. In earlier work we
+treated this map as one transform in a chain of invertible transforms
+\citep{cotton2026transforms}. The raw map is a step function, so it is not
+invertible and has no density. We repair it by strictly monotone interpolation
+through its knots, with kernel-smoothed mass in each cell. The repaired map is an
+invertible transform of the error, updated as new errors arrive, and a forecaster
+can apply further transforms and fit a model to its output before mapping back.
+
 The recipe ends with the percentile, and nothing is fitted to the output of the
 pooled-error step. Conformal prediction is therefore early stopping. As far as we
 know the literature does not discuss it in these terms, and no paper supplies a
@@ -64,10 +74,8 @@ price.
 
 The usual presentation of conformal prediction disguises the fact that it stops
 early, because it presents the method as a new paradigm. We show empirically that
-the conformal step is better viewed as a univariate transform. The transform needs
-repair before it can be used this way, since the raw empirical map is a step
-function. Once repaired, it belongs in a grammar of similar transforms, on an equal
-footing with subtracting a running mean, dividing by a running scale, differencing,
+the conformal step is better viewed as the repaired univariate transform. It belongs
+in a grammar of similar transforms, on an equal footing with subtracting a running mean, dividing by a running scale, differencing,
 serial whitening, and the normal quantile transform of hydrological forecasting
 \citep{bogner2012}.
 
@@ -78,24 +86,6 @@ a fixed calibration sample, the part of the excess log score that no calibration
 choice can reach. We then measure what stopping costs on economic series, and how
 much of that cost composing a model past the pooled law recovers
 (Section~\ref{sec:price}).
-
-\paragraph{Related work.} The proof of Proposition~\ref{prop:floor} uses one
-standard identity of information theory (Lemma~\ref{lem:chain}).
-
-The most any forecast can gain over the unconditional law is the mutual information
-between outcome and inputs \citep{delsole2004}. \citet{catt2026} takes this quantity
-as the definition of forecastability, and Corollary~\ref{cor:forecastability} shows
-how much of it a conformal scheme captures.
-
-Three published results concern the pooled shape. Exact distribution-free
-conditional coverage is impossible in nonatomic settings
-\citep{lei2014distribution,barber2021limits}. Weighting calibration points unequally
-costs coverage in proportion to the total-variation distance between their residual
-laws \citep{barber2023beyond}. A guarantee held at a fixed point rather than on
-average inflates the threshold for classical testing-power reasons
-\citep{li1989honest,low1997nonparametric,cai2004adaptation}. Together these
-give the pooled shape a defence. None of them concerns the stop. The base forecaster is the subject of
-\citet{cotton2026transforms}.
 
 \section{How often published methods stop at the pooled law}\label{sec:count}
 
@@ -343,13 +333,8 @@ the map's output together with the input can recover part of that quantity.
 
 \subsection{Moving the pooled law within a forecasting chain}\label{sec:grammar}
 
-To measure the cost of stopping we need a forecaster in which the empirical map
-can sit at more than one position, so we treat the map as a univariate transform.
-The raw empirical map is a step function, so it is not invertible and has no
-density. We repair it by strictly monotone interpolation through its knots, with
-kernel-smoothed mass so that it can be log-scored. The result is an invertible,
-state-updated map of the observation coordinate, and it can sit anywhere in a
-chain of transforms.
+To measure the cost of stopping we need a forecaster in which the repaired map of
+Section~\ref{sec:intro} can sit at more than one position.
 
 We use the transform grammar of \citet{cotton2026transforms}. A
 forecaster is a \emph{chain} of state-conditional invertible transforms, each
@@ -525,6 +510,19 @@ output. The composed arm is one instance. In the sense of
 Remark~\ref{rem:usecase} it is conformal prediction with the modelling finished,
 and its scored calibration stream measures whether the modelling was in fact
 finished.
+
+\paragraph{Related work.} The most any forecast can gain over the unconditional
+law is the mutual information between outcome and inputs \citep{delsole2004}.
+\citet{catt2026} takes this quantity as the definition of forecastability, and
+Corollary~\ref{cor:forecastability} shows how much of it a conformal scheme
+captures. Three published results concern the pooled shape. Exact distribution-free
+conditional coverage is impossible in nonatomic settings
+\citep{lei2014distribution,barber2021limits}. Weighting calibration points unequally
+costs coverage in proportion to the total-variation distance between their residual
+laws \citep{barber2023beyond}. A guarantee held at a fixed point rather than on
+average inflates the threshold for classical testing-power reasons
+\citep{li1989honest,low1997nonparametric,cai2004adaptation}. Together these give the
+pooled shape a defence. None of them concerns the stop.
 
 \paragraph{Limitations.} The count is a keyword screen with full-text
 verification of every label that could change the conclusion. The 599 stop
