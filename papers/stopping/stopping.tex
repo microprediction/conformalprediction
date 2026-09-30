@@ -102,14 +102,12 @@ The paper has three components.
 Section~\ref{sec:discussion} states the recommendation: keep the map, keep the
 certificate where a certificate is wanted, and keep modelling past it.
 
-\paragraph{What is new and what is borrowed.} The count and the price are this
-paper's, and the floor identity is proved in Appendix~\ref{app:floor} with its
-scope stated carefully. The identity is the chain rule for relative entropy
-along a product reference \citep{cover2006elements}, familiar from universal coding as the split of
-redundancy into a dependence term and a marginal mismatch
-\citep{clarke1990,grunwald2007}; what is new is its application to the whole
-class of frozen conformal schemes, exactly and at a fixed calibration sample, and
-its consequence in the currency forecasters use. The most any forecast can gain
+\paragraph{What is new and what is borrowed.} The count, the floor and the price
+are this paper's. The floor is a new result about conformal prediction: for the whole
+class of frozen conformal schemes, exactly and at a fixed calibration sample, it fixes
+the part of the log score that no calibration choice can reach, and it has a
+consequence in the currency forecasters use. Its proof uses one standard identity of
+information theory (Lemma~\ref{lem:chain}), which we state with its sources. The most any forecast can gain
 over the unconditional law is the mutual information between outcome and inputs
 \citep{delsole2004}, which \citet{catt2026} takes as the definition of
 forecastability; Corollary~\ref{cor:forecastability} shows how much of it a
@@ -207,6 +205,29 @@ entropy $H(Y\given X)$. Throughout, $L(\widehat F)=\E[-\log \widehat f_X(Y)]$
 is the expected log loss of the conformal predictive, so an excess is positive
 and smaller is better.
 
+The proof uses one standard identity, the chain rule for relative entropy along a
+product reference \citep{cover2006elements}, which in coding theory splits
+redundancy into dependence and mismatch \citep{clarke1990,grunwald2007}.
+
+\begin{lemma}[Dependence plus mismatch]\label{lem:chain}
+Let $(U,V)$ have a joint density with $\I(U;V)<\infty$, let $p_V$ be the marginal
+density of $V$, and let $q$ be any density with $\E|\log q(V)|<\infty$. Then
+\[
+\E\log\frac{p(V\given U)}{q(V)} \;=\; \I(U;V)+\KLop\!\big(P_V\,\|\,Q\big).
+\]
+\end{lemma}
+
+\begin{proof}
+Insert $p_V(V)$: $\E\log\frac{p(V\given U)}{p_V(V)}=\I(U;V)$ and
+$\E\log\frac{p_V(V)}{q(V)}=\KLop(P_V\,\|\,Q)$.
+\end{proof}
+
+The floor needs two facts about conformal schemes on top of it: the Jacobian of an
+invertible score cancels between truth and forecast, so the input reaches the
+predictive only through the frozen score and stratum, and every calibration operation
+acts on the pooled scores alone. Together they give the following, which to our
+knowledge has not been stated before.
+
 \begin{proposition}[The floor, exactly]\label{prop:floor}
 Fix the training fold and the calibration sample, so $(A,\kappa,\widehat
 G_\kappa)$ are deterministic, let $(X,Y)$ be a test pair independent of both,
@@ -229,7 +250,7 @@ estimator, not a consequence of the setup.
 \end{proposition}
 
 The proof is a change of variables in which the Jacobian of $A$ cancels between
-truth and forecast, then a split at the population pooled law
+truth and forecast, then Lemma~\ref{lem:chain} within each stratum
 (Appendix~\ref{app:floor}). In words: the input reaches the predictive only
 through the frozen reshaping and the frozen stratum choice, so whatever
 information about the score the input still carries within a stratum is lost
