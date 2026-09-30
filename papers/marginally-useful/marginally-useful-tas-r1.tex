@@ -1,0 +1,374 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[round]{natbib}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{xurl}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue,
+  pdftitle={Marginally Useful},pdfauthor={}}
+
+% run-in paragraph headers in italic, not bold
+\titleformat{\paragraph}[runin]{\normalfont\itshape}{}{0pt}{}
+\titlespacing*{\paragraph}{0pt}{0.6\baselineskip}{0.6em}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\Pr}{\mathbb{P}}
+\newcommand{\KL}{\mathrm{KL}}
+\newcommand{\given}{\,\vert\,}
+
+% blinded build: compile marginally-useful-tas-r1-anon.tex, which sets \anontrue
+\providecommand{\anonflag}{0}
+\newif\ifanon
+\ifnum\anonflag=1 \anontrue \fi
+
+\title{Marginally Useful:\\ Conformal Prediction Adds No Forecastability}
+
+\ifanon
+\author{}
+\else
+\author{Peter Cotton\thanks{Global Strategic Minerals Corporation.
+  Email: \texttt{peter.cotton@gsmc.ai}. Code and the numerical checks are at
+  \url{https://github.com/microprediction/conformalprediction}.}}
+\fi
+\date{March 2027}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+The conformal step adds no forecastability. A conformal predictive system pools one law for
+its score across all inputs, and its expected log-score regret to the oracle is exactly
+the mutual information between that score and the input, plus a marginal mismatch the
+conformal step removes. The information the system can extract about the future is
+therefore fixed by the model and score it wraps before calibration runs, and it can be
+less than none: a poorly located model wrapped in conformal prediction can do worse than
+ignoring the inputs altogether. On 572 economic time series, pooled raw residuals leave
+at least 0.117 nats per observation to a feasible challenger, and a single scale transform
+leaves none it can detect.
+\end{abstract}
+
+\section{The claim}
+
+Conformal prediction is widely presented as the rigorous way to add uncertainty to a
+forecast. One forecasting library tabulates methods by ``Calibration Guarantee'', awarding
+the check mark to conformal prediction and a tilde to bootstrap, quantile regression and
+ARIMA alike \citep{nixtla_conformal}. A popular introduction adds that with Bayesian
+posteriors or bootstrapping ``we have no guarantees that these approaches will perform well
+on new data'' \citep{molnar_conformal}, and from there it is a short step to conformal
+prediction as the thing that ``converts any statistical, machine or deep learning model into
+a probabilistic prediction model'' \citep{manokhin_neuralprophet}. The methodological
+literature is more careful \citep{lei2014distribution,barber2021limits}, but it states its
+cautions in the currency of coverage. The question a forecaster asks is in a different
+currency: how much of what can be predicted does the method predict?
+
+That question has a precise form. Under the logarithmic score the most any forecast can gain
+over the unconditional distribution of $Y$ is the mutual information $I(Y;X)$ between the
+outcome and the information set \citep{delsole2004}, and \citet{catt2026} makes this the
+definition of \emph{forecastability}, resolved by horizon. We answer the question for
+conformal prediction. A conformal predictive system captures $I(Y;X)-I(T;X)$ of the
+available forecastability, where $T$ is the score it pools, and the conformal step
+contributes none of it (Theorem~\ref{thm:gap} and Corollary~\ref{cor:forecastability}). The
+share can be negative. Whatever a conformal system knows about the future, the model and
+score it wraps knew before calibration ran.
+
+None of this disputes the guarantee. Given exchangeable data, a fitted predictor and a
+nonconformity score, split conformal prediction returns a set with
+\begin{equation}\label{eq:marginal}
+  \Pr\!\big(Y_{n+1}\in C_\alpha(X_{n+1})\big)\;\ge\;1-\alpha,
+\end{equation}
+finite-sample and with no assumption on the data distribution
+\citep{vovk2005algorithmic,lei2018distribution,angelopoulos2023gentle}. That is a statement
+about coverage, averaged over $X_{n+1}$. Our result is about the log score, and it separates
+cleanly from \eqref{eq:marginal}: the finite-sample guarantee is coverage, the log-score
+statement is exact for every fixed pooled law and asymptotic only in identifying which law
+the conformal system uses (Lemma~\ref{lem:ident}).
+
+\section{Setup}\label{sec:setup}
+
+Let $(X,Y)$ have joint law $P$ on $\mathcal X\times\R$, with conditional density
+$p(y\given x)$ and marginal density $p_Y$. In time series, $X$ is the past and $Y$ the value
+$h$ steps ahead. The oracle forecasts with $p(\cdot\given x)$ and the unconditional
+forecaster with $p_Y$. Following \citet{catt2026}, the forecastability of $Y$ given $X$ is
+\begin{equation}\label{eq:F}
+  F \;=\; \E\log p(Y\given X)-\E\log p_Y(Y)\;=\;I(Y;X),
+\end{equation}
+the most any forecast can gain over the unconditional law in expected log score. For a
+forecaster $q$, its \emph{exploitability} is $\E\log q(Y\given X)-\E\log p_Y(Y)$, which is
+at most $F$ and can be negative.
+
+\paragraph{Scores and pooling.} A score transform is a family of maps
+$\phi_x:\R\to\mathcal Z$, one per input, each a strictly increasing $C^1$ bijection onto a
+common open interval $\mathcal Z$, with $(x,y)\mapsto\phi_x(y)$ and
+$(x,y)\mapsto\partial_y\phi_x(y)$ jointly measurable. Write $T=\phi_X(Y)$ for the score and
+$P_T$, $p_T$ for its marginal law and density. The cases in use are
+\begin{itemize}
+  \item the signed residual $\phi_x(y)=y-\hat\mu(x)$, whose conformal predictive system (CPS)
+  is that of \citet{vovk2019nonparametric};
+  \item the normalized residual $\phi_x(y)=(y-\hat\mu(x))/\hat\sigma(x)$
+  \citep{lei2018distribution};
+  \item the estimated conditional rank $\phi_x(y)=\Phi^{-1}\big(\hat F(y\given x)\big)$,
+  which is distributional conformal prediction \citep{chernozhukov2021distributional}.
+\end{itemize}
+The model ($\hat\mu$, $\hat\sigma$ or $\hat F$) is fitted on data disjoint from what follows
+and is held fixed. A \emph{pooled forecaster} in the coordinates $\phi$ chooses one density
+$h$ on $\mathcal Z$, the same for every input, and reports
+\begin{equation}\label{eq:pooled}
+  q_h(y\given x)\;=\;h\big(\phi_x(y)\big)\,\partial_y\phi_x(y).
+\end{equation}
+A conformal predictive system is a pooled forecaster whose $h$ is read off the calibration
+scores. Conformal calibration sees the scores $T_i$ and never the inputs, so it can choose
+$h$ and nothing else.
+
+\section{The gap}\label{sec:gap}
+
+\begin{theorem}[Information gap of a pooled forecaster]\label{thm:gap}
+Assume $T$ has finite differential entropy, $I(T;X)<\infty$, and $\E|\log h(T)|<\infty$.
+Then for every density $h$ on $\mathcal Z$,
+\begin{equation}\label{eq:gap}
+  \E\log p(Y\given X)-\E\log q_h(Y\given X)\;=\;I(T;X)+\KL(P_T\,\|\,H).
+\end{equation}
+The regret is minimized at $h=p_T$, where it equals $I(T;X)$. No choice of $h$, and no
+recalibration that ignores $X$, brings it below $I(T;X)$.
+\end{theorem}
+
+\begin{proof}
+By the change of variables $t=\phi_x(y)$, $p(y\given x)=p_T(\phi_x(y)\given x)\,
+\partial_y\phi_x(y)$, where $p_T(\cdot\given x)$ is the conditional density of $T$. The
+Jacobians cancel in the ratio with \eqref{eq:pooled}, so
+\[
+\E\log\frac{p(Y\given X)}{q_h(Y\given X)}
+=\E\log\frac{p_T(T\given X)}{h(T)}
+=\E\log\frac{p_T(T\given X)}{p_T(T)}+\E\log\frac{p_T(T)}{h(T)}
+=I(T;X)+\KL(P_T\,\|\,H),
+\]
+each term finite under the assumptions. The second term is non-negative and vanishes only
+at $h=p_T$ (Gibbs). An $X$-blind recalibration applies a fixed increasing map $\psi$ to the
+score, and $I(\psi(T);X)=I(T;X)$ because $\psi$ is invertible, so the floor is unchanged.
+\end{proof}
+
+The identity \eqref{eq:gap} is the chain rule for relative entropy along a product
+reference, the split of redundancy into a dependence term and a marginal-mismatch term
+familiar from universal coding \citep{clarke1990,grunwald2007}. We claim the reading, not
+the algebra: it holds exactly, at every sample size, for the whole class of pooled
+forecasters, which is the class every conformal predictive system belongs to. For the
+signed residual it gives the residual gap $I(R;X)$ with $R=Y-\hat\mu(X)$. The form in
+general coordinates is also stated by \citet{cotton2026gap}, who use it to measure the gap
+along a sequence of transforms. Reading the symmetric
+intervals of ordinary absolute-residual conformal as a distribution pools the symmetrized
+law $h_{\mathrm{sym}}(z)=\tfrac12(p_R(z)+p_R(-z))$, and \eqref{eq:gap} then adds
+$\KL(P_R\,\|\,H_{\mathrm{sym}})\le\log 2$ for discarding the sign.
+
+\begin{lemma}[Which law the conformal system pools]\label{lem:ident}
+Let the calibration pairs $(X_i,Y_i)$, $i=1,\dots,n$, be i.i.d.\ copies of $(X,Y)$, or a
+stationary ergodic sequence with that marginal law, and let $\widehat G_n$ be the empirical
+distribution function of the scores $T_i=\phi_{X_i}(Y_i)$. The signed CPS reports the
+predictive distribution function $\Pi_x(y)=\widehat G_n(\phi_x(y))$, up to the $1/(n+1)$
+fence-post convention, and $\sup_t|\widehat G_n(t)-G_T(t)|\to0$ almost surely, by
+Glivenko--Cantelli in the i.i.d.\ case and by the ergodic theorem applied on a countable
+dense set of $t$ in the stationary case. If a smoothed version with density $\hat h_n$
+satisfies $\KL(P_T\,\|\,\hat H_n)\to0$, the regret \eqref{eq:gap} of the smoothed CPS tends
+to $I(T;X)$.
+\end{lemma}
+
+Exchangeability alone does not give this. An infinite exchangeable sequence is a mixture of
+i.i.d.\ sequences, and $\widehat G_n$ then converges to the distribution function of the
+directing measure, which is random. Coverage \eqref{eq:marginal} needs only
+exchangeability; the identification needs more. A finite empirical CPS is a predictive
+distribution but not a Lebesgue density, which is why the log-score statement is made for a
+smoothed version. Theorem~\ref{thm:gap} needs none of this, because it is a statement about
+every fixed $h$.
+
+\begin{corollary}[What a conformal system captures]\label{cor:forecastability}
+Under the assumptions of Theorem~\ref{thm:gap}, and with $I(Y;X)<\infty$, the pooled
+forecaster \eqref{eq:pooled} has exploitability
+\begin{equation}\label{eq:captured}
+  \E\log q_h(Y\given X)-\E\log p_Y(Y)\;=\;I(Y;X)-I(T;X)-\KL(P_T\,\|\,H).
+\end{equation}
+Its best value, $I(Y;X)-I(T;X)$, is fixed by the score before calibration. The fraction of
+forecastability captured is at most $1-I(T;X)/I(Y;X)$, which is negative whenever
+$I(T;X)>I(Y;X)$.
+\end{corollary}
+
+\begin{proof}
+Subtract \eqref{eq:gap} from \eqref{eq:F}.
+\end{proof}
+
+\begin{remark}[Why the calibration gain is not forecastability]\label{rem:calgain}
+The conformal step moves $h$ toward $p_T$ and so raises the score by removing
+$\KL(P_T\,\|\,H)$. That term is a property of the marginal law of $T$ alone. It is the same
+whether $X$ carries a great deal of information about $Y$ or none, and a forecaster with
+$I(Y;X)=0$ gains it just as much. What depends on $X$ is $I(Y;X)-I(T;X)$, and that is set by
+$\phi$. In this sense the conformal step adds no forecastability: it repairs marginal
+miscalibration, and what the system knows about the future is decided upstream.
+\end{remark}
+
+\begin{remark}[Negative capture]
+The corollary's negative case is not exotic. Let $Y$ be independent of $X$, so there is
+nothing to forecast, and let $\hat\mu$ vary with $x$. Then $R=Y-\hat\mu(X)$ depends on $X$
+through the model alone, $I(R;X)>0=I(Y;X)$, and the conformal predictive system, perfectly
+calibrated in coverage, scores below the unconditional law by $I(R;X)$. The coverage
+certificate is silent about this.
+\end{remark}
+
+\begin{remark}[Cells and conditional methods]\label{rem:cells}
+Mondrian or binned conformal predictive systems \citep{bostrom2021mondrian,toccaceli2026crps}
+pool one law per cell $g(X)$. The same computation with $H$ replaced by a family $H_g$ gives
+the floor $I(T;X\given g(X))=I(T;X)-I(T;g(X))$: calibration per cell captures
+$I(T;g(X))$ and no more. Distributional conformal prediction
+\citep{chernozhukov2021distributional} is Theorem~\ref{thm:gap} with
+$\phi_x=\Phi^{-1}\circ\hat F(\cdot\given x)$, so its floor is $I(T;X)$ for the estimated
+rank, which is zero when $\hat F$ is the true conditional law. That is the sense in which it
+answers the problem posed here, and it does so through $\hat F$. Density-based and
+conditional-histogram constructions
+\citep{izbicki2020,izbicki2022,sesia2021}, localized conformal prediction \citep{guan2023}
+and conformalized quantile regression \citep{romano2019conformalized} all put $X$ into the
+score or the reference class. Each reduces the floor by what its conditioning retains, never
+by the calibration step.
+\end{remark}
+
+\section{Two readings}\label{sec:readings}
+
+\paragraph{A false-pooling cost.} A pooled forecaster asserts that once $\phi$ is applied,
+one law fits every input, which is to say $T\perp X$. The gap $I(T;X)$ is the relative
+entropy from the true joint law to the nearest such independence model, and one pays it
+whether or not one notices making the assumption.
+
+\paragraph{A betting rent.} A gambler who knows a distribution $P$ and bets against a fair
+book priced by $Q$ compounds wealth at expected log-rate $\KL(P\,\|\,Q)$ per round
+\citep{kelly1956new,cover2006elements}. Read the pooled law as the book and the conditional
+law as what the oracle knows; the oracle's expected rent per round is $I(T;X)$, and a
+re-levelling that ignores $X$ leaves it unchanged.
+
+\paragraph{Coverage and log score grade different objects.} Two forecasters with the same
+location $\hat\mu$ but different claimed densities $f$ have identical residual conformal
+sets and identical coverage at every level, while their log scores differ without bound:
+take $X$ degenerate, $Y\sim N(0,1)$ and $f_\sigma=N(0,\sigma^2)$, whose expected log score
+$-\tfrac12\log(2\pi\sigma^2)-1/(2\sigma^2)$ diverges at both ends of the $\sigma$ range
+while the set never moves. This does not conflict with Theorem~\ref{thm:gap}, where the
+degenerate $X$ gives $I(T;X)=0$. The example grades a density $f$ that the conformal set
+never consults; the theorem grades the density the conformal system itself reports. If the
+practitioner replaces a misspecified $f$ by the conformal system's output, the score can
+rise, by the $\KL$ term of Remark~\ref{rem:calgain}, and never past the ceiling
+$I(Y;X)-I(T;X)$.
+
+\section{Evidence}\label{sec:evidence}
+
+\paragraph{Exact checks.} The identities are checked by deterministic grid integration, each
+side computed independently from its definition (\texttt{check\_gap.py}). With $X$ uniform on
+$[0,1]$ and $Y\given x$ skew-normal with mean $2\sin 3x$ and scale $0.5+1.5x$:
+\begin{center}
+\small
+\begin{tabular}{lcccc}
+\toprule
+location model $\hat\mu(x)$ & $I(Y;X)$ & $I(R;X)$ & captured & share\\
+\midrule
+correct, $2\sin 3x$ & $0.340$ & $0.118$ & $0.222$ & $0.65$\\
+shrunk, $1.2\sin 3x$ & $0.340$ & $0.152$ & $0.189$ & $0.56$\\
+$Y\perp X$, $\hat\mu(x)=1.5\cos 4x$ & $0$ & $0.653$ & $-0.653$ & n/a\\
+\bottomrule
+\end{tabular}
+\end{center}
+Both sides of \eqref{eq:gap} and \eqref{eq:captured} agree to within $10^{-8}$ nats. With the
+same truth and a misspecified logistic $\hat F$, the distributional-conformal score has
+$I(T;X)=0.070$ against $I(R;X)=0.123$ for raw residuals under the same location: the score
+transform, not the calibration, halves the gap.
+
+\paragraph{Economic time series.} \citet{cotton2026gap} measures the residual gap on 572
+continuous FRED change series, with a strong online forecaster's mean held fixed and the
+past as $X$. The oracle is unavailable, but the gap is still observable from below. If $M$
+is the pooled law estimated from the past and $Q$ any past-measurable challenger, then
+$\E\log(q/m)=\E\,\KL(P\,\|\,M)-\E\,\KL(P\,\|\,Q)\le\E\,\KL(P\,\|\,M)$, so a challenger's
+held-out gain over the pooled law is, in expectation, a lower bound on the regret the pooled
+system pays to the oracle. The held-out gains, in nats per observation, were:
+\begin{center}
+\small
+\begin{tabular}{lccc}
+\toprule
+pooled stream & challenger gain & $90\%$ interval & positive on\\
+\midrule
+raw residuals & $+0.117$ & $[0.105,\,0.129]$ & $84\%$ of series\\
+standardized by an EWMA scale & $-0.020$ & $[-0.060,\,0.015]$ & $42\%$\\
+serially whitened & $-0.016$ & $[-0.058,\,0.017]$ & $40\%$\\
+PIT-normalized & $+0.003$ & $[-0.006,\,0.012]$ & $26\%$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Pooling raw residuals, which is what split conformal does, leaves at least $0.117$ nats per
+observation on the table. One scale transform removes all of it that this challenger can
+find. The calibration step is the same in every row; the rows differ only in the
+coordinates in which the pooling happens. In a companion simulation with a known
+heteroscedastic truth, raw and normalized split conformal both hit $90\%$ marginal coverage,
+while raw pooling covers $99.8\%$ of the calmest volatility quartile and $76.7\%$ of the
+most volatile \citep{cotton2026gap}.
+
+\section{What this does not say}\label{sec:scope}
+
+\paragraph{The guarantee stands.} Conformal prediction certifies the coverage of a set,
+finite-sample and distribution-free, under exchangeability. Where coverage is the
+deliverable, as in selective prediction, shortlisting, or conformal $p$-values for novelty
+detection \citep{angelopoulos2021uncertainty,bates2021distribution}, it is the right tool,
+and within its pooled class the CPS is log-score optimal. The cost is the class.
+
+\paragraph{Terms.} Marginal coverage is one calibration-type property of a set. It is not
+probabilistic calibration of a predictive distribution, and neither is sharpness
+\citep{gneiting2007probabilistic,gneiting2007strictly}. We use \emph{coverage} for the first,
+\emph{calibration} only for the distributional property, and grade forecasts by the log
+score.
+
+\paragraph{Heteroscedasticity, not covariate density.} The gap is driven by how the law of
+$T$ varies with $x$. It has nothing to do with whether $x$ is typical or unusual under
+$p_X$: a rare input with ordinary noise contributes nothing to $I(T;X)$, and marginal
+coverage alone does not say which inputs are over- or under-covered.
+
+\paragraph{The log score.} The exact information identities belong to the log score. For
+CRPS or the interval score the analogous floor is the regret of the best $X$-blind law under
+that score, which is not an information quantity, and we claim no identity for it.
+
+\paragraph{Estimate first, certify second.} A Bayesian posterior predictive, or any rich
+conditional model, can supply the distribution, with conformal calibration added on top as a
+certificate. The theorem says what that order buys: the certificate costs nothing in
+forecastability if the model has already made $T$ nearly independent of $X$, and cannot
+recover what the model left in $I(T;X)$. Conformalize last, and put the conditioning in the
+score.
+
+\paragraph{Related work.} The pieces are known: the CPS \citep{vovk2019nonparametric}, the
+calibration--sharpness paradigm \citep{gneiting2007probabilistic}, the impossibility of
+distribution-free conditional coverage \citep{lei2014distribution,barber2021limits}, an
+information-theoretic reading of set size \citep{correia2024information}, the observation
+that validity invites weak predictors \citep{recht2024cover} and that set length can be
+gamed at fixed coverage \citep{min2026coveragelength}, and forecastability as mutual
+information \citep{delsole2004,catt2026}. To our knowledge the exact regret of the pooled
+class, its identification with the conformal predictive system, and the resulting account
+of how much forecastability conformal prediction captures have not been stated before.
+
+\section{Conclusion}
+
+Coverage answers the question \emph{is the truth in this region?} In forecasting that is
+often not the question anyone was asking. The question is how much of what can be predicted
+has been predicted, and for conformal prediction the answer is exact: $I(Y;X)-I(T;X)$ at
+best, set by the model and the score, with the conformal step contributing nothing that
+depends on the inputs. The price of the split conformal coverage guarantee, paid in the
+forecaster's own currency, is $I(T;X)$.
+
+\paragraph{Data availability.} No new data are used. The numerical checks are in
+\texttt{check\_gap.py}, supplied with the submission\ifanon\else{} and at the repository
+above\fi; the time-series results are those of \citet{cotton2026gap}, whose code and series
+list are public.
+
+\bibliographystyle{asa-authoryear}
+\bibliography{references}
+
+\end{document}
