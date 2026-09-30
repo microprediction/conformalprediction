@@ -65,22 +65,20 @@ the truth at least 90\% of the time, at any sample size, with no further assumpt
 the model or the data distribution.
 
 The last step of the recipe applies the empirical distribution function of the
-held-out errors, and the quoted interval is read off its quantiles. Once repaired,
-that map is an invertible univariate transform of the error, one of many that a
-forecaster can chain together (Section~\ref{sec:transform}).
+held-out errors, and the quoted interval is read off its quantiles. Nothing is fitted
+to the output of that step. The recipe stops there, so conformal prediction is a form
+of early stopping.
 
-The recipe ends with the percentile, and nothing is fitted to the output of the
-pooled-error step. Conformal prediction is therefore early stopping. As far as we
-know the literature does not discuss it in these terms, and no paper supplies a
-justification for stopping there. We show that the stop carries a steep empirical
-price.
-
-Conformal prediction is usually presented as a self-contained procedure, which
-makes it easy to miss that it stops early. We show empirically that
-the conformal step is better viewed as the repaired univariate transform. It belongs
-in a grammar of similar transforms, on an equal footing with subtracting a running mean, dividing by a running scale, differencing,
-serial whitening, and the normal quantile transform of hydrological forecasting
-\citep{bogner2012}.
+The stop is easy to miss because conformal prediction is usually presented as a
+self-contained procedure. Once the empirical map is repaired, however, it is an
+invertible univariate transform of the error (Section~\ref{sec:transform}). It then
+belongs in a grammar of similar transforms, alongside subtracting a running mean,
+dividing by a running scale, differencing, serial whitening, and the normal quantile
+transform of hydrological forecasting \citep{bogner2012}. A forecaster working in that
+grammar can apply the transform and keep modelling its output. As far as we know the
+literature does not describe conformal prediction as early stopping, and no paper
+justifies stopping at the empirical map. We show that the stop carries a steep
+empirical price.
 
 We make three contributions. We count how often published conformal methods stop
 at the pooled law (Section~\ref{sec:count}). We introduce and prove the conformal
