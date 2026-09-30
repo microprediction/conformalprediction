@@ -204,6 +204,19 @@ def report(res):
             print(f"  {a:24s} {c:.3f}  |err|={abs(c - 0.800):.3f}")
 
 
+SURVEY100 = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                         "..", "teaching-letter", "survey100.csv")
+
+
+def survey100():
+    """Hand-coded random validation sample: label counts."""
+    if not os.path.exists(SURVEY100):
+        return None
+    with open(SURVEY100, newline="") as fh:
+        labels = [r["label"] for r in csv.DictReader(fh)]
+    return len(labels), collections.Counter(labels)
+
+
 def check(res):
     """Fail if stopping.tex asserts numbers the store does not support."""
     tex = open(os.path.join(os.path.dirname(__file__) or ".",
@@ -232,6 +245,12 @@ def check(res):
                 if phrase in tex:
                     failures.append(f"tex claims '{phrase}' but {closest} "
                                     "is closest to target")
+    sv = survey100()
+    if sv:
+        n, c = sv
+        for phrase in (f"{c['TERMINAL']} of the {n}", f"{c['UNCLEAR']} are unclear"):
+            if phrase not in tex:
+                failures.append(f"survey100: '{phrase}' not in tex")
     for f in failures:
         print(f"CHECK FAIL: {f}", file=sys.stderr)
     return 1 if failures else 0
@@ -240,5 +259,10 @@ def check(res):
 if __name__ == "__main__":
     res = compute()
     report(res)
+    sv = survey100()
+    if sv:
+        n, c = sv
+        print(f"\n===== survey100 (hand-coded random sample) =====\n  n={n}  "
+              + "  ".join(f"{k}={v}" for k, v in sorted(c.items())))
     if "--check" in sys.argv:
         sys.exit(check(res))

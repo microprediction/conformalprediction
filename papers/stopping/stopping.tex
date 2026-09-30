@@ -8,6 +8,8 @@
 \usepackage{microtype}
 
 \newtheorem{proposition}{Proposition}
+\newtheorem{lemma}[proposition]{Lemma}
+\newtheorem{corollary}[proposition]{Corollary}
 \theoremstyle{remark}
 \newtheorem{remark}[proposition]{Remark}
 
@@ -16,9 +18,18 @@
 \newcommand{\given}{\,|\,}
 \newcommand{\KLop}{\mathrm{KL}}
 
-\title{Conformal Prediction is Early Stopping}
-\author{Peter Cotton\\\texttt{peter.cotton@microprediction.com}}
-\date{August 2026 (draft)}
+% blinded build: compile stopping-anon.tex, which sets \anonflag to 1
+\providecommand{\anonflag}{0}
+\newif\ifanon
+\ifnum\anonflag=1 \anontrue \fi
+
+\title{Marginally Useful:\\ Conformal Prediction is Early Stopping}
+\ifanon
+\author{}
+\else
+\author{Peter Cotton\\\texttt{peter.cotton@gsmc.ai}}
+\fi
+\date{Original: 11 June 2026. Revised: 30 September 2026.}
 
 \begin{document}
 \maketitle
@@ -29,7 +40,8 @@ its held-out residuals, quote the pooled quantiles, stop. Of 686 arXiv papers
 with conformal prediction in the title, 599 stop at that empirical map, and the
 one candidate for continuing past it, on reading, also stops. We show the stop
 is the expensive part. An identity pins the irreducible excess log score of a
-frozen scheme to its score and stratification; on 17{,}364 economic series,
+frozen scheme to its score and stratification, so calibration adds no
+forecastability; on 17{,}364 economic series,
 stopping costs 0.40 to 0.48 nats after a null-control adjustment, composing
 past the map recovers a third to a half, and empirical coverage
 detects none of it.
@@ -92,7 +104,16 @@ certificate where a certificate is wanted, and keep modelling past it.
 
 \paragraph{What is new and what is borrowed.} The count and the price are this
 paper's, and the floor identity is proved in Appendix~\ref{app:floor} with its
-scope stated carefully. The published theory around the pooled shape is
+scope stated carefully. The identity is the chain rule for relative entropy
+along a product reference, familiar from universal coding as the split of
+redundancy into a dependence term and a marginal mismatch
+\citep{clarke1990,grunwald2007}; what is new is its application to the whole
+class of frozen conformal schemes, exactly and at a fixed calibration sample, and
+its consequence in the currency forecasters use. The most any forecast can gain
+over the unconditional law is the mutual information between outcome and inputs
+\citep{delsole2004}, which \citet{catt2026} takes as the definition of
+forecastability; Corollary~\ref{cor:forecastability} shows how much of it a
+conformal scheme captures, and that calibration contributes none. The published theory around the pooled shape is
 context, not a contribution here: exact distribution-free conditional coverage
 is impossible in nonatomic settings \citep{lei2014distribution,barber2021limits};
 weighting calibration points unequally costs coverage in proportion to the
@@ -134,6 +155,13 @@ stated and falsifiable: a paper that retains the empirical rank transform,
 applies it to residuals, and fits a downstream model on the transformed stream.
 Reweighting the empirical law does not count, conditioning upstream does not
 count, adapting the level does not count.
+
+The screen's default label is \emph{stop}, so we also coded a sample by hand. A
+seed-fixed random sample of 100 papers, drawn from a wider archive of conformal
+prediction papers, was read and labelled independently of the screen: 93 of the 100
+treat the conformal step as terminal, 7 are unclear because they pass its output
+downstream as a filter or a feature, and none fits a further law on the transformed
+scale and carries it back as a forecast.
 
 Outside the conformal banner the composing move is routine. The normal quantile
 transform in hydrological forecasting \citep{bogner2012}, copula time-series
@@ -230,6 +258,73 @@ an additional source of loss beyond it. The published results cited in
 Section~\ref{sec:intro} defend the pooling constraint inside the certificate.
 No result defends ending the pipeline. Whether ending it is expensive is a
 measurement question, taken up next.
+
+The proposition holds at a fixed calibration sample and so needs no limit. Which
+pooled law a conformal scheme converges to is a separate question, and it needs
+more than exchangeability.
+
+\begin{lemma}[Identification]\label{lem:ident}
+Let the calibration pairs be i.i.d.\ copies of $(X,Y)$, or a stationary ergodic
+sequence with that marginal law, and let $\widehat G_{\kappa,n}$ be the empirical
+distribution of the scores in stratum $\kappa$. Then
+$\sup_w|\widehat G_{\kappa,n}(w)-G_\kappa(w)|\to0$ almost surely (Glivenko--Cantelli,
+or the ergodic theorem on a countable dense set of $w$), and if the smoothed estimate
+is KL-consistent the excess log loss tends to the floor $\I(W;X\given\kappa)$.
+\end{lemma}
+
+Exchangeability alone does not give this: an infinite exchangeable sequence is a
+mixture of i.i.d.\ sequences, and the empirical law converges to that of the random
+directing measure. So the two guarantees have different standing. Coverage is
+finite-sample and needs only exchangeability; the log-score statement is exact for
+every frozen pooled law (Proposition~\ref{prop:floor}) and asymptotic only in
+identifying which law the conformal scheme ends up with.
+
+\begin{corollary}[What a conformal scheme captures]\label{cor:forecastability}
+Under Proposition~\ref{prop:floor}, with $p_Y$ the unconditional density of $Y$ and
+$\I(Y;X)<\infty$, the conformal predictive gains over the unconditional law
+\[
+\E\log\widehat f_X(Y)-\E\log p_Y(Y)
+\;=\;\I(Y;X)-\I(W;X\given\kappa)-\E_\kappa\KLop\!\big(G_\kappa\,\|\,\widehat G_\kappa\big),
+\]
+at most $\I(Y;X)-\I(W;X\given\kappa)$, a quantity fixed by the frozen score and
+stratification. It is negative whenever $\I(W;X\given\kappa)>\I(Y;X)$.
+\end{corollary}
+
+\begin{proof}
+$\E\log p(Y\given X)-\E\log p_Y(Y)=\I(Y;X)$; subtract Proposition~\ref{prop:floor}.
+\end{proof}
+
+\begin{remark}[Calibration adds no forecastability]\label{rem:calgain}
+Calibration moves $\widehat G_\kappa$ toward $G_\kappa$ and removes the KL term. That
+term depends on the pooled law of the score alone, and a forecaster whose inputs carry
+no information about the outcome gains it just as much. What depends on the inputs is
+$\I(Y;X)-\I(W;X\given\kappa)$, and the frozen score sets it. The negative case is
+ordinary: if $Y$ is independent of $X$ but the location model varies with $x$, the
+residual depends on $X$ through the model alone, and a scheme with exact coverage
+scores below the unconditional law by $\I(R;X)$.
+\end{remark}
+
+\begin{remark}[Conditional methods and folded scores]\label{rem:conditional}
+Stratification is one way to put the input back; the score is the other.
+Distributional conformal prediction \citep{chernozhukov2021distributional} scores by
+an estimated conditional rank, so its floor is $\I(W;X)$ for that rank, zero when the
+estimated conditional law is the true one: it closes the gap through the estimate, then
+stops. Density-based, histogram, localized and quantile constructions
+\citep{izbicki2020,izbicki2022,sesia2021,guan2023localized,romano2019conformalized}
+likewise lower the floor by what their conditioning retains, never by calibration. For
+the folded absolute residual read as a symmetric predictive, the same computation adds
+$\KLop(P_R\,\|\,H_{\mathrm{sym}})\le\log 2$ for the discarded sign, with
+$h_{\mathrm{sym}}(z)=\tfrac12(p_R(z)+p_R(-z))$.
+\end{remark}
+
+The floor depends on how the law of the score varies with the input, not on whether
+an input is typical or unusual under its own marginal law: a rare input with ordinary
+noise adds nothing to $\I(W;X\given\kappa)$. Nor does marginal coverage say which
+inputs are over- or under-covered. We use \emph{coverage} for the property of a set and
+reserve \emph{calibration} for the distributional property of a predictive. Both sides
+of the proposition, the corollary and the folded case are computed independently by grid
+integration in \texttt{check\_gap.py}, including a distributional-conformal score from a
+misspecified model and a negative-capture case, and agree to machine precision.
 
 \section{The price}\label{sec:price}
 
@@ -431,7 +526,8 @@ assumes, whether the modelling ever was.
 
 \paragraph{Limitations.} The count is a keyword screen with full-text
 verification of every label that could change the conclusion; the 599 stop
-default rests on the screen plus a stated refutation criterion. The prices are
+default rests on the screen plus a stated refutation criterion, and the hand-coded
+random sample of Section~\ref{sec:count} agrees with it. The prices are
 measured on one base forecaster and one economic corpus plus a synthetic
 control; the deep tier and the matched-window ablation of
 Section~\ref{sec:decomp} are incomplete. The null-control adjustment gauges finite-sample overhead on
@@ -479,11 +575,12 @@ Breadth tier rows are tagged \texttt{forecast:CONFB:ctx256:\ldots/m6+\textit{has
 deep tier \texttt{CONF:ctx1024}, controls \texttt{CONFNB}/\texttt{CONFNULL};
 the hash covers the harness sources, the tracked diff, and the compiled core.
 The survey classifier, frame, and per-paper verdicts live beside the grammar
-paper. Study declarations and the fill protocol are in the \texttt{skaters}
+paper; the hand-coded sample is \texttt{survey100.csv}. The exact checks of
+Section~\ref{sec:floor} are \texttt{check\_gap.py} beside this paper. Study declarations and the fill protocol are in the \texttt{skaters}
 repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md}).
 
 \bibliographystyle{plainnat}
-\begin{thebibliography}{16}
+\begin{thebibliography}{26}
 \bibitem[Barber et al.(2021)]{barber2021limits} Barber, R.~F., Cand\`es, E.~J.,
   Ramdas, A., and Tibshirani, R.~J. (2021). The limits of distribution-free
   conditional predictive inference. \emph{Information and Inference} 10(2).
@@ -505,14 +602,30 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
 \bibitem[Cotton(2026)]{cotton2026transforms} Cotton, P. (2026). Transforms all
   the way down: automatic online distributional forecasting by conjugation.
   Working paper, \url{https://skaters.microprediction.org}.
+\bibitem[Catt(2026)]{catt2026} Catt, P.~M. (2026). Forecastability as an
+  information-theoretic limit on prediction. arXiv:2603.27074.
+\bibitem[Clarke and Barron(1990)]{clarke1990} Clarke, B.~S. and Barron, A.~R.
+  (1990). Information-theoretic asymptotics of Bayes methods. \emph{IEEE
+  Transactions on Information Theory} 36(3), 453--471.
+\bibitem[DelSole(2004)]{delsole2004} DelSole, T. (2004). Predictability and
+  information theory. Part I: Measures of predictability. \emph{Journal of the
+  Atmospheric Sciences} 61(20), 2425--2440.
 \bibitem[Gibbs and Cand\`es(2021)]{gibbs2021adaptive} Gibbs, I. and Cand\`es,
   E. (2021). Adaptive conformal inference under distribution shift.
   \emph{NeurIPS} 34.
+\bibitem[Gr\"unwald(2007)]{grunwald2007} Gr\"unwald, P.~D. (2007). \emph{The
+  Minimum Description Length Principle}. MIT Press.
 \bibitem[Guan(2023)]{guan2023localized} Guan, L. (2023). Localized conformal
   prediction: a generalized inference framework. \emph{JRSS-B} 85(2).
 \bibitem[Hore and Barber(2023)]{hore2023randomly} Hore, R. and Barber, R.~F.
   (2023). Conformal prediction with local weights: randomization enables local
   guarantees. arXiv:2310.07850.
+\bibitem[Izbicki et al.(2020)]{izbicki2020} Izbicki, R., Shimizu, G., and Stern,
+  R. (2020). Flexible distribution-free conditional predictive bands using density
+  estimators. \emph{AISTATS}, PMLR 108, 3068--3077.
+\bibitem[Izbicki et al.(2022)]{izbicki2022} Izbicki, R., Shimizu, G., and Stern,
+  R.~B. (2022). CD-split and HPD-split: efficient conformal regions in high
+  dimensions. \emph{JMLR} 23(87), 1--32.
 \bibitem[Lei and Wasserman(2014)]{lei2014distribution} Lei, J. and Wasserman,
   L. (2014). Distribution-free prediction bands for non-parametric regression.
   \emph{JRSS-B} 76(1), 71--96.
@@ -520,9 +633,13 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
   for nonparametric regression. \emph{Annals of Statistics} 17(3), 1001--1008.
 \bibitem[Low(1997)]{low1997nonparametric} Low, M.~G. (1997). On nonparametric
   confidence intervals. \emph{Annals of Statistics} 25(6), 2547--2554.
+\bibitem[Romano et al.(2019)]{romano2019conformalized} Romano, Y., Patterson, E.,
+  and Cand\`es, E.~J. (2019). Conformalized quantile regression. \emph{NeurIPS} 32.
 \bibitem[R\"ugamer et al.(2023)]{rugamer2023} R\"ugamer, D., et al. (2023).
   Probabilistic autoregressive transformation models. \emph{Statistics and
   Computing}.
+\bibitem[Sesia and Romano(2021)]{sesia2021} Sesia, M. and Romano, Y. (2021).
+  Conformal prediction using conditional histograms. \emph{NeurIPS} 34.
 \bibitem[Tibshirani et al.(2019)]{tibshirani2019conformal} Tibshirani, R.~J.,
   Foygel Barber, R., Cand\`es, E.~J., and Ramdas, A. (2019). Conformal
   prediction under covariate shift. \emph{NeurIPS} 32.
