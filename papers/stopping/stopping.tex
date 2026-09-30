@@ -37,14 +37,12 @@
 \begin{abstract}
 Split conformal prediction ends where its calibration begins: fit a model, pool
 its held-out residuals, quote the pooled quantiles, stop. Of 686 arXiv papers
-with conformal prediction in the title, 599 stop at that empirical map, and the
-one candidate for continuing past it, on reading, also stops. We show the stop
-is the expensive part. An identity pins the irreducible excess log score of a
-frozen scheme to its score and stratification, so calibration adds no
-forecastability; on 17{,}364 economic series,
-stopping costs 0.40 to 0.48 nats after a null-control adjustment, composing
-past the map recovers a third to a half, and empirical coverage
-detects none of it.
+titled conformal prediction, 599 stop there. The other 87 replace the pooled law,
+tune its level, feed it to a decision, or propose no method. None models past it.
+The conformal information gap identity fixes the excess log score of a
+conformal scheme before calibration. On 17{,}364 economic series, stopping costs
+0.40 to 0.48 nats after a null-control adjustment, composing past the pooled law
+recovers a third to a half, and coverage detects none of it.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -71,30 +69,30 @@ density trails another's by $0.15$ nats assigns the realized outcomes
 $e^{0.15}\approx 1.16$ times less probability per observation. Beside it we
 report CRPS, the continuous ranked probability score, which integrates the
 squared difference between the forecast's cumulative distribution and the
-outcome's step function; it is in the units of the data, lower is better, and it
-is the score most conformal papers report.
+outcome's step function. It is in the units of the data, lower is better, and
+most conformal papers report it.
 
 The paper has three components.
 
 \begin{enumerate}
-\item \emph{The count} (Section~\ref{sec:count}). In a frame of 686 arXiv
+\item \emph{How often methods stop} (Section~\ref{sec:count}). In a frame of 686 arXiv
   papers, 599 stop at the empirical map. Papers that attack the pooled quantile
-  replace it or reweight it; none keeps it and continues. The single flagged
+  replace it or reweight it. None keeps it and continues. The single flagged
   candidate for continuing, a PNAS paper, conditions before the map and stops
   after it.
-\item \emph{The floor} (Section~\ref{sec:floor}). For a class of frozen
+\item \emph{The excess log score fixed before calibration} (Section~\ref{sec:floor}). For a class of frozen
   conformal schemes, the excess log score over the conditional oracle
   decomposes exactly into a conditional mutual information fixed by the score
   and stratification, plus an estimation term. Calibration choices move only
   the estimation term. The identity says what stopping protects and what it
   abandons.
-\item \emph{The price} (Section~\ref{sec:price}). Inside a transform grammar
+\item \emph{The cost of stopping on economic series} (Section~\ref{sec:price}). Inside a transform grammar
   where the empirical map is one invertible step among peers, we hold one
   forecaster and one empirical object fixed and move only the object's
   position: last, as the convention has it, or interior, with modelling
   continuing on its output. On 17{,}364 economic series, stopping costs 0.40
-  to 0.48 nats after a null-control adjustment; the interior placement
-  recovers a third to a half of that; and the
+  to 0.48 nats after a null-control adjustment. The interior placement
+  recovers a third to a half of that. The
   stopped arm's empirical coverage sits nearer the nominal target than the
   unconstrained base's, so coverage monitoring is blind to the entire loss.
 \end{enumerate}
@@ -103,27 +101,29 @@ Section~\ref{sec:discussion} states the recommendation: keep the map, keep the
 certificate where a certificate is wanted, and keep modelling past it.
 
 \paragraph{What is new and what is borrowed.} The count, the floor and the price
-are this paper's. The floor is a new result about conformal prediction: for the whole
-class of frozen conformal schemes, exactly and at a fixed calibration sample, it fixes
-the part of the log score that no calibration choice can reach, and it has a
-consequence in the currency forecasters use. Its proof uses one standard identity of
-information theory (Lemma~\ref{lem:chain}), which we state with its sources. The most any forecast can gain
-over the unconditional law is the mutual information between outcome and inputs
-\citep{delsole2004}, which \citet{catt2026} takes as the definition of
-forecastability; Corollary~\ref{cor:forecastability} shows how much of it a
-conformal scheme captures, and that calibration contributes none. The published theory around the pooled shape is
-context, not a contribution here: exact distribution-free conditional coverage
-is impossible in nonatomic settings \citep{lei2014distribution,barber2021limits};
-weighting calibration points unequally costs coverage in proportion to the
-total-variation distance between their residual laws \citep{barber2023beyond};
-and a guarantee held at a fixed point rather than on average inflates the
-threshold for classical testing-power reasons
+are this paper's. The floor is a new result about conformal prediction. For the whole
+class of frozen conformal schemes, it fixes exactly, at a fixed calibration sample,
+the part of the log score that no calibration choice can reach. Its proof uses one
+standard identity of information theory (Lemma~\ref{lem:chain}), which we state with
+its sources.
+
+The most any forecast can gain over the unconditional law is the mutual information
+between outcome and inputs \citep{delsole2004}. \citet{catt2026} takes this quantity
+as the definition of forecastability, and Corollary~\ref{cor:forecastability} shows
+how much of it a conformal scheme captures.
+
+The published theory around the pooled shape is context. Exact distribution-free
+conditional coverage is impossible in nonatomic settings
+\citep{lei2014distribution,barber2021limits}. Weighting calibration points unequally
+costs coverage in proportion to the total-variation distance between their residual
+laws \citep{barber2023beyond}. A guarantee held at a fixed point rather than on
+average inflates the threshold for classical testing-power reasons
 \citep{li1989honest,low1997nonparametric,cai2004adaptation}. Together these
 give the pooled shape a defence. Nothing in them concerns the stop, which is
 the point of this paper. The base forecaster is the subject of
 \citet{cotton2026transforms}.
 
-\section{The count}\label{sec:count}
+\section{How often published methods stop at the pooled law}\label{sec:count}
 
 The claim that everyone stops concerns published work, so it gets a protocol: a
 defined frame, documented keyword rules, and full-text reading of every paper
@@ -154,12 +154,12 @@ applies it to residuals, and fits a downstream model on the transformed stream.
 Reweighting the empirical law does not count, conditioning upstream does not
 count, adapting the level does not count.
 
-The screen's default label is \emph{stop}, so we also coded a sample by hand. A
-seed-fixed random sample of 100 papers, drawn from a wider archive of conformal
-prediction papers, was read and labelled independently of the screen: 93 of the 100
-treat the conformal step as terminal, 7 are unclear because they pass its output
-downstream as a filter or a feature, and none fits a further law on the transformed
-scale and carries it back as a forecast.
+Because the screen's default label is \emph{stop}, we also coded a random sample
+by hand. We drew 100 papers with a fixed seed from a wider archive of conformal
+prediction papers and labelled them without reference to the screen. We find that
+93 of the 100 treat the conformal step as terminal. The remaining 7 are unclear
+because they pass its output downstream as a filter or a feature. None fits a
+further law on the transformed scale and carries it back as a forecast.
 
 Outside the conformal banner the composing move is routine. The normal quantile
 transform in hydrological forecasting \citep{bogner2012}, copula time-series
@@ -176,7 +176,7 @@ through a legitimate escape (marginal recalibration, a stated coverage gap, a
 known covariate-shift tilt, or added smoothness assumptions). The field
 polices the pooling constraint carefully. The stop it does not police at all.
 
-\section{The floor}\label{sec:floor}
+\section{The excess log score fixed before calibration}\label{sec:floor}
 
 The identity below says what the calibration step can and cannot influence. It
 needs two definitions and has a deliberately narrowed scope.
@@ -191,25 +191,27 @@ increasing absolutely continuous bijection in $y$: signed-residual and
 normalized signed-residual schemes, and predictive systems built on invertible
 score transformations. Folded scores such as the absolute residual
 $|y-\widehat\mu(x)|$ and quantile-regression scores are not bijections in $y$
-and need a separate treatment; the empirical arms in Section~\ref{sec:price}
-are of the covered type.
+Remark~\ref{rem:conditional} treats the absolute residual in its symmetric
+reading, and quantile-regression scores need a separate treatment. The empirical
+arms in Section~\ref{sec:price} are of the covered type.
 
 Such a scheme emits the pooled empirical law of calibration scores in the test
 point's stratum, pushed back through $A(x,\cdot)^{-1}$. For log scoring the
 emitted law must have a density, so let $\widehat G_\kappa$ be an absolutely
 continuous estimate of the pooled score law (a kernel-smoothed or interpolated
-empirical law; the raw empirical measure is atomic and scores $-\infty$). Write
+empirical law). The raw empirical measure is atomic and would score $-\infty$. Write
 $W=A(X,Y)$, let $G_\kappa$ be the population pooled law, and let the benchmark
 be the conditional oracle, whose expected negative log score is the conditional
 entropy $H(Y\given X)$. Throughout, $L(\widehat F)=\E[-\log \widehat f_X(Y)]$
 is the expected log loss of the conformal predictive, so an excess is positive
 and smaller is better.
 
-The proof uses one standard identity, the chain rule for relative entropy along a
-product reference \citep{cover2006elements}, which in coding theory splits
-redundancy into dependence and mismatch \citep{clarke1990,grunwald2007}.
+The proof of the floor uses one standard identity, the chain rule for relative
+entropy along a product reference \citep{cover2006elements}. In coding theory it
+splits redundancy into a dependence term and a mismatch term
+\citep{clarke1990,grunwald2007}.
 
-\begin{lemma}[Dependence plus mismatch]\label{lem:chain}
+\begin{lemma}[Chain rule for relative entropy]\label{lem:chain}
 Let $(U,V)$ have a joint density with $\I(U;V)<\infty$, let $p_V$ be the marginal
 density of $V$, and let $q$ be any density with $\E|\log q(V)|<\infty$. Then
 \[
@@ -218,17 +220,26 @@ density of $V$, and let $q$ be any density with $\E|\log q(V)|<\infty$. Then
 \end{lemma}
 
 \begin{proof}
-Insert $p_V(V)$: $\E\log\frac{p(V\given U)}{p_V(V)}=\I(U;V)$ and
-$\E\log\frac{p_V(V)}{q(V)}=\KLop(P_V\,\|\,Q)$.
+Insert the marginal density $p_V$ inside the logarithm:
+\[
+\E\log\frac{p(V\given U)}{q(V)}
+\;=\;\E\log\frac{p(V\given U)}{p_V(V)}\;+\;\E\log\frac{p_V(V)}{q(V)} .
+\]
+The first expectation is $\I(U;V)$ by definition. In the second the integrand
+depends on $V$ alone, and $V$ has law $P_V$, so it equals
+\[
+\int p_V(v)\log\frac{p_V(v)}{q(v)}\,dv \;=\;\KLop\!\big(P_V\,\|\,Q\big).
+\]
+Both terms are finite under the assumptions.
 \end{proof}
 
-The floor needs two facts about conformal schemes on top of it: the Jacobian of an
-invertible score cancels between truth and forecast, so the input reaches the
-predictive only through the frozen score and stratum, and every calibration operation
-acts on the pooled scores alone. Together they give the following, which to our
-knowledge has not been stated before.
+The floor needs two further facts about conformal schemes. The first is that the
+Jacobian of an invertible score cancels between truth and forecast, so the input
+reaches the predictive only through the frozen score and stratum. The second is that
+every calibration operation acts on the pooled scores alone. Together they give the
+following result, which to our knowledge has not been stated before.
 
-\begin{proposition}[The floor, exactly]\label{prop:floor}
+\begin{proposition}[Conformal information gap identity]\label{prop:floor}
 Fix the training fold and the calibration sample, so $(A,\kappa,\widehat
 G_\kappa)$ are deterministic, let $(X,Y)$ be a test pair independent of both,
 and assume the laws below admit densities with finite divergences. Then the
@@ -239,11 +250,11 @@ L(\widehat F) - H(Y\given X)
 \;+\; \E_{\kappa}\,\KLop\!\big(G_{\kappa}\,\|\,\widehat G_{\kappa}\big),
 \]
 where $\I(W;X\given\kappa)$ is the conditional mutual information between score
-and input given the stratum. (Unconditionally, take the outer expectation over
-the calibration sample; the first term is unchanged.) The second term is
+and input given the stratum. We call it the conformal information gap, or the floor. (Unconditionally, take the outer expectation over
+the calibration sample. The first term is unchanged.) The second term is
 nonnegative and is the only part any calibration choice, estimator, quantile
 convention, randomization, or level, can affect. At a fixed calibration sample
-it vanishes if and only if $\widehat G_\kappa=G_\kappa$ almost everywhere;
+it vanishes if and only if $\widehat G_\kappa=G_\kappa$ almost everywhere.
 KL-consistent estimation of the pooled law with growing calibration mass per
 stratum drives it to zero asymptotically, which is an assumption on the
 estimator, not a consequence of the setup.
@@ -258,17 +269,101 @@ before calibration begins, and no amount of calibration data buys it back. With
 a location score and one stratum the floor is $\I(R;X)$, the mutual information
 between the model's error and its input.
 
-\begin{remark}\label{rem:usecase}
+\begin{remark}[When the floor is zero]\label{rem:usecase}
 The floor is zero exactly when the frozen pair renders the score independent of
 the input within strata: $\I(W;X\given\kappa)=0$ iff $W\perp X\given\kappa$.
 When $X$ carries the full information set available downstream, that is the
 statement that the modelling was finished before the conformal step. Conformal
-calibration is especially valuable when one is unwilling to assume that; but
-its guarantee does not diagnose whether the floor is zero, and one may deploy
+calibration is especially valuable when one is unwilling to assume that. Its
+guarantee does not diagnose whether the floor is zero, however, and one may deploy
 it on perfectly finished residuals purely for finite-sample validity. What the
 identity rules out is the middle ground: whenever the floor is positive, no
 calibration choice recovers any of it.
 \end{remark}
+
+\begin{lemma}[Convergence of the pooled law]\label{lem:ident}
+Let the calibration pairs be i.i.d.\ copies of $(X,Y)$, or a stationary ergodic
+sequence with that marginal law, and let $\widehat G_{\kappa,n}$ be the empirical
+distribution of the scores in stratum $\kappa$. Then
+$\sup_w|\widehat G_{\kappa,n}(w)-G_\kappa(w)|\to0$ almost surely. If the smoothed
+estimate is KL-consistent, the excess log loss tends to the floor
+$\I(W;X\given\kappa)$.
+\end{lemma}
+
+\begin{proof}
+In the i.i.d.\ case the uniform convergence is the Glivenko--Cantelli theorem. In
+the stationary ergodic case the scores $W_i=A(X_i,Y_i)$ are themselves stationary and
+ergodic, so the ergodic theorem applied to the indicators $\mathbf 1\{W_i\le w\}$
+gives almost sure convergence at each $w$ in a countable dense set. Because
+distribution functions are monotone and $G_\kappa$ is continuous, convergence on a
+dense set extends to uniform convergence. The second statement follows from
+Proposition~\ref{prop:floor}, whose second term tends to zero under KL-consistency.
+\end{proof}
+
+Exchangeability alone does not give Lemma~\ref{lem:ident}. An infinite exchangeable
+sequence is a mixture of i.i.d.\ sequences, and its empirical law converges to that of
+the random directing measure. Coverage therefore needs only exchangeability and holds
+at every sample size. The log-score statement is exact for every frozen pooled law
+(Proposition~\ref{prop:floor}) and asymptotic only in identifying the law a conformal
+scheme ends up with.
+
+\begin{corollary}[Gain of a conformal scheme over the unconditional law]\label{cor:forecastability}
+Under Proposition~\ref{prop:floor}, let $p_Y$ be the unconditional density of $Y$ and
+suppose $\I(Y;X)<\infty$. The conformal predictive gains over the unconditional law
+\[
+\E\log\widehat f_X(Y)-\E\log p_Y(Y)
+\;=\;\I(Y;X)-\I(W;X\given\kappa)-\E_\kappa\KLop\!\big(G_\kappa\,\|\,\widehat G_\kappa\big).
+\]
+The gain is at most $\I(Y;X)-\I(W;X\given\kappa)$, and the frozen score and
+stratification fix that bound. It is negative whenever $\I(W;X\given\kappa)>\I(Y;X)$.
+\end{corollary}
+
+\begin{proof}
+Add and subtract the oracle's expected log score:
+\[
+\E\log\widehat f_X(Y)-\E\log p_Y(Y)
+\;=\;\big[\E\log p(Y\given X)-\E\log p_Y(Y)\big]
+\;-\;\big[\E\log p(Y\given X)-\E\log\widehat f_X(Y)\big].
+\]
+The first bracket is $\I(Y;X)$ by definition. The second bracket is
+$L(\widehat F)-H(Y\given X)$, which Proposition~\ref{prop:floor} evaluates as
+$\I(W;X\given\kappa)+\E_\kappa\KLop(G_\kappa\,\|\,\widehat G_\kappa)$. Substituting
+gives the display, and dropping the nonnegative KL term gives the bound.
+\end{proof}
+
+\begin{remark}[The calibration gain does not depend on the inputs]\label{rem:calgain}
+Calibration moves $\widehat G_\kappa$ toward $G_\kappa$ and so removes the KL term.
+That term depends only on the pooled law of the score, and a forecaster whose inputs
+carry no information about the outcome gains it just as much. The part of the gain
+that depends on the inputs is $\I(Y;X)-\I(W;X\given\kappa)$, and the frozen score sets
+it. For example, suppose $Y$ is independent of $X$ but the location model varies with
+$x$. The residual then depends on $X$ through the model alone, and a scheme with exact
+coverage scores below the unconditional law by $\I(R;X)$.
+\end{remark}
+
+\begin{remark}[Distributional, localized and folded-score schemes]\label{rem:conditional}
+The input can also return through the score. Distributional conformal prediction
+\citep{chernozhukov2021distributional} scores by an estimated conditional rank. Its
+floor is therefore $\I(W;X)$ for that rank, which is zero when the estimated
+conditional law is the true one. It closes the gap through the estimate and then stops.
+Density-based, histogram, localized and quantile constructions
+\citep{izbicki2020,izbicki2022,sesia2021,guan2023localized,romano2019conformalized}
+likewise lower the floor by what their conditioning retains, and calibration lowers it
+in none of them. The folded absolute residual can be read as a symmetric predictive
+with density $h_{\mathrm{sym}}(z)=\tfrac12(p_R(z)+p_R(-z))$. The same computation then
+adds $\KLop(P_R\,\|\,H_{\mathrm{sym}})\le\log 2$ for the discarded sign.
+\end{remark}
+
+The floor measures how the law of the score varies with the input. Whether an input
+is typical or unusual under its own marginal law does not enter, and a rare input with
+ordinary noise adds nothing to $\I(W;X\given\kappa)$. Marginal coverage also does not
+say which inputs are over- or under-covered. We use \emph{coverage} for the property of
+a set and \emph{calibration} for the distributional property of a predictive.
+
+We check Proposition~\ref{prop:floor}, Corollary~\ref{cor:forecastability} and the
+folded case by grid integration in \texttt{check\_gap.py}, computing each side
+independently. The checks include a distributional-conformal score from a misspecified
+model and a case where the gain is negative, and both sides agree to machine precision.
 
 The floor explains what stopping protects: the certificate, which concerns the
 marginal rank of the test score and is genuinely exact at its position. It also
@@ -280,76 +375,9 @@ Section~\ref{sec:intro} defend the pooling constraint inside the certificate.
 No result defends ending the pipeline. Whether ending it is expensive is a
 measurement question, taken up next.
 
-The proposition holds at a fixed calibration sample and so needs no limit. Which
-pooled law a conformal scheme converges to is a separate question, and it needs
-more than exchangeability.
+\section{The cost of stopping on 17{,}364 economic series}\label{sec:price}
 
-\begin{lemma}[Identification]\label{lem:ident}
-Let the calibration pairs be i.i.d.\ copies of $(X,Y)$, or a stationary ergodic
-sequence with that marginal law, and let $\widehat G_{\kappa,n}$ be the empirical
-distribution of the scores in stratum $\kappa$. Then
-$\sup_w|\widehat G_{\kappa,n}(w)-G_\kappa(w)|\to0$ almost surely (Glivenko--Cantelli,
-or the ergodic theorem on a countable dense set of $w$), and if the smoothed estimate
-is KL-consistent the excess log loss tends to the floor $\I(W;X\given\kappa)$.
-\end{lemma}
-
-Exchangeability alone does not give this: an infinite exchangeable sequence is a
-mixture of i.i.d.\ sequences, and the empirical law converges to that of the random
-directing measure. So the two guarantees have different standing. Coverage is
-finite-sample and needs only exchangeability; the log-score statement is exact for
-every frozen pooled law (Proposition~\ref{prop:floor}) and asymptotic only in
-identifying which law the conformal scheme ends up with.
-
-\begin{corollary}[What a conformal scheme captures]\label{cor:forecastability}
-Under Proposition~\ref{prop:floor}, with $p_Y$ the unconditional density of $Y$ and
-$\I(Y;X)<\infty$, the conformal predictive gains over the unconditional law
-\[
-\E\log\widehat f_X(Y)-\E\log p_Y(Y)
-\;=\;\I(Y;X)-\I(W;X\given\kappa)-\E_\kappa\KLop\!\big(G_\kappa\,\|\,\widehat G_\kappa\big),
-\]
-at most $\I(Y;X)-\I(W;X\given\kappa)$, a quantity fixed by the frozen score and
-stratification. It is negative whenever $\I(W;X\given\kappa)>\I(Y;X)$.
-\end{corollary}
-
-\begin{proof}
-$\E\log p(Y\given X)-\E\log p_Y(Y)=\I(Y;X)$; subtract Proposition~\ref{prop:floor}.
-\end{proof}
-
-\begin{remark}[Calibration adds no forecastability]\label{rem:calgain}
-Calibration moves $\widehat G_\kappa$ toward $G_\kappa$ and removes the KL term. That
-term depends on the pooled law of the score alone, and a forecaster whose inputs carry
-no information about the outcome gains it just as much. What depends on the inputs is
-$\I(Y;X)-\I(W;X\given\kappa)$, and the frozen score sets it. The negative case is
-ordinary: if $Y$ is independent of $X$ but the location model varies with $x$, the
-residual depends on $X$ through the model alone, and a scheme with exact coverage
-scores below the unconditional law by $\I(R;X)$.
-\end{remark}
-
-\begin{remark}[Conditional methods and folded scores]\label{rem:conditional}
-Stratification is one way to put the input back; the score is the other.
-Distributional conformal prediction \citep{chernozhukov2021distributional} scores by
-an estimated conditional rank, so its floor is $\I(W;X)$ for that rank, zero when the
-estimated conditional law is the true one: it closes the gap through the estimate, then
-stops. Density-based, histogram, localized and quantile constructions
-\citep{izbicki2020,izbicki2022,sesia2021,guan2023localized,romano2019conformalized}
-likewise lower the floor by what their conditioning retains, never by calibration. For
-the folded absolute residual read as a symmetric predictive, the same computation adds
-$\KLop(P_R\,\|\,H_{\mathrm{sym}})\le\log 2$ for the discarded sign, with
-$h_{\mathrm{sym}}(z)=\tfrac12(p_R(z)+p_R(-z))$.
-\end{remark}
-
-The floor depends on how the law of the score varies with the input, not on whether
-an input is typical or unusual under its own marginal law: a rare input with ordinary
-noise adds nothing to $\I(W;X\given\kappa)$. Nor does marginal coverage say which
-inputs are over- or under-covered. We use \emph{coverage} for the property of a set and
-reserve \emph{calibration} for the distributional property of a predictive. Both sides
-of the proposition, the corollary and the folded case are computed independently by grid
-integration in \texttt{check\_gap.py}, including a distributional-conformal score from a
-misspecified model and a negative-capture case, and agree to machine precision.
-
-\section{The price}\label{sec:price}
-
-\subsection{A laboratory where position is a variable}\label{sec:grammar}
+\subsection{Moving the pooled law within a forecasting chain}\label{sec:grammar}
 
 Inside standard conformal practice the stop is invisible: the pipeline ends at
 the map by construction, so there is nothing to vary. To measure the stop one
@@ -398,7 +426,7 @@ In this laboratory the conformal habit is one configuration among two:
   candidate chain in the implementation, so the pool weights transform chains
   against each other, never the map against a parametric alternative, and no
   weight can route around it. The one exception is the generalized Pareto tail
-  splice, which replaces the density beyond a frozen tail region; it acts on
+  splice, which replaces the density beyond a frozen tail region. It acts on
   the extremes of the composed predictive and is shared with the base arm.
   This arm carries no coverage certificate. It is the move the floor identity
   permits, a change of representation, executed after the map rather than
@@ -408,7 +436,7 @@ In this laboratory the conformal habit is one configuration among two:
 Both positions run flat and recency-weighted (exponential weights, half-life
 150 observations), so staleness explains no comparison.
 
-\subsection{Design}\label{sec:design}
+\subsection{Series, tiers and the null control}\label{sec:design}
 
 The corpus is FRED economic change series (differences of rates, production,
 employment and similar), non-price, with two tiers. The \emph{breadth} tier
@@ -428,17 +456,17 @@ number below, and we call the result \emph{null-control-adjusted} rather than
 net of estimation, for two reasons the adjustment cannot fix. The estimation
 term $\KLop(G\,\|\,\widehat G)$ depends on $G$, so its size on three simple
 iid laws is a gauge, not an unbiased estimate of its size on economic
-residuals; and because the base forecaster adapts, its residuals are not
+residuals. Because the base forecaster adapts, its residuals are not
 exactly state-independent even on iid data. Raw deficits, without the
 adjustment, are 0.51, 0.61 and 0.59 nats at horizons 1, 6 and 12 on the
 breadth tier (paired, 208{,}368 rows per horizon): the adjustment removes
 about a fifth of the raw gap, and both versions are reported so no reader
 has to trust the gauge. A
-sharper control, permuting each real series so the marginal residual law is
-preserved while temporal state dependence is destroyed; where the two gauges
-disagree, the permutation control governs.
+sharper control permutes each real series, which preserves the marginal residual
+law and destroys temporal state dependence. Where the two gauges disagree, the
+permutation control governs.
 
-\subsection{The decomposition, null-control-adjusted}\label{sec:decomp}
+\subsection{Cost of stopping and the share recovered by composing}\label{sec:decomp}
 
 Breadth tier, 17{,}364 series, null-control-adjusted, log score deficit
 against the unconstrained base:
@@ -466,8 +494,8 @@ confound rather than interpret past it. Between tiers, three things change at
 once: 256 against 1{,}024 observations of context, the series panels differ,
 and the 400-residual window truncates a 1{,}024-observation history while
 holding all of a 256-observation one.
-Nor is a 400-observation window inherent to stopping; a stopped map may retain
-every residual it has ever seen. The clean separation is a same-series,
+A 400-observation window is not inherent to stopping, since a stopped map may
+retain every residual it has ever seen. The clean separation is a same-series,
 same-context ablation in which only one bit changes at a time: stop arms at
 windows 250, 400, 750 and all history, and composed arms matched window for
 window, on the ctx-1024 panel. Until that ablation
@@ -475,27 +503,26 @@ reports, the hypothesis that \emph{the price of stopping grows with how much
 the pooled window discards} is exactly that, a hypothesis the current tiers
 are consistent with but do not identify.
 
-The arms are close on the median series; the mean cost is carried by a
+The arms are close on the median series. The mean cost is carried by a
 minority of series where stopping hurts badly. Stopping behaves like the
 removal of insurance.
 
 Adaptivity does not substitute for position. Recency-weighting the stop arm's
 window recovers 0.05 to 0.08 nats on the breadth tier, against 0.14 to 0.27
-for moving the map's position, raw in both cases; and level adaptation is
-dispatched by Proposition~\ref{prop:floor} directly, since it acts on the
-pooled scores alone.
+for moving the map's position, raw in both cases. Proposition~\ref{prop:floor} dispatches level adaptation
+directly, since it acts on the pooled scores alone.
 
 On CRPS the tiers disagree: on the deep tier the stopped arm degrades CRPS
 and the composed arm improves it, while on the breadth tier both positions
 sit within about 1\% of the base. The disagreement is reported, not resolved,
 and CRPS appears in no summary of this paper.
 
-\subsection{Empirical coverage is blind to the loss}\label{sec:blind}
+\subsection{Empirical coverage of the stopped and composed arms}\label{sec:blind}
 
 Coverage is the axis conformal practice monitors, so we measure it directly,
 with two scope notes. These are economic time series and we assert no
 exchangeability, so what follows is empirical coverage, not the finite-sample
-certificate of Section~\ref{sec:intro}; and the intervals are the 0.1 and 0.9
+certificate of Section~\ref{sec:intro}. The intervals are the 0.1 and 0.9
 quantiles of the kernel-smoothed predictive, which need not coincide with the
 raw conformal order-statistic endpoints. What the table tests is therefore the
 monitoring practice: whether watching interval coverage would reveal the log
@@ -519,8 +546,8 @@ with something the log score column would never suggest: every conformal arm
 sits nearer nominal than the unconstrained base, which overcovers at 0.870.
 On this axis the conformal arms win. On the log score axis the stopped arm
 loses 0.40 to 0.48 nats. Both statements are true at once, which is the
-point: coverage tracks the rank of the outcome in the predictive; the floor
-tracks conditional information the frozen score discarded; the two move
+point. Coverage tracks the rank of the outcome in the predictive. The floor
+tracks conditional information the frozen score discarded. The two move
 independently, and a practice that monitors only coverage will never see the
 loss.
 
@@ -542,15 +569,15 @@ moves only the estimation term. It is to treat the empirical map as a
 coordinate change with a certificate attached at its position, and to keep
 modelling on its output. The composed arm is one constructive instance, and in
 the sense of Remark~\ref{rem:usecase} it is conformal prediction with the
-modelling finished; its scored calibration stream then measures, rather than
-assumes, whether the modelling ever was.
+modelling finished. Its scored calibration stream then measures whether the
+modelling ever was finished.
 
 \paragraph{Limitations.} The count is a keyword screen with full-text
-verification of every label that could change the conclusion; the 599 stop
+verification of every label that could change the conclusion. The 599 stop
 default rests on the screen plus a stated refutation criterion, and the hand-coded
 random sample of Section~\ref{sec:count} agrees with it. The prices are
 measured on one base forecaster and one economic corpus plus a synthetic
-control; the deep tier and the matched-window ablation of
+control. The deep tier and the matched-window ablation of
 Section~\ref{sec:decomp} are incomplete. The null-control adjustment gauges finite-sample overhead on
 simple iid laws and is not an unbiased estimate of the estimation term on
 economic residuals. Scoring floors the log density at $-25$ per observation, which is not a
@@ -560,8 +587,9 @@ stopped arm, and tightening the floor stepwise from $-25$ to $-10$ shrinks
 the raw stop deficit monotonically from 0.51 to 0.33 nats at horizon 1, so
 every gap reported here is a lower bound on its unclipped value. The composed arm has no coverage
 guarantee, which is the thing being priced, and it is not proposed as a
-conformal method. The floor proposition covers invertible signed scores only;
-folded and quantile scores need their own treatment.
+conformal method. The floor proposition covers invertible signed scores, and the absolute residual
+only in the symmetric reading of Remark~\ref{rem:conditional}. Quantile scores need
+their own treatment.
 
 \appendix
 
@@ -579,10 +607,14 @@ log ratio, so
 = \KLop\big(P_W(\cdot\given x)\,\|\,G_{\kappa(x)}\big)
 + \E_{W\sim P_W(\cdot\given x)}\log\frac{g_{\kappa(x)}(W)}{\widehat g_{\kappa(x)}(W)} .
 \]
-Averaging over $X$: the first term is
+Averaging over $X$, the first term is
 $\E_X\,\KLop(P_W(\cdot\given X)\,\|\,P_W(\cdot\given\kappa(X))) =
-\I(W;X\given\kappa)$ by definition, and the second averages to
-$\E_\kappa \KLop(G_\kappa\,\|\,\widehat G_\kappa) \ge 0$. Every calibration
+\I(W;X\given\kappa)$ by definition. Given $\kappa(X)=k$ the score has law $G_k$,
+so the second term averages to
+\[
+\E_\kappa\,\E_{W\sim G_\kappa}\log\frac{g_\kappa(W)}{\widehat g_\kappa(W)}
+\;=\;\E_\kappa \KLop\!\big(G_\kappa\,\|\,\widehat G_\kappa\big)\;\ge\;0 .
+\] Every calibration
 operation is a function of the pooled scores alone, hence acts only on
 $\widehat G_\kappa$ and the second term. \hfill$\square$
 
@@ -596,7 +628,7 @@ Breadth tier rows are tagged \texttt{forecast:CONFB:ctx256:\ldots/m6+\textit{has
 deep tier \texttt{CONF:ctx1024}, controls \texttt{CONFNB}/\texttt{CONFNULL};
 the hash covers the harness sources, the tracked diff, and the compiled core.
 The survey classifier, frame, and per-paper verdicts live beside the grammar
-paper; the hand-coded sample is \texttt{survey100.csv}. The exact checks of
+paper. The hand-coded sample is \texttt{survey100.csv}. The exact checks of
 Section~\ref{sec:floor} are \texttt{check\_gap.py} beside this paper. Study declarations and the fill protocol are in the \texttt{skaters}
 repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md}).
 
