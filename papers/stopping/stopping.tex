@@ -57,14 +57,9 @@ the truth at least 90\% of the time, at any sample size, with no further assumpt
 the model or the data distribution.
 
 The last step of the recipe applies the empirical distribution function of the
-held-out errors. That map sends an error to its rank among them, a number between
-zero and one, and the quoted interval is read off its quantiles. In earlier work we
-treated this map as one transform in a chain of invertible transforms
-\citep{cotton2026transforms}. The raw map is a step function, so it is not
-invertible and has no density. We repair it by strictly monotone interpolation
-through its knots, with kernel-smoothed mass in each cell. The repaired map is an
-invertible transform of the error, updated as new errors arrive, and a forecaster
-can apply further transforms and fit a model to its output before mapping back.
+held-out errors, and the quoted interval is read off its quantiles. Once repaired,
+that map is an invertible univariate transform of the error, one of many that a
+forecaster can chain together (Section~\ref{sec:transform}).
 
 The recipe ends with the percentile, and nothing is fitted to the output of the
 pooled-error step. Conformal prediction is therefore early stopping. As far as we
@@ -87,14 +82,63 @@ choice can reach. We then measure what stopping costs on economic series, and ho
 much of that cost composing a model past the pooled law recovers
 (Section~\ref{sec:price}).
 
+\section{Conformal prediction as a univariate transform}\label{sec:transform}
+
+Viewed as a univariate transform, conformal prediction is a transform in need of
+repair. Its raw form is a step function, and once repaired it is an invertible map
+that can sit anywhere in a chain of transforms.
+
+Let $R_1,\dots,R_n$ be calibration scores, for example held-out residuals. Split
+conformal prediction applies the fence-post empirical map
+\begin{equation}\label{eq:fencepost}
+E_n(r) \;=\; \frac{1+\#\{i\le n:\ R_i\le r\}}{n+1}
+\end{equation}
+and reads the prediction set off its level sets
+\citep{vovk2005algorithmic,lei2018distribution}. The value of $E_n$ at a new score is
+a conformal $p$-value, and $E_n$ itself is the unrandomized conformal predictive
+distribution of \citet{vovk2019nonparametric}. If $R_1,\dots,R_{n+1}$ are
+exchangeable and almost surely distinct, the rank of $R_{n+1}$ among all $n+1$
+scores is uniform, so $E_n(R_{n+1})$ is uniform on the grid
+$\{k/(n+1):k=1,\dots,n+1\}$. That is the coverage guarantee.
+
+A \emph{transform}, in the sense of \citet{cotton2026transforms}, is an online map
+with a state. Its forward function consumes an observation and the current state
+and emits a transformed observation. Its inverse maps a predictive distribution for
+the transformed observation back to one for the original. Given the state, the
+forward function is a strictly increasing change of variables, so predictive
+densities pull back exactly, Jacobians included. A forecaster is a \emph{chain} of
+transforms followed by a \emph{leaf}, a predictive law for whatever the last
+transform emits. Subtracting a running mean, dividing by a running scale,
+differencing and serial whitening are transforms in this sense.
+
+The map \eqref{eq:fencepost} is a step function. It has no inverse and no density,
+so it is not a transform. \citet{cotton2026grammar} repairs it by interpolation. Let
+$r_{(1)}<\dots<r_{(n)}$ be the order statistics of the scores, give the $i$-th knot
+the fence-post probability $i/(n+1)$, and set $z_{(i)}=\Phi^{-1}\big(i/(n+1)\big)$.
+The repaired map $m_n$ is any strictly increasing bijection of the real line with
+$m_n(r_{(i)})=z_{(i)}$ for $i=1,\dots,n$, rebuilt as new scores arrive.
+Appendix~\ref{app:repair} gives the interpolation and tails used here. The repair
+keeps the certificate at the knots, $\Pr\{m_n(R_{n+1})\le z_{(i)}\}=i/(n+1)$, and
+$\Phi(m_n(R_{n+1}))$ is within Kolmogorov distance $1/(n+1)$ of uniform whatever the
+interpolation (Appendix~\ref{app:repair}).
+
+With $m_n$ in hand the two positions are precise. A forecaster \emph{stops} if $m_n$
+is the last transform in its chain and the leaf is the fixed standard normal law.
+Its predictive is then $N(0,1)$ pulled back through $m_n$, which is the smoothed
+empirical law of the calibration scores: the conformal predictive, and nothing
+downstream of it. A forecaster \emph{composes} if it keeps $m_n$ and fits further
+transforms or a leaf to the stream $z_t=m_n(R_t)$, then pulls the result back
+through $m_n$. Composing keeps the certificate at the position of $m_n$. It does not
+carry the certificate to the final predictive, which is the price of continuing.
+
 \section{How often published methods stop at the pooled law}\label{sec:count}
 
-We ask what published conformal methods do with the map of
-Section~\ref{sec:intro}, the empirical distribution function of the calibration
-scores. We call it the \emph{empirical map}. A method \emph{stops} if the output of
-the map, its quantiles, its $p$-values or its intervals, is the answer. It
-\emph{composes} if it keeps the map and fits a model to its output. Our claim is
-that published methods stop.
+We ask what published conformal methods do with the fence-post map
+\eqref{eq:fencepost}, which we also call the \emph{empirical map}. A method
+\emph{stops} if the output of the map, its quantiles, its $p$-values or its
+intervals, is the answer. It \emph{composes} if it keeps the map and fits a model to
+its output, as in Section~\ref{sec:transform}. Our claim is that published methods
+stop.
 
 Methods that neither stop nor compose fall into three further classes. A method
 \emph{replaces} if it substitutes a conditional estimate for the pooled quantile, as
@@ -337,7 +381,7 @@ the map's output together with the input can recover part of that quantity.
 \subsection{Moving the pooled law within a forecasting chain}\label{sec:grammar}
 
 To measure the cost of stopping we need a forecaster in which the repaired map of
-Section~\ref{sec:intro} can sit at more than one position.
+Section~\ref{sec:transform} can sit at more than one position.
 
 We use the transform grammar of \citet{cotton2026transforms}. A
 forecaster is a \emph{chain} of state-conditional invertible transforms, each
@@ -547,6 +591,37 @@ their own treatment.
 
 \appendix
 
+\section{The repaired map}\label{app:repair}
+
+The piecewise-linear repair interpolates the pairs $(r_{(i)},z_{(i)})$ and extends
+beyond the edge knots linearly in $(r,z)$. Linearity in the probit coordinate is a
+Gaussian tail in the score, with scale set by the spacing of the extreme knots. The
+kernel-smoothed repair replaces the step function \eqref{eq:fencepost} by a
+Gaussian-kernel estimate of the distribution function and represents it by a
+monotone $C^1$ cubic through the same knots. Both are strictly increasing
+bijections of the real line \citep{cotton2026grammar}.
+
+The certificate survives any strictly increasing $m_n$ through the knots. Let
+$R_1,\dots,R_{n+1}$ be exchangeable and almost surely distinct. Monotonicity gives
+\[
+\{m_n(R_{n+1})\le z_{(i)}\}\;=\;\{R_{n+1}\le r_{(i)}\}.
+\]
+By exchangeability the rank of $R_{n+1}$ among all $n+1$ scores is uniform on
+$\{1,\dots,n+1\}$, and $R_{n+1}\le r_{(i)}$ holds for exactly the $i$ lowest ranks,
+so
+\[
+\Pr\{m_n(R_{n+1})\le z_{(i)}\}\;=\;\frac{i}{n+1},\qquad i=1,\dots,n .
+\]
+Write $U=\Phi(m_n(R_{n+1}))$. For $u$ between consecutive grid levels $i/(n+1)$ and
+$(i+1)/(n+1)$, the display and monotonicity of the distribution function give
+\[
+\frac{i}{n+1}\;\le\;\Pr\{U\le u\}\;\le\;\frac{i+1}{n+1},
+\]
+so $\Pr\{U\le u\}$ and $u$ lie in the same cell of width $1/(n+1)$. The edge cells
+are the same argument with endpoints $0$ and $1$. Hence
+$\sup_u|\Pr\{U\le u\}-u|\le 1/(n+1)$, whatever the interpolation, the tails and the
+law of the scores.
+
 \section{Proof of Proposition~\ref{prop:floor}}\label{app:floor}
 
 Fix the fold, so $(A,\kappa)$ is deterministic. Given $X=x$, change of
@@ -588,7 +663,7 @@ Section~\ref{sec:floor} are \texttt{check\_gap.py} beside this paper. Study decl
 repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md}).
 
 \bibliographystyle{plainnat}
-\begin{thebibliography}{27}
+\begin{thebibliography}{31}
 \bibitem[Barber et al.(2021)]{barber2021limits} Barber, R.~F., Cand\`es, E.~J.,
   Ramdas, A., and Tibshirani, R.~J. (2021). The limits of distribution-free
   conditional predictive inference. \emph{Information and Inference} 10(2).
@@ -607,7 +682,7 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
 \bibitem[Chernozhukov et al.(2021)]{chernozhukov2021distributional}
   Chernozhukov, V., W\"uthrich, K., and Zhu, Y. (2021). Distributional
   conformal prediction. \emph{PNAS} 118(48), e2107794118.
-\bibitem[Cotton(2026)]{cotton2026transforms} Cotton, P. (2026). Transforms all
+\bibitem[Cotton(2026a)]{cotton2026transforms} Cotton, P. (2026). Transforms all
   the way down: automatic online distributional forecasting by conjugation.
   Working paper, \url{https://skaters.microprediction.org}.
 \bibitem[Catt(2026)]{catt2026} Catt, P.~M. (2026). Forecastability as an
@@ -620,6 +695,9 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
 \bibitem[DelSole(2004)]{delsole2004} DelSole, T. (2004). Predictability and
   information theory. Part I: Measures of predictability. \emph{Journal of the
   Atmospheric Sciences} 61(20), 2425--2440.
+\bibitem[Cotton(2026b)]{cotton2026grammar} Cotton, P. (2026b). Conformal
+  prediction as a transform within a grammar for probabilistic forecasting.
+  Working paper.
 \bibitem[Gibbs and Cand\`es(2021)]{gibbs2021adaptive} Gibbs, I. and Cand\`es,
   E. (2021). Adaptive conformal inference under distribution shift.
   \emph{NeurIPS} 34.
@@ -639,6 +717,10 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
 \bibitem[Lei and Wasserman(2014)]{lei2014distribution} Lei, J. and Wasserman,
   L. (2014). Distribution-free prediction bands for non-parametric regression.
   \emph{JRSS-B} 76(1), 71--96.
+\bibitem[Lei et al.(2018)]{lei2018distribution} Lei, J., G'Sell, M., Rinaldo, A.,
+  Tibshirani, R.~J., and Wasserman, L. (2018). Distribution-free predictive inference
+  for regression. \emph{Journal of the American Statistical Association} 113(523),
+  1094--1111.
 \bibitem[Li(1989)]{li1989honest} Li, K.-C. (1989). Honest confidence regions
   for nonparametric regression. \emph{Annals of Statistics} 17(3), 1001--1008.
 \bibitem[Low(1997)]{low1997nonparametric} Low, M.~G. (1997). On nonparametric
@@ -653,6 +735,11 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
 \bibitem[Tibshirani et al.(2019)]{tibshirani2019conformal} Tibshirani, R.~J.,
   Foygel Barber, R., Cand\`es, E.~J., and Ramdas, A. (2019). Conformal
   prediction under covariate shift. \emph{NeurIPS} 32.
+\bibitem[Vovk et al.(2005)]{vovk2005algorithmic} Vovk, V., Gammerman, A., and
+  Shafer, G. (2005). \emph{Algorithmic Learning in a Random World}. Springer.
+\bibitem[Vovk et al.(2019)]{vovk2019nonparametric} Vovk, V., Shen, J., Manokhin, V.,
+  and Xie, M. (2019). Nonparametric predictive distributions based on conformal
+  prediction. \emph{Machine Learning} 108(3), 445--474.
 \bibitem[Xu and Xie(2023)]{xu2023spci} Xu, C. and Xie, Y. (2023). Sequential
   predictive conformal inference for time series. \emph{ICML}.
 \end{thebibliography}
