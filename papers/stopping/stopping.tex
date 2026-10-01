@@ -190,7 +190,9 @@ We classified the literature instead of relying on an impression of it. We took 
 matched by the title search in error, which leaves the remaining 680 papers. Language-model
 readers (Claude Sonnet) coded each paper against a written rubric, read its body in
 full, and recorded the sentence that places it.\footnote{Two readers, each blind to the other, read the body of
-every paper from its first line to its reference list. We read the method sections of
+every paper from its first line to its reference list. The boundaries between
+stopping, replacing and consuming involve judgment, and the two readers disagree on
+24 of the 680 papers. We read the method sections of
 every paper on which they disagree, and of every paper either of them coded as
 composing, and settled its label. An earlier pass that read only the abstract, the
 introduction and the method passages found the same two composing papers. Four papers
@@ -650,9 +652,7 @@ therefore sit wherever it is wanted, as one transform among those of
 Table~\ref{tab:transforms}, with the modelling done on either side of it. The model
 can be anything, a Bayesian posterior predictive included.
 
-\paragraph{Limitations.} The census labels come from language-model readers, and the
-boundaries between stopping, replacing and consuming involve judgment. The two full
-readings disagree on 24 of the 680 papers. The prices are measured on one base
+\paragraph{Limitations.} The prices are measured on one base
 forecaster and one economic corpus. The floor proposition covers invertible signed
 scores, and the absolute residual only in the symmetric reading of
 Remark~\ref{rem:conditional}. Quantile scores need their own treatment.
