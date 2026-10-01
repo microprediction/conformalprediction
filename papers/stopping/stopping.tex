@@ -610,15 +610,23 @@ Training a neural network stops at an epoch chosen on validation evidence. The
 conformal recipe stops at its empirical map with no such evidence, so the stop is
 \emph{cultural}. All but two of the methods in the census of Section~\ref{sec:count}
 stop at the pooled law, the two go past it only to size a multivariate set, and we
-found no paper that justifies the stop. The measured cost of the conformal stop is large, and composing an ordinary model past
-the map recovers a third to a half of it at no cost to empirical coverage. The
-conformal information gap identity locates the part of the loss that is fixed
-before calibration begins. When the floor is positive no calibration choice
-recovers any of it, and conformal calibration is most attractive exactly when a
-positive floor cannot be ruled out.
+found no paper that justifies the stop.
 
-Because every calibration choice moves only the estimation term, a better
-calibrator cannot help. We recommend treating the empirical map as a coordinate
+The stop is expensive. On 17{,}364 economic series it costs about 0.4 nats per
+observation one step ahead, and composing an ordinary model past the map recovers a
+third to a half of that at no cost to empirical coverage.
+
+The conformal information gap identity explains why calibration cannot win this back.
+The term $\I(W;X\mid\kappa)$ is fixed before calibration begins, and every calibration
+choice moves only the estimation term. Stopping at the pooled law is therefore a
+permanent structural information sacrifice: whatever the frozen score discarded about
+the input stays discarded, however the scores are calibrated.
+
+The sacrifice falls where conformal calibration is most attractive. A
+distribution-free guarantee is most wanted when the model may be misspecified, and
+that is exactly when a positive floor cannot be ruled out.
+
+We recommend treating the empirical map as a coordinate
 change with a certificate attached at its position, and continuing to model on its
 output. The distribution can come from any model, a Bayesian posterior predictive
 included, with conformal calibration attached as a certificate at the position where
