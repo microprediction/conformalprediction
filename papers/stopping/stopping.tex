@@ -492,12 +492,15 @@ empirical law of recent residuals, and they differ only in where it sits.
   parametric leaf. This arm has no coverage certificate.
 \end{description}
 
-The base forecaster and both arms share one further step, a generalized Pareto
-splice that replaces the density beyond a fixed tail region.
-
-Both positions run with flat and with recency-weighted windows (exponential
-weights, half-life 150 observations), so staleness does not explain the
-differences.
+We compare the arms by out-of-sample log likelihood, so each must give the
+realized outcome a usable density, including outcomes beyond the range of past
+residuals, where an empirical law, even kernel-smoothed, has almost none. The base
+forecaster and both arms therefore share one further step, a generalized Pareto
+splice that replaces the density beyond a fixed tail region. Because all three
+share it, the splice does not drive the differences between them. The pooled law
+is built from a window of recent residuals, and a stale window would lose likelihood
+for reasons unrelated to stopping. Both arms therefore run with flat and with
+recency-weighted windows (exponential weights, half-life 150 observations).
 
 \subsection{Series, tiers and the null control}\label{sec:design}
 
