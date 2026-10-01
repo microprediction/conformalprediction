@@ -153,15 +153,15 @@ among candidates.
 We classified the literature instead of relying on an impression of it. We took every arXiv paper with ``conformal prediction'' in the title as of
 20 August 2026, 686 records. Six concern molecular or protein conformation and were
 matched by the title search in error, which leaves the remaining 680 papers. Language-model
-readers (Claude Sonnet) coded each paper against a written rubric, recording the
-sentence that places it. The coding was done twice. A first pass read the abstract,
-the introduction and the method passages. A second pass, blind to the first, read the
-body of every paper from its first line to its reference list, and its labels are
-the ones reported. The two passes agree on 602 of the 680 papers. Four papers have no
-PDF on arXiv and were coded from their abstracts. We then read the method sections of
-every paper coded as composing, and of the copula-based papers nearest to composing,
-and settled their labels. The
-rubric and the per-paper labels, with their quoted evidence, are in the repository.
+readers (Claude Sonnet) coded each paper against a written rubric, read its body in
+full, and recorded the sentence that places it.\footnote{The coding was done twice. A
+first pass read the abstract, the introduction and the method passages. A second pass,
+blind to the first, read the body of every paper from its first line to its reference
+list, and its labels are the ones reported. The two passes agree on 602 of the 680
+papers. Four papers have no PDF on arXiv and were coded from their abstracts. We read
+the method sections of every paper coded as composing, and of the copula-based papers
+nearest to composing, and settled their labels. The rubric and the per-paper labels,
+with their quoted evidence, are in the repository.}
 
 Of the 680 papers, 455 stop, 77 consume, 49 replace, 41 tune, and 56 propose no
 method. Two compose, and both in a narrow sense. \citet{messoudi2021copula}, in one of
