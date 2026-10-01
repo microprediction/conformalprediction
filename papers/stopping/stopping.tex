@@ -44,30 +44,33 @@ is tacit in conformal prediction and departed from by only two of the 624 papers
 
 \section{Introduction}\label{sec:intro}
 
+
 The most any forecast of an outcome $Y$ can gain over the unconditional distribution
 of $Y$, in expected log score, is the mutual information $\I(Y;X)$ between the outcome
 and the information $X$ available to the forecaster \citep{delsole2004}.
 \citet{catt2026} takes this quantity as the definition of the forecastability of $Y$,
 and calls the gain a method actually achieves its exploitability. We ask how much
-forecastability a conformal forecaster exploits, and we prove that conformal
-calibration exploits none of it.
+forecastability a conformal forecaster exploits, and we will prove that conformal
+calibration exploits none of it. 
 
-Conformal prediction attaches a guarantee to any point forecaster by a recipe.
-Fit a model however you like. On $n$ held-out points, compute a scalar error
-for each, for instance the absolute residual. Sort the errors, take the
+
+The conformal recipe is familiar. We fit a base model and then, on $n$ held-out points, compute a scalar error
+for each (for instance the absolute residual). We then sort the errors, take the
 $\lceil (n+1)\,0.9\rceil$-th smallest, and quote the model's prediction plus or
 minus that value. If the joint law of the held-out data and the future point is
 unchanged by permuting them, the quoted interval contains
 the truth at least 90\% of the time, at any sample size, with no further assumption on
 the model or the data distribution.
 
+
 The last step of the recipe applies the empirical distribution function of the
 held-out errors, and the quoted interval is read off its quantiles. Nothing is fitted
-to the output of that step. The recipe stops there, so conformal prediction is a form
-of early stopping.
+to the output of that step. The recipe stops there, and that is the reason we 
+choose to describe conformal prediction as a form of early stopping. The stop
+ is easy to miss because conformal prediction is usually presented as a
+self-contained procedure. 
 
-The stop is easy to miss because conformal prediction is usually presented as a
-self-contained procedure. Once the empirical map is repaired, however, it is an
+Once the empirical map is repaired, however, it is an
 invertible univariate transform of the error (Section~\ref{sec:transform}). It then
 belongs in a grammar of similar transforms, alongside subtracting a running mean,
 dividing by a running scale, differencing, serial whitening, and the normal quantile
