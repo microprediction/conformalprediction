@@ -613,6 +613,15 @@ reveal the loss.
 
 \section{Discussion}\label{sec:discussion}
 
+Three published results concern the pooled shape. Exact distribution-free
+conditional coverage is impossible in nonatomic settings
+\citep{lei2014distribution,barber2021limits}. Weighting calibration points unequally
+costs coverage in proportion to the total-variation distance between their residual
+laws \citep{barber2023beyond}. A guarantee held at a fixed point rather than on
+average inflates the threshold for classical testing-power reasons
+\citep{li1989honest,low1997nonparametric,cai2004adaptation}. Together these give the
+pooled shape a defence. None of them concerns the stop.
+
 Training a neural network stops at an epoch chosen on validation evidence. The
 conformal recipe stops at its empirical map with no such evidence, so the stop is
 \emph{cultural}. All but two of the methods in the census of Section~\ref{sec:count}
@@ -627,7 +636,9 @@ The conformal information gap identity explains why calibration cannot win this 
 The term $\I(W;X\mid\kappa)$ is fixed before calibration begins, and every calibration
 choice moves only the estimation term. Stopping at the pooled law is therefore a
 permanent structural information sacrifice: whatever the frozen score discarded about
-the input stays discarded, however the scores are calibrated.
+the input stays discarded, however the scores are calibrated. Measured against forecastability in the sense of \citet{delsole2004} and
+\citet{catt2026}, Corollary~\ref{cor:forecastability} gives how much of it a conformal
+scheme captures.
 
 The sacrifice falls where conformal calibration is most attractive. A
 distribution-free guarantee is most wanted when the model may be misspecified, and
@@ -641,17 +652,6 @@ it is wanted. The composed arm is one instance. In the sense of
 Remark~\ref{rem:usecase} it is conformal prediction with the modelling finished,
 and its scored calibration stream measures whether the modelling was in fact
 finished.
-
-\paragraph{Related work.} Forecastability as mutual information is due to
-\citet{delsole2004} and \citet{catt2026}, and Corollary~\ref{cor:forecastability}
-shows how much of it a conformal scheme captures. Three published results concern the pooled shape. Exact distribution-free
-conditional coverage is impossible in nonatomic settings
-\citep{lei2014distribution,barber2021limits}. Weighting calibration points unequally
-costs coverage in proportion to the total-variation distance between their residual
-laws \citep{barber2023beyond}. A guarantee held at a fixed point rather than on
-average inflates the threshold for classical testing-power reasons
-\citep{li1989honest,low1997nonparametric,cai2004adaptation}. Together these give the
-pooled shape a defence. None of them concerns the stop.
 
 \paragraph{Limitations.} The census labels come from language-model readers, and the
 boundaries between stopping, replacing and consuming involve judgment. The two full
