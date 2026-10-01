@@ -75,16 +75,16 @@ dividing by a running scale, differencing, serial whitening, and the normal quan
 transform of hydrological forecasting \citep{bogner2012}. A forecaster working in that
 grammar can apply the transform and keep modelling its output. As far as we know the
 literature does not describe conformal prediction as early stopping, and no paper
-justifies stopping at the empirical map. We show that the stop carries a steep
+justifies stopping at the empirical map. Of 623 papers proposing conformal methods,
+only two go past the map, and both only to size a multivariate set
+(Appendix~\ref{sec:count}). We show that the stop carries a steep
 empirical price.
 
 We make two contributions. We introduce and prove the conformal information gap
 identity (Proposition~\ref{prop:floor}), which fixes, exactly and at a fixed
 calibration sample, the part of the excess log score that no calibration choice can
 reach. We then measure what stopping costs on economic series, and how much of that
-cost composing a model past the pooled law recovers (Section~\ref{sec:price}). A
-detailed census of 680 papers supports our characterization of the conformal
-literature (Section~\ref{sec:count}).
+cost composing a model past the pooled law recovers (Section~\ref{sec:price}).
 
 \section{Conformal prediction as a univariate transform}\label{sec:transform}
 
@@ -168,77 +168,6 @@ downstream of it. A forecaster \emph{composes} if it keeps $m_n$ and fits furthe
 transforms or a leaf to the stream $z_t=m_n(R_t)$, then pulls the result back
 through $m_n$. Composing keeps the certificate at the position of $m_n$. It does not
 carry the certificate to the final predictive, which is the price of continuing.
-
-\section{How often published methods stop at the pooled law}\label{sec:count}
-
-We ask what published conformal methods do with the fence-post map
-\eqref{eq:fencepost}, which we also call the \emph{empirical map}. A method
-\emph{stops} if the output of the map, its quantiles, its $p$-values or its
-intervals, is the answer. It \emph{composes} if it keeps the map and fits a model to
-its output, as in Section~\ref{sec:transform}.
-
-Methods that neither stop nor compose fall into three further classes. A method
-\emph{replaces} if it substitutes a conditional estimate for the pooled quantile, as
-SPCI fits a quantile regression to recent residuals \citep{xu2023spci}. It
-\emph{tunes} if it keeps the map and adapts the level online, as adaptive conformal
-inference does \citep{gibbs2021adaptive}. It \emph{consumes} if it feeds the output
-to another procedure, such as training on pseudo-labels it has screened or selecting
-among candidates.
-
-We classified the literature instead of relying on an impression of it. We took every arXiv paper with ``conformal prediction'' in the title as of
-20 August 2026, 686 records. Six concern molecular or protein conformation and were
-matched by the title search in error, which leaves the remaining 680 papers. Language-model
-readers (Claude Sonnet) coded each paper against a written rubric, read its body in
-full, and recorded the sentence that places it.\footnote{Two readers, each blind to the other, read the body of
-every paper from its first line to its reference list. The boundaries between
-stopping, replacing and consuming involve judgment, and the two readers disagree on
-24 of the 680 papers. We read the method sections of
-every paper on which they disagree, and of every paper either of them coded as
-composing, and settled its label. An earlier pass that read only the abstract, the
-introduction and the method passages found the same two composing papers. Four papers
-have no PDF on arXiv and were coded from their abstracts. The rubric and the per-paper
-labels of both readers, with their quoted evidence, are in the repository.}
-
-Of the 680 papers, 454 stop, 77 consume, 50 replace, 40 tune, and 57 propose no
-method. The two that compose do so narrowly. \citet{messoudi2021copula} and
-\citet{park2024semiparametric} fit a copula to the outputs of per-target empirical
-maps, but use it only to set each target's quantile level and still return a box of
-conformal intervals. No paper models the rank stream of a single outcome or carries a
-fitted law back as a forecast. \citet{lardy2024anytime} come closest, fitting
-densities to conformal ranks, but to drive a test martingale.
-
-Distributional conformal prediction \citep{chernozhukov2021distributional} is the
-nearest single-outcome case. It conditions \emph{before} the map, and its answer is
-the empirical quantile of the resulting ranks. A paper would count as composing if it
-kept the empirical map, applied it to scores, and fitted a model on the transformed
-stream. Reweighting the empirical law, conditioning upstream and adapting the level
-do not count.
-
-The 77 papers that consume the conformal output use prediction sets or conformal
-$p$-values as inputs to selection, active learning, planning and similar procedures. Using the sets as data
-has its own limit. The law of the prediction sets does not identify a classifier's
-confusion matrix once a set of size two or more occurs, and a conformal correlation
-matrix built from set membership inherits the failure \citep{cotton2026correlation}.
-
-As an independent check, we coded by hand a random sample of 100 papers, drawn with a
-fixed seed from a wider archive of conformal prediction papers, without reference to
-any other labels. We find that 93 of the 100 treat the conformal step as terminal. The
-remaining 7 are unclear because they pass its output downstream as a filter or a
-feature. None fits a further law on the transformed scale and carries it back as a
-forecast. Sixty-two of the 100 are in the census, and the two codings agree on 61 of
-them.
-
-The argument of this paper does not depend on the exact count. We report it because the uniformity it shows is alarming, highlighting a potential blind spot that
-might be unique to the conformal prediction community. Outside conformal prediction the composing move is routine. The normal quantile
-transform in hydrological forecasting \citep{bogner2012}, copula time-series
-models \citep{chenfan2006}, and autoregressive transformation models
-\citep{rugamer2023} all apply an empirical marginal map and keep modelling in
-the transformed coordinates.
-
-The readers also recorded how each method pools calibration scores. Of the 623 papers
-that propose a method, 452 pool all scores together, 77 pool within fixed strata, and
-94 let the weights depend on the test point, through kernel localization,
-covariate-shift likelihood ratios or a sampling design.
 
 \section{The conformal information gap}\label{sec:floor}
 
@@ -625,8 +554,8 @@ average inflates the threshold for classical testing-power reasons
 the scores, not reasons to stop at the pooled law.
 
 Training a neural network stops at an epoch chosen on validation evidence. The
-conformal recipe stops at its empirical map with no such evidence, and the census
-shows the stop is near universal, so we call it \emph{cultural}. One likely reason is
+conformal recipe stops at its empirical map with no such evidence, and the census of
+Appendix~\ref{sec:count} shows the stop is near universal, so we call it \emph{cultural}. One likely reason is
 that the certificate belongs to the stop. Coverage holds at the empirical map, so
 work that continues past it gives up the property the field measures itself by, and
 the field's effort has gone instead into better weights, strata and levels.
@@ -658,6 +587,78 @@ scores, and the absolute residual only in the symmetric reading of
 Remark~\ref{rem:conditional}. Quantile scores need their own treatment.
 
 \appendix
+
+\section{A census of the conformal literature}\label{sec:count}
+
+We ask what published conformal methods do with the fence-post map
+\eqref{eq:fencepost}, which we also call the \emph{empirical map}. A method
+\emph{stops} if the output of the map, its quantiles, its $p$-values or its
+intervals, is the answer. It \emph{composes} if it keeps the map and fits a model to
+its output, as in Section~\ref{sec:transform}.
+
+Methods that neither stop nor compose fall into three further classes. A method
+\emph{replaces} if it substitutes a conditional estimate for the pooled quantile, as
+SPCI fits a quantile regression to recent residuals \citep{xu2023spci}. It
+\emph{tunes} if it keeps the map and adapts the level online, as adaptive conformal
+inference does \citep{gibbs2021adaptive}. It \emph{consumes} if it feeds the output
+to another procedure, such as training on pseudo-labels it has screened or selecting
+among candidates.
+
+We classified the literature instead of relying on an impression of it. We took every arXiv paper with ``conformal prediction'' in the title as of
+20 August 2026, 686 records. Six concern molecular or protein conformation and were
+matched by the title search in error, which leaves the remaining 680 papers. Language-model
+readers (Claude Sonnet) coded each paper against a written rubric, read its body in
+full, and recorded the sentence that places it.\footnote{Two readers, each blind to the other, read the body of
+every paper from its first line to its reference list. The boundaries between
+stopping, replacing and consuming involve judgment, and the two readers disagree on
+24 of the 680 papers. We read the method sections of
+every paper on which they disagree, and of every paper either of them coded as
+composing, and settled its label. An earlier pass that read only the abstract, the
+introduction and the method passages found the same two composing papers. Four papers
+have no PDF on arXiv and were coded from their abstracts. The rubric and the per-paper
+labels of both readers, with their quoted evidence, are in the repository.}
+
+Of the 680 papers, 454 stop, 77 consume, 50 replace, 40 tune, and 57 propose no
+method. The two that compose do so narrowly. \citet{messoudi2021copula} and
+\citet{park2024semiparametric} fit a copula to the outputs of per-target empirical
+maps, but use it only to set each target's quantile level and still return a box of
+conformal intervals. No paper models the rank stream of a single outcome or carries a
+fitted law back as a forecast. \citet{lardy2024anytime} come closest, fitting
+densities to conformal ranks, but to drive a test martingale.
+
+Distributional conformal prediction \citep{chernozhukov2021distributional} is the
+nearest single-outcome case. It conditions \emph{before} the map, and its answer is
+the empirical quantile of the resulting ranks. A paper would count as composing if it
+kept the empirical map, applied it to scores, and fitted a model on the transformed
+stream. Reweighting the empirical law, conditioning upstream and adapting the level
+do not count.
+
+The 77 papers that consume the conformal output use prediction sets or conformal
+$p$-values as inputs to selection, active learning, planning and similar procedures. Using the sets as data
+has its own limit. The law of the prediction sets does not identify a classifier's
+confusion matrix once a set of size two or more occurs, and a conformal correlation
+matrix built from set membership inherits the failure \citep{cotton2026correlation}.
+
+As an independent check, we coded by hand a random sample of 100 papers, drawn with a
+fixed seed from a wider archive of conformal prediction papers, without reference to
+any other labels. We find that 93 of the 100 treat the conformal step as terminal. The
+remaining 7 are unclear because they pass its output downstream as a filter or a
+feature. None fits a further law on the transformed scale and carries it back as a
+forecast. Sixty-two of the 100 are in the census, and the two codings agree on 61 of
+them.
+
+The argument of this paper does not depend on the exact count. We report it because the uniformity it shows is alarming, highlighting a potential blind spot that
+might be unique to the conformal prediction community. Outside conformal prediction the composing move is routine. The normal quantile
+transform in hydrological forecasting \citep{bogner2012}, copula time-series
+models \citep{chenfan2006}, and autoregressive transformation models
+\citep{rugamer2023} all apply an empirical marginal map and keep modelling in
+the transformed coordinates.
+
+The readers also recorded how each method pools calibration scores. Of the 623 papers
+that propose a method, 452 pool all scores together, 77 pool within fixed strata, and
+94 let the weights depend on the test point, through kernel localization,
+covariate-shift likelihood ratios or a sampling design.
+
 
 \section{The repaired map}\label{app:repair}
 
