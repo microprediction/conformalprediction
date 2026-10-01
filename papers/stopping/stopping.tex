@@ -520,17 +520,17 @@ coverage and not the finite-sample certificate of Section~\ref{sec:intro}. The
 intervals are the 0.1 and 0.9 quantiles of the kernel-smoothed predictive, which
 need not coincide with the raw conformal order-statistic endpoints. The table
 therefore tests whether watching interval coverage would reveal the log score loss.
-It uses the breadth tier, paired rows and a target of 0.800.
+It uses the breadth tier and paired rows, and the nominal coverage is 0.800.
 
 \begin{center}
-\begin{tabular}{lcc}
+\begin{tabular}{lc}
 \toprule
-arm & coverage & distance from target \\
+arm & coverage of the 0.1--0.9 interval \\
 \midrule
-unconstrained    & 0.870 & 0.070 \\
-stop             & 0.784 & 0.016 \\
-stop, weighted   & 0.799 & 0.001 \\
-compose-after    & 0.797 & 0.003 \\
+unconstrained    & 0.870 \\
+stop             & 0.784 \\
+stop, weighted   & 0.799 \\
+compose-after    & 0.797 \\
 \bottomrule
 \end{tabular}
 \end{center}
