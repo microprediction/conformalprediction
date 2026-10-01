@@ -45,7 +45,6 @@ is tacit in conformal prediction and departed from by only two of the 624 papers
 
 \section{Introduction}\label{sec:intro}
 
-
 The most any forecast of an outcome $Y$ can gain over the unconditional distribution
 of $Y$, in expected log score, is the mutual information $\I(Y;X)$ between the outcome
 and the information $X$ available to the forecaster \citep{delsole2004}.
@@ -54,7 +53,6 @@ and calls the gain a method actually achieves its exploitability. We ask how muc
 forecastability a conformal forecaster exploits, and we will prove that conformal
 calibration exploits none of it. 
 
-
 The conformal recipe is familiar. We fit a base model and then, on $n$ held-out points, compute a scalar error
 for each (for instance the absolute residual). We then sort the errors, take the
 $\lceil (n+1)\,0.9\rceil$-th smallest, and quote the model's prediction plus or
@@ -62,7 +60,6 @@ minus that value. If the joint law of the held-out data and the future point is
 unchanged by permuting them, the quoted interval contains
 the truth at least 90\% of the time, at any sample size, with no further assumption on
 the model or the data distribution.
-
 
 The last step of the recipe applies the empirical distribution function of the
 held-out errors, and the quoted interval is read off its quantiles. Nothing is fitted
@@ -424,16 +421,6 @@ is typical or unusual under its own marginal law does not enter, and a rare inpu
 ordinary noise adds nothing to $\I(W;X\given\kappa)$. Marginal coverage also does not
 say which inputs are over- or under-covered. We use \emph{coverage} for the property of
 a set and \emph{calibration} for the distributional property of a predictive.
-
-We check Proposition~\ref{prop:floor}, Corollary~\ref{cor:forecastability} and the
-folded case by grid integration in \texttt{check\_gap.py}, computing each side
-independently. The checks include a distributional-conformal score from a misspecified
-model and a case where the gain is negative, and both sides agree to machine precision.
-
-Stopping keeps the certificate, which concerns the marginal rank of the test
-score and is exact at its position. Stopping gives up $\I(W;X\given\kappa)$, the
-conditional information the frozen score discarded. A downstream model that uses
-the map's output together with the input can recover part of that quantity.
 
 \section{The cost of stopping on 17{,}364 economic series}\label{sec:price}
 
