@@ -623,36 +623,32 @@ average inflates the threshold for classical testing-power reasons
 pooled shape a defence. None of them concerns the stop.
 
 Training a neural network stops at an epoch chosen on validation evidence. The
-conformal recipe stops at its empirical map with no such evidence, so the stop is
-\emph{cultural}. All but two of the methods in the census of Section~\ref{sec:count}
-stop at the pooled law, the two go past it only to size a multivariate set, and we
-found no paper that justifies the stop.
+conformal recipe stops at its empirical map with no such evidence, and the census
+shows the stop is near universal, so we call it \emph{cultural}. One likely reason is
+that the certificate belongs to the stop. Coverage holds at the empirical map, so
+work that continues past it gives up the property the field measures itself by, and
+the field's effort has gone instead into better weights, strata and levels.
 
-A deficit of 0.4 nats means that the stopped forecast gives
-the realized outcome, on geometric average, about two-thirds of the density the
-unconstrained forecast gives it, and the coverage that conformal practice monitors
-registers none of this.
+A deficit of 0.4 nats means that the stopped forecast gives the realized outcome, on
+geometric average, about two-thirds of the density the unconstrained forecast gives
+it, and the coverage that conformal practice monitors registers none of this.
 
-The conformal information gap identity explains why calibration cannot win this back.
-The term $\I(W;X\mid\kappa)$ is fixed before calibration begins, and every calibration
-choice moves only the estimation term. Stopping at the pooled law is therefore a
-permanent structural information sacrifice: whatever the frozen score discarded about
-the input stays discarded, however the scores are calibrated. Measured against forecastability in the sense of \citet{delsole2004} and
-\citet{catt2026}, Corollary~\ref{cor:forecastability} gives how much of it a conformal
-scheme captures.
+We call the stop a permanent structural information sacrifice, and both adjectives
+are meant literally. The sacrifice is structural because the score and the strata fix
+it before any calibration sample is drawn. It is permanent because nothing applied to
+the pooled scores, neither a level schedule nor a larger calibration sample, recovers
+it. The remedies lie elsewhere: upstream, in a score that leaves less of the input in
+the residual, or downstream, in a model fitted to the map's output, which is what the
+composed arm does.
 
-The sacrifice falls where conformal calibration is most attractive. A
-distribution-free guarantee is most wanted when the model may be misspecified, and
-that is exactly when a positive floor cannot be ruled out.
-
-We recommend treating the empirical map as a coordinate
-change with a certificate attached at its position, and continuing to model on its
-output. The distribution can come from any model, a Bayesian posterior predictive
-included, with conformal calibration attached as a certificate at the position where
-it is wanted. The composed arm is one instance. In the sense of
-Remark~\ref{rem:usecase} it is conformal prediction with the modelling finished,
-and its scored calibration stream measures whether the modelling was in fact
-finished.
+Composing does give up the certificate, but the identity also prices getting it back.
+A final empirical map placed at the end of the composed chain restores the
+certificate, and Proposition~\ref{prop:floor}, applied to that map with the composed
+forecaster held fixed, puts its floor at the information left
+in the composed chain's residual, not in the base forecaster's. A certificate can
+therefore sit wherever it is wanted, as one transform among those of
+Table~\ref{tab:transforms}, with the modelling done on either side of it. The model
+can be anything, a Bayesian posterior predictive included.
 
 \paragraph{Limitations.} The census labels come from language-model readers, and the
 boundaries between stopping, replacing and consuming involve judgment. The two full
