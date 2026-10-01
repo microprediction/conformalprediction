@@ -111,8 +111,43 @@ the transformed observation back to one for the original. Given the state, the
 forward function is a strictly increasing change of variables, so predictive
 densities pull back exactly, Jacobians included. A forecaster is a \emph{chain} of
 transforms followed by a \emph{leaf}, a predictive law for whatever the last
-transform emits. Subtracting a running mean, dividing by a running scale,
-differencing and serial whitening are transforms in this sense.
+transform emits. Table~\ref{tab:transforms} lists the transforms of the
+\texttt{skaters} library in which that grammar is implemented. Every one of them
+is invertible given its state, and a chain may stack any of them in any order.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lp{0.25\textwidth}p{0.26\textwidth}p{0.16\textwidth}@{}}
+\toprule
+transform & forward & inverse of a predictive $D$ & removes \\
+\midrule
+\texttt{ema}$(\alpha)$ & $y'_t=y_t-\ell_t$ & $D\mapsto D+\ell_t$ & level \\
+\texttt{difference} & $y'_t=y_t-y_{t-1}$ & cumulative sum, variance $\sum_h\sigma_h^2$ & random walk \\
+\texttt{drift}$(\alpha,\lambda)$ & $y'_t=\Delta y_t-\hat\mu_t$ & $y_t+h\hat\mu_t+\sum\varepsilon$ & random walk with drift \\
+\texttt{holt\_linear}$(\alpha,\beta)$ & $y'_t=y_t-(\ell_t+b_t)$ & $\ell_t+hb_t+\varepsilon$ & level and trend \\
+\texttt{ar}$(p)$ & $y'_t=y_t-\sum_j\hat\phi_jy_{t-j}$ & AR reconstruction, variance propagated & autoregression (online least squares) \\
+\texttt{grouped\_ar}$(L)$ & as \texttt{ar}, coefficients grouped by lag & as \texttt{ar} & long lags \\
+\texttt{fractional\_difference}$(d)$ & $y'_t=(1-B)^dy_t$ & $(1-B)^{-d}$ & long memory \\
+\texttt{standardize}$(\alpha)$ & $y'_t=(y_t-\hat\mu_t)/\hat\sigma_t$ & $D\mapsto\hat\sigma_tD+\hat\mu_t$ & level and scale \\
+\texttt{garch}$(\omega,\alpha,\beta)$ & $y'_t=y_t/\hat\sigma_t$ & $D\mapsto\hat\sigma_tD$ & volatility clustering \\
+\texttt{seasonal\_difference}$(s)$ & $y'_t=y_t-y_{t-s}$ & shift by the lagged value & periodicity \\
+\texttt{power\_transform}$(p)$ & $y'_t=\operatorname{sign}(y_t)|y_t|^p$ & exact pushforward & heavy tails \\
+\texttt{theta}$(\alpha)$ & $y'_t=y_t-\mathrm{SES}_t$ & shift by smoothed level and drift & theta method \\
+\texttt{yeo\_johnson}$(\lambda)$ & signed Box--Cox with parameter $\lambda$ & exact pushforward & coordinates \\
+\texttt{ou}$(\kappa)$ & deviation from a running mean & exact Ornstein--Uhlenbeck moments & mean reversion \\
+\midrule
+repaired conformal map & $y'_t=m_n(y_t)$ & pull back through $m_n^{-1}$, Jacobian included & shape of the pooled law \\
+\bottomrule
+\end{tabular}
+\caption{Transforms of the forecasting grammar, from the \texttt{skaters} library
+\citep{cotton2026transforms}. Here $\ell_t$, $b_t$, $\hat\mu_t$ and $\hat\sigma_t$
+are running level, slope, mean and scale estimates held in the transform's state,
+$h$ is the forecast horizon and $B$ the backshift operator. The last row is the
+repaired empirical map of this section.}
+\label{tab:transforms}
+\end{table}
 
 The map \eqref{eq:fencepost} is a step function. It has no inverse and no density,
 so it is not a transform. \citet{cotton2026grammar} repairs it by interpolation. Let
@@ -420,18 +455,18 @@ a set and \emph{calibration} for the distributional property of a predictive.
 
 \section{The cost of stopping on 17{,}364 economic series}\label{sec:price}
 
+To measure the cost of stopping we need a forecaster in which the repaired map of
+Section~\ref{sec:transform} can sit at more than one position. We build one from
+the grammar of Table~\ref{tab:transforms} and run it on 17{,}364 economic series.
+Stopping at the pooled law costs about 0.4 nats per observation one step ahead,
+composing a model after the map recovers a third of that, and interval coverage
+does not register the loss.
+
 \subsection{Moving the pooled law within a forecasting chain}\label{sec:grammar}
 
-To measure the cost of stopping we need a forecaster in which the repaired map of
-Section~\ref{sec:transform} can sit at more than one position.
-
-We use the transform grammar of \citet{cotton2026transforms}. A
-forecaster is a \emph{chain} of state-conditional invertible transforms, each
-removing one kind of structure and passing its residual on: a location tracker
-subtracts a running mean, a scale transform divides by a running deviation, a
-difference removes trend. A \emph{terminal leaf} models the law of whatever
-residual remains, and the predictive in the original coordinate is the leaf's
-law pushed back through the inverse chain, change of variables handled exactly.
+Each chain in the grammar removes one kind of structure and passes its residual on.
+A terminal leaf models the law of whatever residual remains, and the predictive in
+the original coordinate is the leaf's law pushed back through the inverse chain.
 The base forecaster, \texttt{laplace}, runs roughly sixty candidate chains in
 parallel, combines their predictive densities with likelihood weights updated
 every observation, splices generalized Pareto tails onto the extremes, and
