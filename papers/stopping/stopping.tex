@@ -474,33 +474,32 @@ scores its own probability integral transforms online. It ranks first in the
 public benchmark this study extends, and its own terminal leaf is tuned to
 CRPS.
 
-We compare two configurations.
+We compare two arms. Both use the same object, the kernel-smoothed pooled
+empirical law of recent residuals, and they differ only in where it sits.
 
 \begin{description}
-\item[stop.] Take the finished predictive, keep its centre, replace its shape
-  with the pooled empirical law of the model's own recent errors,
-  kernel-smoothed. Quote that. Nothing acts downstream. This arm is a frozen
-  conformal scheme of the covered type, so Proposition~\ref{prop:floor}
-  applies with floor $\I(R;X)$.
-\item[compose-after.] Install the identical empirical object as the terminal
-  leaf of \emph{every} candidate chain. Writing $R^c_t$ for chain $c$'s
-  residual and $\widehat G^c_t$ for the pooled empirical law of that chain's
-  own residual stream, the arm's predictive is
+\item[stop.] The base forecaster runs unchanged. Its predictive keeps its
+  location, and its shape is replaced by the pooled law of the forecaster's own
+  recent errors. That is the quoted forecast, and nothing is fitted to it
+  afterwards. This arm is a frozen conformal scheme covered by
+  Proposition~\ref{prop:floor}, with floor $\I(R;X)$.
+\item[compose-after.] The pooled law moves inside the forecaster. In each
+  candidate chain $c$ it replaces the terminal leaf, so it describes that
+  chain's own residual stream $R^c_t$ instead of the final error. Write
+  $\widehat G^c_t$ for that law and $(T^c_t)^{-1}_{\#}$ for pushing a law back
+  through chain $c$'s inverse transforms. The arm's predictive is
   \[
-  \widehat F_t \;=\; \sum_c w^c_t \,\big(T^c_t\big)^{-1}_{\#}\widehat G^c_t,
+  \widehat F_t \;=\; \sum_c w^c_t \,\big(T^c_t\big)^{-1}_{\#}\widehat G^c_t ,
   \]
-  where $(T^c_t)^{-1}_{\#}$ pushes the map's law back through chain $c$'s
-  inverse transform and the weights $w^c_t$ are likelihood weights fitted
-  online to the realized densities the maps assign, that is, a mixture model
-  fitted on the maps' output stream. Every predictive path passes through an
-  empirical map, because the leaf override replaces the terminal leaf of every
-  candidate chain. The pool weights therefore compare chains with each other and
-  never compare the map with a parametric alternative. The one exception is the generalized Pareto tail
-  splice, which replaces the density beyond a frozen tail region. It acts on
-  the extremes of the composed predictive and is shared with the base arm.
-  This arm carries no coverage certificate. It changes representation after
-  the map instead of before it.
+  where the weight $w^c_t$ is updated every observation from the density chain
+  $c$ assigned to the outcome. The mixture is therefore a model fitted to the
+  output of the empirical maps. Because every chain ends in an empirical map,
+  the weights choose between chains and never between the empirical map and a
+  parametric leaf. This arm has no coverage certificate.
 \end{description}
+
+The base forecaster and both arms share one further step, a generalized Pareto
+splice that replaces the density beyond a fixed tail region.
 
 Both positions run with flat and with recency-weighted windows (exponential
 weights, half-life 150 observations), so staleness does not explain the
