@@ -40,7 +40,7 @@ We view conformal prediction as a repairable univariate transform to be included
 in a forecasting grammar. By this device we evaluate the wisdom of stopping after the conformalizing step, something that
 is tacit in conformal prediction and departed from by only two of the 623 papers proposing conformal methods in our survey. Across 17,364 economic time-series,
  early stopping costs approximately 0.4 nats. We interpret this through the lens of a new information identity we term the conformal information gap,
- whereby it is possible to formalize why conformal calibration cannot exploit forecastability. 
+ whereby it is possible to formalize why conformal calibration, at a fixed score and stratification, cannot exploit forecastability. 
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -50,8 +50,8 @@ of $Y$, in expected log score, is the mutual information $\I(Y;X)$ between the o
 and the information $X$ available to the forecaster \citep{delsole2004}.
 \citet{catt2026} takes this quantity as the definition of the forecastability of $Y$,
 and calls the gain a method actually achieves its exploitability. We ask how much
-forecastability a conformal forecaster exploits, and we will prove that conformal
-calibration exploits none of it. 
+forecastability a conformal forecaster exploits, and we will prove that, once the score
+and the stratification are fixed, conformal calibration exploits none of it. 
 
 The conformal recipe is familiar. We fit a base model and then, on $n$ held-out points, compute a scalar error
 for each (for instance the absolute residual). We then sort the errors, take the
@@ -82,7 +82,7 @@ empirical price.
 
 We make two contributions. We introduce and prove the conformal information gap
 identity (Proposition~\ref{prop:floor}), which fixes, exactly and at a fixed
-calibration sample, the part of the excess log score that no calibration choice can
+calibration sample, the part of the expected log regret that no calibration choice can
 reach. We then measure what stopping costs on economic series, and how much of that
 cost composing a model past the pooled law recovers (Section~\ref{sec:price}).
 
@@ -152,7 +152,8 @@ repaired empirical map of this section.}
 The map \eqref{eq:fencepost} is a step function. It has no inverse and no density,
 so it is not a transform. \citet{cotton2026grammar} repairs it by interpolation. Let
 $r_{(1)}<\dots<r_{(n)}$ be the order statistics of the scores, give the $i$-th knot
-the fence-post probability $i/(n+1)$, and set $z_{(i)}=\Phi^{-1}\big(i/(n+1)\big)$.
+the probability $i/(n+1)$, which is the left limit of $E_n$ at $r_{(i)}$ and the
+exact probability that a new exchangeable score falls at or below $r_{(i)}$, and set $z_{(i)}=\Phi^{-1}\big(i/(n+1)\big)$.
 The repaired map $m_n$ is any strictly increasing bijection of the real line with
 $m_n(r_{(i)})=z_{(i)}$ for $i=1,\dots,n$, rebuilt as new scores arrive.
 Appendix~\ref{app:repair} gives the interpolation and tails used here. The repair
@@ -192,9 +193,9 @@ continuous estimate of the pooled score law (a kernel-smoothed or interpolated
 empirical law). The raw empirical measure is atomic and would score $-\infty$. Write
 $W=A(X,Y)$, let $G_\kappa$ be the population pooled law, and let the benchmark
 be the conditional oracle, whose expected negative log score is the conditional
-entropy $H(Y\given X)$. Throughout, $L(\widehat F)=\E[-\log \widehat f_X(Y)]$
-is the expected log loss of the conformal predictive, so an excess is positive
-and smaller is better.
+entropy $H(Y\given X)$ when that is finite. We state results as expected log regret
+$\E\log\{p(Y\given X)/\widehat f_X(Y)\}$, which stays finite when the two log losses do
+not, because the Jacobian of the score cancels inside the ratio. Smaller is better.
 
 The proof of the floor uses one standard identity, the chain rule for relative
 entropy along a product reference \citep{cover2006elements}. In coding theory it
@@ -203,7 +204,7 @@ splits redundancy into a dependence term and a mismatch term
 
 \begin{lemma}[Chain rule for relative entropy]\label{lem:chain}
 Let $(U,V)$ have a joint density with $\I(U;V)<\infty$, let $p_V$ be the marginal
-density of $V$, and let $q$ be any density with $\E|\log q(V)|<\infty$. Then
+density of $V$, and let $q$ be any density with $\KLop(P_V\,\|\,Q)<\infty$. Then
 \[
 \E\log\frac{p(V\given U)}{q(V)} \;=\; \I(U;V)+\KLop\!\big(P_V\,\|\,Q\big).
 \]
@@ -231,14 +232,15 @@ following result, which to our knowledge has not been stated before.
 
 \begin{proposition}[Conformal information gap identity]\label{prop:floor}
 Fix the training fold and the calibration sample, so $(A,\kappa,\widehat
-G_\kappa)$ are deterministic, let $(X,Y)$ be a test pair independent of both,
+G_\kappa)$ are deterministic and the emitted predictive depends on the test input only
+through $A(x,\cdot)$ and $\kappa(x)$, let $(X,Y)$ be a test pair independent of both,
 and let $W=A(X,Y)$ have conditional density $p_W(\cdot\given x)$ given $X=x$ and
 pooled density $g_\kappa$ given the stratum. Assume $\E|\log p_W(W\given X)|$,
 $\E|\log g_{\kappa(X)}(W)|$ and $\E|\log\widehat g_{\kappa(X)}(W)|$ are finite, so that
-every term below is finite. Then the excess log loss of the conformal predictor
-decomposes exactly as
+every term below is finite. Then the expected log regret of the conformal predictor
+against the conditional oracle decomposes exactly as
 \[
-L(\widehat F) - H(Y\given X)
+\E\log\frac{p(Y\given X)}{\widehat f_X(Y)}
 \;=\; \I(W;X\given\kappa)
 \;+\; \E_{\kappa}\,\KLop\!\big(G_{\kappa}\,\|\,\widehat G_{\kappa}\big),
 \]
@@ -272,7 +274,7 @@ is $\I(R;X)=0.243$ nats per observation, and no calibration choice reduces it.
 \includegraphics[width=0.92\textwidth]{figures/fig_gap.pdf}
 \caption{The conformal information gap when the error spread grows with the input.
 A single-stratum conformal scheme uses the pooled law (dashed) for every input. It is
-too wide for low-noise inputs and too narrow for high-noise ones. Its excess log loss
+too wide for low-noise inputs and too narrow for high-noise ones. Its expected log regret
 over the conditional law (solid) is $\I(R;X)$, here $0.243$ nats per observation.}
 \label{fig:gap}
 \end{figure}
@@ -290,10 +292,12 @@ positive, no calibration choice recovers any of it.
 
 \begin{lemma}[Convergence of the pooled law]\label{lem:ident}
 Let the calibration pairs be i.i.d.\ copies of $(X,Y)$, or a stationary ergodic
-sequence with that marginal law, and let $\widehat G_{\kappa,n}$ be the empirical
-distribution of the scores in stratum $\kappa$. Then
+sequence with that marginal law, let there be finitely many strata, each of positive
+probability, and let $\widehat G_{\kappa,n}$ be the empirical distribution of the scores
+in stratum $\kappa$. Then
 $\sup_w|\widehat G_{\kappa,n}(w)-G_\kappa(w)|\to0$ almost surely. If the smoothed
-estimate is KL-consistent, the excess log loss tends to the floor
+estimates satisfy $\KLop(G_\kappa\,\|\,\widehat G_{\kappa,n})\to0$ in every stratum, the
+expected log regret tends to the floor
 $\I(W;X\given\kappa)$.
 \end{lemma}
 
@@ -342,7 +346,7 @@ Add and subtract the oracle's expected log score:
 \;-\;\big[\E\log p(Y\given X)-\E\log\widehat f_X(Y)\big].
 \]
 The first bracket is $\I(Y;X)$ by definition. The second bracket is
-$L(\widehat F)-H(Y\given X)$, which Proposition~\ref{prop:floor} evaluates as
+the expected log regret, which Proposition~\ref{prop:floor} evaluates as
 $\I(W;X\given\kappa)+\E_\kappa\KLop(G_\kappa\,\|\,\widehat G_\kappa)$. Substituting
 gives the display, and dropping the nonnegative KL term gives the bound.
 \end{proof}
@@ -352,7 +356,8 @@ Calibration moves $\widehat G_\kappa$ toward $G_\kappa$ and so removes the KL te
 That term depends only on the pooled law of the score, and a forecaster whose inputs
 carry no information about the outcome gains it just as much. The part of the gain
 that depends on the inputs is $\I(Y;X)-\I(W;X\given\kappa)$, and the frozen score sets
-it. Calibration therefore exploits none of the forecastability. For example, suppose $Y$ is independent of $X$ but the location model varies with
+it. At a fixed score and stratification, calibration therefore exploits none of the
+forecastability. For example, suppose $Y$ is independent of $X$ but the location model varies with
 $x$. The residual then depends on $X$ through the model alone, and a scheme with exact
 coverage scores below the unconditional law by $\I(R;X)$.
 \end{remark}
@@ -364,8 +369,11 @@ floor is therefore $\I(W;X)$ for that rank, which is zero when the estimated
 conditional law is the true one. It closes the gap through the estimate and then stops.
 Density-based, histogram, localized and quantile constructions
 \citep{izbicki2020,izbicki2022,sesia2021,guan2023localized,romano2019conformalized,cauchois2021}
-likewise lower the floor by what their conditioning retains, and calibration lowers it
-in none of them. The folded absolute residual can be read as a symmetric predictive
+likewise lower the floor by what their conditioning retains. Localized calibration,
+which weights calibration scores by their nearness to the test input, lies outside the
+proposition, since its emitted law depends on the input beyond a fixed stratum. As the
+localization sharpens it can approach the conditional law and remove the floor. It is a
+change of stratification, and the proposition applies to each fixed one. The folded absolute residual can be read as a symmetric predictive
 with density $h_{\mathrm{sym}}(z)=\tfrac12(p_R(z)+p_R(-z))$. The same computation then
 adds $\KLop(P_R\,\|\,H_{\mathrm{sym}})\le\log 2$ for the discarded sign.
 \end{remark}
@@ -398,14 +406,16 @@ public benchmark this study extends, and its own terminal leaf is tuned to
 CRPS.
 
 We compare two arms. Both use the same object, the kernel-smoothed pooled
-empirical law of recent residuals, and they differ only in where it sits.
+empirical law of recent residuals, but they are two forecasting architectures, not one
+map with and without a model after it.
 
 \begin{description}
 \item[stop.] The base forecaster runs unchanged. Its predictive keeps its
   location, and its shape is replaced by the pooled law of the forecaster's own
   recent errors. That is the quoted forecast, and nothing is fitted to it
-  afterwards. This arm is a frozen conformal scheme covered by
-  Proposition~\ref{prop:floor}, with floor $\I(R;X)$.
+  afterwards. It is the online counterpart of the schemes of
+  Proposition~\ref{prop:floor}. Its location model and residual window evolve, so
+  the proposition does not identify its deficit as a fixed floor.
 \item[compose-after.] The pooled law moves inside the forecaster. In each
   candidate chain $c$ it replaces the terminal leaf, so it describes that
   chain's own residual stream $R^c_t$ instead of the final error. Write
@@ -425,8 +435,7 @@ We compare the arms by out-of-sample log likelihood, so each must give the
 realized outcome a usable density, including outcomes beyond the range of past
 residuals, where an empirical law, even kernel-smoothed, has almost none. The base
 forecaster and both arms therefore share one further step, a generalized Pareto
-splice that replaces the density beyond a fixed tail region. Because all three
-share it, the splice does not drive the differences between them. The pooled law
+splice that replaces the density beyond a fixed tail region. The pooled law
 is built from a window of recent residuals, and a stale window would lose likelihood
 for reasons unrelated to stopping. Both arms therefore run with flat and with
 recency-weighted windows (exponential weights, half-life 150 observations).
@@ -448,10 +457,10 @@ series overlap, all intervals are bootstrap over series, not rows.
 
 We floor the log density at $-25$ per observation. The floor is not a
 proper score where it binds, and it binds more often on the stopped arm (1.78\% of
-rows) than on the base (0.62\%, breadth tier, paired). That favours the stopped arm.
-Tightening the floor stepwise from $-25$ to $-10$ shrinks the raw stop deficit at
-horizon 1 monotonically from 0.51 to 0.33 nats, so every gap reported here understates
-its unclipped value.
+rows) than on the base (0.62\%, breadth tier, paired). Tightening the floor stepwise
+from $-25$ to $-10$ shrinks the raw stop deficit at horizon 1 monotonically from 0.51
+to 0.33 nats, so over that range clipping works against the reported gap. The floor is
+also not invariant to the units of a series.
 
 Part of what a constrained arm loses is the cost of estimating an empirical law
 from a finite window. To gauge it we run the identical protocol, at matched context,
@@ -505,8 +514,9 @@ minority of series where stopping hurts badly.
 
 Adaptivity does not substitute for position. Recency-weighting the stop arm's
 window recovers 0.05 to 0.08 nats on the breadth tier, against 0.14 to 0.27
-for moving the map's position, raw in both cases. Proposition~\ref{prop:floor} dispatches level adaptation
-directly, since it acts on the pooled scores alone.
+for moving the map's position, raw in both cases. In the frozen setting of
+Proposition~\ref{prop:floor} level adaptation acts on the pooled scores alone and cannot
+touch the floor, and the online result is consistent with that.
 
 On CRPS the tiers disagree. On the deep tier the stopped arm degrades CRPS and
 the composed arm improves it, while on the breadth tier both positions sit within
@@ -560,9 +570,9 @@ that the certificate belongs to the stop. Coverage holds at the empirical map, s
 work that continues past it gives up the property the field measures itself by, and
 the field's effort has gone instead into better weights, strata and levels.
 
-A deficit of 0.4 nats means that the stopped forecast gives the realized outcome, on
-geometric average, about two-thirds of the density the unconstrained forecast gives
-it, and the coverage that conformal practice monitors registers none of this.
+The raw one-step deficit of 0.51 nats means that the stopped forecast gives the
+realized outcome, on geometric average, about 60 percent of the density the
+unconstrained forecast gives it, and the coverage that conformal practice monitors registers none of this.
 
 We call the stop a permanent structural information sacrifice, and both adjectives
 are meant literally. The sacrifice is structural because the score and the strata fix
@@ -572,14 +582,13 @@ it. The remedies lie elsewhere: upstream, in a score that leaves less of the inp
 the residual, or downstream, in a model fitted to the map's output, which is what the
 composed arm does.
 
-The composed arm has no coverage certificate, but one can be added back. Put a
-second empirical map at the end of the composed chain. That map carries the usual
-certificate, and by Proposition~\ref{prop:floor} (with the composed forecaster held
-fixed) its floor is the information left in the composed residual, not the larger amount
-left in the base residual whenever composing has helped. So the certificate need not come at the
-end of the modelling. It can go anywhere in a chain, like any transform in
-Table~\ref{tab:transforms}, and the model around it can be anything, a Bayesian
-posterior predictive included.
+The composed arm has no coverage certificate, but one can be added back by a second
+empirical map at the end of the composed chain, calibrated on fresh scores. Its floor is
+then the information left in the composed residual. That is smaller than the base
+residual's only if composing removed residual dependence, which a better log score does
+not by itself guarantee. A certificate can therefore go anywhere in a chain, like any
+transform in Table~\ref{tab:transforms}, and the model around it can be anything, a
+Bayesian posterior predictive included.
 
 \paragraph{Limitations.} The prices are measured on one base
 forecaster and one economic corpus. The floor proposition covers invertible signed
@@ -664,11 +673,12 @@ covariate-shift likelihood ratios or a sampling design.
 
 The piecewise-linear repair interpolates the pairs $(r_{(i)},z_{(i)})$ and extends
 beyond the edge knots linearly in $(r,z)$. Linearity in the probit coordinate is a
-Gaussian tail in the score, with scale set by the spacing of the extreme knots. The
-kernel-smoothed repair replaces the step function \eqref{eq:fencepost} by a
-Gaussian-kernel estimate of the distribution function and represents it by a
-monotone $C^1$ cubic through the same knots. Both are strictly increasing
-bijections of the real line \citep{cotton2026grammar}.
+Gaussian tail in the score, with scale set by the spacing of the extreme knots. A monotone
+$C^1$ cubic through the same knots gives a smooth repair. Both are strictly increasing
+bijections of the real line \citep{cotton2026grammar}. A Gaussian-kernel estimate of
+the distribution function, which the experiments of Section~\ref{sec:price} use, does
+not in general pass through the knots, so the argument below covers it only to within
+its distance from them. Section~\ref{sec:blind} accordingly reports empirical coverage.
 
 The certificate survives any strictly increasing $m_n$ through the knots. Let
 $R_1,\dots,R_{n+1}$ be exchangeable and almost surely distinct. Monotonicity gives

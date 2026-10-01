@@ -2,7 +2,7 @@
 
 Setup: X uniform on [0, 4]; given X = x the residual R is Gaussian with mean 0 and standard
 deviation sigma(x) = 0.15 + 0.7 x. A pooled (single-shape) conformal predictive uses the
-marginal law of R for every input. Its excess log loss over the oracle is I(R;X)
+marginal law of R for every input. Its expected log regret against the oracle is I(R;X)
 (Proposition 2 with one stratum), computed here by grid integration.
 
     python fig_gap.py        # writes figures/fig_gap.pdf and prints I(R;X)
