@@ -572,14 +572,14 @@ it. The remedies lie elsewhere: upstream, in a score that leaves less of the inp
 the residual, or downstream, in a model fitted to the map's output, which is what the
 composed arm does.
 
-Composing does give up the certificate, but the identity also prices getting it back.
-A final empirical map placed at the end of the composed chain restores the
-certificate, and Proposition~\ref{prop:floor}, applied to that map with the composed
-forecaster held fixed, puts its floor at the information left
-in the composed chain's residual, not in the base forecaster's. A certificate can
-therefore sit wherever it is wanted, as one transform among those of
-Table~\ref{tab:transforms}, with the modelling done on either side of it. The model
-can be anything, a Bayesian posterior predictive included.
+The composed arm has no coverage certificate, but one can be added back. Put a
+second empirical map at the end of the composed chain. That map carries the usual
+certificate, and by Proposition~\ref{prop:floor} (with the composed forecaster held
+fixed) its floor is the information left in the composed residual, which is smaller
+than the information left in the base residual. So the certificate need not come at the
+end of the modelling. It can go anywhere in a chain, like any transform in
+Table~\ref{tab:transforms}, and the model around it can be anything, a Bayesian
+posterior predictive included.
 
 \paragraph{Limitations.} The prices are measured on one base
 forecaster and one economic corpus. The floor proposition covers invertible signed
