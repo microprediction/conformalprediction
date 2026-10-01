@@ -515,6 +515,13 @@ probability score, which is in the units of the data and which most conformal pa
 report. Because origins within a
 series overlap, all intervals are bootstrap over series, not rows.
 
+We floor the log density at $-25$ per observation. The floor is not a
+proper score where it binds, and it binds more often on the stopped arm (1.78\% of
+rows) than on the base (0.62\%, breadth tier, paired). That favours the stopped arm.
+Tightening the floor stepwise from $-25$ to $-10$ shrinks the raw stop deficit at
+horizon 1 monotonically from 0.51 to 0.33 nats, so every gap reported here understates
+its unclipped value.
+
 Part of what a constrained arm loses is the cost of estimating an empirical law
 from a finite window. To gauge it we run the identical protocol, at matched context,
 on a control corpus of synthetic iid draws (Gaussian, Student-$t_3$, Laplace). These
@@ -646,26 +653,12 @@ average inflates the threshold for classical testing-power reasons
 \citep{li1989honest,low1997nonparametric,cai2004adaptation}. Together these give the
 pooled shape a defence. None of them concerns the stop.
 
-\paragraph{Limitations.} The census labels were assigned by
-language-model readers, and we read the method sections ourselves only where the
-readers disagreed or a label could change the conclusion. The boundaries between
-stopping, replacing and consuming involve judgment, and the two full readings disagree
-on 24 of the 680 papers. Three of those disagreements involve a composing label, and
-reading the method sections settled all three against composing. The hand-coded random sample agrees with the readers on 61 of the
-62 papers the two share. The prices are
-measured on one base forecaster and one economic corpus plus a synthetic
-control. The deep tier and the matched-window ablation of
-Section~\ref{sec:decomp} are incomplete. The null-control adjustment gauges finite-sample overhead on
-simple iid laws and is not an unbiased estimate of the estimation term on
-economic residuals. Scoring floors the log density at $-25$ per observation, which is not a
-proper score where it binds, and it binds unequally: on 1.78\% of stopped-arm
-rows against 0.62\% of base rows (breadth tier, paired). The inequality favours the
-stopped arm, and tightening the floor stepwise from $-25$ to $-10$ shrinks
-the raw stop deficit monotonically from 0.51 to 0.33 nats at horizon 1, so
-every gap reported here is a lower bound on its unclipped value. The composed arm has no coverage
-guarantee and is not proposed as a conformal method. The floor proposition covers invertible signed scores, and the absolute residual
-only in the symmetric reading of Remark~\ref{rem:conditional}. Quantile scores need
-their own treatment.
+\paragraph{Limitations.} The census labels come from language-model readers, and the
+boundaries between stopping, replacing and consuming involve judgment. The two full
+readings disagree on 24 of the 680 papers. The prices are measured on one base
+forecaster and one economic corpus. The floor proposition covers invertible signed
+scores, and the absolute residual only in the symmetric reading of
+Remark~\ref{rem:conditional}. Quantile scores need their own treatment.
 
 \appendix
 
