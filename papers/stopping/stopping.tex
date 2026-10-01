@@ -200,18 +200,12 @@ nearest to composing, and settled their labels. The rubric and the per-paper lab
 with their quoted evidence, are in the repository.}
 
 Of the 680 papers, 455 stop, 77 consume, 49 replace, 41 tune, and 56 propose no
-method. Two compose, and both in a narrow sense. \citet{messoudi2021copula}, in one of
-three variants, fit a one-parameter Gumbel copula to the outputs of the per-target empirical maps in a
-multi-target regression, and \citet{park2024semiparametric} fit a nonparametric vine
-copula to the same outputs. Both use the fitted law only to choose the quantile level
-of each target, and both return a hyper-rectangle of per-target conformal intervals.
-Fitting the copula costs \citet{park2024semiparametric} the finite-sample guarantee,
-and their exact variant uses the empirical copula instead, which stops.
-\citet{sun2024copula} apply the empirical-copula construction across forecast
-horizons, and they also stop. No paper fits a model to the rank stream of a single
-outcome, and none carries a fitted law back as a forecast. The one other paper that
-fits a model to conformal output does so to test, not to forecast:
-\citet{lardy2024anytime} fit densities to conformal ranks to drive a test martingale.
+method. The two that compose do so narrowly. \citet{messoudi2021copula} and
+\citet{park2024semiparametric} fit a copula to the outputs of per-target empirical
+maps, but use it only to set each target's quantile level and still return a box of
+conformal intervals. No paper models the rank stream of a single outcome or carries a
+fitted law back as a forecast. \citet{lardy2024anytime} come closest, fitting
+densities to conformal ranks, but to drive a test martingale.
 
 Distributional conformal prediction \citep{chernozhukov2021distributional} is the
 nearest single-outcome case. It conditions \emph{before} the map, and its answer is
@@ -826,9 +820,6 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
   Computing}.
 \bibitem[Sesia and Romano(2021)]{sesia2021} Sesia, M. and Romano, Y. (2021).
   Conformal prediction using conditional histograms. \emph{NeurIPS} 34.
-\bibitem[Sun and Yu(2024)]{sun2024copula} Sun, S. and Yu, R. (2024). Copula
-  conformal prediction for multi-step time series forecasting. \emph{International
-  Conference on Learning Representations}.
 \bibitem[Tibshirani et al.(2019)]{tibshirani2019conformal} Tibshirani, R.~J.,
   Foygel Barber, R., Cand\`es, E.~J., and Ramdas, A. (2019). Conformal
   prediction under covariate shift. \emph{NeurIPS} 32.
