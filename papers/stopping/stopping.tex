@@ -514,22 +514,19 @@ probability score, which is in the units of the data and which most conformal pa
 report. Because origins within a
 series overlap, all intervals are bootstrap over series, not rows.
 
-A control corpus of synthetic independent draws (Gaussian, Student-$t_3$,
-Laplace) runs under the identical protocol at matched context. On the control
-there is no state to condition on, so what a constrained arm loses there is
-finite-sample overhead: the cost of estimating a 41-node empirical law rather
-than a parametric scale. We subtract that overhead from every headline
-number below and call the result \emph{null-control-adjusted}. It is not the loss
-net of estimation, for two reasons. First, the estimation term
-$\KLop(G\,\|\,\widehat G)$ depends on $G$, so its size on three simple iid laws
-gauges, but does not estimate, its size on economic residuals. Second, because the
-base forecaster adapts, its residuals are not exactly state-independent even on iid
-data. Without the adjustment the deficits are 0.51, 0.61 and 0.59 nats at horizons
-1, 6 and 12 on the breadth tier (paired, 208{,}368 rows per horizon), so the
-adjustment removes about a fifth of the raw gap. A
-sharper control permutes each real series, which preserves the marginal residual
-law and destroys temporal state dependence. Where the two gauges disagree, the
-permutation control governs.
+Part of what a constrained arm loses is the cost of estimating an empirical law
+from a finite window. To gauge it we run the identical protocol, at matched context,
+on a control corpus of synthetic iid draws (Gaussian, Student-$t_3$, Laplace). These
+series have no state to condition on, so what a constrained arm loses on them is
+estimation overhead alone: the price of a 41-node empirical law instead of a
+parametric scale. We subtract that overhead from every headline number below and call
+the result \emph{null-control-adjusted}. The adjustment is a gauge, not an exact
+correction. The estimation term $\KLop(G\,\|\,\widehat G)$ depends on $G$, and three
+simple iid laws need not match economic residuals. The base forecaster also adapts,
+so even on iid data its residuals are not exactly state-independent. Without the
+adjustment the breadth-tier deficits are 0.51, 0.61 and 0.59 nats at horizons 1, 6
+and 12 (paired, 208{,}368 rows per horizon). The adjustment removes about a fifth of
+that.
 
 \subsection{Cost of stopping and the share recovered by composing}\label{sec:decomp}
 
