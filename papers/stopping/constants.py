@@ -299,6 +299,13 @@ def check(res):
                        f"disagree on {pass_agreement()[1] - pass_agreement()[0]} of the {pass_agreement()[1]}"):
             if phrase.replace("\n", " ") not in " ".join(tex.split()):
                 failures.append(f"census: '{phrase}' not in tex")
+    try:
+        import fig_gap
+        g = f"{fig_gap.gap_nats():.3f}"
+        if f"$\\I(R;X)={g}$ nats" not in tex:
+            failures.append(f"figure gap {g} not in tex")
+    except ImportError:
+        pass
     sv = survey100()
     if sv:
         n, c = sv

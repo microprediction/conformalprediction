@@ -2,6 +2,7 @@
 \usepackage[margin=1.1in]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage[round]{natbib}
 \usepackage{hyperref}
 \hypersetup{hidelinks}
@@ -309,6 +310,21 @@ input still carries within a stratum is therefore lost before calibration begins
 and more calibration data does not recover it. With
 a location score and one stratum the floor is $\I(R;X)$, the mutual information
 between the model's error and its input.
+
+Figure~\ref{fig:gap} draws this case when the spread of the error grows with the
+input. The pooled law is too wide where the noise is low and too narrow where it is
+high. With $X$ uniform on $[0,4]$ and error standard deviation $0.15+0.7x$, the floor
+is $\I(R;X)=0.243$ nats per observation, and no calibration choice reduces it.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig_gap.pdf}
+\caption{The conformal information gap when the error spread grows with the input.
+A single-stratum conformal scheme uses the pooled law (dashed) for every input. It is
+too wide for low-noise inputs and too narrow for high-noise ones. Its excess log loss
+over the conditional law (solid) is $\I(R;X)$, here $0.243$ nats per observation.}
+\label{fig:gap}
+\end{figure}
 
 \begin{remark}[When the floor is zero]\label{rem:usecase}
 The floor is zero exactly when the frozen pair renders the score independent of
@@ -706,7 +722,7 @@ the hash covers the harness sources, the tracked diff, and the compiled core.
 The census rubric and the per-paper labels, with their quoted evidence, are in
 \texttt{census/} beside this paper, and the papers themselves are on arXiv. The
 hand-coded sample is \texttt{survey100.csv}. The exact checks of
-Section~\ref{sec:floor} are \texttt{check\_gap.py} beside this paper. Study declarations and the fill protocol are in the \texttt{skaters}
+Section~\ref{sec:floor} are \texttt{check\_gap.py} beside this paper. Figure~\ref{fig:gap} and its value of $\I(R;X)$ come from \texttt{fig\_gap.py}. Study declarations and the fill protocol are in the \texttt{skaters}
 repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md}).
 
 \bibliographystyle{plainnat}
