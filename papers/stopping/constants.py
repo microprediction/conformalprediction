@@ -293,9 +293,7 @@ def check(res):
                        f"Of the {n_meth} papers that propose a method, {pool['POOLED']} pool",
                        f"{pool['STRATIFIED']} pool within fixed strata",
                        f"{pool['SMOOTH']} let the weights",
-                       f"Of {n_meth} papers proposing conformal methods, {lab['STOP']} stop there, "
-                       f"{other} replace, retune or pass on the pooled law, and "
-                       f"{['no', 'one', 'two', 'three'][lab['COMPOSE']]} model its output",
+                       f"{n_meth} papers proposing conformal methods",
                        f"agree on {agreement()[0]} of them",
                        f"agree on {pass_agreement()[0]} of the {pass_agreement()[1]} papers",
                        f"disagree on {pass_agreement()[1] - pass_agreement()[0]} of the {pass_agreement()[1]}"):

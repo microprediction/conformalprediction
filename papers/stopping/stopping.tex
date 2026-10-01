@@ -35,14 +35,11 @@
 \maketitle
 
 \begin{abstract}
-We prove that conformal calibration cannot exploit forecastability. The proof rests
-on a new identity, the conformal information gap, fixing the excess log score before
-calibration. Split conformal prediction ends where its calibration begins: fit a
-model, pool its held-out residuals, quote their quantiles, stop. Of 624 papers
-proposing conformal methods, 455 stop there, 167 replace, retune or pass on the
-pooled law, and two model its output. On 17{,}364 economic series, stopping costs
-0.40 to 0.48 nats after a null-control adjustment, composing past the pooled law
-recovers a third to a half, and coverage detects none of it.
+We view conformal prediction as a repairable univariate transform to be included alongside other time-series operators
+in a forecasting grammar. By this device we evaluate the wisdom of stopping after the conformalizing step, something that
+is tacit in conformal prediction and never departed from in our survey of  624 papers proposing conformal methods. Across 17,364 economic time-series,
+ early stopping costs approximately 0.4 nats. We interpret this through the lens of a new information identity we term the conformal information gap,
+ whereby it is possible to formalize why split conformal prediction cannot exploit forecastability. 
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
