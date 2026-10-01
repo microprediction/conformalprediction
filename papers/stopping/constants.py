@@ -225,11 +225,11 @@ def census():
 
 
 def pass_agreement():
-    """Full-text census labels against the independent first-pass labels, in scope."""
+    """The two independent full readings of the census, in scope."""
     if not os.path.exists(CENSUS):
         return (0, 0)
     rows = [r for r in csv.DictReader(open(CENSUS)) if r["label"] != "OUT_OF_SCOPE"]
-    return (sum(r["label"] == r.get("first_pass_label") for r in rows), len(rows))
+    return (sum(r["first_reading_label"] == r["second_reading_label"] for r in rows), len(rows))
 
 
 def agreement():

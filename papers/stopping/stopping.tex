@@ -38,7 +38,7 @@
 \begin{abstract}
 We view conformal prediction as a repairable univariate transform to be included alongside other time-series operators
 in a forecasting grammar. By this device we evaluate the wisdom of stopping after the conformalizing step, something that
-is tacit in conformal prediction and departed from by only two of the 624 papers proposing conformal methods in our survey. Across 17,364 economic time-series,
+is tacit in conformal prediction and departed from by only two of the 623 papers proposing conformal methods in our survey. Across 17,364 economic time-series,
  early stopping costs approximately 0.4 nats. We interpret this through the lens of a new information identity we term the conformal information gap,
  whereby it is possible to formalize why conformal calibration cannot exploit forecastability. 
 \end{abstract}
@@ -189,17 +189,15 @@ We classified the literature instead of relying on an impression of it. We took 
 20 August 2026, 686 records. Six concern molecular or protein conformation and were
 matched by the title search in error, which leaves the remaining 680 papers. Language-model
 readers (Claude Sonnet) coded each paper against a written rubric, read its body in
-full, and recorded the sentence that places it.\footnote{The coding was done twice. A
-first pass read the abstract, the introduction and the method passages. A second pass,
-blind to the first, read the body of every paper from its first line to its reference
-list, and its labels are the ones reported. The two passes identify the same two
-composing papers, and every difference between them is a boundary call among the other
-labels. Four papers have no PDF on arXiv and were coded from their abstracts. We read
-the method sections of every paper coded as composing, and of the copula-based papers
-nearest to composing, and settled their labels. The rubric and the per-paper labels,
-with their quoted evidence, are in the repository.}
+full, and recorded the sentence that places it.\footnote{Two readers, each blind to the other, read the body of
+every paper from its first line to its reference list. We read the method sections of
+every paper on which they disagree, and of every paper either of them coded as
+composing, and settled its label. An earlier pass that read only the abstract, the
+introduction and the method passages found the same two composing papers. Four papers
+have no PDF on arXiv and were coded from their abstracts. The rubric and the per-paper
+labels of both readers, with their quoted evidence, are in the repository.}
 
-Of the 680 papers, 455 stop, 77 consume, 49 replace, 41 tune, and 56 propose no
+Of the 680 papers, 454 stop, 77 consume, 50 replace, 40 tune, and 57 propose no
 method. The two that compose do so narrowly. \citet{messoudi2021copula} and
 \citet{park2024semiparametric} fit a copula to the outputs of per-target empirical
 maps, but use it only to set each target's quantile level and still return a box of
@@ -235,8 +233,8 @@ models \citep{chenfan2006}, and autoregressive transformation models
 \citep{rugamer2023} all apply an empirical marginal map and keep modelling in
 the transformed coordinates.
 
-The readers also recorded how each method pools calibration scores. Of the 624 papers
-that propose a method, 454 pool all scores together, 76 pool within fixed strata, and
+The readers also recorded how each method pools calibration scores. Of the 623 papers
+that propose a method, 452 pool all scores together, 77 pool within fixed strata, and
 94 let the weights depend on the test point, through kernel localization,
 covariate-shift likelihood ratios or a sampling design.
 
@@ -608,13 +606,11 @@ reveal the loss.
 
 \section{Discussion}\label{sec:discussion}
 
-The conformal recipe stops at its empirical map in the way training stops at an
-epoch, except that in learning the stop is chosen on validation evidence. In
-conformal prediction the stop is \emph{cultural}. Almost every paper in the census
-of Section~\ref{sec:count} stops at the pooled law. Only two continue past it, and
-then only to size a multivariate set. We found no paper that justifies stopping
-there. The
-measured cost of the conformal stop is large, and composing an ordinary model past
+Training a neural network stops at an epoch chosen on validation evidence. The
+conformal recipe stops at its empirical map with no such evidence, so the stop is
+\emph{cultural}. All but two of the methods in the census of Section~\ref{sec:count}
+stop at the pooled law, the two go past it only to size a multivariate set, and we
+found no paper that justifies the stop. The measured cost of the conformal stop is large, and composing an ordinary model past
 the map recovers a third to a half of it at no cost to empirical coverage. The
 conformal information gap identity locates the part of the loss that is fixed
 before calibration begins. When the floor is positive no calibration choice
@@ -643,10 +639,11 @@ average inflates the threshold for classical testing-power reasons
 pooled shape a defence. None of them concerns the stop.
 
 \paragraph{Limitations.} The census labels were assigned by
-language-model readers, and we read the method sections ourselves only where a label
-could change the conclusion. The boundaries between stopping, replacing and consuming
-involve judgment, and the two reading passes disagree on 78 of the 680 papers,
-none of them on whether a paper composes. The hand-coded random sample agrees with the readers on 61 of the
+language-model readers, and we read the method sections ourselves only where the
+readers disagreed or a label could change the conclusion. The boundaries between
+stopping, replacing and consuming involve judgment, and the two full readings disagree
+on 24 of the 680 papers. Three of those disagreements involve a composing label, and
+reading the method sections settled all three against composing. The hand-coded random sample agrees with the readers on 61 of the
 62 papers the two share. The prices are
 measured on one base forecaster and one economic corpus plus a synthetic
 control. The deep tier and the matched-window ablation of
