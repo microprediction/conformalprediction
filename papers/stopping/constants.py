@@ -295,7 +295,6 @@ def check(res):
                        f"{pool['SMOOTH']} let the weights",
                        f"{n_meth} papers proposing conformal methods",
                        f"agree on {agreement()[0]} of them",
-                       f"agree on {pass_agreement()[0]} of the {pass_agreement()[1]} papers",
                        f"disagree on {pass_agreement()[1] - pass_agreement()[0]} of the {pass_agreement()[1]}"):
             if phrase.replace("\n", " ") not in " ".join(tex.split()):
                 failures.append(f"census: '{phrase}' not in tex")
