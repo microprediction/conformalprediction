@@ -36,7 +36,9 @@ function draw() {
   const rng = mulberry32(seed);
   const s = scores(N, rng);
 
-  // covered placements: rank <= k
+  // covered placements: rank <= k. Scores are continuous, so ties have probability zero;
+  // the index tiebreak below is a convention, and with real ties the plain <= rule
+  // would cover more than k placements.
   const order = Array.from({ length: N }, (_, i) => i).sort((a, b) => s[a] - s[b] || a - b);
   const covered = new Array(N).fill(false);
   for (let r = 0; r < k; r++) covered[order[r]] = true;

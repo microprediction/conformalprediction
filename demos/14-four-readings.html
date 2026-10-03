@@ -95,7 +95,9 @@
   <p>Turn <em>heteroscedasticity</em> up and the residual spread starts to depend on \(x\): the
   gap opens, and all four panels respond in lockstep. Turn <em>skew</em> up and the
   absolute-interval forecaster picks up its extra \(\mathrm{KL}(\bar r\,\|\,h_{\mathrm{sym}})\)
-  penalty, while \(I(R;X)\) itself is unmoved.</p>
+  penalty. Skew also moves \(I(R;X)\) itself, because it changes the noise law inside the
+  scale channel rather than relabelling the residual: at the default heteroscedasticity the gap
+  goes from 0.070 nats with no skew to 0.104 at full skew.</p>
 
   <div class="demo">
     <div class="readouts" id="readouts"></div>

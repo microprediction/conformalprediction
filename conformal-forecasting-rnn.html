@@ -256,8 +256,8 @@
 
   <p>Theorem 1 is correct where its index exists. Split conformal quantiles per horizon with a
   Bonferroni correction give joint coverage over exchangeable sequences, and the paper is right that this holds for any point forecaster. The framing is also a real
-  contribution: a set of independent sequences is exchangeable where the time steps within one
-  series are not, and that is the right way to get a finite-sample guarantee out of a forecasting
+  contribution: sequences drawn i.i.d. from a common population are exchangeable across
+  sequences even though the time steps within one series are not, and that is the right way to get a finite-sample guarantee out of a forecasting
   RNN. What does not follow is that the constant-width construction is a good interval, or that
   methods without the guarantee are worse. The guarantee is one number, the average
   coverage, and once it is met the comparison is a comparison of proper scores. On that comparison the constant width is beaten by the quantile RNN on every split of the

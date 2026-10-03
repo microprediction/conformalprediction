@@ -164,12 +164,23 @@
 
   <h2>The hypothesis nobody states</h2>
 
-  <p>Residual pooling has an adequacy condition. It is legitimate when the state dependence in the error
-  law mixes away over the calibration window, and misleading when it does not. Conformal prediction never
-  states this condition, because the coverage guarantee holds either way. That is the appeal, and it is
-  also why the condition goes unexamined.</p>
+  <p>Residual pooling needs two conditions, and they are easy to run together. The first is about
+  estimation: exchangeability, or enough temporal mixing, lets the pooled empirical quantile learn its
+  marginal target from a calibration window. The second is about adequacy: pooling loses nothing only
+  when the law of the error does not depend on what is known at prediction time, for example when the
+  residual is independent of the input, or a normalized score is pivotal given it. Mixing does not
+  supply the second condition. World B is i.i.d., so it mixes as fast as anything can, and its
+  conditional coverage still runs from 57% to 100%.</p>
 
-  <p>Homogenization is the theory of exactly that condition. It names the separation parameter, gives the
+  <p>Which information set counts matters too. If the fast volatility is genuinely unobserved and
+  unpredictable, the pooled Student-\(t\) law is the right forecast given what is known, and the
+  0.17 nats are out of reach for everyone. If it is observed or predictable, as World B grants when it
+  says you would know the period was dangerous, the 0.17 nats are there for a forecaster that conditions
+  on it, and pooling throws them away. Conformal prediction never states the adequacy condition, because
+  the coverage guarantee holds either way. That is the appeal, and it is also why the condition goes
+  unexamined.</p>
+
+  <p>Homogenization is the theory of when averaging over a fast state is the right leading term. It names the separation parameter, gives the
   solvability condition under which the averaged limit is the right leading term, and quantifies the
   error in terms of that parameter. Whether the information discarded by pooling admits a clean expansion
   in the same parameter is open, and it is worth asking, because in the fast mean reverting models the
