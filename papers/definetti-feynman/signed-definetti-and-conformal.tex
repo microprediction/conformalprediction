@@ -171,7 +171,7 @@ $\hat q$, which is a property of the dependence, not of the sign of a de Finetti
 A sufficient condition for the increasing case is a scalar latent location with log-concave noise,
 $S_i=\Theta+\varepsilon_i$. Order statistics of log-concave noise are log-concave, so the posterior of
 $\Theta$ given $\hat q$ rises in the likelihood-ratio order, and $S_{n+1}$ rises stochastically with
-it. Term (ii) is then $\le 0$, it cancels the threshold term, and pooling the calibration scores
+it. Term (ii) is then $\le 0$, it offsets the non-negative threshold term, and pooling the calibration scores
 conditions you into the realised world. The decreasing case is the batch-relative one of
 Section~5 (without-replacement samples, multinomials, ranks, compositional vectors), where the
 calibration set anti-predicts the test and the per-case coverage swings high and low while the
@@ -181,8 +181,9 @@ Remark~\ref{rem:counter}, can give term (ii) either sign at different widths.
 
 The reading concerns conformal's coverage, and coverage only. The residual-information
 gap of the companion paper sits there whatever the sign, so even at its best this is a coverage
-certificate, not a sharp forecast. When the test score rises with the width, the certificate
-holds case by case as well as on average. When it falls, it does not: the number holds on
+certificate, not a sharp forecast. When the test score rises with the width, the dependence term
+works against the threshold fan, and per-case coverage varies less with the width. When it falls,
+the two terms add, and it varies more: the number holds on
 average while the per-case coverage swings high and low. The sharpness comes from modelling the
 latent, never from the wrapper.
 
