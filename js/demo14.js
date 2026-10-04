@@ -212,7 +212,7 @@ function syncedSlider(params, apply) {
 }
 syncedSlider({ label: "heteroscedasticity  (spread depends on x  →  I(R;X))", min: 0, max: 1.2, step: 0.02, value: state.eta, fmt: v => v.toFixed(2) },
   v => { state.eta = v; });
-syncedSlider({ label: "residual skew  (→ KL skew penalty, leaves I(R;X) fixed)", min: 0, max: 6, step: 0.1, value: state.skew, fmt: v => v.toFixed(1) },
+syncedSlider({ label: "residual skew  (→ KL skew penalty; also moves I(R;X))", min: 0, max: 6, step: 0.1, value: state.skew, fmt: v => v.toFixed(1) },
   v => { state.skew = v; });
 
 autoResize(pool, drawAll); autoResize(bayes, drawAll); autoResize(ranks, drawAll); autoResize(proj, drawAll); autoResize(wealth, drawAll);
