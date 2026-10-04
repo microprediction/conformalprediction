@@ -2,7 +2,6 @@
 \usepackage[margin=1.1in]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
-\usepackage{graphicx}
 \usepackage[round]{natbib}
 \usepackage{hyperref}
 \hypersetup{hidelinks}
@@ -38,20 +37,22 @@
 \begin{abstract}
 We view conformal prediction as a repairable univariate transform to be included alongside other time-series operators
 in a forecasting grammar. By this device we evaluate the wisdom of stopping after the conformalizing step, something that
-is tacit in conformal prediction and departed from by only two of the 623 papers proposing conformal methods in our survey. Across 17,364 economic time-series,
+is tacit in conformal prediction and departed from by only two of the 624 papers proposing conformal methods in our survey. Across 17,364 economic time-series,
  early stopping costs approximately 0.4 nats. We interpret this through the lens of a new information identity we term the conformal information gap,
- whereby it is possible to formalize why conformal calibration, at a fixed score and stratification, cannot exploit forecastability. 
+ whereby it is possible to formalize why conformal calibration cannot exploit forecastability. 
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
+
 
 The most any forecast of an outcome $Y$ can gain over the unconditional distribution
 of $Y$, in expected log score, is the mutual information $\I(Y;X)$ between the outcome
 and the information $X$ available to the forecaster \citep{delsole2004}.
 \citet{catt2026} takes this quantity as the definition of the forecastability of $Y$,
 and calls the gain a method actually achieves its exploitability. We ask how much
-forecastability a conformal forecaster exploits, and we will prove that, once the score
-and the stratification are fixed, conformal calibration exploits none of it. 
+forecastability a conformal forecaster exploits, and we will prove that conformal
+calibration exploits none of it. 
+
 
 The conformal recipe is familiar. We fit a base model and then, on $n$ held-out points, compute a scalar error
 for each (for instance the absolute residual). We then sort the errors, take the
@@ -61,10 +62,11 @@ unchanged by permuting them, the quoted interval contains
 the truth at least 90\% of the time, at any sample size, with no further assumption on
 the model or the data distribution.
 
+
 The last step of the recipe applies the empirical distribution function of the
 held-out errors, and the quoted interval is read off its quantiles. Nothing is fitted
 to the output of that step. The recipe stops there, and that is the reason we 
-choose to describe conformal prediction as a form of early stopping. The stop
+choose to describe conformal prediction is a form of early stopping. The stop
  is easy to miss because conformal prediction is usually presented as a
 self-contained procedure. 
 
@@ -75,16 +77,16 @@ dividing by a running scale, differencing, serial whitening, and the normal quan
 transform of hydrological forecasting \citep{bogner2012}. A forecaster working in that
 grammar can apply the transform and keep modelling its output. As far as we know the
 literature does not describe conformal prediction as early stopping, and no paper
-justifies stopping at the empirical map. Of 623 papers proposing conformal methods,
-only two go past the map, and both only to size a multivariate set
-(Appendix~\ref{sec:count}). We show that the stop carries a steep
+justifies stopping at the empirical map. We show that the stop carries a steep
 empirical price.
 
 We make two contributions. We introduce and prove the conformal information gap
 identity (Proposition~\ref{prop:floor}), which fixes, exactly and at a fixed
-calibration sample, the part of the expected log regret that no calibration choice can
+calibration sample, the part of the excess log score that no calibration choice can
 reach. We then measure what stopping costs on economic series, and how much of that
-cost composing a model past the pooled law recovers (Section~\ref{sec:price}).
+cost composing a model past the pooled law recovers (Section~\ref{sec:price}). A
+detailed census of 680 papers supports our characterization of the conformal
+literature (Section~\ref{sec:count}).
 
 \section{Conformal prediction as a univariate transform}\label{sec:transform}
 
@@ -111,49 +113,13 @@ the transformed observation back to one for the original. Given the state, the
 forward function is a strictly increasing change of variables, so predictive
 densities pull back exactly, Jacobians included. A forecaster is a \emph{chain} of
 transforms followed by a \emph{leaf}, a predictive law for whatever the last
-transform emits. Table~\ref{tab:transforms} lists the transforms of the
-\texttt{skaters} library in which that grammar is implemented. Every one of them
-is invertible given its state, and a chain may stack any of them in any order.
-
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}lp{0.25\textwidth}p{0.26\textwidth}p{0.16\textwidth}@{}}
-\toprule
-transform & forward & inverse of a predictive $D$ & removes \\
-\midrule
-\texttt{ema}$(\alpha)$ & $y'_t=y_t-\ell_t$ & $D\mapsto D+\ell_t$ & level \\
-\texttt{difference} & $y'_t=y_t-y_{t-1}$ & cumulative sum, variance $\sum_h\sigma_h^2$ & random walk \\
-\texttt{drift}$(\alpha,\lambda)$ & $y'_t=\Delta y_t-\hat\mu_t$ & $y_t+h\hat\mu_t+\sum\varepsilon$ & random walk with drift \\
-\texttt{holt\_linear}$(\alpha,\beta)$ & $y'_t=y_t-(\ell_t+b_t)$ & $\ell_t+hb_t+\varepsilon$ & level and trend \\
-\texttt{ar}$(p)$ & $y'_t=y_t-\sum_j\hat\phi_jy_{t-j}$ & AR reconstruction, variance propagated & autoregression (online least squares) \\
-\texttt{grouped\_ar}$(L)$ & as \texttt{ar}, coefficients grouped by lag & as \texttt{ar} & long lags \\
-\texttt{fractional\_difference}$(d)$ & $y'_t=(1-B)^dy_t$ & $(1-B)^{-d}$ & long memory \\
-\texttt{standardize}$(\alpha)$ & $y'_t=(y_t-\hat\mu_t)/\hat\sigma_t$ & $D\mapsto\hat\sigma_tD+\hat\mu_t$ & level and scale \\
-\texttt{garch}$(\omega,\alpha,\beta)$ & $y'_t=y_t/\hat\sigma_t$ & $D\mapsto\hat\sigma_tD$ & volatility clustering \\
-\texttt{seasonal\_difference}$(s)$ & $y'_t=y_t-y_{t-s}$ & shift by the lagged value & periodicity \\
-\texttt{power\_transform}$(p)$ & $y'_t=\operatorname{sign}(y_t)|y_t|^p$ & exact pushforward & heavy tails \\
-\texttt{theta}$(\alpha)$ & $y'_t=y_t-\mathrm{SES}_t$ & shift by smoothed level and drift & theta method \\
-\texttt{yeo\_johnson}$(\lambda)$ & signed Box--Cox with parameter $\lambda$ & exact pushforward & coordinates \\
-\texttt{ou}$(\kappa)$ & deviation from a running mean & exact Ornstein--Uhlenbeck moments & mean reversion \\
-\midrule
-repaired conformal map & $y'_t=m_n(y_t)$ & pull back through $m_n^{-1}$, Jacobian included & shape of the pooled law \\
-\bottomrule
-\end{tabular}
-\caption{Transforms of the forecasting grammar, from the \texttt{skaters} library
-\citep{cotton2026transforms}. Here $\ell_t$, $b_t$, $\hat\mu_t$ and $\hat\sigma_t$
-are running level, slope, mean and scale estimates held in the transform's state,
-$h$ is the forecast horizon and $B$ the backshift operator. The last row is the
-repaired empirical map of this section.}
-\label{tab:transforms}
-\end{table}
+transform emits. Subtracting a running mean, dividing by a running scale,
+differencing and serial whitening are transforms in this sense.
 
 The map \eqref{eq:fencepost} is a step function. It has no inverse and no density,
 so it is not a transform. \citet{cotton2026grammar} repairs it by interpolation. Let
 $r_{(1)}<\dots<r_{(n)}$ be the order statistics of the scores, give the $i$-th knot
-the probability $i/(n+1)$, which is the left limit of $E_n$ at $r_{(i)}$ and the
-exact probability that a new exchangeable score falls at or below $r_{(i)}$, and set $z_{(i)}=\Phi^{-1}\big(i/(n+1)\big)$.
+the fence-post probability $i/(n+1)$, and set $z_{(i)}=\Phi^{-1}\big(i/(n+1)\big)$.
 The repaired map $m_n$ is any strictly increasing bijection of the real line with
 $m_n(r_{(i)})=z_{(i)}$ for $i=1,\dots,n$, rebuilt as new scores arrive.
 Appendix~\ref{app:repair} gives the interpolation and tails used here. The repair
@@ -170,7 +136,90 @@ transforms or a leaf to the stream $z_t=m_n(R_t)$, then pulls the result back
 through $m_n$. Composing keeps the certificate at the position of $m_n$. It does not
 carry the certificate to the final predictive, which is the price of continuing.
 
-\section{The conformal information gap}\label{sec:floor}
+\section{How often published methods stop at the pooled law}\label{sec:count}
+
+We ask what published conformal methods do with the fence-post map
+\eqref{eq:fencepost}, which we also call the \emph{empirical map}. A method
+\emph{stops} if the output of the map, its quantiles, its $p$-values or its
+intervals, is the answer. It \emph{composes} if it keeps the map and fits a model to
+its output, as in Section~\ref{sec:transform}. Our claim is that published methods
+stop.
+
+Methods that neither stop nor compose fall into three further classes. A method
+\emph{replaces} if it substitutes a conditional estimate for the pooled quantile, as
+SPCI fits a quantile regression to recent residuals \citep{xu2023spci}. It
+\emph{tunes} if it keeps the map and adapts the level online, as adaptive conformal
+inference does \citep{gibbs2021adaptive}. It \emph{consumes} if it feeds the output
+to another procedure, such as training on pseudo-labels it has screened or selecting
+among candidates.
+
+We checked the claim against the literature instead of relying on an impression of
+it. We took every arXiv paper with ``conformal prediction'' in the title as of
+20 August 2026, 686 records. Six concern molecular or protein conformation and were
+matched by the title search in error, which leaves the remaining 680 papers. Language-model
+readers (Claude Sonnet) coded each paper against a written rubric, recording the
+sentence that places it. The coding was done twice. A first pass read the abstract,
+the introduction and the method passages. A second pass, blind to the first, read the
+body of every paper from its first line to its reference list, and its labels are
+the ones reported. The two passes agree on 602 of the 680 papers. Four papers have no
+PDF on arXiv and were coded from their abstracts. We then read the method sections of
+every paper coded as composing, and of the copula-based papers nearest to composing,
+and settled their labels. The
+rubric and the per-paper labels, with their quoted evidence, are in the repository.
+
+Of the 680 papers, 455 stop, 77 consume, 49 replace, 41 tune, and 56 propose no
+method. Two compose, and both in a narrow sense. \citet{messoudi2021copula}, in one of
+three variants, fit a one-parameter Gumbel copula to the outputs of the per-target empirical maps in a
+multi-target regression, and \citet{park2024semiparametric} fit a nonparametric vine
+copula to the same outputs. Both use the fitted law only to choose the quantile level
+of each target, and both return a hyper-rectangle of per-target conformal intervals.
+Fitting the copula costs \citet{park2024semiparametric} the finite-sample guarantee,
+and their exact variant uses the empirical copula instead, which stops.
+\citet{sun2024copula} apply the empirical-copula construction across forecast
+horizons, and they also stop. No paper fits a model to the rank stream of a single
+outcome, and none carries a fitted law back as a forecast. The one other paper that
+fits a model to conformal output does so to test, not to forecast:
+\citet{lardy2024anytime} fit densities to conformal ranks to drive a test martingale.
+
+Distributional conformal prediction \citep{chernozhukov2021distributional} is the
+nearest single-outcome case. It conditions \emph{before} the map, and its answer is
+the empirical quantile of the resulting ranks. A paper would count as composing if it
+kept the empirical map, applied it to scores, and fitted a model on the transformed
+stream. Reweighting the empirical law, conditioning upstream and adapting the level
+do not count.
+
+The 77 papers that consume the conformal output use prediction sets or conformal
+$p$-values as inputs to selection, active learning, planning and similar procedures. Using the sets as data
+has its own limit. The law of the prediction sets does not identify a classifier's
+confusion matrix once a set of size two or more occurs, and a conformal correlation
+matrix built from set membership inherits the failure \citep{cotton2026correlation}.
+
+As an independent check, we coded by hand a random sample of 100 papers, drawn with a
+fixed seed from a wider archive of conformal prediction papers, without reference to
+any other labels. We find that 93 of the 100 treat the conformal step as terminal. The
+remaining 7 are unclear because they pass its output downstream as a filter or a
+feature. None fits a further law on the transformed scale and carries it back as a
+forecast. Sixty-two of the 100 are in the census, and the two codings agree on 61 of
+them.
+
+The argument of this paper does not depend on the exact count. We report it because
+the uniformity it shows is alarming.
+
+Outside conformal prediction the composing move is routine. The normal quantile
+transform in hydrological forecasting \citep{bogner2012}, copula time-series
+models \citep{chenfan2006}, and autoregressive transformation models
+\citep{rugamer2023} all apply an empirical marginal map and keep modelling in
+the transformed coordinates.
+
+The readers also recorded how each method pools calibration scores. Of the 624 papers
+that propose a method, 454 pool all scores together, 76 pool within fixed strata, and
+94 let the weights depend on the test point, through kernel localization,
+covariate-shift likelihood ratios or a sampling design. An earlier reading of the nine
+smooth-weighting papers that claim exact validity found that each obtains it by
+marginal recalibration, a stated coverage gap, a known covariate-shift tilt, or added
+smoothness assumptions.
+
+\section{The excess log score fixed before calibration}\label{sec:floor}
 
 A \emph{nonconformity score} is a map $A:\mathcal{X}\times\mathbb{R}\to
 \mathbb{R}$ assigning a scalar to each candidate outcome $y$ at input $x$. A
@@ -193,9 +242,9 @@ continuous estimate of the pooled score law (a kernel-smoothed or interpolated
 empirical law). The raw empirical measure is atomic and would score $-\infty$. Write
 $W=A(X,Y)$, let $G_\kappa$ be the population pooled law, and let the benchmark
 be the conditional oracle, whose expected negative log score is the conditional
-entropy $H(Y\given X)$ when that is finite. We state results as expected log regret
-$\E\log\{p(Y\given X)/\widehat f_X(Y)\}$, which stays finite when the two log losses do
-not, because the Jacobian of the score cancels inside the ratio. Smaller is better.
+entropy $H(Y\given X)$. Throughout, $L(\widehat F)=\E[-\log \widehat f_X(Y)]$
+is the expected log loss of the conformal predictive, so an excess is positive
+and smaller is better.
 
 The proof of the floor uses one standard identity, the chain rule for relative
 entropy along a product reference \citep{cover2006elements}. In coding theory it
@@ -204,7 +253,7 @@ splits redundancy into a dependence term and a mismatch term
 
 \begin{lemma}[Chain rule for relative entropy]\label{lem:chain}
 Let $(U,V)$ have a joint density with $\I(U;V)<\infty$, let $p_V$ be the marginal
-density of $V$, and let $q$ be any density with $\KLop(P_V\,\|\,Q)<\infty$. Then
+density of $V$, and let $q$ be any density with $\E|\log q(V)|<\infty$. Then
 \[
 \E\log\frac{p(V\given U)}{q(V)} \;=\; \I(U;V)+\KLop\!\big(P_V\,\|\,Q\big).
 \]
@@ -232,15 +281,14 @@ following result, which to our knowledge has not been stated before.
 
 \begin{proposition}[Conformal information gap identity]\label{prop:floor}
 Fix the training fold and the calibration sample, so $(A,\kappa,\widehat
-G_\kappa)$ are deterministic and the emitted predictive depends on the test input only
-through $A(x,\cdot)$ and $\kappa(x)$, let $(X,Y)$ be a test pair independent of both,
+G_\kappa)$ are deterministic, let $(X,Y)$ be a test pair independent of both,
 and let $W=A(X,Y)$ have conditional density $p_W(\cdot\given x)$ given $X=x$ and
 pooled density $g_\kappa$ given the stratum. Assume $\E|\log p_W(W\given X)|$,
 $\E|\log g_{\kappa(X)}(W)|$ and $\E|\log\widehat g_{\kappa(X)}(W)|$ are finite, so that
-every term below is finite. Then the expected log regret of the conformal predictor
-against the conditional oracle decomposes exactly as
+every term below is finite. Then the excess log loss of the conformal predictor
+decomposes exactly as
 \[
-\E\log\frac{p(Y\given X)}{\widehat f_X(Y)}
+L(\widehat F) - H(Y\given X)
 \;=\; \I(W;X\given\kappa)
 \;+\; \E_{\kappa}\,\KLop\!\big(G_{\kappa}\,\|\,\widehat G_{\kappa}\big),
 \]
@@ -264,21 +312,6 @@ and more calibration data does not recover it. With
 a location score and one stratum the floor is $\I(R;X)$, the mutual information
 between the model's error and its input.
 
-Figure~\ref{fig:gap} draws this case when the spread of the error grows with the
-input. The pooled law is too wide where the noise is low and too narrow where it is
-high. With $X$ uniform on $[0,4]$ and error standard deviation $0.15+0.7x$, the floor
-is $\I(R;X)=0.243$ nats per observation, and no calibration choice reduces it.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.92\textwidth]{figures/fig_gap.pdf}
-\caption{The conformal information gap when the error spread grows with the input.
-A single-stratum conformal scheme uses the pooled law (dashed) for every input. It is
-too wide for low-noise inputs and too narrow for high-noise ones. Its expected log regret
-over the conditional law (solid) is $\I(R;X)$, here $0.243$ nats per observation.}
-\label{fig:gap}
-\end{figure}
-
 \begin{remark}[When the floor is zero]\label{rem:usecase}
 The floor is zero exactly when the frozen pair renders the score independent of
 the input within strata: $\I(W;X\given\kappa)=0$ iff $W\perp X\given\kappa$.
@@ -292,12 +325,10 @@ positive, no calibration choice recovers any of it.
 
 \begin{lemma}[Convergence of the pooled law]\label{lem:ident}
 Let the calibration pairs be i.i.d.\ copies of $(X,Y)$, or a stationary ergodic
-sequence with that marginal law, let there be finitely many strata, each of positive
-probability, and let $\widehat G_{\kappa,n}$ be the empirical distribution of the scores
-in stratum $\kappa$. Then
+sequence with that marginal law, and let $\widehat G_{\kappa,n}$ be the empirical
+distribution of the scores in stratum $\kappa$. Then
 $\sup_w|\widehat G_{\kappa,n}(w)-G_\kappa(w)|\to0$ almost surely. If the smoothed
-estimates satisfy $\KLop(G_\kappa\,\|\,\widehat G_{\kappa,n})\to0$ in every stratum, the
-expected log regret tends to the floor
+estimate is KL-consistent, the excess log loss tends to the floor
 $\I(W;X\given\kappa)$.
 \end{lemma}
 
@@ -346,7 +377,7 @@ Add and subtract the oracle's expected log score:
 \;-\;\big[\E\log p(Y\given X)-\E\log\widehat f_X(Y)\big].
 \]
 The first bracket is $\I(Y;X)$ by definition. The second bracket is
-the expected log regret, which Proposition~\ref{prop:floor} evaluates as
+$L(\widehat F)-H(Y\given X)$, which Proposition~\ref{prop:floor} evaluates as
 $\I(W;X\given\kappa)+\E_\kappa\KLop(G_\kappa\,\|\,\widehat G_\kappa)$. Substituting
 gives the display, and dropping the nonnegative KL term gives the bound.
 \end{proof}
@@ -356,8 +387,7 @@ Calibration moves $\widehat G_\kappa$ toward $G_\kappa$ and so removes the KL te
 That term depends only on the pooled law of the score, and a forecaster whose inputs
 carry no information about the outcome gains it just as much. The part of the gain
 that depends on the inputs is $\I(Y;X)-\I(W;X\given\kappa)$, and the frozen score sets
-it. At a fixed score and stratification, calibration therefore exploits none of the
-forecastability. For example, suppose $Y$ is independent of $X$ but the location model varies with
+it. Calibration therefore exploits none of the forecastability. For example, suppose $Y$ is independent of $X$ but the location model varies with
 $x$. The residual then depends on $X$ through the model alone, and a scheme with exact
 coverage scores below the unconditional law by $\I(R;X)$.
 \end{remark}
@@ -369,11 +399,8 @@ floor is therefore $\I(W;X)$ for that rank, which is zero when the estimated
 conditional law is the true one. It closes the gap through the estimate and then stops.
 Density-based, histogram, localized and quantile constructions
 \citep{izbicki2020,izbicki2022,sesia2021,guan2023localized,romano2019conformalized,cauchois2021}
-likewise lower the floor by what their conditioning retains. Localized calibration,
-which weights calibration scores by their nearness to the test input, lies outside the
-proposition, since its emitted law depends on the input beyond a fixed stratum. As the
-localization sharpens it can approach the conditional law and remove the floor. It is a
-change of stratification, and the proposition applies to each fixed one. The folded absolute residual can be read as a symmetric predictive
+likewise lower the floor by what their conditioning retains, and calibration lowers it
+in none of them. The folded absolute residual can be read as a symmetric predictive
 with density $h_{\mathrm{sym}}(z)=\tfrac12(p_R(z)+p_R(-z))$. The same computation then
 adds $\KLop(P_R\,\|\,H_{\mathrm{sym}})\le\log 2$ for the discarded sign.
 \end{remark}
@@ -384,20 +411,30 @@ ordinary noise adds nothing to $\I(W;X\given\kappa)$. Marginal coverage also doe
 say which inputs are over- or under-covered. We use \emph{coverage} for the property of
 a set and \emph{calibration} for the distributional property of a predictive.
 
-\section{The cost of stopping on 17{,}364 economic series}\label{sec:price}
+We check Proposition~\ref{prop:floor}, Corollary~\ref{cor:forecastability} and the
+folded case by grid integration in \texttt{check\_gap.py}, computing each side
+independently. The checks include a distributional-conformal score from a misspecified
+model and a case where the gain is negative, and both sides agree to machine precision.
 
-To measure the cost of stopping we need a forecaster in which the repaired map of
-Section~\ref{sec:transform} can sit at more than one position. We build one from
-the grammar of Table~\ref{tab:transforms} and run it on 17{,}364 economic series.
-Stopping at the pooled law costs about 0.4 nats per observation one step ahead,
-composing a model after the map recovers a third of that, and interval coverage
-does not register the loss.
+Stopping keeps the certificate, which concerns the marginal rank of the test
+score and is exact at its position. Stopping gives up $\I(W;X\given\kappa)$, the
+conditional information the frozen score discarded. A downstream model that uses
+the map's output together with the input can recover part of that quantity.
+
+\section{The cost of stopping on 17{,}364 economic series}\label{sec:price}
 
 \subsection{Moving the pooled law within a forecasting chain}\label{sec:grammar}
 
-Each chain in the grammar removes one kind of structure and passes its residual on.
-A terminal leaf models the law of whatever residual remains, and the predictive in
-the original coordinate is the leaf's law pushed back through the inverse chain.
+To measure the cost of stopping we need a forecaster in which the repaired map of
+Section~\ref{sec:transform} can sit at more than one position.
+
+We use the transform grammar of \citet{cotton2026transforms}. A
+forecaster is a \emph{chain} of state-conditional invertible transforms, each
+removing one kind of structure and passing its residual on: a location tracker
+subtracts a running mean, a scale transform divides by a running deviation, a
+difference removes trend. A \emph{terminal leaf} models the law of whatever
+residual remains, and the predictive in the original coordinate is the leaf's
+law pushed back through the inverse chain, change of variables handled exactly.
 The base forecaster, \texttt{laplace}, runs roughly sixty candidate chains in
 parallel, combines their predictive densities with likelihood weights updated
 every observation, splices generalized Pareto tails onto the extremes, and
@@ -405,40 +442,37 @@ scores its own probability integral transforms online. It ranks first in the
 public benchmark this study extends, and its own terminal leaf is tuned to
 CRPS.
 
-We compare two arms. Both use the same object, the kernel-smoothed pooled
-empirical law of recent residuals, but they are two forecasting architectures, not one
-map with and without a model after it.
+We compare two configurations.
 
 \begin{description}
-\item[stop.] The base forecaster runs unchanged. Its predictive keeps its
-  location, and its shape is replaced by the pooled law of the forecaster's own
-  recent errors. That is the quoted forecast, and nothing is fitted to it
-  afterwards. It is the online counterpart of the schemes of
-  Proposition~\ref{prop:floor}. Its location model and residual window evolve, so
-  the proposition does not identify its deficit as a fixed floor.
-\item[compose-after.] The pooled law moves inside the forecaster. In each
-  candidate chain $c$ it replaces the terminal leaf, so it describes that
-  chain's own residual stream $R^c_t$ instead of the final error. Write
-  $\widehat G^c_t$ for that law and $(T^c_t)^{-1}_{\#}$ for pushing a law back
-  through chain $c$'s inverse transforms. The arm's predictive is
+\item[stop.] Take the finished predictive, keep its centre, replace its shape
+  with the pooled empirical law of the model's own recent errors,
+  kernel-smoothed. Quote that. Nothing acts downstream. This arm is a frozen
+  conformal scheme of the covered type, so Proposition~\ref{prop:floor}
+  applies with floor $\I(R;X)$.
+\item[compose-after.] Install the identical empirical object as the terminal
+  leaf of \emph{every} candidate chain. Writing $R^c_t$ for chain $c$'s
+  residual and $\widehat G^c_t$ for the pooled empirical law of that chain's
+  own residual stream, the arm's predictive is
   \[
-  \widehat F_t \;=\; \sum_c w^c_t \,\big(T^c_t\big)^{-1}_{\#}\widehat G^c_t ,
+  \widehat F_t \;=\; \sum_c w^c_t \,\big(T^c_t\big)^{-1}_{\#}\widehat G^c_t,
   \]
-  where the weight $w^c_t$ is updated every observation from the density chain
-  $c$ assigned to the outcome. The mixture is therefore a model fitted to the
-  output of the empirical maps. Because every chain ends in an empirical map,
-  the weights choose between chains and never between the empirical map and a
-  parametric leaf. This arm has no coverage certificate.
+  where $(T^c_t)^{-1}_{\#}$ pushes the map's law back through chain $c$'s
+  inverse transform and the weights $w^c_t$ are likelihood weights fitted
+  online to the realized densities the maps assign, that is, a mixture model
+  fitted on the maps' output stream. Every predictive path passes through an
+  empirical map, because the leaf override replaces the terminal leaf of every
+  candidate chain. The pool weights therefore compare chains with each other and
+  never compare the map with a parametric alternative. The one exception is the generalized Pareto tail
+  splice, which replaces the density beyond a frozen tail region. It acts on
+  the extremes of the composed predictive and is shared with the base arm.
+  This arm carries no coverage certificate. It changes representation after
+  the map instead of before it.
 \end{description}
 
-We compare the arms by out-of-sample log likelihood, so each must give the
-realized outcome a usable density, including outcomes beyond the range of past
-residuals, where an empirical law, even kernel-smoothed, has almost none. The base
-forecaster and both arms therefore share one further step, a generalized Pareto
-splice that replaces the density beyond a fixed tail region. The pooled law
-is built from a window of recent residuals, and a stale window would lose likelihood
-for reasons unrelated to stopping. Both arms therefore run with flat and with
-recency-weighted windows (exponential weights, half-life 150 observations).
+Both positions run with flat and with recency-weighted windows (exponential
+weights, half-life 150 observations), so staleness does not explain the
+differences.
 
 \subsection{Series, tiers and the null control}\label{sec:design}
 
@@ -455,26 +489,22 @@ probability score, which is in the units of the data and which most conformal pa
 report. Because origins within a
 series overlap, all intervals are bootstrap over series, not rows.
 
-We floor the log density at $-25$ per observation. The floor is not a
-proper score where it binds, and it binds more often on the stopped arm (1.78\% of
-rows) than on the base (0.62\%, breadth tier, paired). Tightening the floor stepwise
-from $-25$ to $-10$ shrinks the raw stop deficit at horizon 1 monotonically from 0.51
-to 0.33 nats, so over that range clipping works against the reported gap. The floor is
-also not invariant to the units of a series.
-
-Part of what a constrained arm loses is the cost of estimating an empirical law
-from a finite window. To gauge it we run the identical protocol, at matched context,
-on a control corpus of synthetic iid draws (Gaussian, Student-$t_3$, Laplace). These
-series have no state to condition on, so what a constrained arm loses on them is
-estimation overhead alone: the price of a 41-node empirical law instead of a
-parametric scale. We subtract that overhead from every headline number below and call
-the result \emph{null-control-adjusted}. The adjustment is a gauge, not an exact
-correction. The estimation term $\KLop(G\,\|\,\widehat G)$ depends on $G$, and three
-simple iid laws need not match economic residuals. The base forecaster also adapts,
-so even on iid data its residuals are not exactly state-independent. Without the
-adjustment the breadth-tier deficits are 0.51, 0.61 and 0.59 nats at horizons 1, 6
-and 12 (paired, 208{,}368 rows per horizon). The adjustment removes about a fifth of
-that.
+A control corpus of synthetic independent draws (Gaussian, Student-$t_3$,
+Laplace) runs under the identical protocol at matched context. On the control
+there is no state to condition on, so what a constrained arm loses there is
+finite-sample overhead: the cost of estimating a 41-node empirical law rather
+than a parametric scale. We subtract that overhead from every headline
+number below and call the result \emph{null-control-adjusted}. It is not the loss
+net of estimation, for two reasons. First, the estimation term
+$\KLop(G\,\|\,\widehat G)$ depends on $G$, so its size on three simple iid laws
+gauges, but does not estimate, its size on economic residuals. Second, because the
+base forecaster adapts, its residuals are not exactly state-independent even on iid
+data. Without the adjustment the deficits are 0.51, 0.61 and 0.59 nats at horizons
+1, 6 and 12 on the breadth tier (paired, 208{,}368 rows per horizon), so the
+adjustment removes about a fifth of the raw gap. A
+sharper control permutes each real series, which preserves the marginal residual
+law and destroys temporal state dependence. Where the two gauges disagree, the
+permutation control governs.
 
 \subsection{Cost of stopping and the share recovered by composing}\label{sec:decomp}
 
@@ -514,9 +544,8 @@ minority of series where stopping hurts badly.
 
 Adaptivity does not substitute for position. Recency-weighting the stop arm's
 window recovers 0.05 to 0.08 nats on the breadth tier, against 0.14 to 0.27
-for moving the map's position, raw in both cases. In the frozen setting of
-Proposition~\ref{prop:floor} level adaptation acts on the pooled scores alone and cannot
-touch the floor, and the online result is consistent with that.
+for moving the map's position, raw in both cases. Proposition~\ref{prop:floor} dispatches level adaptation
+directly, since it acts on the pooled scores alone.
 
 On CRPS the tiers disagree. On the deep tier the stopped arm degrades CRPS and
 the composed arm improves it, while on the breadth tier both positions sit within
@@ -530,17 +559,17 @@ coverage and not the finite-sample certificate of Section~\ref{sec:intro}. The
 intervals are the 0.1 and 0.9 quantiles of the kernel-smoothed predictive, which
 need not coincide with the raw conformal order-statistic endpoints. The table
 therefore tests whether watching interval coverage would reveal the log score loss.
-It uses the breadth tier and paired rows, and the nominal coverage is 0.800.
+It uses the breadth tier, paired rows and a target of 0.800.
 
 \begin{center}
-\begin{tabular}{lc}
+\begin{tabular}{lcc}
 \toprule
-arm & coverage of the 0.1--0.9 interval \\
+arm & coverage & distance from target \\
 \midrule
-unconstrained    & 0.870 \\
-stop             & 0.784 \\
-stop, weighted   & 0.799 \\
-compose-after    & 0.797 \\
+unconstrained    & 0.870 & 0.070 \\
+stop             & 0.784 & 0.016 \\
+stop, weighted   & 0.799 & 0.001 \\
+compose-after    & 0.797 & 0.003 \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -554,131 +583,71 @@ reveal the loss.
 
 \section{Discussion}\label{sec:discussion}
 
-Well known results place limitations on the conformal program. Exact distribution-free
+The conformal recipe stops at its empirical map in the way training stops at an
+epoch, except that in learning the stop is chosen on validation evidence. In
+conformal prediction the stop is \emph{cultural}. Almost every paper in the census
+of Section~\ref{sec:count} stops at the pooled law. Only two continue past it, and
+then only to size a multivariate set. We found no paper that justifies stopping
+there. The
+measured cost of the conformal stop is large, and composing an ordinary model past
+the map recovers a third to a half of it at no cost to empirical coverage. The
+conformal information gap identity locates the part of the loss that is fixed
+before calibration begins. When the floor is positive no calibration choice
+recovers any of it, and conformal calibration is most attractive exactly when a
+positive floor cannot be ruled out.
+
+Because every calibration choice moves only the estimation term, a better
+calibrator cannot help. We recommend treating the empirical map as a coordinate
+change with a certificate attached at its position, and continuing to model on its
+output. The distribution can come from any model, a Bayesian posterior predictive
+included, with conformal calibration attached as a certificate at the position where
+it is wanted. The composed arm is one instance. In the sense of
+Remark~\ref{rem:usecase} it is conformal prediction with the modelling finished,
+and its scored calibration stream measures whether the modelling was in fact
+finished.
+
+\paragraph{Related work.} Forecastability as mutual information is due to
+\citet{delsole2004} and \citet{catt2026}, and Corollary~\ref{cor:forecastability}
+shows how much of it a conformal scheme captures. Three published results concern the pooled shape. Exact distribution-free
 conditional coverage is impossible in nonatomic settings
 \citep{lei2014distribution,barber2021limits}. Weighting calibration points unequally
 costs coverage in proportion to the total-variation distance between their residual
 laws \citep{barber2023beyond}. A guarantee held at a fixed point rather than on
 average inflates the threshold for classical testing-power reasons
-\citep{li1989honest,low1997nonparametric,cai2004adaptation}. They are reasons to pool
-the scores, not reasons to stop at the pooled law.
+\citep{li1989honest,low1997nonparametric,cai2004adaptation}. Together these give the
+pooled shape a defence. None of them concerns the stop.
 
-Training a neural network stops at an epoch chosen on validation evidence. The
-conformal recipe stops at its empirical map with no such evidence, and the census of
-Appendix~\ref{sec:count} shows the stop is near universal, so we call it \emph{cultural}. One likely reason is
-that the certificate belongs to the stop. Coverage holds at the empirical map, so
-work that continues past it gives up the property the field measures itself by, and
-the field's effort has gone instead into better weights, strata and levels.
-
-The raw one-step deficit of 0.51 nats means that the stopped forecast gives the
-realized outcome, on geometric average, about 60 percent of the density the
-unconstrained forecast gives it, and the coverage that conformal practice monitors registers none of this.
-
-We call the stop a permanent structural information sacrifice, and both adjectives
-are meant literally. The sacrifice is structural because the score and the strata fix
-it before any calibration sample is drawn. It is permanent because nothing applied to
-the pooled scores, neither a level schedule nor a larger calibration sample, recovers
-it. The remedies lie elsewhere: upstream, in a score that leaves less of the input in
-the residual, or downstream, in a model fitted to the map's output, which is what the
-composed arm does.
-
-The composed arm has no coverage certificate, but one can be added back by a second
-empirical map at the end of the composed chain, calibrated on fresh scores. Its floor is
-then the information left in the composed residual. That is smaller than the base
-residual's only if composing removed residual dependence, which a better log score does
-not by itself guarantee. A certificate can therefore go anywhere in a chain, like any
-transform in Table~\ref{tab:transforms}, and the model around it can be anything, a
-Bayesian posterior predictive included.
-
-\paragraph{Limitations.} The prices are measured on one base
-forecaster and one economic corpus. The floor proposition covers invertible signed
-scores, and the absolute residual only in the symmetric reading of
-Remark~\ref{rem:conditional}. Quantile scores need their own treatment.
+\paragraph{Limitations.} The census labels were assigned by
+language-model readers, and we read the method sections ourselves only where a label
+could change the conclusion. The boundaries between stopping, replacing and consuming
+involve judgment, and the two reading passes disagree on 78 of the 680 papers,
+mostly at those boundaries. The hand-coded random sample agrees with the readers on 61 of the
+62 papers the two share. The prices are
+measured on one base forecaster and one economic corpus plus a synthetic
+control. The deep tier and the matched-window ablation of
+Section~\ref{sec:decomp} are incomplete. The null-control adjustment gauges finite-sample overhead on
+simple iid laws and is not an unbiased estimate of the estimation term on
+economic residuals. Scoring floors the log density at $-25$ per observation, which is not a
+proper score where it binds, and it binds unequally: on 1.78\% of stopped-arm
+rows against 0.62\% of base rows (breadth tier, paired). The inequality favours the
+stopped arm, and tightening the floor stepwise from $-25$ to $-10$ shrinks
+the raw stop deficit monotonically from 0.51 to 0.33 nats at horizon 1, so
+every gap reported here is a lower bound on its unclipped value. The composed arm has no coverage
+guarantee and is not proposed as a conformal method. The floor proposition covers invertible signed scores, and the absolute residual
+only in the symmetric reading of Remark~\ref{rem:conditional}. Quantile scores need
+their own treatment.
 
 \appendix
-
-\section{A census of the conformal literature}\label{sec:count}
-
-We ask what published conformal methods do with the fence-post map
-\eqref{eq:fencepost}, which we also call the \emph{empirical map}. A method
-\emph{stops} if the output of the map, its quantiles, its $p$-values or its
-intervals, is the answer. It \emph{composes} if it keeps the map and fits a model to
-its output, as in Section~\ref{sec:transform}.
-
-Methods that neither stop nor compose fall into three further classes. A method
-\emph{replaces} if it substitutes a conditional estimate for the pooled quantile, as
-SPCI fits a quantile regression to recent residuals \citep{xu2023spci}. It
-\emph{tunes} if it keeps the map and adapts the level online, as adaptive conformal
-inference does \citep{gibbs2021adaptive}. It \emph{consumes} if it feeds the output
-to another procedure, such as training on pseudo-labels it has screened or selecting
-among candidates.
-
-We classified the literature instead of relying on an impression of it. We took every arXiv paper with ``conformal prediction'' in the title as of
-20 August 2026, 686 records. Six concern molecular or protein conformation and were
-matched by the title search in error, which leaves the remaining 680 papers. Language-model
-readers (Claude Sonnet) coded each paper against a written rubric, read its body in
-full, and recorded the sentence that places it.\footnote{Two readers, each blind to the other, read the body of
-every paper from its first line to its reference list. The boundaries between
-stopping, replacing and consuming involve judgment, and the two readers disagree on
-24 of the 680 papers. We read the method sections of
-every paper on which they disagree, and of every paper either of them coded as
-composing, and settled its label. An earlier pass that read only the abstract, the
-introduction and the method passages found the same two composing papers. Four papers
-have no PDF on arXiv and were coded from their abstracts. The rubric and the per-paper
-labels of both readers, with their quoted evidence, are in the repository.}
-
-Of the 680 papers, 454 stop, 77 consume, 50 replace, 40 tune, and 57 propose no
-method. The two that compose do so narrowly. \citet{messoudi2021copula} and
-\citet{park2024semiparametric} fit a copula to the outputs of per-target empirical
-maps, but use it only to set each target's quantile level and still return a box of
-conformal intervals. No paper models the rank stream of a single outcome or carries a
-fitted law back as a forecast. \citet{lardy2024anytime} come closest, fitting
-densities to conformal ranks, but to drive a test martingale.
-
-Distributional conformal prediction \citep{chernozhukov2021distributional} is the
-nearest single-outcome case. It conditions \emph{before} the map, and its answer is
-the empirical quantile of the resulting ranks. A paper would count as composing if it
-kept the empirical map, applied it to scores, and fitted a model on the transformed
-stream. Reweighting the empirical law, conditioning upstream and adapting the level
-do not count.
-
-The 77 papers that consume the conformal output use prediction sets or conformal
-$p$-values as inputs to selection, active learning, planning and similar procedures. Using the sets as data
-has its own limit. The law of the prediction sets does not identify a classifier's
-confusion matrix once a set of size two or more occurs, and a conformal correlation
-matrix built from set membership inherits the failure \citep{cotton2026correlation}.
-
-As an independent check, we coded by hand a random sample of 100 papers, drawn with a
-fixed seed from a wider archive of conformal prediction papers, without reference to
-any other labels. We find that 93 of the 100 treat the conformal step as terminal. The
-remaining 7 are unclear because they pass its output downstream as a filter or a
-feature. None fits a further law on the transformed scale and carries it back as a
-forecast. Sixty-two of the 100 are in the census, and the two codings agree on 61 of
-them.
-
-The argument of this paper does not depend on the exact count. We report it because the uniformity it shows is alarming, highlighting a potential blind spot that
-might be unique to the conformal prediction community. Outside conformal prediction the composing move is routine. The normal quantile
-transform in hydrological forecasting \citep{bogner2012}, copula time-series
-models \citep{chenfan2006}, and autoregressive transformation models
-\citep{rugamer2023} all apply an empirical marginal map and keep modelling in
-the transformed coordinates.
-
-The readers also recorded how each method pools calibration scores. Of the 623 papers
-that propose a method, 452 pool all scores together, 77 pool within fixed strata, and
-94 let the weights depend on the test point, through kernel localization,
-covariate-shift likelihood ratios or a sampling design.
-
 
 \section{The repaired map}\label{app:repair}
 
 The piecewise-linear repair interpolates the pairs $(r_{(i)},z_{(i)})$ and extends
 beyond the edge knots linearly in $(r,z)$. Linearity in the probit coordinate is a
-Gaussian tail in the score, with scale set by the spacing of the extreme knots. A monotone
-$C^1$ cubic through the same knots gives a smooth repair. Both are strictly increasing
-bijections of the real line \citep{cotton2026grammar}. A Gaussian-kernel estimate of
-the distribution function, which the experiments of Section~\ref{sec:price} use, does
-not in general pass through the knots, so the argument below covers it only to within
-its distance from them. Section~\ref{sec:blind} accordingly reports empirical coverage.
+Gaussian tail in the score, with scale set by the spacing of the extreme knots. The
+kernel-smoothed repair replaces the step function \eqref{eq:fencepost} by a
+Gaussian-kernel estimate of the distribution function and represents it by a
+monotone $C^1$ cubic through the same knots. Both are strictly increasing
+bijections of the real line \citep{cotton2026grammar}.
 
 The certificate survives any strictly increasing $m_n$ through the knots. Let
 $R_1,\dots,R_{n+1}$ be exchangeable and almost surely distinct. Monotonicity gives
@@ -739,7 +708,7 @@ the hash covers the harness sources, the tracked diff, and the compiled core.
 The census rubric and the per-paper labels, with their quoted evidence, are in
 \texttt{census/} beside this paper, and the papers themselves are on arXiv. The
 hand-coded sample is \texttt{survey100.csv}. The exact checks of
-Section~\ref{sec:floor} are \texttt{check\_gap.py} beside this paper. Figure~\ref{fig:gap} and its value of $\I(R;X)$ come from \texttt{fig\_gap.py}. Study declarations and the fill protocol are in the \texttt{skaters}
+Section~\ref{sec:floor} are \texttt{check\_gap.py} beside this paper. Study declarations and the fill protocol are in the \texttt{skaters}
 repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md}).
 
 \bibliographystyle{plainnat}
@@ -826,6 +795,9 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
   Computing}.
 \bibitem[Sesia and Romano(2021)]{sesia2021} Sesia, M. and Romano, Y. (2021).
   Conformal prediction using conditional histograms. \emph{NeurIPS} 34.
+\bibitem[Sun and Yu(2024)]{sun2024copula} Sun, S. and Yu, R. (2024). Copula
+  conformal prediction for multi-step time series forecasting. \emph{International
+  Conference on Learning Representations}.
 \bibitem[Tibshirani et al.(2019)]{tibshirani2019conformal} Tibshirani, R.~J.,
   Foygel Barber, R., Cand\`es, E.~J., and Ramdas, A. (2019). Conformal
   prediction under covariate shift. \emph{NeurIPS} 32.

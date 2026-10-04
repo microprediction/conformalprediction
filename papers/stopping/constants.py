@@ -204,6 +204,57 @@ def report(res):
             print(f"  {a:24s} {c:.3f}  |err|={abs(c - 0.800):.3f}")
 
 
+SURVEY100 = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                         "..", "teaching-letter", "survey100.csv")
+
+
+CENSUS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                      "census", "census_labels.csv")
+
+
+def census():
+    """Full-text census: label counts in scope and pooling among method papers."""
+    if not os.path.exists(CENSUS):
+        return None
+    with open(CENSUS, newline="") as fh:
+        rows = list(csv.DictReader(fh))
+    scope = [r for r in rows if r["label"] != "OUT_OF_SCOPE"]
+    methods = [r for r in scope if r["label"] != "NA"]
+    return (len(rows), len(scope), collections.Counter(r["label"] for r in scope),
+            len(methods), collections.Counter(r["pooling"] for r in methods))
+
+
+def pass_agreement():
+    """The two independent full readings of the census, in scope."""
+    if not os.path.exists(CENSUS):
+        return (0, 0)
+    rows = [r for r in csv.DictReader(open(CENSUS)) if r["label"] != "OUT_OF_SCOPE"]
+    return (sum(r["first_reading_label"] == r["second_reading_label"] for r in rows), len(rows))
+
+
+def agreement():
+    """Hand-coded sample against the census on shared papers. Agreement means
+    TERMINAL <-> not consumed or composed, and UNCLEAR <-> consumed."""
+    sv, cs_path = SURVEY100, CENSUS
+    if not (os.path.exists(sv) and os.path.exists(cs_path)):
+        return (0, 0)
+    cen = {r["arxiv_id"].split("v")[0]: r["label"] for r in csv.DictReader(open(cs_path))}
+    hand = {r["arxiv_id"].split("v")[0]: r["label"] for r in csv.DictReader(open(sv))}
+    shared = [k for k in hand if k in cen]
+    agree = sum((hand[k] == "UNCLEAR") == (cen[k] == "CONSUME") and cen[k] != "COMPOSE"
+                for k in shared)
+    return (agree, len(shared))
+
+
+def survey100():
+    """Hand-coded random validation sample: label counts."""
+    if not os.path.exists(SURVEY100):
+        return None
+    with open(SURVEY100, newline="") as fh:
+        labels = [r["label"] for r in csv.DictReader(fh)]
+    return len(labels), collections.Counter(labels)
+
+
 def check(res):
     """Fail if stopping.tex asserts numbers the store does not support."""
     tex = open(os.path.join(os.path.dirname(__file__) or ".",
@@ -232,6 +283,34 @@ def check(res):
                 if phrase in tex:
                     failures.append(f"tex claims '{phrase}' but {closest} "
                                     "is closest to target")
+    cs = census()
+    if cs:
+        total, n_scope, lab, n_meth, pool = cs
+        other = lab["CONSUME"] + lab["REPLACE"] + lab["TUNE"]
+        for phrase in (f"{total} records", f"remaining {n_scope} papers",
+                       f"Of the {n_scope} papers, {lab['STOP']} stop, {lab['CONSUME']} consume, "
+                       f"{lab['REPLACE']} replace, {lab['TUNE']} tune, and {lab['NA']} propose no method",
+                       f"Of the {n_meth} papers that propose a method, {pool['POOLED']} pool",
+                       f"{pool['STRATIFIED']} pool within fixed strata",
+                       f"{pool['SMOOTH']} let the weights",
+                       f"{n_meth} papers proposing conformal methods",
+                       f"agree on {agreement()[0]} of them",
+                       f"disagree on {pass_agreement()[1] - pass_agreement()[0]} of the {pass_agreement()[1]}"):
+            if phrase.replace("\n", " ") not in " ".join(tex.split()):
+                failures.append(f"census: '{phrase}' not in tex")
+    try:
+        import fig_gap
+        g = f"{fig_gap.gap_nats():.3f}"
+        if f"$\\I(R;X)={g}$ nats" not in tex:
+            failures.append(f"figure gap {g} not in tex")
+    except ImportError:
+        pass
+    sv = survey100()
+    if sv:
+        n, c = sv
+        for phrase in (f"{c['TERMINAL']} of the {n}", f"{c['UNCLEAR']} are unclear"):
+            if phrase not in tex:
+                failures.append(f"survey100: '{phrase}' not in tex")
     for f in failures:
         print(f"CHECK FAIL: {f}", file=sys.stderr)
     return 1 if failures else 0
@@ -240,5 +319,17 @@ def check(res):
 if __name__ == "__main__":
     res = compute()
     report(res)
+    cs = census()
+    if cs:
+        total, n_scope, lab, n_meth, pool = cs
+        print(f"\nagreement with hand sample: {agreement()}")
+        print(f"\n===== census =====\n  records={total} in_scope={n_scope} "
+              + " ".join(f"{k}={v}" for k, v in sorted(lab.items()))
+              + f"\n  method papers={n_meth} " + " ".join(f"{k}={v}" for k, v in sorted(pool.items())))
+    sv = survey100()
+    if sv:
+        n, c = sv
+        print(f"\n===== survey100 (hand-coded random sample) =====\n  n={n}  "
+              + "  ".join(f"{k}={v}" for k, v in sorted(c.items())))
     if "--check" in sys.argv:
         sys.exit(check(res))
