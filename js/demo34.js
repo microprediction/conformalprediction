@@ -66,21 +66,32 @@ function summarize(sets, yt) {
 }
 
 // ---------- a synthetic model: margin a on a chosen class, Gaussian noise ----------
-// The chosen class is the true class with probability acc0, else a random other class.
-// exact = true: the chosen class beats the best other option by exactly a, so
-// the realized accuracy equals acc0 whatever a and sigma are (panel B).
-function drawModel(rng, n, acc0, a, sigma, exact = false) {
-  const ys = new Int32Array(n), Z = new Array(n);
+// drawBase fixes the questions: the true class, the chosen class (the true class
+// with probability acc0, else a random other class) and the Gaussian logits of
+// the other classes. logitsFrom puts the chosen class exactly a above the best
+// other option, so the chosen class is always the argmax and the realized
+// accuracy is the same for every a. Two margins applied to one base give two
+// models with the same answer on every question.
+function drawBase(rng, n, acc0, sigma) {
+  const ys = new Int32Array(n), stars = new Int32Array(n), noise = new Array(n);
   for (let i = 0; i < n; i++) {
     const y = Math.floor(rng() * K); ys[i] = y;
-    const star = rng() < acc0 ? y : (y + 1 + Math.floor(rng() * (K - 1))) % K;
+    stars[i] = rng() < acc0 ? y : (y + 1 + Math.floor(rng() * (K - 1))) % K;
     const z = new Array(K);
     for (let h = 0; h < K; h++) z[h] = sigma * randn(rng);
-    if (exact) { let mx = -Infinity; for (let h = 0; h < K; h++) if (h !== star) mx = Math.max(mx, z[h]); z[star] = mx + a; }
-    else z[star] += a;
-    Z[i] = z;
+    noise[i] = z;
   }
-  return { ys, Z };
+  return { ys, stars, noise };
+}
+function logitsFrom(base, a) {
+  const Z = base.noise.map((z0, i) => {
+    const z = z0.slice(), star = base.stars[i];
+    let mx = -Infinity;
+    for (let h = 0; h < K; h++) if (h !== star) mx = Math.max(mx, z[h]);
+    z[star] = mx + a;
+    return z;
+  });
+  return { ys: base.ys, Z };
 }
 const withT = (Z, T) => Z.map((z) => softmax(z.map((v) => v / T)));
 
@@ -91,7 +102,8 @@ const outA = readouts(document.getElementById("t-readouts"), ["accuracy", "set s
 
 function drawA() {
   const rng = mulberry32(A.seed);
-  const cal = drawModel(rng, N_CAL, A.acc, A.a, A.sigma), te = drawModel(rng, N_TEST, A.acc, A.a, A.sigma);
+  const cal = logitsFrom(drawBase(rng, N_CAL, A.acc, A.sigma), A.a);
+  const te = logitsFrom(drawBase(rng, N_TEST, A.acc, A.sigma), A.a);
   const acc = te.Z.reduce((s, z, i) => s + (argmax(z) === te.ys[i] ? 1 : 0), 0) / N_TEST;
   const Ts = [], lac = [], aps = [], covL = [], covA = [];
   for (let lt = Math.log(0.25); lt <= Math.log(4) + 1e-9; lt += (Math.log(4) - Math.log(0.25)) / 24) {
@@ -137,8 +149,9 @@ const outB = readouts(document.getElementById("s-readouts"), ["accuracy sharp / 
 function drawB() {
   const rng = mulberry32(B.seed + 100);
   const res = {};
+  const calBase = drawBase(rng, N_CAL, B.acc, B.sigma), teBase = drawBase(rng, N_TEST, B.acc, B.sigma);
   for (const [name, a] of [["sharp", B.a1], ["soft", B.a2]]) {
-    const cal = drawModel(rng, N_CAL, B.acc, a, B.sigma, true), te = drawModel(rng, N_TEST, B.acc, a, B.sigma, true);
+    const cal = logitsFrom(calBase, a), te = logitsFrom(teBase, a);
     const Pc = withT(cal.Z, 1), Pt = withT(te.Z, 1);
     res[name] = { acc: te.Z.reduce((s, z, i) => s + (argmax(z) === te.ys[i] ? 1 : 0), 0) / N_TEST,
       L: summarize(lacSets(Pc, cal.ys, Pt, B.alpha), te.ys), P: summarize(apsSets(Pc, cal.ys, Pt, B.alpha), te.ys) };

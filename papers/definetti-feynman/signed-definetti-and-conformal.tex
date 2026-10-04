@@ -23,10 +23,13 @@ finite-sample and distribution-free, assuming only exchangeable data. That
 guarantee is marginal. de Finetti's theorem describes the exchangeability it rests on, and in
 the finite form the mixing measure may be signed \citep{kerns2006}. A short lemma decomposes the slope of
 conformal's calibration-conditional coverage into a non-negative threshold term (the classical
-Beta-law fan) and a term carrying the sign of the de Finetti measure. Positive (extendable)
-mixtures make conformal conditionally adaptive; the signed corner of de-meaned, ranked, or
-compositional scores makes it anti-adaptive. The marginal guarantee is the same either way; only
-what it hides changes.
+Beta-law fan) and a term carrying the sign of the cross-sample dependence. When the test score
+rises stochastically with the calibration width, as for a scalar latent with log-concave noise,
+conformal is conditionally adaptive. When it falls, as for scores defined relative to the batch
+(de-meaned, ranked, compositional), it is anti-adaptive. The sign of the finite de Finetti measure
+is related to this but does not determine it: a positive mixture need not be associated, and a law
+that needs a signed representation can be positively correlated. The marginal guarantee is the
+same either way. Only what it hides changes.
 \end{abstract}
 
 \section{Setup}
@@ -81,9 +84,9 @@ $\mathrm{law}(X_1,\dots,X_n)=\int P^{\otimes n}\,\mathrm{d}\mu(P)$. One may take
 genuine prior, recovering Theorem~\ref{thm:definetti}) if and only if the sequence extends to an
 infinitely exchangeable one \citep{leonetti2018}.
 \end{theorem} We picture this as the i.i.d.\ laws tracing a curve: positive mixtures are its convex hull, the
-extendable $\rho\ge 0$ laws, and signed mixtures its affine span, everything. A signed
-representation marks non-extendability---a finite exchangeable sequence that cannot be continued
-to an infinite one---which is the negative-correlation regime.
+extendable laws, and signed mixtures its affine span, everything. A representation that must be
+signed marks non-extendability, a finite exchangeable sequence that cannot be continued to an
+infinite one. Signed representations are also not unique.
 
 We frame the signed measure as a negative probability, the kind \citet{feynman1987} used
 partway through a calculation, or \citet{wigner1932}'s phase-space distribution, which dips
@@ -92,9 +95,31 @@ statistics through \citealp{bartlett1945}). You cannot sample a parameter from i
 the signed corner gives a diagnosis, not a model: recovering a latent means fitting a real one,
 not reading the quasi-probability off.
 
-So the sign of the de Finetti mixing measure is a clean label: positive = extendable,
-non-negatively correlated, a genuine prior. Signed = finite, negatively correlated,
-no genuine prior.
+Three properties need to be kept apart.
+\begin{enumerate}
+\item Extendability, equivalently a positive representation (a genuine prior).
+\item The sign of the pairwise correlation.
+\item Association or negative association \citep{esary1967,joagdev1983}, the monotone dependence
+that the slope in Section~4 needs.
+\end{enumerate}
+Property 1 implies non-negative pairwise correlation, so negative correlation implies a signed
+representation. Neither converse holds, and property 1 does not imply association.
+
+\begin{remark}[Two counterexamples]\label{rem:counter}
+\emph{A positive mixture that is not associated.} Let $\Theta$ be fair on $\{A,B\}$, and given
+$\Theta$ draw i.i.d.\ scores from $P_A=\mathrm{U}(1.4,1.6)$ or
+$P_B=\tfrac12\mathrm{U}(-0.1,0.1)+\tfrac12\mathrm{U}(2.9,3.1)$. With the increasing functions
+$f=\mathbf 1\{s>1\}$ and $g=\mathbf 1\{s>2\}$,
+$\operatorname{Cov}(f(S_1),g(S_2))=\tfrac18-\tfrac34\cdot\tfrac14=-\tfrac1{16}$. With $n=1$ the
+width is $S_1$, and a width near $0$ or $3$ points to $B$ while a width near $1.5$ points to $A$, so
+$S_2$ is neither stochastically increasing nor decreasing in it.
+
+\emph{A signed law that is positively correlated.} Let $(X_1,X_2,X_3)$ be exchangeable Bernoulli
+with $\Pr(\sum X_i=3)=\tfrac12$ and $\Pr(\sum X_i=1)=\tfrac12$. Then
+$\operatorname{Cov}(X_i,X_j)=\tfrac12-\tfrac49=\tfrac1{18}>0$. A positive mixture would need
+moments $\mathbb E P=\tfrac23$ and $\mathbb E P^2=\mathbb E P^3=\tfrac12$, but $\mathbb E P^2(1-P)=0$ forces $P\in\{0,1\}$
+and hence $\mathbb E P=\mathbb E P^2$, a contradiction. So the law is not extendable.
+\end{remark}
 
 \section{Marginal coverage ignores the sign}
 
@@ -141,23 +166,23 @@ dependent scores, with term (ii) the new piece.
 \end{remark}
 
 \begin{remark}[Reading the sign]
-The sign of the cross-sample dependence sets the direction. Positive dependence makes conformal
-conditionally adaptive, negative dependence makes it anti-adaptive. The mechanism is short. The
-width $\hat q=S_{(k)}$ is non-decreasing in the calibration scores, and the test score is
-disjoint from them. A positive (proper) de Finetti mixture makes the score vector associated
-\citep{esary1967}, so $\hat q$ and $S_{n+1}$ move together: term (ii) is $\le 0$, it cancels the
-threshold term, and pooling the calibration scores conditions you into the realised world. A
-signed, negatively-correlated law makes the vector negatively associated \citep{joagdev1983}
-(without-replacement samples, multinomials, ranks, compositional vectors), so term (ii) is
-$\ge 0$ and adds to it: the calibration set anti-predicts the test, and the per-case coverage
-swings high and low while the marginal stays pinned. The order-statistic version uses a
-difference in place of the derivative and behaves the same.
+The direction is set by whether $S_{n+1}$ is stochastically increasing or decreasing in
+$\hat q$, which is a property of the dependence, not of the sign of a de Finetti representation.
+A sufficient condition for the increasing case is a scalar latent location with log-concave noise,
+$S_i=\Theta+\varepsilon_i$. Order statistics of log-concave noise are log-concave, so the posterior of
+$\Theta$ given $\hat q$ rises in the likelihood-ratio order, and $S_{n+1}$ rises stochastically with
+it. Term (ii) is then $\le 0$, it cancels the threshold term, and pooling the calibration scores
+conditions you into the realised world. The decreasing case is the batch-relative one of
+Section~5 (without-replacement samples, multinomials, ranks, compositional vectors), where the
+calibration set anti-predicts the test and the per-case coverage swings high and low while the
+marginal stays pinned. A positive mixture without such monotone structure, as in
+Remark~\ref{rem:counter}, can give term (ii) either sign at different widths.
 \end{remark}
 
-The reading is a go/no-go on conformal's coverage, and coverage only. The residual-information
+The reading concerns conformal's coverage, and coverage only. The residual-information
 gap of the companion paper sits there whatever the sign, so even at its best this is a coverage
-certificate, not a sharp forecast. With independent or positively-dependent data the certificate
-holds case by case as well as on average. With negatively-dependent data it does not: the number holds on
+certificate, not a sharp forecast. When the test score rises with the width, the certificate
+holds case by case as well as on average. When it falls, it does not: the number holds on
 average while the per-case coverage swings high and low. The sharpness comes from modelling the
 latent, never from the wrapper.
 
@@ -258,8 +283,9 @@ coverage is \citet{bian2023}. Magnitude-based bounds for dependent data are
 
 \citet{barberpananjady2026} are closest: they show conformal can over- or under-cover under
 temporal dependence. That account is marginal, it grades a departure by the size of the
-dependence rather than its sign, and it does not condition on the calibration set. The sign,
-and its identification with the sign of the finite de Finetti measure, is what this note adds.
+dependence rather than its sign, and it does not condition on the calibration set. The sign of
+the dependence term, and conditions that fix it, are what this note adds. The sign of the finite
+de Finetti measure is related to it but does not determine it (Remark~\ref{rem:counter}).
 
 de Finetti describes a law. Conformal runs without one. Using a de Finetti measure means
 estimating it, and that estimation is ill-posed: the latent is recovered from finite data, so in

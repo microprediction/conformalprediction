@@ -86,14 +86,17 @@
   theorem describes. In the finite form the mixing measure may be <em>signed</em> (Kerns&ndash;Sz&eacute;kely):
   a negative probability of the kind Feynman and Wigner used, exact but un-samplable. A short
   lemma decomposes the slope of conformal's calibration-conditional coverage into a non-negative
-  threshold term (the classical Beta-law fan) and a dependence term that carries the sign of that
-  measure.</p>
+  threshold term (the classical Beta-law fan) and a dependence term whose sign is set by whether the
+  test score rises or falls with the calibration width. The sign of the de Finetti measure is related
+  but does not decide it: a positive mixture need not be associated, and a law that needs a signed
+  representation can still be positively correlated. The note gives a counterexample to each.</p>
 
   <h2>What it advises</h2>
   <p>The marginal coverage guarantee is the same whatever the sign. Only what it hides changes.
-  So the sign is a go/no-go for trusting conformal point by point: with ordinary data the
-  coverage is a fair per-case guide; with ranked, market-implied, or otherwise constrained
-  scores it is not, and the value is in the model, not the wrapper. A symmetric contest of
+  When the test score rises with the calibration width, as for a shared latent level with
+  log-concave noise, the coverage is a fair per-case guide. With ranked, market-implied, or
+  otherwise batch-relative scores, where it falls, it is not, and the value is in the model, not
+  the wrapper. A symmetric contest of
   \(M\) competitors sits exactly on the floor \(\rho=-\tfrac{1}{M-1}\), where the per-case
   coverage fans hardest.</p>
 
