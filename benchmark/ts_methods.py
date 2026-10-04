@@ -33,6 +33,22 @@ def _wquantile(vals, weights, q):
     return float(np.interp(q, cw, v))
 
 
+def _wconformal_quantile(vals, weights, alpha):
+    """Weighted conformal quantile of Barber et al. (2023), eq. (5): calibration
+    residual i carries mass w_i/(1+S) and the test point carries 1/(1+S) at
+    +infinity, S = sum w_i. Returns +inf when the residuals alone cannot reach
+    level 1 - alpha."""
+    vals = np.asarray(vals, float); weights = np.asarray(weights, float)
+    S = weights.sum()
+    level = (1 - alpha) * (S + 1)
+    if level > S:
+        return np.inf
+    order = np.argsort(vals)
+    cw = np.cumsum(weights[order])
+    k = int(np.searchsorted(cw, level - 1e-12 * S))
+    return float(vals[order][min(k, len(vals) - 1)])
+
+
 # ---------------- Conformal-for-time-series ----------------
 
 def fixed_split(mu_hat, resid_cal, y, alpha, **_):
@@ -129,8 +145,9 @@ def conformal_pid(mu_hat, y, alpha, window=250, Kp=0.10, Ki=0.02, warm=None, **_
 
 
 def nexcp(mu_hat, y, alpha, rho=0.99, window=400, warm=None, **_):
-    """Non-exchangeable / weighted conformal (Barber et al. 2023): recency-weighted
-    quantile of recent absolute residuals (weights rho**age)."""
+    """Non-exchangeable / weighted conformal (Barber et al. 2023): weighted
+    conformal quantile of recent absolute residuals, weights rho**age, with the
+    test point's unit mass at +infinity (eq. 5)."""
     T = len(y)
     lo = np.empty(T); hi = np.empty(T)
     hist = list(np.abs(warm)) if warm is not None else []
@@ -139,7 +156,7 @@ def nexcp(mu_hat, y, alpha, rho=0.99, window=400, warm=None, **_):
             recent = np.array(hist[-window:])
             ages = np.arange(len(recent))[::-1]
             w = rho ** ages
-            q = _wquantile(recent, w, 1 - alpha)
+            q = _wconformal_quantile(recent, w, alpha)
         else:
             q = np.quantile(hist, 0.9) if hist else 1.0
         lo[t] = mu_hat[t] - q; hi[t] = mu_hat[t] + q

@@ -109,10 +109,10 @@
   <h2>Setup</h2>
 
   <p>Six options, as in the paper&rsquo;s multiple-choice format. A synthetic model produces a logit
-  vector for each question: it puts a margin \(a\) on one chosen option and Gaussian noise of scale
-  \(\sigma\) on every option. The chosen option is the correct one with probability \(\text{acc}_0\)
-  and otherwise a random wrong one, so accuracy is fixed by \(\text{acc}_0\) and does not depend on
-  \(a\) or \(\sigma\). Probabilities are the softmax of the logits. The paper&rsquo;s two set
+  vector for each question: Gaussian noise of scale \(\sigma\) on every option, with one chosen
+  option raised to exactly \(a\) above the best of the others. The chosen option is the correct one
+  with probability \(\text{acc}_0\) and otherwise a random wrong one. It is always the model&rsquo;s
+  answer, so accuracy is fixed by \(\text{acc}_0\) and does not depend on \(a\) or \(\sigma\). Probabilities are the softmax of the logits. The paper&rsquo;s two set
   constructions, taken from its released code, are</p>
 
   $$\text{LAC:}\quad C(x) = \{\, y : \hat\pi_y(x) \ge 1 - \hat q \,\}, \qquad
@@ -146,8 +146,9 @@
 
   <h2 id="b">B. Score function</h2>
 
-  <p>Two models with the same accuracy, arranged by letting the chosen option beat the best other
-  option by exactly the margin \(a\). The sharp model has a large margin and, when it is wrong, is
+  <p>Two models built on the same questions: the same true answers, the same chosen option on each
+  question and the same noise, differing only in the margin \(a\). They therefore give the same
+  answer on every question and have the same accuracy. The sharp model has a large margin and, when it is wrong, is
   confidently wrong. The soft model has a small margin. At the default \(\alpha = 0.15\), above the
   10% of questions both models get wrong, LAC gives both models singleton sets and ranks them equal.
   APS gives the sharp model the larger sets, because APS admits options while the cumulative
