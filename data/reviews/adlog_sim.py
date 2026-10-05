@@ -26,7 +26,7 @@ Methods, all online with the ACI recursion of Gibbs and Candes (2021):
   norm     (cont only) per-arm ACI on the normalized score |y| / sd_a(x) with the true sd: a
            conditionally pivotal score, the limiting case of a learned scale model.
 
-Reported per method, averaged over seeds: counterfactual gap max_a |CCov_T(a) - 0.9|, played-
+Reported per method, averaged over seeds, on rounds 501..T (the first 500 are burn-in): counterfactual gap max_a |CCov_T(a) - 0.9|, played-
 action coverage MCov_T, the median finite threshold of the played action's set (score units),
 and the fraction of rounds on which the set for some action is the whole line (alpha_t <= 0
 gives Q(1 - alpha_t) = +inf under the paper's boundary convention, eq. 6). The paper's
