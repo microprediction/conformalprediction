@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <title>Counterfactual online conformal under adaptive logging — Conformal Prediction</title>
-<meta name="description" content="A close reading of Qiao, Lin, Ji, Wang and Yao (2026), who blame the counterfactual miscoverage of online conformal prediction on actions shifting the outcome law. On the paper's own construction the failure is covariate shift in the context mix: it is unchanged when the action effect is zero and vanishes when the logger ignores the context. Calibrating per context and action fixes it with no propensities, and the propensity-weighted method reaches its coverage by returning the whole line on most rounds." />
+<meta name="description" content="A close reading of Qiao, Lin, Ji, Wang and Yao (2026) on online conformal prediction under adaptive logging. On the paper's own construction the counterfactual gap behaves like covariate shift in the context mix rather than an action effect: it is unchanged when the action effect is zero and vanishes when the logger ignores the context. Calibrating per context and action closes it without propensities" />
 <meta property="og:title" content="Conformal Prediction — counterfactual online conformal under adaptive logging" />
-<meta property="og:description" content="The failure is the logger's context mix, not the action effect. Conditioning on context fixes it with no propensities." />
+<meta property="og:description" content="The counterfactual gap tracks the logger's context mix rather than the action effect, and conditioning on context closes it without propensities." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://conformalprediction.net/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -97,13 +97,14 @@
   <h1>Counterfactual online conformal under adaptive logging</h1>
   <p class="subtitle">Qiao, Lin, Ji, Wang and Yao study online conformal prediction when the
   prediction sets drive actions and only the chosen action&rsquo;s outcome is seen. They blame the
-  resulting miscoverage of rarely chosen actions on the actions shifting the outcome law, index it by
-  an &ldquo;endogeneity coefficient&rdquo;, and correct it with inverse-propensity weights. On the
-  paper&rsquo;s own construction the failure is something more ordinary: covariate shift in the mix of
-  contexts the logger shows each action. It is unchanged when the action effect is set to zero, it
-  disappears when the logger ignores the context, and calibrating per context and action fixes it with
-  no propensities at all. The weighted method reaches its coverage, on the paper&rsquo;s benchmarks,
-  by returning the whole real line for some action on most rounds.</p>
+  resulting miscoverage of rarely chosen actions on the actions shifting the outcome law, measure it
+  by an &ldquo;endogeneity coefficient&rdquo;, and correct it with inverse-propensity weights. The
+  problem is a real one and the paper states it clearly. Rerunning the paper&rsquo;s own construction,
+  we think the cause is better described as covariate shift in the mix of contexts the logger shows
+  each action. The gap is unchanged when the action effect is set to zero and disappears when the
+  logger ignores the context, and calibrating per context and action closes it without propensities.
+  We also found that the weighted method often reaches its coverage by returning the whole real line
+  for some action, which the paper&rsquo;s set-quality figure does not show.</p>
 
   <h2>What is proposed</h2>
 
@@ -151,16 +152,19 @@
   None of these four is cited. Zheng and Jin (2026) argue that the per-action target itself
   &ldquo;appears insufficient for decision-making&rdquo;, and are not cited either.</p>
 
-  <p>What follows is not in any of these, as far as we can find.</p>
+  <p>The paper&rsquo;s own contributions stand apart from these points: a clear statement of
+  counterfactual coverage in the online setting, a telescoping identity for the weighted recursion
+  that needs no projection, and a matching lower bound. What follows is not in any of the works above,
+  as far as we can find, and we offer it as a suggestion for how the result might be framed.</p>
 
-  <h2>The failure is the context mix, not the action effect</h2>
+  <h2>The gap tracks the context mix rather than the action effect</h2>
 
-  <p>The paper itself says that action-conditional coverage &ldquo;is therefore biased by the
-  policy-induced context distribution.&rdquo; That is the whole mechanism. In the Theorem 3.2
+  <p>The paper itself notes that action-conditional coverage &ldquo;is therefore biased by the
+  policy-induced context distribution,&rdquo; and in our reading that is the whole mechanism. In the Theorem 3.2
   construction the logger plays action 0 mostly in one context and action 1 mostly in the other. The
   threshold ignores the context while the score&rsquo;s law depends on it, so the logged scores for an
   action come from the wrong mix of contexts. Whether the two actions&rsquo; outcome laws differ within
-  a context, which is what \(\rho\) measures, plays no part.</p>
+  a context, which is what \(\rho\) measures, does not seem to play a part.</p>
 
   <p>Two variants of the paper&rsquo;s variance-shift instance make this concrete. In the first, both
   actions have the same outcome law in each context, standard deviation 1 in one and 3 in the other,
@@ -185,14 +189,14 @@
 
   <p>With \(\rho = 0\) the gap is 0.229, the same as the paper&rsquo;s \(\rho>0\) instance. With
   \(\rho>0\) and a logger that ignores the context it is 0.002. So the statement that \(\rho=0\)
-  recovers exchangeable online conformal prediction is false whenever the logger uses the context,
-  and so is the related-work claim that partial-feedback methods &ldquo;assume per-action outcome laws
+  recovers exchangeable online conformal prediction needs a qualification when the logger uses the
+  context, as does the related-work claim that partial-feedback methods &ldquo;assume per-action outcome laws
   are exogenous, i.e., \(\rho = 0\), so per-arm calibration on the logged subset is already
-  unbiased.&rdquo; Theorem 3.2 is an existence result and stands, but the quantity that indexes the
-  failure is the dependence of the logger on the context together with the dependence of the
-  score&rsquo;s law on the context, not \(\rho\).</p>
+  unbiased.&rdquo; Theorem 3.2 is an existence result and is not affected. Our suggestion is that the
+  quantity indexing the failure is the dependence of the logger on the context together with the
+  dependence of the score&rsquo;s law on the context, rather than \(\rho\).</p>
 
-  <h2>Conditioning on the context fixes it without propensities</h2>
+  <h2>Conditioning on the context closes the gap without propensities</h2>
 
   <p>Counterfactual coverage averages over the marginal law of the context, and the shift is in the
   context. Coverage within each context therefore implies coverage under any reweighting of the
@@ -202,7 +206,8 @@
   weights. Every benchmark in the paper has a handful of discrete contexts: two, \(K\), and four
   aggregated contexts for the Open Bandit data. The last column of the table is this method. It
   matches PW-OCP on the counterfactual gap and needs neither positivity weights nor known
-  propensities.</p>
+  propensities. The weighted approach remains the natural choice when contexts are many and
+  propensities are known, and the two can be combined.</p>
 
   <p>With a continuous context the per-cell route needs either bins or a score whose law does not
   depend on the context. Five bins already close the gap in the continuous case above, and the
@@ -232,21 +237,22 @@
   <p class="note">Same runs as above. A round counts when the set for at least one action is the whole
   line. The per-cell method&rsquo;s whole-line sets are early rounds of rarely observed cells.</p>
 
-  <p>The paper&rsquo;s own Figure 4 shows the same overcoverage of the played action, 0.992 for PW-OCP
-  against a target of 0.90. Its set-quality figure reports the threshold error &ldquo;restricted to
-  rounds with non-degenerate \(C_t(a)\),&rdquo; so the rounds on which the method returns the whole
-  line are left out of the evidence for &ldquo;without sacrificing prediction-set sharpness.&rdquo;
-  The sharpness theorem, C.3, is for a projected recursion that keeps \(\alpha_t(a)\) inside \((0,1)\),
-  which is not what the headline coverage theorem or the experiments run.</p>
+  <p>The paper&rsquo;s own Figure 4 is consistent with this: it shows the played action covered at
+  0.992 for PW-OCP against a target of 0.90. Its set-quality figure reports the threshold error
+  &ldquo;restricted to rounds with non-degenerate \(C_t(a)\),&rdquo; so rounds with whole-line sets do
+  not enter the evidence for &ldquo;without sacrificing prediction-set sharpness.&rdquo; The sharpness
+  theorem, C.3, covers a projected recursion that keeps \(\alpha_t(a)\) inside \((0,1)\), and it would
+  help to report the fraction of degenerate rounds alongside it. Our numbers come from a
+  reimplementation, since the code is not yet public, so the exact fraction may differ from the
+  authors&rsquo; runs.</p>
 
   <div class="takeaway">
-    <p>Takeaway. The counterfactual miscoverage the paper calls endogeneity is covariate shift: the
-    logger shows each action a different mix of contexts, and a threshold that ignores the context
-    cannot correct for it. It persists when the actions have identical outcome laws and vanishes when
-    the logger ignores the context. Calibrating within each context and action removes it with no
-    propensities, keeps the played action at its nominal coverage, and keeps the sets finite, where
-    the propensity-weighted recursion reaches its coverage by returning the whole line on most
-    rounds.</p>
+    <p>Takeaway. The paper identifies a real failure of online conformal prediction under adaptive
+    logging. In our reruns the failure behaves like covariate shift: the logger shows each action a
+    different mix of contexts, and a threshold that ignores the context cannot correct for it. It
+    persists when the actions have identical outcome laws and vanishes when the logger ignores the
+    context. Calibrating within each context and action closes it without propensities and keeps the
+    sets finite, which may be a useful baseline alongside the weighted recursion.</p>
   </div>
 
   <p class="note">The paper is Qiao, Lin, Ji, Wang and Yao, <em>Counterfactual Online Conformal
