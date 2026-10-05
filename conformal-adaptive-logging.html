@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Counterfactual online conformal under adaptive logging — Conformal Prediction</title>
+<meta name="description" content="A close reading of Qiao, Lin, Ji, Wang and Yao (2026), who blame the counterfactual miscoverage of online conformal prediction on actions shifting the outcome law. On the paper's own construction the failure is covariate shift in the context mix: it is unchanged when the action effect is zero and vanishes when the logger ignores the context. Calibrating per context and action fixes it with no propensities, and the propensity-weighted method reaches its coverage by returning the whole line on most rounds." />
+<meta property="og:title" content="Conformal Prediction — counterfactual online conformal under adaptive logging" />
+<meta property="og:description" content="The failure is the logger's context mix, not the action effect. Conditioning on context fixes it with no propensities." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  table.phi { border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px; margin: 1em 0; }
+  table.phi th, table.phi td { border: 1px solid var(--line); padding: 6px 14px; text-align: right; }
+  table.phi th { background: #f7f6f1; font-weight: 600; }
+  table.phi td:first-child, table.phi th:first-child { text-align: left; }
+  .tablewrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+          <a href="/conformal-relational.html">Relational conformal prediction</a>
+          <a href="/conformal-adaptive-logging.html">Counterfactual online conformal</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+
+<div class="wrap">
+
+  <p class="tag">Review</p>
+  <h1>Counterfactual online conformal under adaptive logging</h1>
+  <p class="subtitle">Qiao, Lin, Ji, Wang and Yao study online conformal prediction when the
+  prediction sets drive actions and only the chosen action&rsquo;s outcome is seen. They blame the
+  resulting miscoverage of rarely chosen actions on the actions shifting the outcome law, index it by
+  an &ldquo;endogeneity coefficient&rdquo;, and correct it with inverse-propensity weights. On the
+  paper&rsquo;s own construction the failure is something more ordinary: covariate shift in the mix of
+  contexts the logger shows each action. It is unchanged when the action effect is set to zero, it
+  disappears when the logger ignores the context, and calibrating per context and action fixes it with
+  no propensities at all. The weighted method reaches its coverage, on the paper&rsquo;s benchmarks,
+  by returning the whole real line for some action on most rounds.</p>
+
+  <h2>What is proposed</h2>
+
+  <p>The paper is &ldquo;Counterfactual Online Conformal Prediction Under Adaptive Logging,&rdquo;
+  arXiv:2609.30811, September 2026. There are finitely many actions. Each round a context \(X_t\)
+  arrives, the learner issues one set per action, \(C_t(a)=\{y: s(X_t,y;a)\le \hat q_t(a)\}\), a
+  logging policy picks \(a_t\), and only \(Y_t(a_t)\) is revealed. The threshold \(\hat q_t(a)\) depends
+  on the action but not on the context. The target is counterfactual coverage,</p>
+
+  $$\mathrm{CCov}_T(a) \;=\; \frac1T\sum_{t=1}^T \mathbf 1\{Y_t(a)\in C_t(a)\},$$
+
+  <p>which averages over the marginal law of the context, including rounds where \(a\) was not played.
+  Definition 2.5 measures the problem by the endogeneity coefficient</p>
+
+  $$\rho \;=\; \sup_x \max_{a\ne a'} \mathrm{TV}\big(P(\cdot\mid x,a),\,P(\cdot\mid x,a')\big),$$
+
+  <p>the largest difference, within one context, between the outcome laws of two actions. The text
+  that follows says &ldquo;The case \(\rho = 0\) recovers exchangeable online CP.&rdquo; Theorem 3.2 builds a
+  two-context, two-action instance on which per-action calibration on the logged scores misses
+  counterfactual coverage by an amount of order \(\rho\). The fix, PW-OCP, runs the adaptive conformal
+  recursion of Gibbs and Cand&egrave;s per action on the error signal
+  \(Z_t(a)=\mathbf 1\{a_t=a\}\,\mathbf 1\{\text{miss}\}/\pi_t(a\mid X_t)\), which is unbiased for the
+  counterfactual miss. A doubly robust variant adds an outcome model. The coverage rate is
+  \((T\pi_{\min})^{-1/2}\), matched by a lower bound, and the abstract states that the methods
+  &ldquo;improve counterfactual coverage and downstream regret without sacrificing prediction-set
+  sharpness.&rdquo;</p>
+
+  <h2>What the paper concedes, and what is already in print</h2>
+
+  <p>Much of what a reader would raise, the paper raises itself. It needs positivity (&ldquo;Positivity
+  is essential&rdquo;) and excludes logging that stops exploring. It notes that the weighted signal
+  &ldquo;becomes noisy when \(\pi_{\min}\) is small&rdquo; and that it &ldquo;requires the true logging
+  propensity&rdquo;. Its own sliding-window weighted quantile does about as well, and on regret
+  &ldquo;Online COPP gives the largest reduction.&rdquo; On the Open Bandit and DJIA benchmarks plain ACI
+  matches the new methods.</p>
+
+  <p>The ingredients are also in print, several without citation. That a counterfactual target and a
+  logged sample &ldquo;share the same conditional distribution \(P_{Y(1)|X}\) of the outcome but
+  otherwise differ in the distribution of the covariates&rdquo; is Lei and Cand&egrave;s (2021, Section
+  3.1), which the paper cites. Weighted conformal prediction under covariate shift is Tibshirani,
+  Barber, Cand&egrave;s and Ramdas (2019), and conformal prediction when a model&rsquo;s outputs choose
+  the next data is Fannjiang et al. (2022). The doubly robust construction with &ldquo;the product
+  bias form&rdquo; is Yang, Kuchibhotla and Tchetgen Tchetgen (2022). An importance-weighted miss
+  indicator inside an online recursion is Wang, Zecchin and Simeone (2025), for intermittent feedback.
+  None of these four is cited. Zheng and Jin (2026) argue that the per-action target itself
+  &ldquo;appears insufficient for decision-making&rdquo;, and are not cited either.</p>
+
+  <p>What follows is not in any of these, as far as we can find.</p>
+
+  <h2>The failure is the context mix, not the action effect</h2>
+
+  <p>The paper itself says that action-conditional coverage &ldquo;is therefore biased by the
+  policy-induced context distribution.&rdquo; That is the whole mechanism. In the Theorem 3.2
+  construction the logger plays action 0 mostly in one context and action 1 mostly in the other. The
+  threshold ignores the context while the score&rsquo;s law depends on it, so the logged scores for an
+  action come from the wrong mix of contexts. Whether the two actions&rsquo; outcome laws differ within
+  a context, which is what \(\rho\) measures, plays no part.</p>
+
+  <p>Two variants of the paper&rsquo;s variance-shift instance make this concrete. In the first, both
+  actions have the same outcome law in each context, standard deviation 1 in one and 3 in the other,
+  so \(\rho=0\) exactly, and the logger still favours one action per context. In the second the
+  outcome laws differ as in the paper, so \(\rho>0\), but the logger ignores the context. The table
+  reruns the paper&rsquo;s setup: \(T = 20{,}000\), \(\alpha=0.1\), \(\varepsilon\)-greedy logging
+  with \(\varepsilon = 0.05\), the paper&rsquo;s ACI step of 0.005, PW-OCP at its rate-optimal step
+  \(\sqrt{\pi_{\min}/T}\) with the iterate clipped to \([-0.5, 1.5]\) as in its appendix, ten seeds.</p>
+
+  <div class="tablewrap">
+  <table class="phi">
+    <tr><th>instance</th><th>\(\rho\)</th><th>per-action ACI</th><th>PW-OCP</th><th>per context and action</th></tr>
+    <tr><td>mean shift (paper)</td><td>&gt; 0</td><td>0.252</td><td>0.015</td><td>0.009</td></tr>
+    <tr><td>variance shift (paper)</td><td>&gt; 0</td><td>0.231</td><td>0.017</td><td>0.012</td></tr>
+    <tr><td>variance shift, same law for both actions</td><td>0</td><td>0.229</td><td>0.016</td><td>0.012</td></tr>
+    <tr><td>variance shift, logger ignores context</td><td>&gt; 0</td><td>0.002</td><td>0.002</td><td>0.002</td></tr>
+    <tr><td>continuous context, five bins</td><td>&gt; 0</td><td>0.103</td><td>0.013</td><td>0.011</td></tr>
+  </table>
+  </div>
+  <p class="note">Worst counterfactual coverage gap over actions, \(\max_a|\mathrm{CCov}_T(a)-0.9|\),
+  mean over ten seeds. Standard errors are at most 0.003.</p>
+
+  <p>With \(\rho = 0\) the gap is 0.229, the same as the paper&rsquo;s \(\rho>0\) instance. With
+  \(\rho>0\) and a logger that ignores the context it is 0.002. So the statement that \(\rho=0\)
+  recovers exchangeable online conformal prediction is false whenever the logger uses the context,
+  and so is the related-work claim that partial-feedback methods &ldquo;assume per-action outcome laws
+  are exogenous, i.e., \(\rho = 0\), so per-arm calibration on the logged subset is already
+  unbiased.&rdquo; Theorem 3.2 is an existence result and stands, but the quantity that indexes the
+  failure is the dependence of the logger on the context together with the dependence of the
+  score&rsquo;s law on the context, not \(\rho\).</p>
+
+  <h2>Conditioning on the context fixes it without propensities</h2>
+
+  <p>Counterfactual coverage averages over the marginal law of the context, and the shift is in the
+  context. Coverage within each context therefore implies coverage under any reweighting of the
+  contexts, which is the equivalence Gibbs, Cherian and Cand&egrave;s (2023) open with:
+  &ldquo;reformulating conditional coverage as coverage over a class of covariate shifts.&rdquo; Run
+  the same ACI recursion separately in each context and action, on the logged rounds only, with no
+  weights. Every benchmark in the paper has a handful of discrete contexts: two, \(K\), and four
+  aggregated contexts for the Open Bandit data. The last column of the table is this method. It
+  matches PW-OCP on the counterfactual gap and needs neither positivity weights nor known
+  propensities.</p>
+
+  <p>With a continuous context the per-cell route needs either bins or a score whose law does not
+  depend on the context. Five bins already close the gap in the continuous case above, and the
+  normalized score \(|y|/\sigma_a(x)\) with the true scale gives 0.003. A learned scale is not free,
+  so the point has full force on the paper&rsquo;s experiments and partial force in general.</p>
+
+  <h2>How the weighted method reaches its coverage</h2>
+
+  <p>PW-OCP&rsquo;s threshold is still the empirical quantile of the logged scores, at level
+  \(1-\alpha_t(a)\). For a rarely chosen action those scores come almost entirely from the contexts
+  where the action does well, so reaching counterfactual coverage needs a level near 1, and the
+  recursion repeatedly drives \(\alpha_t(a)\) to zero or below. The paper&rsquo;s boundary convention
+  (its eq. 6) then sets the threshold to \(+\infty\), so the set is the whole line. Its appendix clips
+  the iterate to \([-0.5,1.5]\), which permits this.</p>
+
+  <div class="tablewrap">
+  <table class="phi">
+    <tr><th>instance</th><th>method</th><th>played-action coverage</th><th>rounds with a whole-line set</th></tr>
+    <tr><td>mean shift</td><td>PW-OCP</td><td>0.984</td><td>58%</td></tr>
+    <tr><td>mean shift</td><td>per context and action</td><td>0.900</td><td>1%</td></tr>
+    <tr><td>variance shift</td><td>PW-OCP</td><td>0.988</td><td>69%</td></tr>
+    <tr><td>variance shift</td><td>per context and action</td><td>0.900</td><td>1%</td></tr>
+    <tr><td>continuous context</td><td>PW-OCP</td><td>0.959</td><td>23%</td></tr>
+    <tr><td>continuous context</td><td>per context and action</td><td>0.900</td><td>5%</td></tr>
+  </table>
+  </div>
+  <p class="note">Same runs as above. A round counts when the set for at least one action is the whole
+  line. The per-cell method&rsquo;s whole-line sets are early rounds of rarely observed cells.</p>
+
+  <p>The paper&rsquo;s own Figure 4 shows the same overcoverage of the played action, 0.992 for PW-OCP
+  against a target of 0.90. Its set-quality figure reports the threshold error &ldquo;restricted to
+  rounds with non-degenerate \(C_t(a)\),&rdquo; so the rounds on which the method returns the whole
+  line are left out of the evidence for &ldquo;without sacrificing prediction-set sharpness.&rdquo;
+  The sharpness theorem, C.3, is for a projected recursion that keeps \(\alpha_t(a)\) inside \((0,1)\),
+  which is not what the headline coverage theorem or the experiments run.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. The counterfactual miscoverage the paper calls endogeneity is covariate shift: the
+    logger shows each action a different mix of contexts, and a threshold that ignores the context
+    cannot correct for it. It persists when the actions have identical outcome laws and vanishes when
+    the logger ignores the context. Calibrating within each context and action removes it with no
+    propensities, keeps the played action at its nominal coverage, and keeps the sets finite, where
+    the propensity-weighted recursion reaches its coverage by returning the whole line on most
+    rounds.</p>
+  </div>
+
+  <p class="note">The paper is Qiao, Lin, Ji, Wang and Yao, <em>Counterfactual Online Conformal
+  Prediction Under Adaptive Logging</em>, arXiv:2609.30811v1. Quotations are from that version and its
+  LaTeX source, and appendix settings from its Appendix F.1. Lei and Cand&egrave;s, <em>Conformal
+  inference of counterfactuals and individual treatment effects</em>, JRSSB 2021, arXiv:2006.06138.
+  Tibshirani, Barber, Cand&egrave;s and Ramdas, <em>Conformal prediction under covariate shift</em>,
+  NeurIPS 2019, arXiv:1904.06019. Fannjiang, Bates, Angelopoulos, Listgarten and Jordan,
+  <em>Conformal prediction under feedback covariate shift for biomolecular design</em>, PNAS 2022,
+  arXiv:2202.03613. Gibbs, Cherian and Cand&egrave;s, <em>Conformal prediction with conditional
+  guarantees</em>, arXiv:2305.12616. Yang, Kuchibhotla and Tchetgen Tchetgen, <em>Doubly robust
+  calibration of prediction sets under covariate shift</em>, arXiv:2203.01761. Wang, Zecchin and
+  Simeone, <em>Mirror online conformal prediction with intermittent feedback</em>, arXiv:2503.10345.
+  Zheng and Jin, <em>Prediction sets for counterfactual decisions</em>, arXiv:2607.02206. The rerun is
+  <code>data/reviews/adlog_sim.py</code>, with its output in <code>adlog_sim.out</code>.</p>
+
+  <div class="prevnext">
+    <a href="/reviews.html">&larr; All reviews</a>
+    <span class="spacer"></span>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+</body>
+</html>
