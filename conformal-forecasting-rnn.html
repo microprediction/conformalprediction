@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <title>Conformal forecasting RNNs — Conformal Prediction</title>
-<meta name="description" content="A close reading of Stankeviciute, Alaa and van der Schaar (NeurIPS 2021), who add one calibration quantile per horizon to an RNN point forecast and compare methods by joint coverage and width. The baselines are judged against a joint target they were not built for, the COVID-19 interval carries no finite guarantee, and under the interval score a state-dependent width beats the constant one on their data and on FRED." />
+<meta name="description" content="A close reading of Stankeviciute, Alaa and van der Schaar (NeurIPS 2021), who add one calibration quantile per horizon to an RNN point forecast and compare methods by joint coverage and width. The baselines are judged against a joint target they were not built for, the COVID-19 interval carries no finite guarantee, and under the interval score a state-dependent width beats the constant one on a reconstruction of their COVID-19 data and on FRED." />
 <meta property="og:title" content="Conformal Prediction — conformal forecasting RNNs" />
 <meta property="og:description" content="Coverage and width decide nothing between methods. The interval score does, and it goes against the constant width." />
 <meta property="og:type" content="website" />
@@ -103,7 +103,7 @@
   calibrated for per-horizon coverage and then graded on a joint criterion that only CF-RNN was
   widened to meet, and the paper&rsquo;s own uncorrected results show the gap is that widening rather
   than the method. Neither coverage nor width is a proper score, and rerunning the paper&rsquo;s
-  COVID-19 experiment with one reverses its conclusion: the quantile RNN it reports as failing has
+  COVID-19 experiment with one, on a reconstruction of its data, reverses its conclusion: the quantile RNN it reports as failing has
   the best interval on every split, and the dropout RNN that covers half the time still beats the
   uncorrected CF-RNN on two splits of three.
   <a href="/demos/35-constant-width.html">Demonstration 35</a> shows the width mechanism on a
@@ -219,10 +219,10 @@
   conclusion names the problem: future work &ldquo;would involve making them more adaptive to
   individual observations.&rdquo;</p>
 
-  <h2>Rerun on their COVID-19 data</h2>
+  <h2>Rerun on a reconstruction of the COVID-19 data</h2>
 
   <!-- COVID -->
-<p>We reran the COVID-19 experiment with the authors&rsquo; code and hyperparameters, an LSTM with embedding size 20 trained for 1,000 epochs, on daily cases for the 307 English lower-tier local authorities from the UK Health Security Agency API over the same 150-day window, 100 observed days and 50 to forecast, split 162 training, 81 calibration and 64 test areas in the paper&rsquo;s proportions, over 3 random splits. All three methods share the architecture, the hyperparameters and the training areas, so the only difference between them is how the interval is built. The Bonferroni index is \(\lceil 82 \times 0.998 \rceil = 82 > 81\), and on every split every Bonferroni half-width equalled the largest calibration residual. Every interval is scored at the level it claims. Means over splits, with standard deviations in parentheses.</p>
+<p>The authors&rsquo; loader reads a May 2021 snapshot of 380 local authorities counted by publish date, with 200, 100 and 80 areas for training, calibration and test. We did not use that snapshot. This is a reconstruction on replacement data, so the ranking on the original data may differ. We reran the COVID-19 experiment with the authors&rsquo; code and hyperparameters, an LSTM with embedding size 20 trained for 1,000 epochs, on daily cases by specimen date for the 307 English lower-tier local authorities from the UK Health Security Agency API over the same 150-day window, 100 observed days and 50 to forecast, split 162 training, 81 calibration and 64 test areas in the paper&rsquo;s proportions, over 3 random splits. All three methods share the architecture, the hyperparameters and the training areas, so the only difference between them is how the interval is built. The Bonferroni index is \(\lceil 82 \times 0.998 \rceil = 82 > 81\), and on every split every Bonferroni half-width equalled the largest calibration residual. Every interval is scored at the level it claims. Means over splits, with standard deviations in parentheses.</p>
 <div class="tablewrap">
 <table class="phi">
 <tr><th>Interval, nominal level</th><th>Interval score</th><th>Width, mean</th><th>Coverage per horizon</th><th>Joint coverage over 50 horizons</th></tr>
@@ -261,15 +261,15 @@
   sequences even though the time steps within one series are not, and that is the right way to get a finite-sample guarantee out of a forecasting
   RNN. What does not follow is that the constant-width construction is a good interval, or that
   methods without the guarantee are worse. The guarantee is one number, the average
-  coverage, and once it is met the comparison is a comparison of proper scores. On that comparison the constant width is beaten by the quantile RNN on every split of the
-  paper&rsquo;s own data.</p>
+  coverage, and once it is met the comparison is a comparison of proper scores. On that comparison the constant width is beaten by the quantile RNN on every split of our
+  reconstruction of the paper&rsquo;s COVID-19 data.</p>
 
   <div class="takeaway">
     <p>Takeaway. That the COVID-19 guarantee is vacuous and the intervals inefficient was
     established by others in 2022 and 2024. What appears to be new is that the comparison itself is
     decided by a target mismatch, since the baselines are graded on joint coverage they were never
-    calibrated for, and that coverage and width do not rank methods. Under the interval score the quantile RNN the paper dismisses is the best interval on its own
-    data on every split, and on FRED the constant width loses to the forecaster&rsquo;s own quantiles
+    calibrated for, and that coverage and width do not rank methods. Under the interval score the quantile RNN the paper dismisses is the best interval on every
+    split of a reconstruction of its COVID-19 experiment, and on FRED the constant width loses to the forecaster&rsquo;s own quantiles
     at the same coverage on most series.</p>
   </div>
 

@@ -99,6 +99,10 @@
   are <em>negative</em>. That signed measure is not a prior you can sample. It is the finite,
   non-extendable corner.</p>
 
+  <p>The slider moves the law along one line of the triangle: fair coins, each landing heads with
+  probability \(\tfrac12\), with only their correlation \(\rho\) varying. The dot therefore travels the
+  vertical midline. Laws with unfair coins fill the rest of the triangle.</p>
+
   <div class="demo">
     <div class="readouts" id="readouts"></div>
     <div class="controls" id="controls"></div>
@@ -111,7 +115,9 @@
 
   <div class="canvas-box med demo"><canvas id="weights"></canvas></div>
   <p class="note">The mixing measure over three i.i.d. nodes \(\theta=0,\tfrac12,1\) that
-  reproduces your law. With \(\rho\ge 0\) the weights are a genuine probability (all
+  reproduces your law on this fair-coin line. Off the line these three nodes are not enough: the
+  i.i.d. law with \(\theta=\tfrac15\) has \(\rho=0\) but needs a negative weight on them, and its
+  positive representation is the single node \(\theta=\tfrac15\). On the line, with \(\rho\ge 0\) the weights are a genuine probability (all
   non-negative). With \(\rho<0\) the outer weights drop below zero: a negative probability, in
   the sense Feynman and Wigner used, exact but un-samplable.</p>
 
