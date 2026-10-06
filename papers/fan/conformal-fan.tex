@@ -33,9 +33,10 @@ statistic at every $n$, and full support does not rescue it (a strictly-positive
 strictly-interior-NA law violates too, certified exactly). The bound does hold, at every level, on
 the designs a practitioner actually builds: sampling without replacement gives the exact closed form
 $\operatorname{Var}(U_{(k)})=\tfrac{M-n}{M+1}V_0$ with the coverage mean on target, stratified and
-Latin-hypercube designs contract with exact variances, and the FGM and general negative-correlation
-Gaussian copulas contract by a monotonicity argument that also closes the transfer to the uniform
-scale. Positive dependence --- serial correlation, clustering, shared factors, the common case ---
+Latin-hypercube designs contract with exact variances, and so does the negatively dependent FGM
+copula. For negative-correlation Gaussian copulas a monotonicity argument reduces the contraction, on
+both the normal and the uniform scale, to a single sign condition, proved for $n=2$ and on the
+equicorrelated slice and certified numerically to $n=8$. Positive dependence --- serial correlation, clustering, shared factors, the common case ---
 runs the mirror: the fan reliably \emph{widens}, at every level in every structured family, and we
 conjecture it can never narrow a single level, a genuine asymmetry with the negative side.
 \end{abstract}
