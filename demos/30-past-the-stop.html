@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Past the stop — Conformal Prediction</title>
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+          <a href="/conformal-relational.html">Relational conformal prediction</a>
+          <a href="/conformal-adaptive-logging.html">Counterfactual online conformal</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration</p>
+  <h1>Past the stop</h1>
+  <p class="subtitle">The transform&rsquo;s output is a coordinate system, not a terminus.</p>
+
+  <p>This is what the conformal community is apparently getting wrong. In conformal practice the rank map is where inference ends: fit a model, rank the residuals, quote the ranked law, stop. The stop is treated as principle. It is nothing of the sort. It is a bet that the residuals arrived exchangeable, with nothing left in them worth modeling &mdash; and the certificate is silent on whether that bet is any good, because coverage holds either way. <a href="/demos/29-just-a-transform.html">The previous page</a> made the map an invertible transform; this one shows what stopping leaves on the table.</p>
+
+  <p>The data are a warped AR(1): a Gaussian autoregression \(z_t = \varphi z_{t-1} + \varepsilon_t\) observed through a monotone warp, \(y_t = \mathrm{sign}(z_t)\,|z_t|^{\gamma}\). The warp hides the linear structure without removing an ounce of it. Three online forecasters run prequentially, and every density is scored by the exact change of variables, Jacobians included:</p>
+
+  <p><strong>Stop at the map</strong> Gaussianize the stream and quote \(N(0,1)\) where you stand: the conformal pattern&rsquo;s terminal forecast. <strong>Refit through the map</strong> The same transform, then an AR(1) fitted online on the transformed stream. <strong>Same refit, no map</strong> The identical AR(1) on a scale-standardized stream, with no rank map in the chain.</p>
+
+
+  <div style="margin:18px 0 6px;">
+  <svg viewBox="0 0 860 330" style="max-width:100%;height:auto;display:block;" role="img"
+       aria-label="Two chains of transforms. The conformal pattern stops at the rank map and quotes the pooled law. The grammar continues through the rank map into a serial model and a leaf, with predictive densities pulled back through every inverse. The certificate sits at the rank map's output in both chains.">
+    <defs>
+      <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#444"/>
+      </marker>
+      <marker id="arrb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f4ed8"/>
+      </marker>
+    </defs>
+    <style>
+      .box { fill:#fff; stroke:#444; stroke-width:1.4; rx:8; }
+      .boxhl { fill:#eef3ff; stroke:#1f4ed8; stroke-width:1.6; }
+      .lbl { font:13px system-ui,sans-serif; fill:#222; text-anchor:middle; }
+      .row { font:600 13px system-ui,sans-serif; fill:#555; }
+      .small { font:11.5px system-ui,sans-serif; fill:#666; text-anchor:middle; }
+      .cert { font:600 11px system-ui,sans-serif; fill:#b45309; text-anchor:middle; }
+      .stop { font:700 12px system-ui,sans-serif; fill:#b45309; text-anchor:middle; }
+    </style>
+
+    <text class="row" x="10" y="28">the conformal pattern</text>
+    <rect class="box" x="10"  y="44" width="110" height="40" rx="8"/><text class="lbl" x="65"  y="69">location</text>
+    <rect class="box" x="160" y="44" width="110" height="40" rx="8"/><text class="lbl" x="215" y="69">scale</text>
+    <rect class="box" x="310" y="44" width="110" height="40" rx="8"/><text class="lbl" x="365" y="69">rank map</text>
+    <rect class="box" x="460" y="44" width="150" height="40" rx="8" stroke-dasharray="5 4"/><text class="lbl" x="535" y="69">quote pooled law</text>
+    <line x1="120" y1="64" x2="158" y2="64" stroke="#444" stroke-width="1.4" marker-end="url(#arr)"/>
+    <line x1="270" y1="64" x2="308" y2="64" stroke="#444" stroke-width="1.4" marker-end="url(#arr)"/>
+    <line x1="420" y1="64" x2="458" y2="64" stroke="#444" stroke-width="1.4" marker-end="url(#arr)"/>
+    <text class="cert" x="440" y="38">certificate</text>
+    <line x1="440" y1="42" x2="440" y2="58" stroke="#b45309" stroke-width="1.2"/>
+    <text class="stop" x="680" y="69">■ stop</text>
+
+    <text class="row" x="10" y="148">the grammar</text>
+    <rect class="box" x="10"  y="164" width="110" height="40" rx="8"/><text class="lbl" x="65"  y="189">location</text>
+    <rect class="box" x="160" y="164" width="110" height="40" rx="8"/><text class="lbl" x="215" y="189">scale</text>
+    <rect class="box" x="310" y="164" width="110" height="40" rx="8"/><text class="lbl" x="365" y="189">rank map</text>
+    <rect class="box boxhl" x="460" y="164" width="110" height="40" rx="8"/><text class="lbl" x="515" y="189">AR(1)</text>
+    <rect class="box boxhl" x="610" y="164" width="110" height="40" rx="8"/><text class="lbl" x="665" y="189">leaf</text>
+    <line x1="120" y1="184" x2="158" y2="184" stroke="#444" stroke-width="1.4" marker-end="url(#arr)"/>
+    <line x1="270" y1="184" x2="308" y2="184" stroke="#444" stroke-width="1.4" marker-end="url(#arr)"/>
+    <line x1="420" y1="184" x2="458" y2="184" stroke="#1f4ed8" stroke-width="1.6" marker-end="url(#arrb)"/>
+    <line x1="570" y1="184" x2="608" y2="184" stroke="#1f4ed8" stroke-width="1.6" marker-end="url(#arrb)"/>
+    <text class="cert" x="440" y="158">certificate</text>
+    <line x1="440" y1="162" x2="440" y2="178" stroke="#b45309" stroke-width="1.2"/>
+
+    <path d="M 665 214 C 665 250, 65 250, 65 218" fill="none" stroke="#1f4ed8" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#arrb)"/>
+    <text class="small" x="365" y="266">predictive densities pulled back through every inverse, Jacobians included</text>
+
+    <text class="small" x="430" y="304">same operators, same certificate, same position. The only difference is whether anything comes after the rank map.</text>
+  </svg>
+  </div>
+
+  <div class="demo">
+    <div class="canvas-box med"><canvas id="series"></canvas></div>
+    <div class="canvas-box med demo"><canvas id="race"></canvas></div>
+    <div class="readouts" id="readouts"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+
+  <p>With the warp at \(\gamma = 1.5\) and \(\varphi = 0.8\), refitting through the map wins on both flanks. It beats the stop because the transformed stream still carries the serial structure the stop leaves on the table. It beats the no-map chain because the AR model is well specified only in the transformed coordinates: the warp makes the raw stream heavy-tailed and nonlinear, and a linear model fed the raw coordinates fits the wrong thing. Slide \(\gamma\) to \(1\) and the warp vanishes: the map has nothing to undo, and the two refits converge. Slide \(\varphi\) to \(0\) and the serial structure vanishes: the stop becomes optimal, and refitting pays a small estimation tax, visible as the gap running the other way.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. Stopping at the conformal step is a bet, not a theorem, and the certificate does not answer it: the certificate holds at the map&rsquo;s output whether or not structure remains beyond it. When the residual stream still carries signal, the map&rsquo;s best role is not terminal but interior: a coordinate change that hands the next model a stream it can actually fit. Stopping, continuing, and skipping the map are three chains, and the scoring rule, not the philosophy, picks between them.</p>
+  </div>
+
+  <p class="note">On 572 economic series the same three-way race, run with the full grammar, gives the refit-through chain the lead under both log score and CRPS; the grammar paper in <a href="/papers/">papers &amp; notes</a> reports the campaign, and the <a href="https://github.com/microprediction/skaters">skaters</a> library implements the operator with its guards and certificates.</p>
+
+  <div class="prevnext">
+    <a href="29-just-a-transform.html">&larr; Just a transform</a>
+    <span class="spacer"></span>
+    <a href="01-how-conformal-works.html">How conformal works &rarr;</a>
+  </div>
+
+</div>
+  <div class="wrap"><p style="text-align:center;font-size:0.82em;color:#888;margin:10px 0 26px;">Using conformal prediction in your own project? Tell Claude: &ldquo;Read https://conformalprediction.net/SKILL.md and create a project skill from it.&rdquo; It adds a check for whether your coverage is conditionally trustworthy.</p></div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+
+<script type="module" src="../js/demo30.js"></script>
+</body>
+</html>

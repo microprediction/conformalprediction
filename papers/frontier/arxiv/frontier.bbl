@@ -1,0 +1,265 @@
+\begin{thebibliography}{40}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Akaike(1974)]{akaike1974new}
+Hirotugu Akaike.
+\newblock A new look at the statistical model identification.
+\newblock \emph{IEEE Transactions on Automatic Control}, 19\penalty0
+  (6):\penalty0 716--723, 1974.
+
+\bibitem[Angelopoulos and Bates(2023)]{angelopoulos2023gentle}
+Anastasios~N. Angelopoulos and Stephen Bates.
+\newblock Conformal prediction: A gentle introduction.
+\newblock \emph{Foundations and Trends in Machine Learning}, 16\penalty0
+  (4):\penalty0 494--591, 2023.
+
+\bibitem[Angelopoulos et~al.(2021)Angelopoulos, Bates, Malik, and
+  Jordan]{angelopoulos2021uncertainty}
+Anastasios~N. Angelopoulos, Stephen Bates, Jitendra Malik, and Michael~I.
+  Jordan.
+\newblock Uncertainty sets for image classifiers using conformal prediction.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2021.
+
+\bibitem[Angelopoulos et~al.(2024{\natexlab{a}})Angelopoulos, Barber, and
+  Bates]{angelopoulos2025theoretical}
+Anastasios~N. Angelopoulos, Rina~Foygel Barber, and Stephen Bates.
+\newblock Theoretical foundations of conformal prediction.
+\newblock \emph{arXiv preprint arXiv:2411.11824}, 2024{\natexlab{a}}.
+
+\bibitem[Angelopoulos et~al.(2024{\natexlab{b}})Angelopoulos, Bates, Fisch,
+  Lei, and Schuster]{angelopoulos2024conformalrisk}
+Anastasios~N. Angelopoulos, Stephen Bates, Adam Fisch, Lihua Lei, and Tal
+  Schuster.
+\newblock Conformal risk control.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2024{\natexlab{b}}.
+
+\bibitem[Auer et~al.(2023)Auer, Gauch, Klotz, and Hochreiter]{auer2023hopcpt}
+Andreas Auer, Martin Gauch, Daniel Klotz, and Sepp Hochreiter.
+\newblock Conformal prediction for time series with modern hopfield networks.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2023.
+\newblock arXiv:2303.12783.
+
+\bibitem[Barron and Cover(1988)]{barron1988bound}
+Andrew~R. Barron and Thomas~M. Cover.
+\newblock A bound on the financial value of information.
+\newblock \emph{IEEE Transactions on Information Theory}, 34\penalty0
+  (5):\penalty0 1097--1100, 1988.
+
+\bibitem[Bates et~al.(2021)Bates, Angelopoulos, Lei, Malik, and
+  Jordan]{bates2021distribution}
+Stephen Bates, Anastasios Angelopoulos, Lihua Lei, Jitendra Malik, and
+  Michael~I. Jordan.
+\newblock Distribution-free, risk-controlling prediction sets.
+\newblock \emph{Journal of the ACM}, 68\penalty0 (6):\penalty0 1--34, 2021.
+
+\bibitem[Blackwell(1953)]{blackwell1953equivalent}
+David Blackwell.
+\newblock Equivalent comparisons of experiments.
+\newblock \emph{The Annals of Mathematical Statistics}, 24\penalty0
+  (2):\penalty0 265--272, 1953.
+
+\bibitem[Bostr{\"o}m et~al.(2021)Bostr{\"o}m, Johansson, and
+  L{\"o}fstr{\"o}m]{bostrom2021mondrian}
+Henrik Bostr{\"o}m, Ulf Johansson, and Tuwe L{\"o}fstr{\"o}m.
+\newblock Mondrian conformal predictive distributions.
+\newblock In \emph{Conformal and Probabilistic Prediction and Applications
+  (COPA), PMLR}, volume 152, pages 24--38, 2021.
+
+\bibitem[Braun et~al.(2025)Braun, Holzm{\"u}ller, Jordan, and
+  Bach]{braun2025conditional}
+Sacha Braun, David Holzm{\"u}ller, Michael~I. Jordan, and Francis Bach.
+\newblock Conditional coverage diagnostics for conformal prediction.
+\newblock \emph{arXiv preprint arXiv:2512.11779}, 2025.
+
+\bibitem[Chen and Guestrin(2016)]{chen2016xgboost}
+Tianqi Chen and Carlos Guestrin.
+\newblock {XGBoost}: A scalable tree boosting system.
+\newblock In \emph{Proceedings of the 22nd ACM SIGKDD International Conference
+  on Knowledge Discovery and Data Mining}, pages 785--794, 2016.
+
+\bibitem[Chernozhukov et~al.(2021)Chernozhukov, W{\"u}thrich, and
+  Zhu]{chernozhukov2021distributional}
+Victor Chernozhukov, Kaspar W{\"u}thrich, and Yinchu Zhu.
+\newblock Distributional conformal prediction.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 118\penalty0
+  (48):\penalty0 e2107794118, 2021.
+
+\bibitem[Cotton(2026{\natexlab{a}})]{cotton2026marginally}
+Peter Cotton.
+\newblock Marginally useful: Formalizing the information gap in conformal
+  prediction.
+\newblock Under review, 2026{\natexlab{a}}.
+
+\bibitem[Cotton(2026{\natexlab{b}})]{cotton_skaters}
+Peter Cotton.
+\newblock skaters: online distributional time-series forecasting.
+\newblock \url{https://github.com/microprediction/skaters}, 2026{\natexlab{b}}.
+
+\bibitem[Dawid(1984)]{dawid1984present}
+A.~Philip Dawid.
+\newblock Present position and potential developments: Some personal views:
+  Statistical theory: The prequential approach.
+\newblock \emph{Journal of the Royal Statistical Society: Series A},
+  147\penalty0 (2):\penalty0 278--292, 1984.
+
+\bibitem[DeGroot(1962)]{degroot1962uncertainty}
+Morris~H. DeGroot.
+\newblock Uncertainty, information, and sequential experiments.
+\newblock \emph{The Annals of Mathematical Statistics}, 33\penalty0
+  (2):\penalty0 404--419, 1962.
+
+\bibitem[Duan et~al.(2020)Duan, Avati, Ding, Basu, Ng, and
+  Schuler]{duan2020ngboost}
+Tony Duan, Anand Avati, Daisy~Yi Ding, Sanyam Basu, Andrew~Y. Ng, and Alejandro
+  Schuler.
+\newblock {NGBoost}: Natural gradient boosting for probabilistic prediction.
+\newblock In \emph{Proceedings of the 37th International Conference on Machine
+  Learning}, 2020.
+
+\bibitem[Foygel~Barber et~al.(2021)Foygel~Barber, Cand{\`e}s, Ramdas, and
+  Tibshirani]{barber2021limits}
+Rina Foygel~Barber, Emmanuel~J. Cand{\`e}s, Aaditya Ramdas, and Ryan~J.
+  Tibshirani.
+\newblock The limits of distribution-free conditional predictive inference.
+\newblock \emph{Information and Inference: A Journal of the IMA}, 10\penalty0
+  (2):\penalty0 455--482, 2021.
+
+\bibitem[Friedman(2001)]{friedman2001greedy}
+Jerome~H. Friedman.
+\newblock Greedy function approximation: a gradient boosting machine.
+\newblock \emph{The Annals of Statistics}, 29\penalty0 (5):\penalty0
+  1189--1232, 2001.
+
+\bibitem[Fukumizu et~al.(2004)Fukumizu, Bach, and
+  Jordan]{fukumizu2004dimensionality}
+Kenji Fukumizu, Francis~R. Bach, and Michael~I. Jordan.
+\newblock Dimensionality reduction for supervised learning with reproducing
+  kernel {H}ilbert spaces.
+\newblock \emph{Journal of Machine Learning Research}, 5:\penalty0 73--99,
+  2004.
+
+\bibitem[Gibbs and Cand{\`e}s(2021)]{gibbs2021adaptive}
+Isaac Gibbs and Emmanuel~J. Cand{\`e}s.
+\newblock Adaptive conformal inference under distribution shift.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~34, pages 1660--1672, 2021.
+
+\bibitem[Gibbs et~al.(2025)Gibbs, Cherian, and
+  Cand{\`e}s]{gibbs2025conditional}
+Isaac Gibbs, John~J. Cherian, and Emmanuel~J. Cand{\`e}s.
+\newblock Conformal prediction with conditional guarantees.
+\newblock \emph{Journal of the Royal Statistical Society Series B}, 2025.
+\newblock arXiv:2305.12616.
+
+\bibitem[Globerson and Tishby(2003)]{globerson2003sufficient}
+Amir Globerson and Naftali Tishby.
+\newblock Sufficient dimensionality reduction.
+\newblock \emph{Journal of Machine Learning Research}, 3:\penalty0 1307--1331,
+  2003.
+
+\bibitem[Gneiting and Raftery(2007)]{gneiting2007strictly}
+Tilmann Gneiting and Adrian~E. Raftery.
+\newblock Strictly proper scoring rules, prediction, and estimation.
+\newblock \emph{Journal of the American Statistical Association}, 102\penalty0
+  (477):\penalty0 359--378, 2007.
+
+\bibitem[Gneiting et~al.(2007)Gneiting, Balabdaoui, and
+  Raftery]{gneiting2007probabilistic}
+Tilmann Gneiting, Fadoua Balabdaoui, and Adrian~E. Raftery.
+\newblock Probabilistic forecasts, calibration and sharpness.
+\newblock \emph{Journal of the Royal Statistical Society: Series B},
+  69\penalty0 (2):\penalty0 243--268, 2007.
+
+\bibitem[Gr{\"u}nwald and Dawid(2004)]{grunwald2004game}
+Peter~D. Gr{\"u}nwald and A.~Philip Dawid.
+\newblock Game theory, maximum entropy, minimum discrepancy and robust
+  {B}ayesian decision theory.
+\newblock \emph{The Annals of Statistics}, 32\penalty0 (4):\penalty0
+  1367--1433, 2004.
+
+\bibitem[Kalman(1960)]{kalman1960new}
+Rudolf~E. Kalman.
+\newblock A new approach to linear filtering and prediction problems.
+\newblock \emph{Journal of Basic Engineering}, 82\penalty0 (1):\penalty0
+  35--45, 1960.
+
+\bibitem[Kelly(1956)]{kelly1956new}
+J.~L. Kelly.
+\newblock A new interpretation of information rate.
+\newblock \emph{Bell System Technical Journal}, 35\penalty0 (4):\penalty0
+  917--926, 1956.
+
+\bibitem[Lei and Wasserman(2014)]{lei2014distribution}
+Jing Lei and Larry Wasserman.
+\newblock Distribution-free prediction bands for non-parametric regression.
+\newblock \emph{Journal of the Royal Statistical Society: Series B},
+  76\penalty0 (1):\penalty0 71--96, 2014.
+
+\bibitem[Lei et~al.(2018)Lei, G'Sell, Rinaldo, Tibshirani, and
+  Wasserman]{lei2018distribution}
+Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan~J. Tibshirani, and Larry
+  Wasserman.
+\newblock Distribution-free predictive inference for regression.
+\newblock \emph{Journal of the American Statistical Association}, 113\penalty0
+  (523):\penalty0 1094--1111, 2018.
+
+\bibitem[Li(1991)]{li1991sliced}
+Ker-Chau Li.
+\newblock Sliced inverse regression for dimension reduction.
+\newblock \emph{Journal of the American Statistical Association}, 86\penalty0
+  (414):\penalty0 316--327, 1991.
+
+\bibitem[Lindley(1956)]{lindley1956measure}
+Dennis~V. Lindley.
+\newblock On a measure of the information provided by an experiment.
+\newblock \emph{The Annals of Mathematical Statistics}, 27\penalty0
+  (4):\penalty0 986--1005, 1956.
+
+\bibitem[Recht(2024)]{recht2024cover}
+Benjamin Recht.
+\newblock Cover songs; and from intervals to bands.
+\newblock \emph{arg min} blog, 2024.
+\newblock \url{https://www.argmin.net/}.
+
+\bibitem[Romano et~al.(2019)Romano, Patterson, and
+  Cand{\`e}s]{romano2019conformalized}
+Yaniv Romano, Evan Patterson, and Emmanuel~J. Cand{\`e}s.
+\newblock Conformalized quantile regression.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~32, 2019.
+
+\bibitem[Tishby et~al.(1999)Tishby, Pereira, and Bialek]{tishby1999information}
+Naftali Tishby, Fernando~C. Pereira, and William Bialek.
+\newblock The information bottleneck method.
+\newblock In \emph{Proceedings of the 37th Allerton Conference on
+  Communication, Control and Computing}, pages 368--377, 1999.
+
+\bibitem[Vovk(2012)]{vovk2012conditional}
+Vladimir Vovk.
+\newblock Conditional validity of inductive conformal predictors.
+\newblock \emph{Proceedings of the Asian Conference on Machine Learning (ACML),
+  PMLR}, 25:\penalty0 475--490, 2012.
+
+\bibitem[Vovk et~al.(2005)Vovk, Gammerman, and Shafer]{vovk2005algorithmic}
+Vladimir Vovk, Alexander Gammerman, and Glenn Shafer.
+\newblock \emph{Algorithmic Learning in a Random World}.
+\newblock Springer, New York, 2005.
+
+\bibitem[Vovk et~al.(2019)Vovk, Shen, Manokhin, and Xie]{vovk2019nonparametric}
+Vladimir Vovk, Jieli Shen, Valery Manokhin, and Min-ge Xie.
+\newblock Nonparametric predictive distributions based on conformal prediction.
+\newblock \emph{Machine Learning}, 108\penalty0 (3):\penalty0 445--474, 2019.
+
+\bibitem[White(1982)]{white1982maximum}
+Halbert White.
+\newblock Maximum likelihood estimation of misspecified models.
+\newblock \emph{Econometrica}, 50\penalty0 (1):\penalty0 1--25, 1982.
+
+\end{thebibliography}

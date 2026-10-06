@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Conformal correlation: three experiments</title>
+<meta name="description" content="Three live experiments on the conformal correlation matrix: its entries are pinned by inclusion rates, it cannot tell which way a confusion runs, and it loses resolution as prediction sets shrink." />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="../css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  @media (max-width: 720px) { .row2, .row3 { grid-template-columns: 1fr; } }
+  .canvas-box.sq canvas { height: 330px; }
+  table.phi { border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px; margin: 1em 0; }
+  table.phi th, table.phi td { border: 1px solid var(--line); padding: 6px 14px; text-align: right; }
+  table.phi th { background: #f7f6f1; font-weight: 600; }
+  table.phi td:first-child, table.phi th:first-child { text-align: left; }
+  .tablewrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+          <a href="/conformal-relational.html">Relational conformal prediction</a>
+          <a href="/conformal-adaptive-logging.html">Counterfactual online conformal</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Demonstration 32</p>
+  <h1>Conformal correlation</h1>
+  <p class="subtitle">A recent paper proposes correlating class membership across conformal prediction
+  sets and reading the result as a map of which classes a classifier confuses. Four experiments, one
+  inside randomized APS exactly as Romano, Sesia and Cand&egrave;s specify it and three on a synthetic classifier with known injected logit perturbations show what the statistic responds to. The close reading is on the
+  <a href="/conformal-correlation.html">critique page</a>.</p>
+
+  <p>The question the authors want the matrix to answer is which classes the classifier confuses. The
+  direct answer is the soft confusion matrix,</p>
+
+  $$C_{ab} = \mathbb{E}\big[\,p_b \,\big|\, y = a\,\big],$$
+
+  <p>the average probability the classifier assigns to class \(b\) over images whose true class is
+  \(a\). It is directional and threshold free, and it needs no calibration set. It does need labeled
+  evaluation data, as any confusion matrix does, and as a conditional mean it summarizes the
+  probabilities rather than determining error rates. The authors never compute it. Every panel below puts the conformal correlation
+  matrix beside the soft confusion matrix on the same data and asks which one answers the question.</p>
+
+  <p>We build a classifier whose mistakes we control. There are \(H = 10\) classes. For an image with
+  true class \(y\), the classifier&rsquo;s logits and reported probabilities are</p>
+
+  $$\ell_h = m\,\mathbf{1}[h = y] + G_{yh} + \varepsilon_h, \qquad
+    \varepsilon_h \sim N(0,1) \text{ independently}, \qquad
+    p_h = \frac{e^{\ell_h}}{\sum_{k=1}^{H} e^{\ell_k}}, \qquad h = 1, \dots, H.$$
+
+  <p>The margin \(m\) sets the accuracy. The matrix \(G\) sets the confusions: \(G_{yh} > 0\) pushes
+  probability from images of class \(y\) onto class \(h\), and \(G\) need not be symmetric. Panel A uses
+  \(G_{01} = G_{10} = c\) and zero elsewhere. Panel B uses \(G_{01} = \theta c\) and
+  \(G_{10} = (1-\theta) c\). Panel C draws a symmetric \(G\) at random. In every case the injected
+  confusion is known exactly. Pairs with \(G_{ij} = 0\) have no injected confusion, and at the default
+  margin they are separated on almost every image, though not on every image, since the noise is
+  Gaussian.</p>
+
+  <p>From this classifier we draw \(n = 1{,}000\) labeled calibration images and 3,000 test images. The
+  sets are the adaptive prediction sets of Romano, Sesia and Cand&egrave;s, which the paper uses. Each
+  calibration image gets the score</p>
+
+  $$s = \sum_{k :\, p_k \ge p_y} p_k \;-\; U\, p_y, \qquad U \sim \mathrm{Unif}(0,1),$$
+
+  <p>the probability mass at and above the true class, less a random share of the true class&rsquo;s
+  own mass. The threshold \(q\) is the \(\lceil (n+1)(1-\alpha) \rceil\)-th smallest calibration score.
+  For a test image the classes are taken in decreasing order of \(p_h\) while the mass before them is
+  below \(q\), and the last class taken is kept with probability equal to the fraction of its mass
+  needed to reach \(q\). Marginal coverage is then \(k/(n+1)\) with
+  \(k = \lceil (n+1)(1-\alpha) \rceil\), at least \(1-\alpha\) and within \(1/(n+1)\) of it.</p>
+
+  <p>For each test image write \(z_h = 1\) if class \(h\) is in its set and \(0\) otherwise. The
+  conformal correlation matrix is</p>
+
+  $$\rho_{ij} = \frac{\mathbb{E}[z_i z_j] - \mathbb{E}[z_i]\,\mathbb{E}[z_j]}
+    {\sqrt{\operatorname{Var}(z_i)\,\operatorname{Var}(z_j)}},$$
+
+  <p>with the expectations taken over the 3,000 test images, exactly as the authors define it. Since the
+  \(z_h\) are zeros and ones, each entry is a phi coefficient.</p>
+
+  <p>Beside it, each panel computes the soft confusion matrix \(C\) defined above from the same
+  probability vectors. Panel C also uses the symmetric version, the mean pairwise product
+  \(S_{ij} = \mathbb{E}[p_i p_j]\), since the truth there is symmetric. Each panel then changes one thing
+  about \(G\) or the inputs and shows how the two matrices respond.</p>
+
+  <h2 id="a">A. Two classifiers, one law of sets, inside randomized APS</h2>
+
+  <p>Three classes with equal frequency. Two models assign the probabilities \((0.6, 0.3, 0.1)\) in
+  the orders below, so the true class is always ranked second and both models have accuracy zero.
+  Model 1 labels every \(A\) as \(C\), every \(B\) as \(A\) and every \(C\) as \(B\). Model 2 runs the
+  cycle the other way.</p>
+
+  <div class="tablewrap">
+  <table class="phi">
+    <tr><th>True class</th><th>Model 1 order</th><th>Model 2 order</th></tr>
+    <tr><td>\(A\)</td><td>\(C > A > B\)</td><td>\(B > A > C\)</td></tr>
+    <tr><td>\(B\)</td><td>\(A > B > C\)</td><td>\(C > B > A\)</td></tr>
+    <tr><td>\(C\)</td><td>\(B > C > A\)</td><td>\(A > C > B\)</td></tr>
+  </table>
+  </div>
+
+  <p>By the score in the setup above, the true label scores \(0.9 - 0.3u\) under both models. The two
+  models are calibrated on the same inputs with the same uniforms, so they get the same threshold, and
+  at test time they see the same inputs and the same uniforms. The panel computes both conformal
+  correlation matrices and both confusion matrices from the resulting sets. In the confusion
+  matrices the row is the true class and the column is the class ranked first.</p>
+
+  <div class="demo">
+    <div class="row2">
+      <div class="canvas-box short"><canvas id="d-ccm1"></canvas></div>
+      <div class="canvas-box short"><canvas id="d-ccm2"></canvas></div>
+    </div>
+    <div class="row2" style="margin-top:12px">
+      <div class="canvas-box short"><canvas id="d-cm1"></canvas></div>
+      <div class="canvas-box short"><canvas id="d-cm2"></canvas></div>
+    </div>
+    <div class="readouts" id="d-readouts"></div>
+    <div class="controls" id="d-controls"></div>
+  </div>
+
+  <p>The two conformal correlation matrices agree up to sampling noise, and the two confusion
+  matrices are transposes of each other. The population laws of the sets are identical: with
+  \(r = (\tau - 0.6)/0.3\), each singleton occurs with probability \((1-r)/3\) and each pair with
+  probability \(r/3\) under either model, so the population matrices are equal exactly. The authors
+  write that the matrix &ldquo;contains a superset of the information conveyed by the confusion
+  matrix.&rdquo; Here the sets are produced by randomized APS exactly as Romano, Sesia and Cand&egrave;s specify it,
+  and the matrix does not determine the confusion matrix.</p>
+
+  <h2 id="b">B. The entries are pinned by inclusion rates</h2>
+
+  <p>Here the confusion term is nonzero for exactly one pair, 0 and 1. The other 44 pairs have no
+  injected confusion. The left heat map is the conformal correlation matrix at the chosen \(\alpha\). The right
+  is the soft confusion matrix, the mean probability the classifier puts on each column class for
+  images of each row class.</p>
+
+  <div class="demo">
+    <div class="row2">
+      <div class="canvas-box sq"><canvas id="a-ccm"></canvas></div>
+      <div class="canvas-box sq"><canvas id="a-soft"></canvas></div>
+    </div>
+    <div class="canvas-box med" style="margin-top:12px"><canvas id="a-sweep"></canvas></div>
+    <div class="readouts" id="a-readouts"></div>
+    <div class="controls" id="a-controls"></div>
+  </div>
+
+  <p>In this experiment 44 of the 45 pairs have no injected confusion. Their entries in the conformal
+  correlation matrix are all close to the same negative number, and that number is set by how often
+  each class is included in a set. It says nothing about the classes.</p>
+
+  <p>Write \(p_i\) for the fraction of test sets that contain class \(i\). Two classes that never appear
+  in the same set have \(\mathbb{E}[z_i z_j] = 0\), so their entry is</p>
+
+  $$\rho_{ij} = \frac{0 - p_i p_j}{\sqrt{p_i(1-p_i)\,p_j(1-p_j)}}
+             = -\sqrt{\frac{p_i\,p_j}{(1-p_i)(1-p_j)}}.$$
+
+  <p>With ten balanced classes and singleton sets, \(p_i = 1/10\) for every class and every such entry
+  equals \(-1/9\). The dashed line in the lower plot is this formula evaluated at the observed
+  inclusion rates. It lies on top of the blue line, the average of the 44 entries.</p>
+
+  <p>The sliders change the inclusion rates without changing the classifier. Moving \(\alpha\) changes
+  the set sizes, so all 44 entries move together. Adding class imbalance makes common classes appear in
+  more sets than rare ones, so the 44 entries spread out in a pattern that copies the class frequencies.
+  Raising the share of hard inputs, on which the classifier has no margin and so returns a large set,
+  makes all 45 entries positive, including the 44 pairs with no injected confusion.</p>
+
+  <p>The authors read a negative entry as dissimilarity and a positive entry as similarity. Here the
+  negative entries are set by the inclusion rates, which here move with \(\alpha\) and the class
+  frequencies while the classifier is unchanged, and the positive entries
+  are produced by input difficulty with no similarity between the classes at all.</p>
+
+  <h2 id="c">C. A symmetric object cannot carry a directional claim</h2>
+
+  <p>In this experiment a fixed amount of confusion \(c\) is split between two directions. A share
+  \(\theta\) runs from class 0 to class 1, meaning images of class 0 put probability on class 1, and the
+  rest runs from class 1 to class 0. At \(\theta = 1\) images of class 0 are the only ones confused. At
+  \(\theta = 0\) images of class 1 are the only ones confused.</p>
+
+  <div class="demo">
+    <div class="canvas-box med"><canvas id="b-plot"></canvas></div>
+    <div class="readouts" id="b-readouts"></div>
+    <div class="controls" id="b-controls"></div>
+  </div>
+
+  <p>The soft confusion entries \(C_{01}\) and \(C_{10}\) cross as \(\theta\) moves. Read together they
+  say how much confusion there is and which way it runs. The conformal correlation entry
+  \(\rho_{01}\) is one curve, symmetric about \(\theta = 1/2\). Up to sampling noise it takes the same value at
+  \(\theta\) and at \(1 - \theta\), as the readouts show, so it cannot tell a classifier that mistakes 0 for 1
+  from one that mistakes 1 for 0.</p>
+
+  <p>This is forced by the definition. A correlation matrix is symmetric, so it has \(H(H-1)/2\)
+  distinct off diagonal entries. Directional confusion between class pairs has \(H(H-1)\) numbers.
+  The authors nevertheless read from a positive entry that the classifier &ldquo;is much more likely to
+  misclassify images of class 91 as class 30 than as class 95,&rdquo; and write that the matrix
+  &ldquo;contains a superset of the information conveyed by the confusion matrix.&rdquo; Neither
+  statement can be true of a symmetric matrix.</p>
+
+  <h2 id="d">D. Resolution collapses as the sets shrink</h2>
+
+  <p>In this experiment every pair of classes has its own confusion strength \(G_{ij} = G_{ji}\), drawn
+  at random once and then held fixed. The question is whether a statistic can recover the ordering of
+  the 45 pairs by injected strength. The left plot shows the conformal correlation entry for each pair
+  against its injected strength, at the chosen \(\alpha\). The middle plot shows the mean pairwise
+  product \(S_{ij} = \mathbb{E}[p_i p_j]\) against the same strengths. The right plot shows the rank
+  correlation between each statistic and the injected strengths, as \(\alpha\) varies.</p>
+
+  <div class="demo">
+    <div class="row3">
+      <div class="canvas-box med"><canvas id="c-ccm"></canvas></div>
+      <div class="canvas-box med"><canvas id="c-soft"></canvas></div>
+      <div class="canvas-box med"><canvas id="c-curve"></canvas></div>
+    </div>
+    <div class="readouts" id="c-readouts"></div>
+    <div class="controls" id="c-controls"></div>
+  </div>
+
+  <p>The probability based statistic recovers the ordering well at every \(\alpha\), and it has no
+  \(\alpha\) to choose. The conformal correlation entries sit at the floor from panel B for most pairs
+  and rise only for the few strongest, so their rank correlation with the injected strengths is
+  lower at every \(\alpha\). It falls further as \(\alpha\) grows, because larger \(\alpha\) means smaller sets, and singleton
+  sets contain no pairwise co-occurrence, which leaves the entries determined by the marginal
+  inclusion rates.</p>
+
+  <p>The authors sweep \(\alpha\) over four values and present the dependence on \(\alpha\) as a
+  feature. The dependence is the statistic recovering, four coarse steps at a time, information that
+  the threshold removed and that the probabilities still contain. The randomization in APS adds noise
+  of its own. Untick the box to remove it, and the sets grow instead.</p>
+
+  <div class="takeaway">
+    <p>Takeaway. These are controlled settings in which the conformal correlation matrix responds to
+    marginal inclusion rates, set size and the erasure of direction rather than to the pairwise
+    confusion it is meant to measure. The construction injects confusion into the logits, so it is a
+    counterexample generator and not a general comparison of statistics. Each panel is a single
+    simulation draw without error bars. The resample button shows how much the numbers move.</p>
+  </div>
+
+  <p class="note">The paper is Perlo, Chiasserini, De Veciana and Malandrino, <em>Computer
+  Communications</em> 247 (2026) 108398. APS sets and scores follow Romano, Sesia and Cand&egrave;s (NeurIPS
+  2020), randomized as in the original. Untick the box to see the non randomized sets, which are much larger on a confident classifier. Source: <code>js/demo32.js</code>.</p>
+
+  <div class="prevnext">
+    <a href="31-two-worlds.html">&larr; Two worlds</a>
+    <span class="spacer"></span>
+    <a href="/conformal-correlation.html">The critique &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+<script type="module" src="../js/demo32.js"></script>
+</body>
+</html>

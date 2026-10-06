@@ -32,6 +32,10 @@
           <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
           <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
           <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
@@ -43,13 +47,25 @@
           <a href="/demos/05-drift-timeseries.html">Drift</a>
         </span>
       </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+          <a href="/conformal-relational.html">Relational conformal prediction</a>
+          <a href="/conformal-adaptive-logging.html">Counterfactual online conformal</a>
+        </span>
+      </span>
       <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
         <span class="drop">
           <a href="/literature.html">Bibliography</a>
           <a href="/map.html">The map</a>
           <a href="/connections.html">Connections</a>
           <a href="/applications.html">Applications</a>
-          <a href="/papers/">Papers &amp; notes</a>
           <a href="/blogs.html">Other sites &amp; blogs</a>
         </span>
       </span>
@@ -83,10 +99,10 @@
   received, especially nominations from practitioners who have shipped it.</p>
 
   <h3>Doesn&rsquo;t conformalizing my model improve its uncertainty?</h3>
-  <p>It gives the prediction <em>set</em> a coverage guarantee. It does not change your predictive <em>distribution</em>&rsquo;s sharpness, and a proper score (log-likelihood, CRPS) is unmoved by the conformal step. If the model is overconfident, conformal widens the set to hit coverage, but the density it implies is just your model&rsquo;s residual shape, re-levelled. Watch coverage and log-score decouple in <a href="/demos/04-coverage-vs-logscore.html">the coverage &perp; log-score demo</a>, see the re-levelling side by side in <a href="/demos/06-conformal-vs-recalibration.html">conformal vs. recalibration</a>, and read <a href="/papers/marginally-useful/">the Marginally Useful note</a> for the exact size of what stays untouched: \(I(R;X)\).</p>
+  <p>It gives the prediction <em>set</em> a coverage guarantee. Ordinary split conformal outputs a set, not a distribution, so any density you supply alongside it is untouched, and that density&rsquo;s log-likelihood and CRPS are unchanged. Distribution-valued conformal methods (conformal predictive systems, <a href="https://arxiv.org/abs/1902.06579">conformal calibrators</a>) do output a new predictive CDF, and that can move proper scores, often for the better: Vovk et al. report CRPS gains from conformal calibration. What no calibration step can do is put back information the frozen score discarded. That part of the log-score gap is fixed before calibration begins, and for a location score it is \(I(R;X)\). Watch coverage and log-score decouple in <a href="/demos/04-coverage-vs-logscore.html">the coverage &perp; log-score demo</a>, see the re-levelling side by side in <a href="/demos/06-conformal-vs-recalibration.html">conformal vs. recalibration</a>, and read <a href="/papers/marginally-useful/">the Marginally Useful note</a> for the exact size of what stays untouched.</p>
 
   <h3>But conformal predictive systems and CQR output whole distributions!</h3>
-  <p>They do, and they can be excellent. The point is <em>attribution</em>: their sharpness comes from the conditional model they wrap, the quantile regressor, the difficulty estimator, the per-region bins, not from the conformal step, which supplies the coverage certificate. A <a href="/benchmark.html">worked example</a> shows raw quantile regression matching its conformalized version, and <a href="/demos/13-coverage-score-plane.html">the coverage-score plane</a> plots where each method actually moves.</p>
+  <p>They do, and they can be excellent. Their conformal step reshapes the predictive CDF and can improve proper scores by recalibrating it. The ability to tell one input from another comes from the conditional model they wrap, the quantile regressor, the difficulty estimator, the per-region bins, and the conformal step adds calibration and the coverage certificate on top. A <a href="/benchmark.html">worked example</a> shows raw quantile regression matching its conformalized version, and <a href="/demos/13-coverage-score-plane.html">the coverage-score plane</a> plots where each method actually moves.</p>
 
   <h3>Can I get conditional (per-\(x\)) coverage?</h3>
   <p>Not exactly, and not for free: distribution-free, finite-sample conditional coverage forces infinite-length intervals (<a href="/demos/07-price-of-conditional-coverage.html">the price of conditional coverage</a>; the full set of no-go theorems is the wall on <a href="/map.html">the map</a>). You can <em>approach</em> it under assumptions, conformalized quantile regression, normalized/Mondrian conformal, recent pivotal-score and optimal-transport methods, all of which condition on \(x\). <a href="/demos/02-marginal-vs-conditional.html">The marginal-vs-conditional demo</a> shows what the marginal average hides, and <a href="/demos/08-subgroup-coverage.html">the subgroup demo</a> shows the group-conditional version buying only a wider band.</p>
@@ -109,6 +125,18 @@
 
   <h3>Does it work for time series?</h3>
   <p>Better than the folklore says as regards moving sideways in the coverage / accuracy diagram. Exchangeability is not the right perspective: it is the assumption under which the guarantee is exact, not a switch that turns it off. On a stationary series whose dependence vanishes beyond a finite lag, plain split conformal provably loses at most (dependence range)/(calibration size) of its coverage, plus a mixing term when the dependence merely fades &mdash; watch it in <a href="/demos/19-dependence-tax.html">the dependence-tax demo</a>. What genuinely breaks a fixed band is drift (<a href="/demos/05-drift-timeseries.html">the drift demo</a>); there the adaptive methods (ACI, conformal PID, EnbPI) recover a long-run average coverage and are well worth using &mdash; just don&rsquo;t read them as a per-step guarantee. Dependence also carries a second, permanent bill: the sharpness rent priced in <a href="/papers/two-prices/">the two-prices note</a>. See <a href="/timeseries.html">the coverage games</a> and <a href="/timeseries-conditional.html">conditional coverage and sharpness</a>.</p>
+
+  <h3>Is any of this connected to something outside statistics?</h3>
+  <p>Conformal prediction is a gateway drug to homogenization. Pooling residuals over states is
+  averaging a fast, unobserved variable over its invariant law, which is the first move in
+  homogenization and averaging theory. The difference is what happens next. That field calls the
+  averaged limit the <em>naive</em> one and spends its energy on the corrector, the solvability
+  condition that says when averaging is legitimate, and the rate. Conformal prediction stops at the
+  average and attaches a certificate. If the pooling step feels unsatisfying to you, the literature
+  you want is already written, and it is a century deep.
+  <a href="/homogenization.html">The homogenization page</a> makes the comparison, with two processes
+  whose conformal intervals and marginal coverage are identical while their conditional coverage runs
+  from 57% to 100%.</p>
 
   <h3>Then what should I use to make forecasts better?</h3>
   <p>Model the conditional distribution (heteroscedastic models, quantile regression, mixture or flow densities) and recalibrate against a proper score. <em>Then</em> conformalize, if you also need a distribution-free coverage certificate. The order matters: estimate first, certify second. <a href="/alternatives.html">The alternatives page</a> lists the workhorses (t-GARCH, laplace, pymc_forecast), <a href="/demos/17-laplace-vs-conformal.html">demo 17</a> races one against a conformal wrap, and <a href="/recipes.html">the recipes page</a> has the audit code.</p>

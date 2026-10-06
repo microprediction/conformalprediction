@@ -1,0 +1,5 @@
+The predictive cost of pooling residuals is a conditional mutual information
+Conformal calibration cannot recover information excluded by the representation
+A nested ladder of online transforms prices each representation on 701 series
+Conditional scale is the largest and most reliable component of the gain
+Scale-normalized empirical pooling beats raw pooling on 87 percent of series

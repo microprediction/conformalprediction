@@ -1,0 +1,101 @@
+arxiv_id,title,year,label,note
+2508.11345v1,Conformal Prediction Meets Long-tail Classification,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2205.03647v2,Training-conditional coverage for distribution-free predictive inference,2022,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+1903.04684v2,The limits of distribution-free conditional predictive inference,2019,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2512.07770v2,Distribution-informed Online Conformal Prediction,2025,TERMINAL,models-scores-but-terminal: estimates CDF of nonconformity scores online to tighten sets
+2403.03868v3,Confidence on the Focal: Conformal Prediction with Selection-Conditional Coverage,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2312.15799v2,Efficient Conformal Prediction under Data Heterogeneity,2023,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2310.07850v5,Conformal prediction with local weights: randomization enables local guarantees,2023,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2210.10161v1,Nonparametric Quantile Regression: Non-Crossing Constraints and Conformal Prediction,2022,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2512.03547v1,Learning-Based Hierarchical Approach for Fast Mixed-Integer Optimization,2025,TERMINAL,conformal certifies out-of-sample performance of learned MIP solutions; guarantee is the deliverable
+2202.07282v1,Adaptive Conformal Predictions for Time Series,2022,TERMINAL,models-scores-but-terminal: adaptive conformal (AgACI) expert aggregation over ACI learning rates
+2509.25692v1,Annotation-Efficient Active Test-Time Adaptation with Conformal Prediction,2025,UNCLEAR,conformal uncertainty drives annotation selection and staged self-training updates in test-time adaptation; conformal output gates further training but the calibrated stream itself is not modeled
+2512.06945v2,Symmetric Aggregation of Conformity Scores for Efficient Uncertainty Sets,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2605.24848v1,Distributional Conformal Prediction for Markov Processes,2026,TERMINAL,PIT-transforms Markov data to i.i.d. BEFORE conformal (transform-then-conformalize); conformal interval is final
+2504.15722v1,From predictions to confidence intervals: an empirical study of conformal prediction methods for in-context learning,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2110.00816v2,Calibrated Multiple-Output Quantile Regression with Representation Learning,2021,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2506.05583v2,Conformal Prediction Adaptive to Unknown Subpopulation Shifts,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2411.01596v1,Strategic Conformal Prediction,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+1908.03569v1,Concepts and Applications of Conformal Prediction in Computational Drug Discovery,2019,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+1905.07886v2,Conformal Prediction Interval Estimations with an Application to Day-Ahead and Intraday Power Markets,2019,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2110.13031v1,Applying Regression Conformal Prediction with Nearest Neighbors to time series data,2021,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2309.12510v1,Confidence Calibration for Systems with Cascaded Predictive Modules,2023,TERMINAL,composes module-level calibration into system-level intervals; intervals are final output
+2311.12688v2,On the Out-of-Distribution Coverage of Combining Split Conformal Prediction and Bayesian Deep Learning,2023,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2503.04071v5,Tightening optimality gap with confidence through conformal prediction,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2506.18162v1,Pitfalls of Conformal Predictions for Medical Image Classification,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+1904.06330v1,Reliable Prediction Errors for Deep Neural Networks Using Test-Time Dropout,2019,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2505.10919v3,A Physics-Informed Spatiotemporal Deep Learning Framework for Turbulent Systems,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2306.11128v2,CAMMARL: Conformal Action Modeling in Multi Agent Reinforcement Learning,2023,UNCLEAR,"CAMMARL: RL policy is trained taking conformal action-sets of other agents as inputs; a further model consumes conformal output, but sets are used as features, no mapping back through the conformal transform"
+2511.13533v2,Minimax Multi-Target Conformal Prediction with Applications to Imaging Inverse Problems,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2509.04733v1,CoVeR: Conformal Calibration for Versatile and Reliable Autoregressive Next-Token Prediction,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2511.02103v4,Efficient Quantification of Time-Series Prediction Error: Optimal Selection Conformal Prediction,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2607.17297v1,Multi-Granularity Conformal Prediction for Reliable Neural-Operator Automotive Aerodynamic Surrogates,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2410.24136v2,Two-sided conformalized survival analysis,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2310.02863v1,Conformal Predictions for Longitudinal Data,2023,TERMINAL,models-scores-but-terminal: quantile regression on residuals (LPCI) to build longitudinal intervals
+2412.19318v1,Adaptive Conformal Inference by Betting,2024,TERMINAL,models-scores-but-terminal: adaptive conformal inference via parameter-free online betting
+2506.05497v1,Conformal Prediction Beyond the Seen: A Missing Mass Perspective for Uncertainty Quantification in Generative Models,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2403.07263v2,Adaptive Bounding Box Uncertainties via Two-Step Conformal Prediction,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2603.01719v1,Co-optimization for Adaptive Conformal Prediction,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2605.08422v1,Rolling-Origin Conformal Prediction under Local Stationarity and Weak Dependence,2026,TERMINAL,models-scores-but-terminal: rolling-window calibration on recent score sequence under drift
+1401.3880v1,Regression Conformal Prediction with Nearest Neighbours,2014,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2601.02948v1,Parameter-Robust MPPI for Safe Online Learning of Unknown Parameters,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2602.20151v1,Conformal Risk Control for Non-Monotonic Losses,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2302.07869v1,Improved Online Conformal Prediction via Strongly Adaptive Online Learning,2023,TERMINAL,models-scores-but-terminal: strongly adaptive online conformal regret minimization
+2510.21784v1,Generative Quantile Bayesian Prediction,2025,TERMINAL,conformal appears only as a comparison baseline to generative quantile Bayesian prediction
+2607.11470v1,Climate-Invariant Conformal Prediction Intervals for Multi-Horizon Solar and Wind Forecasting,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2406.04498v1,Conformal Multi-Target Hyperrectangles,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2606.27001v1,Uncertainty quantification via conformal prediction in data assimilation,2026,UNCLEAR,"CP-derived perturbations fed back into the data assimilation cycle so forecasts flow onward from conformal output; closest pipeline continuation found, but the conformal/PIT stream is not itself modeled"
+2302.04019v1,Fortuna: A Library for Uncertainty Quantification in Deep Learning,2023,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2309.07332v1,Reliability-based cleaning of noisy training labels with inductive conformal prediction in multi-modal biomedical data mining,2023,UNCLEAR,"conformal p-value reliability metrics used to clean/relabel noisy training data, then a classifier is retrained; conformal is an intermediate filter, not a coordinate transform"
+2601.13102v3,Approximate full conformal prediction in an RKHS,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2406.01416v2,Adapting Prediction Sets to Distribution Shifts Without Labels,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2607.24773v1,Right-sizing Recommendations (RSR): Cloud Workload Conformal Prediction for Virtual Machines in Data Center Operations,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2110.11339v2,Unsupervised cross-user adaptation in taste sensation recognition based on surface electromyography with conformal prediction and domain regularized component analysis,2021,UNCLEAR,conformal prediction with shrunken centroids used inside an unlabeled-data augmentation/pseudo-labeling pipeline; conformal gates retraining
+2408.13825v2,RoCP-GNN: Robust Conformal Prediction for Graph Neural Networks in Node-Classification,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2112.10224v2,Stable Conformal Prediction Sets,2021,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2407.03094v4,Conformal Prediction for Causal Effects of Continuous Treatments,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2604.21595v1,A Kernel Nonconformity Score for Multivariate Conformal Prediction,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2406.06818v5,Conformal Prediction for Class-wise Coverage via Augmented Label Rank Calibration,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2506.20173v1,Valid Selection among Conformal Sets,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2402.09623v2,Conformalized Adaptive Forecasting of Heterogeneous Trajectories,2024,TERMINAL,models-scores-but-terminal: online conformal + heteroscedasticity modeling for trajectory bands
+2602.22432v2,LoBoost: Fast Model-Native Local Conformal Prediction for Gradient-Boosted Trees,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2004.10181v3,Knowing what you know: valid and validated confidence sets in multiclass and multilabel prediction,2020,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2511.18225v2,Adaptive Conformal Prediction for Quantum Machine Learning,2025,TERMINAL,models-scores-but-terminal: adaptive conformal recalibration under quantum hardware noise
+2501.11689v3,"Randomness, exchangeability, and conformal prediction",2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2504.06934v2,Conformal Robust Beamforming via Generative Channel Models,2025,TERMINAL,conformal uncertainty set consumed as-is by min-max robust beamforming optimizer
+2207.02238v1,Improving Trustworthiness of AI Disease Severity Rating in Medical Imaging with Ordinal Conformal Prediction Sets,2022,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2408.10939v2,Conformalized Interval Arithmetic with Symmetric Calibration,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2106.08460v2,Localized Conformal Prediction: A Generalized Inference Framework for Conformal Prediction,2021,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2505.04733v3,Conformal Prediction with Corrupted Labels: Uncertain Imputation and Robust Re-weighting,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2404.05482v1,WaveCatBoost for Probabilistic Forecasting of Regional Air Quality Data,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2604.01413v2,Adaptive Stopping for Multi-Turn LLM Reasoning,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2507.15803v1,ConformalSAM: Unlocking the Potential of Foundational Segmentation Models in Semi-Supervised Semantic Segmentation with Conformal Prediction,2025,UNCLEAR,"ConformalSAM: conformal calibration filters foundation-model pseudo-labels that then supervise further segmentation training; conformal output gates training, not modeled as coordinates"
+2507.09007v2,Possibilistic inferential models: a review,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2605.19024v1,Conformal Prediction via Transported Beta Laws,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2605.05497v2,Online Localized Conformal Prediction,2026,TERMINAL,models-scores-but-terminal: online localized conformal with bandwidth hedging
+2407.06141v2,CHAMP: Conformalized 3D Human Multi-Hypothesis Pose Estimators,2024,UNCLEAR,CHAMP: differentiable conformal predictor trained end-to-end; downstream aggregation model operates on the conformal-filtered hypothesis set to emit a point prediction
+2505.19587v1,WQLCP: Weighted Adaptive Conformal Prediction for Robust Uncertainty Quantification Under Distribution Shifts,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2306.05131v2,Conformal Prediction for Federated Uncertainty Quantification Under Label Shift,2023,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2511.04835v1,Conformalized Non-uniform Sampling Strategies for Accelerated Sampling-based Motion Planning,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2104.06648v3,Root-finding Approaches for Computing Conformal Prediction Set,2021,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2005.07972v2,Conformal Prediction: a Unified Review of Theory and New Challenges,2020,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2509.15926v1,Beyond the Score: Uncertainty-Calibrated LLMs for Automated Essay Assessment,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2310.15641v2,Guaranteed Coverage Prediction Intervals with Gaussian Process Regression,2023,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2601.23128v1,Distribution-informed Efficient Conformal Prediction for Full Ranking,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2403.19950v1,Coverage-Guaranteed Prediction Sets for Out-of-Distribution Data,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2107.00363v4,Valid prediction intervals for regression problems,2021,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2605.01868v1,Robust Conditional Conformal Prediction via Branched Normalizing Flow,2026,TERMINAL,"invertible flow transports test input to calibration distribution and maps the prediction set back; the flow is fitted before conformal, set remains final"
+2607.04236v2,Robust Bayes-Assisted Conformal Prediction,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2605.07100v1,TRACE: Transport Alignment Conformal Prediction via Diffusion and Flow Matching Models,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2202.03613v5,Conformal Prediction Under Feedback Covariate Shift for Biomolecular Design,2022,TERMINAL,conformal sets consumed downstream to select protein design algorithms; sets are final statistical output
+2606.10734v1,SPACR: Single-Pass Adaptive Training of Uncertainty-Aware Conformal Regressors,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2606.15950v2,Spectral Adaptive Conformal Prediction for Structured Non-Exchangeable Data,2026,TERMINAL,models-scores-but-terminal: spectral weighting of calibration scores + online adaptive update
+2501.06308v1,Uncertainty Estimation for Path Loss and Radio Metric Models,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2508.05272v1,Conditional validity and a fast approximation formula of full conformal prediction sets,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2604.06464v2,Weighted Bayesian Conformal Prediction,2026,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2407.07700v3,Split Conformal Prediction under Data Contamination,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2303.00203v3,Joint Coverage Regions: Simultaneous Confidence and Prediction Sets,2023,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2407.17377v1,Entropy Reweighted Conformal Classification,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2406.18052v3,Flexible Conformal Highest Predictive Conditional Density Sets,2024,TERMINAL,conformal sets/intervals/calibration are the final deliverable
+2307.16895v1,Conformal PID Control for Time Series Prediction,2023,TERMINAL,models-scores-but-terminal: PID scorecaster prospectively models the conformal score sequence to set thresholds
+2509.24095v2,Singleton-Optimized Conformal Prediction,2025,TERMINAL,conformal sets/intervals/calibration are the final deliverable

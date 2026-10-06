@@ -28,6 +28,10 @@
           <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
           <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
           <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
@@ -39,13 +43,25 @@
           <a href="/demos/05-drift-timeseries.html">Drift</a>
         </span>
       </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+          <a href="/conformal-relational.html">Relational conformal prediction</a>
+          <a href="/conformal-adaptive-logging.html">Counterfactual online conformal</a>
+        </span>
+      </span>
       <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
         <span class="drop">
           <a href="/literature.html">Bibliography</a>
           <a href="/map.html">The map</a>
           <a href="/connections.html">Connections</a>
           <a href="/applications.html">Applications</a>
-          <a href="/papers/">Papers &amp; notes</a>
           <a href="/blogs.html">Other sites &amp; blogs</a>
         </span>
       </span>
@@ -77,7 +93,7 @@
     <li>fixed split (CP), constant half-width \(q\) from the calibration residuals. The straw man, kept for contrast.</li>
     <li>ACI (Gibbs &amp; Candès, 2021), online \(\alpha_t\), width from the \((1-\alpha_t)\) quantile of a trailing window of \(|y-\hat y|\), updated by \(\alpha_{t+1}=\operatorname{clip}\!\big(\alpha_t+\gamma(\alpha-\mathrm{err}_t)\big)\).</li>
     <li>conformal PID (after Angelopoulos, Candès &amp; Tibshirani, 2023), trailing-quantile base radius plus an integral correction on the running coverage error.</li>
-    <li>NexCP (weighted) (Barber et&nbsp;al., 2023), a recency-weighted quantile of trailing residuals, weights \(\rho^{\,\text{age}}\).</li>
+    <li>NexCP (weighted) (Barber et&nbsp;al., 2023), the weighted conformal quantile of trailing residuals, weights \(\rho^{\,\text{age}}\), with the test point's unit weight placed at \(+\infty\) as the method requires.</li>
     <li>EWMA-vol Gaussian, the yardstick: estimate the conditional sd by RiskMetrics EWMA of squared residuals (\(\lambda=0.94\)) and emit \(\hat y_t \pm z\,\sigma_t\). This models the spread directly, so it also returns a full predictive distribution.</li>
   </ul>
 

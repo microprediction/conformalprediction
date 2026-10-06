@@ -1,6 +1,6 @@
 # Conformal Prediction and the Finite (Signed) de Finetti Representation
 
-*A short note. Companion to "Marginally Useful: Formalizing the Information Gap in Conformal Prediction."*
+*A short note. Companion to "Marginally Useful: An Information-Gap Identity in Split Conformal Prediction."*
 
 Peter Cotton
 
@@ -79,7 +79,7 @@ The link runs only one way and only so far. de Finetti is a representation of a 
 - Barber, R. F., Candès, E. J., Ramdas, A. and Tibshirani, R. J. (2023). Conformal prediction beyond exchangeability. *The Annals of Statistics* 51(2):816–845.
 - Barber, R. F. and Pananjady, A. (2026). Predictive inference for time series: why is split conformal effective despite temporal dependence? Preprint, arXiv:2510.02471.
 - Bian, M. and Barber, R. F. (2023). Training-conditional coverage for distribution-free predictive inference. *Electronic Journal of Statistics* 17(2):2044–2066.
-- Cotton, P. Marginally Useful: Formalizing the Information Gap in Conformal Prediction. Companion paper.
+- Cotton, P. Marginally Useful: An Information-Gap Identity in Split Conformal Prediction. Companion paper.
 - Datta, J., Polson, N. G., Sokolov, V. and Zantedeschi, D. (2025). Conformal Prediction = Bayes? Preprint, arXiv:2512.23308.
 - Diaconis, P. and Freedman, D. (1980). Finite exchangeable sequences. *The Annals of Probability* 8(4):745–764.
 - Esary, J. D., Proschan, F. and Walkup, D. W. (1967). Association of random variables, with applications. *The Annals of Mathematical Statistics* 38(5):1466–1474.

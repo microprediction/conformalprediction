@@ -25,6 +25,8 @@
           <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
           <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
           <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
@@ -34,6 +36,15 @@
           <a href="/demos/19-dependence-tax.html">The dependence tax</a>
           <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
           <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
@@ -63,10 +74,11 @@
 <div class="wrap">
   <p class="tag">Companion paper</p>
   <h1>Marginally Useful</h1>
-  <p class="subtitle">Formalizing the information gap in conformal prediction. The companion paper to this site, built around one decomposition.</p>
+  <p class="subtitle">Formalizing the information gap in conformal prediction, built around one decomposition.</p>
 
   <p>
     <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="marginally-useful.pdf">Read the PDF</a>
+    <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="https://arxiv.org/abs/2608.07479">arXiv:2608.07479</a>
     <a class="card" style="display:inline-block;padding:10px 16px;margin-right:8px;" href="marginally-useful.tex">LaTeX source</a>
     <a class="card" style="display:inline-block;padding:10px 16px;" href="references.bib">references.bib</a>
   </p>
@@ -91,11 +103,6 @@
 
   <h2>Prediction versus verification</h2>
   <p>Conformal prediction verifies a coverage property; it does not model. It is best read as a terminal certification step: it repairs coverage, but any gain in a proper score comes from modeling the conditional spread, quantiles, or residual shape. Practically: conformalize last, and to sharpen, condition on \(x\) rather than tighten the conformal step.</p>
-
-  <h2>Building from source</h2>
-  <p>The paper builds with <a href="https://tectonic-typesetting.github.io/">Tectonic</a> (which fetches packages and runs BibTeX automatically):</p>
-  <p><code>cd paper &amp;&amp; tectonic marginally-useful.tex</code></p>
-  <p class="note">Any standard TeX distribution works too: <code>pdflatex → bibtex → pdflatex → pdflatex</code>.</p>
 
   <div class="prevnext">
     <a href="../../index.html">&larr; Back to overview</a>

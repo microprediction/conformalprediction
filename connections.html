@@ -38,6 +38,10 @@
           <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
           <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
           <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
@@ -49,13 +53,25 @@
           <a href="/demos/05-drift-timeseries.html">Drift</a>
         </span>
       </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+          <a href="/conformal-relational.html">Relational conformal prediction</a>
+          <a href="/conformal-adaptive-logging.html">Counterfactual online conformal</a>
+        </span>
+      </span>
       <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
         <span class="drop">
           <a href="/literature.html">Bibliography</a>
           <a href="/map.html">The map</a>
           <a href="/connections.html">Connections</a>
           <a href="/applications.html">Applications</a>
-          <a href="/papers/">Papers &amp; notes</a>
           <a href="/blogs.html">Other sites &amp; blogs</a>
         </span>
       </span>
@@ -122,7 +138,7 @@ const NODES = [
  {id:"gap", label:"I(R;X) — THE GAP", c:"gap", r:15, url:"/papers/marginally-useful/", note:"The residual-information gap: coverage–sharpness shortfall = mutual information between residual and input. The quantity no re-levelling of coverage can touch."},
  {id:"parimutuel", label:"Parimutuel rent", c:"gap", url:"/papers/parimutuel/", note:"The same gap derived from a betting mechanism: an X-informed bettor grows wealth against the conformal book at rate I(R;X)."},
  {id:"twoprices", label:"Two prices", c:"gap", url:"/papers/two-prices/", note:"The coverage tax of dependence vanishes with n; the sharpness rent ΔH = I(S₀; past) never does — the information-gap identity applied to the past."},
- {id:"definetti", label:"Feynman–Wigner sign", c:"gap", url:"/papers/definetti-feynman/", note:"The sign of the finite de Finetti measure decides whether per-case coverage adapts or fans; distance covariance is the runnable check."},
+ {id:"definetti", label:"Feynman–Wigner sign", c:"gap", url:"/papers/definetti-feynman/", note:"Whether the test score rises or falls with the calibration width decides whether per-case coverage adapts or fans; the sign of the finite de Finetti measure is related but does not decide it. The note's runnable check is a distance-covariance test of the conformal rank against the features, which detects the residual-information gap."},
  {id:"fan", label:"The conformal fan", c:"fanax", url:"/papers/fan/", note:"Across-calibration dispersion of realized coverage; its width is set by the sign of cross-sample dependence."},
  {id:"price", label:"Price of a dumb model", c:"gap", url:"/demos/28-price-of-dumb.html", note:"On real mcycle data: regressogram vs smooth kernel density, both conformalized to the same coverage. The regressogram pays ~25% on CRPS and width at every cell width — the gap measured, not just named."},
  {id:"ucpd", label:"Universal CPD (Vovk)", c:"found", url:"/demos/27-universal-cpd.html", note:"Universally consistent conformal predictive systems (ALRW WP 18): histogram cells shrink, the predictive law converges weakly to the true conditional law. The gap crossed in the limit — demo 27 runs it."},

@@ -104,6 +104,24 @@ function wquantile(vals, weights, q) {
   return v[v.length - 1];
 }
 
+// Weighted conformal quantile (Barber et al. 2023, eq. 5): residual i has mass
+// w_i/(1+S), the test point has 1/(1+S) at +infinity, S = sum w_i. Returns
+// Infinity when the residuals alone cannot reach level 1-alpha.
+// Matches ts_methods._wconformal_quantile.
+function wconformalQuantile(vals, weights, alpha) {
+  let S = 0;
+  for (const wi of weights) S += wi;
+  const level = (1 - alpha) * (S + 1);
+  if (level > S) return Infinity;
+  const idx = vals.map((_, i) => i).sort((a, b) => vals[a] - vals[b]);
+  let acc = 0;
+  for (const i of idx) {
+    acc += weights[i];
+    if (acc >= level - 1e-12 * S) return vals[i];
+  }
+  return vals[idx[idx.length - 1]];
+}
+
 // Interval (Winkler) score at level 1-alpha, averaged over the test stream.
 // IS_t = (hi-lo) + (2/alpha)(lo-y)1{y<lo} + (2/alpha)(y-hi)1{y>hi}. Lower is
 // better. Infinite widths are guarded so 0*inf never appears.
@@ -239,8 +257,9 @@ function methodPID(y, yHat, warm, idx, alpha) {
   return B;
 }
 
-// nexcp: recency-weighted quantile of trailing absolute residuals, weights
-// rho**age. Matches ts_methods.nexcp (window=400).
+// nexcp: weighted conformal quantile of trailing absolute residuals, weights
+// rho**age, with the test point's mass at +infinity. Matches ts_methods.nexcp
+// (window=400).
 function methodNexCP(y, yHat, warm, idx, alpha, rho) {
   const B = emptyBands();
   const window = 400;
@@ -252,7 +271,7 @@ function methodNexCP(y, yHat, warm, idx, alpha, rho) {
       const m = recent.length;
       const w = new Array(m);
       for (let i = 0; i < m; i++) w[i] = Math.pow(rho, m - 1 - i); // age = m-1-i
-      q = wquantile(recent, w, 1 - alpha);
+      q = wconformalQuantile(recent, w, alpha);
     } else {
       q = hist.length ? quantile(hist, 0.9) : 1.0;
     }

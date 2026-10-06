@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Reviews — Conformal Prediction</title>
+<meta name="description" content="Close readings of published conformal prediction papers, each with a live experiment that reproduces the construction on a case where the truth is known." />
+<meta property="og:title" content="Conformal Prediction — reviews" />
+<meta property="og:description" content="Close readings of published conformal prediction papers, each paired with a live experiment." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+          <a href="/conformal-relational.html">Relational conformal prediction</a>
+          <a href="/conformal-adaptive-logging.html">Counterfactual online conformal</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Reviews</p>
+  <h1>Reviews</h1>
+  <p class="subtitle">Close readings of published papers. Each one asks what is proposed, what is
+  computed once the vocabulary is stripped away, what the coverage certificate constrains,
+  and what the experiments can support. Each is paired with a live demonstration that rebuilds the
+  construction on a case where the truth is known.</p>
+
+  <p>The aim is to separate the part of a proposal that conformal prediction certifies from the part it
+  only names. The two are routinely confused, and the confusion is easiest to see on a specific
+  example.</p>
+
+  <div class="cards">
+    <a class="card" href="conformal-correlation.html">
+      <div class="num">Computer Communications, 2026</div>
+      <h3>Conformal correlation</h3>
+      <p>Perlo, Chiasserini, De Veciana and Malandrino correlate class membership across conformal
+      prediction sets and read the result as a map of which classes a classifier confuses. The statistic
+      is the phi coefficient of prediction set membership indicators. Its negative entries are pinned by marginal inclusion
+      rates, it is symmetric where confusion is directional, and the coverage certificate does not
+      transfer to its entries.</p>
+    </a>
+    <a class="card" href="demos/32-conformal-correlation.html">
+      <div class="num">Demonstration 32</div>
+      <h3>Conformal correlation: the experiments</h3>
+      <p>A synthetic ten class classifier with known confusability. The pinned floor and the formula drawn
+      together, a confusion slid from one direction to the other under a symmetric statistic, and the
+      loss of resolution against a probability based statistic as the sets shrink.</p>
+    </a>
+    <a class="card" href="conformal-forecasting-rnn.html">
+      <div class="num">NeurIPS, 2021</div>
+      <h3>Conformal forecasting RNNs</h3>
+      <p>Stankevi&#269;i&#363;t&#279;, Alaa and van der Schaar add one calibration quantile per horizon to
+      an RNN point forecast and compare methods by joint coverage and width alone. That the COVID-19 guarantee is vacuous and the
+      intervals inefficient was published by others in 2022 and 2024, and is set out here with
+      sources. What appears to be new: the baselines are judged against a joint target they were
+      never calibrated for, and under the proper score for an interval the quantile RNN the paper
+      dismisses is the best interval on every split of a reconstruction of the paper&rsquo;s COVID-19 data.</p>
+    </a>
+    <a class="card" href="demos/35-constant-width.html">
+      <div class="num">Demonstration 35</div>
+      <h3>Constant-width intervals</h3>
+      <p>The same point forecast with the CF-RNN width and with a width that follows a running scale,
+      on a series with stochastic volatility. Same coverage, different interval score.</p>
+    </a>
+    <a class="card" href="conformal-relational.html">
+      <div class="num">ICML, 2025</div>
+      <h3>Relational conformal prediction</h3>
+      <p>Cini, Jenkins, Mandic, Alippi and Bianchi train a graph quantile network on forecast residuals
+      and read the interval off the fitted quantiles. That nothing is conformalized and that the
+      intervals undercover throughout was said by the ICML reviewers and is set out here with sources.
+      What appears to be new: the code calibrates by early stopping on the reported score, the
+      synthetic experiment shows a residual forecaster rather than an uncertainty model, and on
+      METR-LA a lookup table of conformal quantiles keyed by sensor, hour and current speed takes 85%
+      of the distance from split conformal to the network, with no graph and nothing trained.</p>
+    </a>
+    <a class="card" href="demos/36-the-missing-step.html">
+      <div class="num">Demonstration 36</div>
+      <h3>The missing step</h3>
+      <p>Relational quantile regression on the residuals of a univariate forecaster, read directly and
+      conformalized on held-out residuals, on a ring of coupled series with known truth. The direct
+      read undercovers, the correction costs a few percent of score, and an oracle point forecast with
+      one conformal quantile shows what the relational model is recovering.</p>
+    </a>
+    <a class="card" href="conformal-adaptive-logging.html">
+      <div class="num">arXiv, 2026</div>
+      <h3>Counterfactual online conformal under adaptive logging</h3>
+      <p>Qiao, Lin, Ji, Wang and Yao blame the counterfactual miscoverage of online conformal prediction
+      on actions shifting the outcome law and correct it with inverse-propensity weights. Positivity,
+      known propensities and the weighted-conformal ingredients are conceded or already in print, and
+      credited. What appears to be new: on the paper&rsquo;s own construction the gap behaves like
+      covariate shift in the context mix, unchanged when the action effect is zero, and calibrating per
+      context and action closes it without propensities. The weighted method often returns whole-line
+      sets, which the paper&rsquo;s set-quality figure leaves out.</p>
+    </a>
+    <a class="card" href="conformal-set-size.html">
+      <div class="num">NeurIPS Datasets and Benchmarks, 2024</div>
+      <h3>Set size as uncertainty</h3>
+      <p>Ye et al. rank language models by mean conformal set size. They concede that the size depends on
+      the score function and average two scores to fix it. Rerun from their released logits, the fix
+      fails on their own findings: two of the four headline examples in Section 6.3 survive under one
+      score only, produced by that score covering at 95% and 99% rather than 90%.</p>
+    </a>
+    <a class="card" href="demos/34-set-size-uncertainty.html">
+      <div class="num">Demonstration 34</div>
+      <h3>Set size as uncertainty: the experiments</h3>
+      <p>Temperature moves the set size at fixed accuracy, LAC and APS separate two equal-accuracy
+      models differently, and two models with identical sets have accuracy 90% and 5%.</p>
+    </a>
+    <a class="card" href="conformal-uncertainty-bounds.html">
+      <div class="num">AAAI Summer Symposium, 2023</div>
+      <h3>Certified uncertainty bounds</h3>
+      <p>Karimi and Samavi certify per-input uncertainty bounds from a conformal set size by inserting the
+      marginal coverage guarantee as if it held for each input. The bounds depend on the set size alone, and a two-group
+      classifier with valid marginal coverage puts every input outside them, in a setting where
+      calibrating per group would have given exact coverage.</p>
+    </a>
+    <a class="card" href="demos/33-certified-uncertainty.html">
+      <div class="num">Demonstration 33</div>
+      <h3>Certified uncertainty bounds: the experiment</h3>
+      <p>The two-group example with sliders: the certified interval is a line and both groups miss it.</p>
+    </a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+</body>
+</html>

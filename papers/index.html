@@ -7,6 +7,10 @@
 <title>Working papers and technical notes — Conformal Prediction</title>
 <meta name="description" content="Research papers accompanying conformalprediction.net." />
 <link rel="stylesheet" href="/css/style.css" />
+<script>
+  window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]] }, svg: { fontCache: "global" } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <header class="site">
@@ -22,6 +26,10 @@
           <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
           <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
           <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
@@ -33,13 +41,25 @@
           <a href="/demos/05-drift-timeseries.html">Drift</a>
         </span>
       </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+          <a href="/conformal-relational.html">Relational conformal prediction</a>
+          <a href="/conformal-adaptive-logging.html">Counterfactual online conformal</a>
+        </span>
+      </span>
       <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
         <span class="drop">
           <a href="/literature.html">Bibliography</a>
           <a href="/map.html">The map</a>
           <a href="/connections.html">Connections</a>
           <a href="/applications.html">Applications</a>
-          <a href="/papers/">Papers &amp; notes</a>
           <a href="/blogs.html">Other sites &amp; blogs</a>
         </span>
       </span>
@@ -62,7 +82,7 @@
 
   <div class="card" style="padding:16px 20px;margin-top:18px;">
     <h2 style="margin-top:0;"><a href="/papers/marginally-useful/">Marginally Useful</a></h2>
-    <p class="note" style="margin-top:2px;">Formalizing the Information Gap in Conformal Prediction</p>
+    <p class="subtitle" style="margin:2px 0 12px;font-size:0.98rem;">An Information-Gap Identity in Split Conformal Prediction</p>
     <p>Conformal prediction gives a distribution-free, finite-sample guarantee of
     <em>marginal</em> coverage for a set, and it is easy to read this as more than it is. The
     paper separates coverage from forecast quality: for a fixed location predictor re-leveled
@@ -73,12 +93,49 @@
       <a href="/papers/marginally-useful/">Read more &rarr;</a>
       &nbsp;&middot;&nbsp;
       <a href="/papers/marginally-useful/marginally-useful.pdf">PDF</a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://arxiv.org/abs/2608.07479">arXiv:2608.07479</a>
+    </p>
+  </div>
+
+  <div class="card" style="padding:16px 20px;margin-top:18px;">
+    <h2 style="margin-top:0;">An Empirical Study of the Conformal Information Gap</h2>
+    <p class="subtitle" style="margin:2px 0 12px;font-size:0.98rem;">the empirical companion to Marginally Useful</p>
+    <p>Every forecasting architecture restricts the information available to its predictive
+    law. Under logarithmic loss the irreducible cost of replacing the full input by a
+    retained representation is exactly the conditional mutual information between outcome and
+    input given the representation &mdash; the information gap. Conformal calibration improves
+    estimation and provides a coverage certificate, but it cannot recover predictive
+    information the representation excluded. The decomposition is measured on a corpus of
+    economic series through a nested grammar of online transforms, where conditional scale is
+    the largest and most reliable component of the recovered gain.</p>
+    <p style="margin-bottom:0;">
+      <a href="https://papers.ssrn.com/abstract=7220538">SSRN</a>
+    </p>
+  </div>
+
+  <div class="card" style="padding:16px 20px;margin-top:18px;">
+    <h2 style="margin-top:0;">Transforms All the Way Down</h2>
+    <p class="subtitle" style="margin:2px 0 12px;font-size:0.98rem;">automatic online distributional forecasting by conjugation</p>
+    <p>The transform-chain machinery the grammar programme runs on. The
+    <a href="https://github.com/microprediction/skaters">skaters</a> package is an online,
+    distributional, univariate time-series forecaster built by conjugation: invertible
+    transforms nest all the way down onto a single distributional leaf fitted by a proper
+    scoring rule. The collection collapses into one parameter-free forecast function,
+    laplace, which leads the per-series held-out log-likelihood race against classical,
+    neural, and foundation-model baselines on FRED series; on asset prices a GARCH-t model
+    remains better, a split reported rather than averaged away. Run in laplace&rsquo;s
+    coordinates and mapped back exactly, existing models improve without retraining.
+    Implemented in Python, zero-dependency JavaScript, R, and a Rust core, held to
+    \(10^{-6}\) agreement by a shared parity suite.</p>
+    <p style="margin-bottom:0;">
+      <a href="https://papers.ssrn.com/abstract=7220478">SSRN</a>
     </p>
   </div>
 
   <div class="card" style="padding:16px 20px;margin-top:18px;">
     <h2 style="margin-top:0;"><a href="/papers/definetti-feynman/">A Feynman&ndash;Wigner Diagnostic for Conformal Prediction</a></h2>
-    <p class="note" style="margin-top:2px;">via signed de Finetti representations</p>
+    <p class="subtitle" style="margin:2px 0 12px;font-size:0.98rem;">via signed de Finetti representations</p>
     <p>Conformal&rsquo;s guarantee is exact under exchangeability, and exchangeability is what de Finetti&rsquo;s
     theorem describes. In the finite form the mixing measure may be signed
     (Kerns&ndash;Sz&eacute;kely) &mdash; a Feynman&ndash;Wigner negative probability. The sign of
@@ -94,7 +151,7 @@
 
   <div class="card" style="padding:16px 20px;margin-top:18px;">
     <h2 style="margin-top:0;"><a href="/papers/parimutuel/">Betting Against a Conformal Predictor</a></h2>
-    <p class="note" style="margin-top:2px;">a parimutuel account of the information gap</p>
+    <p class="subtitle" style="margin:2px 0 12px;font-size:0.98rem;">a parimutuel account of the information gap</p>
     <p>The same gap, derived from a betting mechanism rather than a score. Treat the predictor
     as the crowd in a parimutuel pool on the residual; in the continuous limit the payoff is the
     ratio of your density to the crowd&rsquo;s. An entrant who knows only the marginal breaks even; that is marginal coverage as wealth. One who conditions on the input grows his bankroll at rate exactly the mutual information. The gap is the rent, and the mechanism is
@@ -110,7 +167,7 @@
 
   <div class="card" style="padding:16px 20px;margin-top:18px;">
     <h2 style="margin-top:0;"><a href="/papers/fan/">The Width of the Conformal Fan</a></h2>
-    <p class="note" style="margin-top:2px;">dependence and the variance of realized coverage</p>
+    <p class="subtitle" style="margin:2px 0 12px;font-size:0.98rem;">dependence and the variance of realized coverage</p>
     <p>Fix the calibration set and the coverage you realize is a random number around
     1&minus;&alpha; &mdash; the Beta &ldquo;fan.&rdquo; Its width is set by the sign of the
     cross-sample dependence: positive dependence adds a non-negative between-dataset term (exact,
@@ -122,12 +179,14 @@
       <a href="/papers/fan/">Read more &rarr;</a>
       &nbsp;&middot;&nbsp;
       <a href="/papers/fan/conformal-fan.pdf">PDF</a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://papers.ssrn.com/abstract=6979679">SSRN</a>
     </p>
   </div>
 
   <div class="card" style="padding:16px 20px;margin-top:18px;">
     <h2 style="margin-top:0;"><a href="/papers/steinitz/">A Contragredient View of Conformal Placement and Steinitz Balancing</a></h2>
-    <p class="note" style="margin-top:2px;">the exact orbit identity, its balanced-permutation primal, herding as the relaxation &mdash; rough draft, not for dissemination</p>
+    <p class="subtitle" style="margin:2px 0 12px;font-size:0.98rem;">the exact orbit identity, its balanced-permutation primal, herding as the relaxation &mdash; rough draft, not for dissemination</p>
     <p>Conformal validity stated as an exact orbit-averaging identity for the permutation
     action, in contragredient form through the Reynolds projector. The primal construction under
     the same action is Steinitz balancing; conformal placements are themselves a zero-sum
@@ -146,7 +205,7 @@
 
   <div class="card" style="padding:16px 20px;margin-top:18px;">
     <h2 style="margin-top:0;"><a href="/papers/two-prices/">The Two Prices of Dependence</a></h2>
-    <p class="note" style="margin-top:2px;">a vanishing coverage tax and a fixed sharpness rent</p>
+    <p class="subtitle" style="margin:2px 0 12px;font-size:0.98rem;">a vanishing coverage tax and a fixed sharpness rent</p>
     <p>Temporal dependence charges split conformal twice, on different scales. The coverage tax
     vanishes with the calibration size (Barber&ndash;Pananjady: at most
     min<sub>&tau;</sub>{&tau;/(n+1)+2&beta;(&tau;)}). The sharpness rent does not: the log-score
@@ -159,6 +218,22 @@
       <a href="/papers/two-prices/two-prices.pdf">PDF</a>
       &nbsp;&middot;&nbsp;
       <a href="/demos/22-timeseries-fan.html">Demo</a>
+    </p>
+  </div>
+
+  <div class="card" style="padding:16px 20px;margin-top:18px;">
+    <h2 style="margin-top:0;">Scoring Point-Cloud Distributional Submissions</h2>
+    <p class="subtitle" style="margin:2px 0 12px;font-size:0.98rem;">the nearest-the-pin parimutuel, jittered outcomes, and the heat ladder</p>
+    <p>Point-cloud forecasts are often scored by smoothing the samples into a density and
+    evaluating it at the outcome. That procedure is not proper: under log scoring it rewards
+    submitting a deconvolution of one&rsquo;s belief, &ldquo;shave \(h^2\) from the
+    covariance&rdquo; in the Gaussian case. The repair is to add outcome noise from the same
+    kernel used to smooth. More generally, composing a proper score with a fixed Markov kernel
+    preserves propriety, strictly when the induced channel is injective; a ladder of smoothing
+    scales then decomposes log-score regret, via the relative de Bruijn identity, into
+    Fisher-divergence bands plus a coarse-scale remainder.</p>
+    <p style="margin-bottom:0;">
+      <a href="https://papers.ssrn.com/abstract=7054518">SSRN</a>
     </p>
   </div>
 

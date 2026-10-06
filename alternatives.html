@@ -28,6 +28,10 @@
           <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
           <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
           <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
@@ -39,13 +43,25 @@
           <a href="/demos/05-drift-timeseries.html">Drift</a>
         </span>
       </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+          <a href="/conformal-relational.html">Relational conformal prediction</a>
+          <a href="/conformal-adaptive-logging.html">Counterfactual online conformal</a>
+        </span>
+      </span>
       <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
         <span class="drop">
           <a href="/literature.html">Bibliography</a>
           <a href="/map.html">The map</a>
           <a href="/connections.html">Connections</a>
           <a href="/applications.html">Applications</a>
-          <a href="/papers/">Papers &amp; notes</a>
           <a href="/blogs.html">Other sites &amp; blogs</a>
         </span>
       </span>
@@ -142,6 +158,14 @@
   <a href="/papers/two-prices/">the two-prices note</a> prices what ignoring the conditional
   information costs. There is no free lunch: the conditional models pay in assumptions, conformal
   pays in sharpness, and the only real decision is which bill your application can afford.</p>
+
+  <p class="note">This trade has a name elsewhere. Averaging a fast, unobserved variable out of a
+  model is homogenization, and that field treats the averaged limit as the naive leading term and
+  then computes a corrector for what the averaging destroyed. Residual pooling is the same average,
+  stopped one step earlier, and the corrector is what the certificate cannot see.
+  <a href="/homogenization.html">The homogenization page</a> works the comparison through, including
+  two processes with identical conformal intervals and identical marginal coverage whose conditional
+  coverage runs from 57% to 100%.</p>
 
   <p>NNS and the seasonal-pool idea both run live on
   <a href="https://skaters.microprediction.org">the skaters benchmarks</a>, part of an ongoing

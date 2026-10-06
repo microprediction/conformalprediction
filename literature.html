@@ -28,6 +28,10 @@
           <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
           <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
           <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
         </span>
       </span>
       <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
@@ -39,13 +43,25 @@
           <a href="/demos/05-drift-timeseries.html">Drift</a>
         </span>
       </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+          <a href="/conformal-relational.html">Relational conformal prediction</a>
+          <a href="/conformal-adaptive-logging.html">Counterfactual online conformal</a>
+        </span>
+      </span>
       <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
         <span class="drop">
           <a href="/literature.html">Bibliography</a>
           <a href="/map.html">The map</a>
           <a href="/connections.html">Connections</a>
           <a href="/applications.html">Applications</a>
-          <a href="/papers/">Papers &amp; notes</a>
           <a href="/blogs.html">Other sites &amp; blogs</a>
         </span>
       </span>
@@ -275,7 +291,7 @@
   <ul class="refs">
     <li>Barber, Cand&egrave;s, Ramdas &amp; Tibshirani (2023). <em>Conformal prediction beyond exchangeability.</em> Annals of Statistics. <a href="https://arxiv.org/abs/2202.13415">arXiv:2202.13415</a> &mdash; the general-purpose robustness result: the coverage gap bounded by a total-variation term per calibration point. But swapping single points is the wrong deformation for a time series (under short-range dependence the TV term stays large), which is what the two entries below repair.</li>
     <li>Oliveira, Orenstein, Ramos &amp; Romano (2024). <em>Split conformal prediction and non-exchangeable data.</em> JMLR. <a href="https://arxiv.org/abs/2203.15885">arXiv:2203.15885</a> &mdash; blocking plus empirical-process concentration: unmodified split conformal on a &beta;-mixing series loses at most on the order of &radic;(t<sub>mix</sub>/n) of its coverage. The first general no-modification guarantee, at the classical square-root rate.</li>
-    <li>Barber &amp; Pananjady (2026). <em>Predictive inference for time series: why is split conformal effective despite temporal dependence?</em> ALT. <a href="https://arxiv.org/abs/2510.02471">arXiv:2510.02471</a> &mdash; the sharp accounting. A &ldquo;switch coefficient&rdquo; (the total variation between the score sequence and a copy with a block of &tau; entries deleted and one point rotated to the end) bounds the coverage loss by min<sub>&tau;</sub> {&tau;/n + 2&beta;(&tau;)} &mdash; linear in &tau;/n where blocking arguments gave the square root, tight over stationary &beta;-mixing processes, and paired with a matching upper bound so the set cannot silently over-cover either. Handles predictors with memory L (an extra L/n) and calibration-trained scores (a second buffer &tau;<sub>&#8727;</sub> after the training block). The trick is quantile stability under insertion and deletion rather than concentration. The best explanation yet of why vanilla split conformal works on time series.</li>
+    <li>Barber &amp; Pananjady (2026). <em>Predictive inference for time series: why is split conformal effective despite temporal dependence?</em> ALT, <a href="https://proceedings.mlr.press/v313/barber26a.html">PMLR 313</a>. <a href="https://arxiv.org/abs/2510.02471">arXiv:2510.02471</a> &mdash; the sharp accounting. A &ldquo;switch coefficient&rdquo; (the total variation between the score sequence and a copy with a block of &tau; entries deleted and one point rotated to the end) bounds the coverage loss by min<sub>&tau;</sub> {&tau;/n + 2&beta;(&tau;)} &mdash; linear in &tau;/n where blocking arguments gave the square root, tight over stationary &beta;-mixing processes, and paired with a matching upper bound so the set cannot silently over-cover either. Handles predictors with memory L (an extra L/n) and calibration-trained scores (a second buffer &tau;<sub>&#8727;</sub> after the training block). The trick is quantile stability under insertion and deletion rather than concentration. The best explanation yet of why vanilla split conformal works on time series.</li>
     <li>Chernozhukov, W&uuml;thrich &amp; Zhu (2018). <em>Exact and robust conformal inference for dependent data.</em> COLT. <a href="https://arxiv.org/abs/1802.06300">arXiv:1802.06300</a> &mdash; permute blocks rather than points: approximately valid under ergodicity, exact under block-exchangeability.</li>
     <li>Chernozhukov, W&uuml;thrich &amp; Zhu (2021). <em>Distributional conformal prediction.</em> PNAS. <a href="https://arxiv.org/abs/1909.07889">arXiv:1909.07889</a> &mdash; probability-integral-transform scores with permuted estimated ranks; built for dependent-data uses such as k-step forecasts, synthetic controls, and counterfactuals.</li>
     <li>Nettasinghe, Chatterjee, Tipireddy &amp; Halappanavar (2023). <em>Extending conformal prediction to hidden Markov models with exact validity via de&nbsp;Finetti&rsquo;s theorem for Markov chains.</em> <a href="https://arxiv.org/abs/2210.02271">arXiv:2210.02271</a> &mdash; block exchangeability inside a Markov chain restores exact validity; the de&nbsp;Finetti thread in a temporal setting.</li>

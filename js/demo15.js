@@ -18,7 +18,7 @@ const weights = new Plot(document.getElementById("weights"),
   { xlim: [-0.6, 2.6], ylim: [-0.8, 2.2], ylabel: "mixing weight", margin: { l: 52, r: 14, t: 14, b: 36 } });
 
 const setRO = readouts(document.getElementById("readouts"),
-  ["correlation ρ", "mixing measure", "extends to ∞?"]);
+  ["P(heads) per coin", "correlation ρ", "mixing measure", "extends to ∞?"]);
 
 function drawSimplex() {
   const ctx = simplex.ctx; simplex.clear("#fff");
@@ -64,6 +64,7 @@ function drawWeights() {
 function draw() {
   drawSimplex(); drawWeights();
   const neg = state.rho < 0;
+  setRO("P(heads) per coin", "0.50 (fair-coin line)", "good");
   setRO("correlation ρ", fmt(state.rho, 2), neg ? "bad" : "good");
   setRO("mixing measure", neg ? "signed (Székely)" : "probability (de Finetti)", neg ? "bad" : "good");
   setRO("extends to ∞?", neg ? "no" : "yes", neg ? "bad" : "good");
