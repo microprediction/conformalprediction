@@ -378,6 +378,25 @@ with density $h_{\mathrm{sym}}(z)=\tfrac12(p_R(z)+p_R(-z))$. The same computatio
 adds $\KLop(P_R\,\|\,H_{\mathrm{sym}})\le\log 2$ for the discarded sign.
 \end{remark}
 
+\begin{remark}[Set loss, level by level]\label{rem:setloss}
+For a discrete outcome the identity also holds for prediction sets, one coverage level at a time.
+\citet{zhang2026} score a set $\Gamma$ by $\ell_\lambda(Y,\Gamma)=|\Gamma|+\lambda^{-1}\mathbf
+1\{Y\notin\Gamma\}$, whose Bayes set is $\{y:p(y\given X)\ge\lambda\}$, and define a conformal mutual
+information $I_\lambda$ and a divergence $D_\lambda$ from it. Because the set loss is linear in the
+law of $Y$, a frozen predictor that acts on the estimated pooled law $\widehat G_\kappa$ for every
+input has excess set loss over the oracle equal to
+\[
+I_\lambda(X;Y\given\kappa)\;+\;\E_\kappa D_\lambda\big(G_\kappa\,\|\,\widehat G_\kappa\big)
+\]
+at every $\lambda\in(0,1]$, and calibration moves only the second term. Integrating over $\lambda$
+returns Proposition~\ref{prop:floor}: $\int_0^1 I_\lambda\,d\lambda$ is the Shannon information
+\citep[Theorem 1]{zhang2026}, and $\int_0^1 D_\lambda\,d\lambda=\KLop(G_\kappa\,\|\,\widehat G_\kappa)$ by
+the same calculation, in the tradition of \citet{schervish1989}. So the log-score floor is the sum
+over coverage levels of what the frozen sets lose in size and coverage at each level, and a scheme
+calibrated at one level sees one slice of it. The identities are checked in
+\texttt{check\_setloss.py}.
+\end{remark}
+
 The floor measures how the law of the score varies with the input. Whether an input
 is typical or unusual under its own marginal law does not enter, and a rare input with
 ordinary noise adds nothing to $\I(W;X\given\kappa)$. Marginal coverage also does not
@@ -747,7 +766,7 @@ the hash covers the harness sources, the tracked diff, and the compiled core.
 The census rubric and the per-paper labels, with their quoted evidence, are in
 \texttt{census/} beside this paper, and the papers themselves are on arXiv. The
 hand-coded sample is \texttt{survey100.csv}. The exact checks of
-Section~\ref{sec:floor} are \texttt{check\_gap.py} beside this paper. Figure~\ref{fig:gap} and its value of $\I(R;X)$ come from \texttt{fig\_gap.py}. Study declarations and the fill protocol are in the \texttt{skaters}
+Section~\ref{sec:floor} are \texttt{check\_gap.py} and, for Remark~\ref{rem:setloss}, \texttt{check\_setloss.py}, beside this paper. Figure~\ref{fig:gap} and its value of $\I(R;X)$ come from \texttt{fig\_gap.py}. Study declarations and the fill protocol are in the \texttt{skaters}
 repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md}).
 
 \bibliographystyle{plainnat}
@@ -840,6 +859,8 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
   Computing}.
 \bibitem[Sandroni(2003)]{sandroni2003} Sandroni, A. (2003). The reproducible properties
   of correct forecasts. \emph{International Journal of Game Theory} 32(1), 151--159.
+\bibitem[Schervish(1989)]{schervish1989} Schervish, M.~J. (1989). A general method for
+  comparing probability assessors. \emph{Annals of Statistics} 17(4), 1856--1879.
 \bibitem[Sesia and Romano(2021)]{sesia2021} Sesia, M. and Romano, Y. (2021).
   Conformal prediction using conditional histograms. \emph{NeurIPS} 34.
 \bibitem[Tibshirani et al.(2019)]{tibshirani2019conformal} Tibshirani, R.~J.,
@@ -852,6 +873,8 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
   prediction. \emph{Machine Learning} 108(3), 445--474.
 \bibitem[Xu and Xie(2023)]{xu2023spci} Xu, C. and Xie, Y. (2023). Sequential
   predictive conformal inference for time series. \emph{ICML}.
+\bibitem[Zhang and Bates(2026)]{zhang2026} Zhang, K. and Bates, S. (2026). Conformal prediction
+  sets quantify information gain: a theoretical perspective. arXiv:2610.08785.
 \end{thebibliography}
 
 \end{document}
