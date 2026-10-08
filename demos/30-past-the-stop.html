@@ -157,7 +157,7 @@
     <p>Takeaway. Stopping at the conformal step is a bet, not a theorem, and the certificate does not answer it: the certificate holds at the map&rsquo;s output whether or not structure remains beyond it. When the residual stream still carries signal, the map&rsquo;s best role is not terminal but interior: a coordinate change that hands the next model a stream it can actually fit. Stopping, continuing, and skipping the map are three chains, and the scoring rule, not the philosophy, picks between them.</p>
   </div>
 
-  <p class="note">On 572 economic series the same three-way race, run with the full grammar, gives the refit-through chain the lead under both log score and CRPS; the grammar paper in <a href="/papers/">papers &amp; notes</a> reports the campaign, and the <a href="https://github.com/microprediction/skaters">skaters</a> library implements the operator with its guards and certificates.</p>
+  <p class="note">On 572 economic series the <a href="/papers/grammar/grammar.pdf">grammar paper</a> runs the same three chains with the full grammar. Refitting through the map beats stopping at it on average, by 0.038 nats of log score and 3.2% of the mean per-series CRPS, though on the median series it is a coin flip. It beats the same refit without the map by 0.65 nats, and wins on CRPS for 97% of series. The frontier paper&rsquo;s matched-predictor grid is a different experiment, and there scale-normalized empirical pooling is best under CRPS. The <a href="https://github.com/microprediction/skaters">skaters</a> library implements the operator with its guards and certificates.</p>
 
   <div class="prevnext">
     <a href="29-just-a-transform.html">&larr; Just a transform</a>
