@@ -378,22 +378,25 @@ with density $h_{\mathrm{sym}}(z)=\tfrac12(p_R(z)+p_R(-z))$. The same computatio
 adds $\KLop(P_R\,\|\,H_{\mathrm{sym}})\le\log 2$ for the discarded sign.
 \end{remark}
 
-\begin{remark}[Set loss, level by level]\label{rem:setloss}
-For a discrete outcome the identity also holds for prediction sets, one coverage level at a time.
-\citet{zhang2026} score a set $\Gamma$ by $\ell_\lambda(Y,\Gamma)=|\Gamma|+\lambda^{-1}\mathbf
-1\{Y\notin\Gamma\}$, whose Bayes set is $\{y:p(y\given X)\ge\lambda\}$, and define a conformal mutual
-information $I_\lambda$ and a divergence $D_\lambda$ from it. Because the set loss is linear in the
-law of $Y$, a frozen predictor that acts on the estimated pooled law $\widehat G_\kappa$ for every
-input has excess set loss over the oracle equal to
+\begin{remark}[Set loss, cutoff by cutoff]\label{rem:setloss}
+For a discrete outcome the identity also holds for prediction sets, one probability cutoff at a
+time. \citet{zhang2026} score a set $\Gamma$ by $\ell_\lambda(Y,\Gamma)=|\Gamma|+\lambda^{-1}\mathbf
+1\{Y\notin\Gamma\}$ for a cutoff $\lambda\in(0,1]$, whose Bayes set is $\{y:p(y\given X)\ge\lambda\}$,
+and define from it a conformal mutual information $I_\lambda$ and a divergence $D_\lambda$. Let the
+score $A(x,\cdot)$ be one-to-one on the finite outcome set, so a set of scores pulls back to a set of
+outcomes of the same size and the same coverage. A frozen scheme at cutoff $\lambda$ uses the pulled-back
+set $\{y:\widehat g_\kappa(A(x,y))\ge\lambda\}$. Its excess set loss over the oracle is then
 \[
-I_\lambda(X;Y\given\kappa)\;+\;\E_\kappa D_\lambda\big(G_\kappa\,\|\,\widehat G_\kappa\big)
+I_\lambda(W;X\given\kappa)\;+\;\E_\kappa D_\lambda\big(G_\kappa\,\|\,\widehat G_\kappa\big)
 \]
-at every $\lambda\in(0,1]$, and calibration moves only the second term. Integrating over $\lambda$
-returns Proposition~\ref{prop:floor}: $\int_0^1 I_\lambda\,d\lambda$ is the Shannon information
-\citep[Theorem 1]{zhang2026}, and $\int_0^1 D_\lambda\,d\lambda=\KLop(G_\kappa\,\|\,\widehat G_\kappa)$ by
-the same calculation, in the tradition of \citet{schervish1989}. So the log-score floor is the sum
-over coverage levels of what the frozen sets lose in size and coverage at each level, and a scheme
-calibrated at one level sees one slice of it. The identities are checked in
+at every cutoff, and at a fixed cutoff calibration moves only the second term. Integrating over
+$\lambda$ returns Proposition~\ref{prop:floor}: $\int_0^1 I_\lambda\,d\lambda$ is the Shannon
+information \citep[Theorem 1]{zhang2026}, and $\int_0^1 D_\lambda\,d\lambda=\KLop(G_\kappa\,\|\,\widehat
+G_\kappa)$ by the same calculation, in the tradition of \citet{schervish1989}. So the log-score floor
+is the integral over cutoffs of what the frozen sets lose in size and coverage at each cutoff. The
+cutoff is not the nominal coverage level. A conformal set at level $1-\alpha$ corresponds to a
+data-dependent cutoff, and sees one slice of the integral. The identities, including an example
+where the outcome carries information about the input but the score does not, are checked in
 \texttt{check\_setloss.py}.
 \end{remark}
 
@@ -584,11 +587,12 @@ the scores, not reasons to stop at the pooled law.
 
 That calibration alone does not establish forecasting skill is older than conformal
 prediction. Calibration in the sense of \citet{dawid1982} can be achieved, approximately and
-asymptotically, by randomized forecasts against any sequence of outcomes \citep{fostervohra1998}, any test that the true forecaster passes can also be passed
-by one who knows nothing \citep{sandroni2003}, and \citet{fishelson2026} calibrate forecasts of
-many outcomes at once using nothing but past outcomes. The identity of Section~\ref{sec:floor}
-prices the same fact for conformal schemes, as the forecastability that calibration leaves
-unexploited.
+asymptotically, by randomized forecasts against any sequence of outcomes \citep{fostervohra1998}.
+In a finite-horizon prequential setting, an uninformed randomized forecaster can pass, with high
+probability, any given test that accepts truthful forecasts whatever the data-generating law
+\citep{sandroni2003}. \citet{fishelson2026} calibrate forecasts of many outcomes at once using
+nothing but past outcomes. The identity of Section~\ref{sec:floor} prices the same fact for
+conformal schemes, as the forecastability that calibration leaves unexploited.
 
 Training a neural network stops at an epoch chosen on validation evidence. The
 conformal recipe stops at its empirical map with no such evidence, and the census of
