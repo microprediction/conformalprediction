@@ -563,6 +563,14 @@ average inflates the threshold for classical testing-power reasons
 \citep{li1989honest,low1997nonparametric,cai2004adaptation}. They are reasons to pool
 the scores, not reasons to stop at the pooled law.
 
+That calibration alone does not establish forecasting skill is older than conformal
+prediction. Calibration in the sense of \citet{dawid1982} can be achieved against any sequence
+of outcomes \citep{fostervohra1998}, any test that the true forecaster passes can also be passed
+by one who knows nothing \citep{sandroni2003}, and \citet{fishelson2026} calibrate forecasts of
+many outcomes at once using nothing but past outcomes. The identity of Section~\ref{sec:floor}
+prices the same fact for conformal schemes, as the forecastability that calibration leaves
+unexploited.
+
 Training a neural network stops at an epoch chosen on validation evidence. The
 conformal recipe stops at its empirical map with no such evidence, and the census of
 Appendix~\ref{sec:count} shows the stop is near universal, so we call it \emph{cultural}. One likely reason is
@@ -781,9 +789,15 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
   correlation counterexamples. SSRN working paper 7456178.
 \bibitem[Cover and Thomas(2006)]{cover2006elements} Cover, T.~M. and Thomas,
   J.~A. (2006). \emph{Elements of Information Theory}, 2nd edition. Wiley.
+\bibitem[Dawid(1982)]{dawid1982} Dawid, A.~P. (1982). The well-calibrated Bayesian.
+  \emph{Journal of the American Statistical Association} 77(379), 605--610.
 \bibitem[DelSole(2004)]{delsole2004} DelSole, T. (2004). Predictability and
   information theory. Part I: Measures of predictability. \emph{Journal of the
   Atmospheric Sciences} 61(20), 2425--2440.
+\bibitem[Fishelson and Mohri(2026)]{fishelson2026} Fishelson, M. and Mohri, M. (2026).
+  High-dimensional online calibration from harmonic weights. arXiv:2610.07740.
+\bibitem[Foster and Vohra(1998)]{fostervohra1998} Foster, D.~P. and Vohra, R.~V. (1998).
+  Asymptotic calibration. \emph{Biometrika} 85(2), 379--390.
 \bibitem[Gibbs and Cand\`es(2021)]{gibbs2021adaptive} Gibbs, I. and Cand\`es,
   E. (2021). Adaptive conformal inference under distribution shift.
   \emph{NeurIPS} 34.
@@ -824,6 +838,8 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
 \bibitem[R\"ugamer et al.(2023)]{rugamer2023} R\"ugamer, D., et al. (2023).
   Probabilistic autoregressive transformation models. \emph{Statistics and
   Computing}.
+\bibitem[Sandroni(2003)]{sandroni2003} Sandroni, A. (2003). The reproducible properties
+  of correct forecasts. \emph{International Journal of Game Theory} 32(1), 151--159.
 \bibitem[Sesia and Romano(2021)]{sesia2021} Sesia, M. and Romano, Y. (2021).
   Conformal prediction using conditional histograms. \emph{NeurIPS} 34.
 \bibitem[Tibshirani et al.(2019)]{tibshirani2019conformal} Tibshirani, R.~J.,
