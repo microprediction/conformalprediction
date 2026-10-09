@@ -378,6 +378,28 @@ with density $h_{\mathrm{sym}}(z)=\tfrac12(p_R(z)+p_R(-z))$. The same computatio
 adds $\KLop(P_R\,\|\,H_{\mathrm{sym}})\le\log 2$ for the discarded sign.
 \end{remark}
 
+\begin{remark}[Set loss, cutoff by cutoff]\label{rem:setloss}
+For a discrete outcome the identity also holds for prediction sets, one probability cutoff at a
+time. \citet{zhang2026} score a set $\Gamma$ by $\ell_\lambda(Y,\Gamma)=|\Gamma|+\lambda^{-1}\mathbf
+1\{Y\notin\Gamma\}$ for a cutoff $\lambda\in(0,1]$, whose Bayes set is $\{y:p(y\given X)\ge\lambda\}$,
+and define from it a conformal mutual information $I_\lambda$ and a divergence $D_\lambda$. Let the
+score $A(x,\cdot)$ be one-to-one on the finite outcome set, so a set of scores pulls back to a set of
+outcomes of the same size and the same coverage. A frozen scheme at cutoff $\lambda$ uses the pulled-back
+set $\{y:\widehat g_\kappa(A(x,y))\ge\lambda\}$. Its excess set loss over the oracle is then
+\[
+I_\lambda(W;X\given\kappa)\;+\;\E_\kappa D_\lambda\big(G_\kappa\,\|\,\widehat G_\kappa\big)
+\]
+at every cutoff, and at a fixed cutoff calibration moves only the second term. Integrating over
+$\lambda$ returns Proposition~\ref{prop:floor}: $\int_0^1 I_\lambda\,d\lambda$ is the Shannon
+information \citep[Theorem 1]{zhang2026}, and $\int_0^1 D_\lambda\,d\lambda=\KLop(G_\kappa\,\|\,\widehat
+G_\kappa)$ by the same calculation, in the tradition of \citet{schervish1989}. So the log-score floor
+is the integral over cutoffs of what the frozen sets lose in size and coverage at each cutoff. The
+cutoff is not the nominal coverage level. A conformal set at level $1-\alpha$ corresponds to a
+data-dependent cutoff, and sees one slice of the integral. The identities, including an example
+where the outcome carries information about the input but the score does not, are checked in
+\texttt{check\_setloss.py}.
+\end{remark}
+
 The floor measures how the law of the score varies with the input. Whether an input
 is typical or unusual under its own marginal law does not enter, and a rare input with
 ordinary noise adds nothing to $\I(W;X\given\kappa)$. Marginal coverage also does not
@@ -563,6 +585,15 @@ average inflates the threshold for classical testing-power reasons
 \citep{li1989honest,low1997nonparametric,cai2004adaptation}. They are reasons to pool
 the scores, not reasons to stop at the pooled law.
 
+That calibration alone does not establish forecasting skill is older than conformal
+prediction. Calibration in the sense of \citet{dawid1982} can be achieved, approximately and
+asymptotically, by randomized forecasts against any sequence of outcomes \citep{fostervohra1998}.
+In a finite-horizon prequential setting, an uninformed randomized forecaster can pass, with high
+probability, any given test that accepts truthful forecasts whatever the data-generating law
+\citep{sandroni2003}. \citet{fishelson2026} calibrate forecasts of many outcomes at once using
+nothing but past outcomes. The identity of Section~\ref{sec:floor} prices the same fact for
+conformal schemes, as the forecastability that calibration leaves unexploited.
+
 Training a neural network stops at an epoch chosen on validation evidence. The
 conformal recipe stops at its empirical map with no such evidence, and the census of
 Appendix~\ref{sec:count} shows the stop is near universal, so we call it \emph{cultural}. One likely reason is
@@ -739,7 +770,7 @@ the hash covers the harness sources, the tracked diff, and the compiled core.
 The census rubric and the per-paper labels, with their quoted evidence, are in
 \texttt{census/} beside this paper, and the papers themselves are on arXiv. The
 hand-coded sample is \texttt{survey100.csv}. The exact checks of
-Section~\ref{sec:floor} are \texttt{check\_gap.py} beside this paper. Figure~\ref{fig:gap} and its value of $\I(R;X)$ come from \texttt{fig\_gap.py}. Study declarations and the fill protocol are in the \texttt{skaters}
+Section~\ref{sec:floor} are \texttt{check\_gap.py} and, for Remark~\ref{rem:setloss}, \texttt{check\_setloss.py}, beside this paper. Figure~\ref{fig:gap} and its value of $\I(R;X)$ come from \texttt{fig\_gap.py}. Study declarations and the fill protocol are in the \texttt{skaters}
 repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md}).
 
 \bibliographystyle{plainnat}
@@ -781,9 +812,15 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
   correlation counterexamples. SSRN working paper 7456178.
 \bibitem[Cover and Thomas(2006)]{cover2006elements} Cover, T.~M. and Thomas,
   J.~A. (2006). \emph{Elements of Information Theory}, 2nd edition. Wiley.
+\bibitem[Dawid(1982)]{dawid1982} Dawid, A.~P. (1982). The well-calibrated Bayesian.
+  \emph{Journal of the American Statistical Association} 77(379), 605--610.
 \bibitem[DelSole(2004)]{delsole2004} DelSole, T. (2004). Predictability and
   information theory. Part I: Measures of predictability. \emph{Journal of the
   Atmospheric Sciences} 61(20), 2425--2440.
+\bibitem[Fishelson and Mohri(2026)]{fishelson2026} Fishelson, M. and Mohri, M. (2026).
+  High-dimensional online calibration from harmonic weights. arXiv:2610.07740.
+\bibitem[Foster and Vohra(1998)]{fostervohra1998} Foster, D.~P. and Vohra, R.~V. (1998).
+  Asymptotic calibration. \emph{Biometrika} 85(2), 379--390.
 \bibitem[Gibbs and Cand\`es(2021)]{gibbs2021adaptive} Gibbs, I. and Cand\`es,
   E. (2021). Adaptive conformal inference under distribution shift.
   \emph{NeurIPS} 34.
@@ -824,6 +861,10 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
 \bibitem[R\"ugamer et al.(2023)]{rugamer2023} R\"ugamer, D., et al. (2023).
   Probabilistic autoregressive transformation models. \emph{Statistics and
   Computing}.
+\bibitem[Sandroni(2003)]{sandroni2003} Sandroni, A. (2003). The reproducible properties
+  of correct forecasts. \emph{International Journal of Game Theory} 32(1), 151--159.
+\bibitem[Schervish(1989)]{schervish1989} Schervish, M.~J. (1989). A general method for
+  comparing probability assessors. \emph{Annals of Statistics} 17(4), 1856--1879.
 \bibitem[Sesia and Romano(2021)]{sesia2021} Sesia, M. and Romano, Y. (2021).
   Conformal prediction using conditional histograms. \emph{NeurIPS} 34.
 \bibitem[Tibshirani et al.(2019)]{tibshirani2019conformal} Tibshirani, R.~J.,
@@ -836,6 +877,8 @@ repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md})
   prediction. \emph{Machine Learning} 108(3), 445--474.
 \bibitem[Xu and Xie(2023)]{xu2023spci} Xu, C. and Xie, Y. (2023). Sequential
   predictive conformal inference for time series. \emph{ICML}.
+\bibitem[Zhang and Bates(2026)]{zhang2026} Zhang, K. and Bates, S. (2026). Conformal prediction
+  sets quantify information gain: a theoretical perspective. arXiv:2610.08785.
 \end{thebibliography}
 
 \end{document}
