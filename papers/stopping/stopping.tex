@@ -110,8 +110,9 @@ and emits a transformed observation. Its inverse maps a predictive distribution 
 the transformed observation back to one for the original. Given the state, the
 forward function is a strictly increasing change of variables, so predictive
 densities pull back exactly, Jacobians included. A forecaster is a \emph{chain} of
-transforms followed by a \emph{leaf}, a predictive law for whatever the last
-transform emits. Table~\ref{tab:transforms} lists the transforms of the
+transforms followed by a \emph{leaf}, a predictive law for whatever the last transform emits.
+
+Table~\ref{tab:transforms} lists the transforms of the
 \texttt{skaters} library in which that grammar is implemented. Every one of them
 is invertible given its state, and a chain may stack any of them in any order.
 
@@ -154,6 +155,8 @@ so it is not a transform. \citet{cotton2026grammar} repairs it by interpolation.
 $r_{(1)}<\dots<r_{(n)}$ be the order statistics of the scores, give the $i$-th knot
 the probability $i/(n+1)$, which is the left limit of $E_n$ at $r_{(i)}$ and the
 exact probability that a new exchangeable score falls at or below $r_{(i)}$, and set $z_{(i)}=\Phi^{-1}\big(i/(n+1)\big)$.
+
+
 The repaired map $m_n$ is any strictly increasing bijection of the real line with
 $m_n(r_{(i)})=z_{(i)}$ for $i=1,\dots,n$, rebuilt as new scores arrive.
 Appendix~\ref{app:repair} gives the interpolation and tails used here. The repair
@@ -180,8 +183,9 @@ of calibration and test scores is what the coverage argument uses. The schemes
 covered by the proposition are those whose score is, for each $x$, a strictly
 increasing absolutely continuous bijection in $y$: signed-residual and
 normalized signed-residual schemes, and predictive systems built on invertible
-score transformations. Folded scores such as the absolute residual
-$|y-\widehat\mu(x)|$ and quantile-regression scores are not bijections in $y$.
+score transformations. 
+
+Folded scores such as the absolute residual $|y-\widehat\mu(x)|$ and quantile-regression scores are not bijections in $y$.
 Remark~\ref{rem:conditional} treats the absolute residual in its symmetric
 reading. Quantile-regression scores need a separate treatment. The empirical
 arms in Section~\ref{sec:price} are of the covered type.
@@ -245,8 +249,9 @@ against the conditional oracle decomposes exactly as
 \;+\; \E_{\kappa}\,\KLop\!\big(G_{\kappa}\,\|\,\widehat G_{\kappa}\big),
 \]
 where $\I(W;X\given\kappa)$ is the conditional mutual information between score
-and input given the stratum. We call it the conformal information gap, or the floor. (Unconditionally, take the outer expectation over
-the calibration sample. The first term is unchanged.) The second term is
+and input given the stratum. We call it the conformal information gap, or the floor. Unconditionally, take the outer expectation over the calibration sample; the first term is unchanged.
+
+The second term is
 nonnegative and is the only part any calibration choice, estimator, quantile
 convention, randomization, or level, can affect. At a fixed calibration sample
 it vanishes if and only if $\widehat G_\kappa=G_\kappa$ almost everywhere.
@@ -372,8 +377,9 @@ Density-based, histogram, localized and quantile constructions
 likewise lower the floor by what their conditioning retains. Localized calibration,
 which weights calibration scores by their nearness to the test input, lies outside the
 proposition, since its emitted law depends on the input beyond a fixed stratum. As the
-localization sharpens it can approach the conditional law and remove the floor. It is a
-change of stratification, and the proposition applies to each fixed one. The folded absolute residual can be read as a symmetric predictive
+localization sharpens it can approach the conditional law and remove the floor. It is a change of stratification, and the proposition applies to each fixed one.
+
+The folded absolute residual can be read as a symmetric predictive
 with density $h_{\mathrm{sym}}(z)=\tfrac12(p_R(z)+p_R(-z))$. The same computation then
 adds $\KLop(P_R\,\|\,H_{\mathrm{sym}})\le\log 2$ for the discarded sign.
 \end{remark}
@@ -389,7 +395,9 @@ set $\{y:\widehat g_\kappa(A(x,y))\ge\lambda\}$. Its excess set loss over the or
 \[
 I_\lambda(W;X\given\kappa)\;+\;\E_\kappa D_\lambda\big(G_\kappa\,\|\,\widehat G_\kappa\big)
 \]
-at every cutoff, and at a fixed cutoff calibration moves only the second term. Integrating over
+at every cutoff, and at a fixed cutoff calibration moves only the second term.
+
+Integrating over
 $\lambda$ returns Proposition~\ref{prop:floor}: $\int_0^1 I_\lambda\,d\lambda$ is the Shannon
 information \citep[Theorem 1]{zhang2026}, and $\int_0^1 D_\lambda\,d\lambda=\KLop(G_\kappa\,\|\,\widehat
 G_\kappa)$ by the same calculation, in the tradition of \citet{schervish1989}. So the log-score floor
@@ -424,7 +432,7 @@ The base forecaster, \texttt{laplace}, runs roughly sixty candidate chains in
 parallel, combines their predictive densities with likelihood weights updated
 every observation, splices generalized Pareto tails onto the extremes, and
 scores its own probability integral transforms online. It ranks first in the
-public benchmark this study extends, and its own terminal leaf is tuned to
+public benchmark extended here, and its own terminal leaf is tuned to
 CRPS.
 
 We compare two arms. Both use the same object, the kernel-smoothed pooled
@@ -436,8 +444,8 @@ map with and without a model after it.
   location, and its shape is replaced by the pooled law of the forecaster's own
   recent errors. That is the quoted forecast, and nothing is fitted to it
   afterwards. It is the online counterpart of the schemes of
-  Proposition~\ref{prop:floor}. Its location model and residual window evolve, so
-  the proposition does not identify its deficit as a fixed floor.
+  Proposition~\ref{prop:floor}. Its location model and residual window evolve, so the proposition does not identify its deficit as a fixed floor.
+
 \item[compose-after.] The pooled law moves inside the forecaster. In each
   candidate chain $c$ it replaces the terminal leaf, so it describes that
   chain's own residual stream $R^c_t$ instead of the final error. Write
@@ -447,8 +455,9 @@ map with and without a model after it.
   \widehat F_t \;=\; \sum_c w^c_t \,\big(T^c_t\big)^{-1}_{\#}\widehat G^c_t ,
   \]
   where the weight $w^c_t$ is updated every observation from the density chain
-  $c$ assigned to the outcome. The mixture is therefore a model fitted to the
-  output of the empirical maps. Because every chain ends in an empirical map,
+  $c$ assigned to the outcome.
+
+  The mixture is therefore a model fitted to the output of the empirical maps. Because every chain ends in an empirical map,
   the weights choose between chains and never between the empirical map and a
   parametric leaf. This arm has no coverage certificate.
 \end{description}
@@ -469,7 +478,9 @@ employment and similar), non-price, with two tiers. The \emph{breadth} tier
 uses 256 observations of history per forecast origin and every qualifying
 series: 17{,}364. The \emph{deep} tier uses 1{,}024 observations and series with at
 least 1{,}100, so the 400-residual window is a strict subset of the history it
-could have used: about 6{,}400 series. Each series has twelve rolling origins,
+could have used: about 6{,}400 series.
+
+Each series has twelve rolling origins,
 and we forecast at horizons 1, 6 and 12. We score each forecast by its log density, in nats. A
 deficit of $0.15$ nats means the realized outcomes receive $e^{0.15}\approx1.16$
 times less probability per observation. We also compute CRPS, the continuous ranked
@@ -490,8 +501,9 @@ on a control corpus of synthetic iid draws (Gaussian, Student-$t_3$, Laplace). T
 series have no state to condition on, so what a constrained arm loses on them is
 estimation overhead alone: the price of a 41-node empirical law instead of a
 parametric scale. We subtract that overhead from every headline number below and call
-the result \emph{null-control-adjusted}. The adjustment is a gauge, not an exact
-correction. The estimation term $\KLop(G\,\|\,\widehat G)$ depends on $G$, and three
+the result \emph{null-control-adjusted}.
+
+The adjustment is a gauge, not an exact correction. The estimation term $\KLop(G\,\|\,\widehat G)$ depends on $G$, and three
 simple iid laws need not match economic residuals. The base forecaster also adapts,
 so even on iid data its residuals are not exactly state-independent. Without the
 adjustment the breadth-tier deficits are 0.51, 0.61 and 0.59 nats at horizons 1, 6
@@ -646,8 +658,9 @@ among candidates.
 
 We classified the literature instead of relying on an impression of it. We took every arXiv paper with ``conformal prediction'' in the title as of
 20 August 2026, 686 records. Six concern molecular or protein conformation and were
-matched by the title search in error, which leaves the remaining 680 papers. Language-model
-readers (Claude Sonnet) coded each paper against a written rubric, read its body in
+matched by the title search in error, which leaves the remaining 680 papers.
+
+Language-model readers (Claude Sonnet) coded each paper against a written rubric, read its body in
 full, and recorded the sentence that places it.\footnote{Two readers, each blind to the other, read the body of
 every paper from its first line to its reference list. The boundaries between
 stopping, replacing and consuming involve judgment, and the two readers disagree on
@@ -687,8 +700,7 @@ feature. None fits a further law on the transformed scale and carries it back as
 forecast. Sixty-two of the 100 are in the census, and the two codings agree on 61 of
 them.
 
-The argument of this paper does not depend on the exact count. We report it because the uniformity it shows is alarming, highlighting a potential blind spot that
-might be unique to the conformal prediction community. Outside conformal prediction the composing move is routine. The normal quantile
+The argument does not depend on the exact count. The count is reported because the uniformity is nearly complete, and that uniformity is itself a finding about the field. Outside conformal prediction the composing move is routine. The normal quantile
 transform in hydrological forecasting \citep{bogner2012}, copula time-series
 models \citep{chenfan2006}, and autoregressive transformation models
 \citep{rugamer2023} all apply an empirical marginal map and keep modelling in
@@ -722,6 +734,7 @@ so
 \[
 \Pr\{m_n(R_{n+1})\le z_{(i)}\}\;=\;\frac{i}{n+1},\qquad i=1,\dots,n .
 \]
+
 Write $U=\Phi(m_n(R_{n+1}))$. For $u$ between consecutive grid levels $i/(n+1)$ and
 $(i+1)/(n+1)$, the display and monotonicity of the distribution function give
 \[
@@ -762,15 +775,14 @@ $\widehat G_\kappa$ and the second term. \hfill$\square$
 
 Every constant regenerates from a tidy store keyed
 \texttt{(task, source, dataset, uid, model, horizon, repr, metric, value)};
-the script \texttt{constants.py} beside this paper's source performs the
-regeneration and fails if the manuscript disagrees with the store.
+the script \texttt{constants.py} in the source directory performs the regeneration and fails if the manuscript disagrees with the store.
 Breadth tier rows are tagged \texttt{forecast:CONFB:ctx256:\ldots/m6+\textit{hash}},
 deep tier \texttt{CONF:ctx1024}, controls \texttt{CONFNB}/\texttt{CONFNULL};
 the hash covers the harness sources, the tracked diff, and the compiled core.
-The census rubric and the per-paper labels, with their quoted evidence, are in
-\texttt{census/} beside this paper, and the papers themselves are on arXiv. The
+
+The census rubric and the per-paper labels, with their quoted evidence, are in \texttt{census/} in the source directory, and the papers themselves are on arXiv. The
 hand-coded sample is \texttt{survey100.csv}. The exact checks of
-Section~\ref{sec:floor} are \texttt{check\_gap.py} and, for Remark~\ref{rem:setloss}, \texttt{check\_setloss.py}, beside this paper. Figure~\ref{fig:gap} and its value of $\I(R;X)$ come from \texttt{fig\_gap.py}. Study declarations and the fill protocol are in the \texttt{skaters}
+Section~\ref{sec:floor} are \texttt{check\_gap.py} and, for Remark~\ref{rem:setloss}, \texttt{check\_setloss.py}, in the source directory. Figure~\ref{fig:gap} and its value of $\I(R;X)$ come from \texttt{fig\_gap.py}. Study declarations and the fill protocol are in the \texttt{skaters}
 repository (\texttt{surrogate/bench/studies.py}, \texttt{skills/run-a-study.md}).
 
 \bibliographystyle{plainnat}
