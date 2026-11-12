@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<title>Conformal Seasonal Pools: one good tool</title>
+<meta name="description" content="Why Conformal Seasonal Pools wins on series that repeat, why one tool loses on series that do not, and why conformal calibration is a transform, not a basis for time-series modelling." />
+<meta property="og:title" content="Conformal Seasonal Pools: one good tool" />
+<meta property="og:description" content="CSP wins where a series repeats itself. Elsewhere one tool is not enough, and stopping at the empirical law has a measured price." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://conformalprediction.net/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://conformalprediction.net/og.png" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/index.html">Conformal&nbsp;Prediction</a>
+    <nav>
+      <a href="/index.html">Demonstrations</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Insights &#9662;</span>
+        <span class="drop">
+          <a href="/demos/14-four-readings.html">The Information Gap</a>
+          <a href="/demos/18-conformal-fan.html">The conformal fan</a>
+          <a href="/demos/20-coverage-vs-price.html">Same coverage, different price</a>
+          <a href="/demos/21-herding-slots.html">Moving the balls, moving the slots</a>
+          <a href="/demos/23-steinitz-balancing.html">Steinitz balancing</a>
+          <a href="/demos/24-balanced-placements.html">Balanced placements</a>
+          <a href="/demos/29-just-a-transform.html">Just a transform</a>
+          <a href="/demos/30-past-the-stop.html">Past the stop</a>
+          <a href="/demos/31-two-worlds.html">Two worlds</a>
+          <a href="/homogenization.html">Homogenization</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Time series &#9662;</span>
+        <span class="drop">
+          <a href="/timeseries.html">The coverage games</a>
+          <a href="/timeseries-conditional.html">Conditional coverage &amp; sharpness</a>
+          <a href="/demos/19-dependence-tax.html">The dependence tax</a>
+          <a href="/demos/22-timeseries-fan.html">The time-series fan</a>
+          <a href="/demos/05-drift-timeseries.html">Drift</a>
+        </span>
+      </span>
+      <a href="/papers/">Papers</a>
+      <a href="/posts.html">Posts</a>
+      <span class="menu" tabindex="0"><span class="menu-label">Reviews &#9662;</span>
+        <span class="drop">
+          <a href="/reviews.html">All reviews</a>
+          <a href="/conformal-correlation.html">Conformal correlation</a>
+          <a href="/conformal-forecasting-rnn.html">Conformal forecasting RNNs</a>
+          <a href="/conformal-set-size.html">Set size as uncertainty</a>
+          <a href="/conformal-uncertainty-bounds.html">Certified uncertainty bounds</a>
+          <a href="/conformal-relational.html">Relational conformal prediction</a>
+          <a href="/csp.html">Conformal seasonal pools</a>
+          <a href="/conformal-adaptive-logging.html">Counterfactual online conformal</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Literature &#9662;</span>
+        <span class="drop">
+          <a href="/literature.html">Bibliography</a>
+          <a href="/map.html">The map</a>
+          <a href="/connections.html">Connections</a>
+          <a href="/applications.html">Applications</a>
+          <a href="/blogs.html">Other sites &amp; blogs</a>
+        </span>
+      </span>
+      <span class="menu" tabindex="0"><span class="menu-label">Code &#9662;</span>
+        <span class="drop">
+          <a href="/recipes.html">Recipes &amp; audits</a>
+          <a href="/benchmark.html">Worked example</a>
+          <a href="/alternatives.html">Alternatives</a>
+        </span>
+      </span>
+      <a href="/faq.html">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <p class="tag">Review</p>
+  <h1>Conformal Seasonal Pools: one good tool</h1>
+  <p class="subtitle">Conformal Seasonal Pools (CSP) forecasts a series by drawing from its own past
+  at the same phase of the cycle, around a seasonal-naive forecast. It is training-free, fast and well
+  calibrated where a series repeats itself. This page explains where it wins and where it cannot, and
+  what that says about conformal prediction as a basis for time-series modelling.</p>
+
+  <h2>The method</h2>
+
+  <p>Valery Manokhin's CSP
+  (<a href="https://arxiv.org/abs/2605.03789">arXiv:2605.03789</a>,
+  <a href="https://github.com/valeman/csp-forecaster">csp-forecaster</a>) forms its predictive from
+  two pools: past values from the same phase of the cycle (the same hour of the day, the same week of
+  the year), and signed residuals around a seasonal-naive forecast. It mixes the two, weights recent
+  history more, and samples. Nothing is trained.</p>
+
+  <h2>Common sense: why it wins where it wins</h2>
+
+  <p>Take hourly electricity demand. At 6&nbsp;pm tomorrow, demand will look a lot like it did at
+  6&nbsp;pm today and at 6&nbsp;pm last week. The series returns to roughly the same level at the same
+  time every day. For a series like that, a good summary of what 6&nbsp;pm will bring is the spread
+  of what 6&nbsp;pm has brought before. That is exactly what CSP samples.</p>
+
+  <p>No model is needed to learn the cycle, because the pool already contains it, and calibration comes
+  almost for free because the pool is made of the very outcomes being forecast. On the strongly seasonal
+  M4 hourly series, CSP beat <code>laplace</code> by CRPS on most series in our July comparison, and
+  <code>laplace</code> adopted a seasonal anchor as a result. Where the past at the same phase is a good
+  sample of the future, CSP is hard to beat.</p>
+
+  <h2>Common sense: why one tool is not enough</h2>
+
+  <p>Most series do not return to the same level every day. An unemployment rate drifts for years,
+  then jumps. A spread is calm for months, then volatile for weeks. An index trends. For series like
+  these, the empirical distribution of past values, or of past residuals around a seasonal naive, is a
+  description of a regime that has moved on. The pool is stale exactly when the forecast matters.</p>
+
+  <p>A general forecaster needs more than one tool: something to track a moving level, something to
+  follow a trend, something for a scale that changes, something for mean reversion, something for
+  heavy tails. <code>laplace</code> carries about sixty such chains of transforms and lets the data
+  weight them; the <a href="https://skaters.microprediction.org/guide.html">skaters methodology
+  guide</a> describes each one. The
+  <a href="https://skaters.microprediction.org/demos/playground.html">playground</a> lets you
+  generate a series (trending, seasonal, shifting) and watch, live, which transform chains the
+  ensemble leans on as its character changes. On FRED economic
+  series, <code>laplace</code> beat CSP on 77 to 99 percent of series by CRPS and 90 to 100 percent by
+  log score in the same July comparison, across every corpus and every CSP configuration tried.</p>
+
+  <p>The empirical distribution is one of those tools, not a rival to them. With only that tool, the
+  forecaster wins where the series repeats and loses where it does not.</p>
+
+  <h2>Conformal prediction is (sometimes) early stopping</h2>
+
+  <p>CSP's pools are conformal in spirit: the forecast is read off an empirical distribution of past
+  outcomes or past scores. <a href="/papers/stopping/stopping.pdf"><em>Marginally Useful: Conformal
+  Prediction Is Early Stopping at an Information Price</em></a> studies what that step costs.</p>
+
+  <p>Viewed as a map, the conformal step is a univariate transform in need of repair. In raw form it is
+  a step function with no inverse and no density. Once repaired by interpolation it is an invertible
+  transform, and it can sit anywhere in a chain alongside subtracting a running mean, dividing by a
+  running scale or differencing.</p>
+
+  <p>Whether conformal prediction is early stopping depends on what comes after it. If the conformal
+  map is the last step, so that the forecast is the pooled empirical law of the scores, modelling has
+  stopped there. If a model is fitted to the map's output, it has not. Stopping is the norm: of 623
+  papers proposing conformal methods surveyed there, only two go past the map.</p>
+
+  <p>On 17,364 economic series, stopping at the pooled law costs about 0.4 nats per observation one step
+  ahead, and interval coverage does not register the loss. Composing a model after the map recovers about
+  a third of it.</p>
+
+  <p>Depending on the construction, the stop is an information gambit: the score and stratification,
+  chosen before any calibration data is seen, decide what information about the input survives into
+  the forecast. The paper's conformal information gap identity prices what they discard, and no amount
+  of calibration wins it back. The paper calls this a permanent structural information sacrifice.</p>
+
+  <h2>So: a transform, not a basis</h2>
+
+  <p>The empirical distribution, conformal calibration included, is a useful transform like all the
+  others. CSP shows how useful it is on series that repeat. It is not, by itself, a basis for general
+  time-series modelling: that needs the other tools too, and it needs modelling to continue past the
+  conformal step when there is something left to model.</p>
+
+  <div class="note">
+    <p>Results here are from the July 2026 comparison
+    (<a href="https://github.com/microprediction/skaters/tree/main/benchmarks/comparisons/laplace-vs-csp">laplace
+    vs CSP</a>), which used the author's package installed from GitHub as its README directs. A rerun on
+    about 18,800 series under the same protocol as the foundation models will appear on
+    <a href="https://foundationalprediction.com">foundationalprediction.com</a>.</p>
+  </div>
+
+  <div class="prevnext">
+    <a href="/reviews.html">&larr; Reviews</a>
+    <span class="spacer"></span>
+    <a href="/papers/">Papers &rarr;</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site"><div class="wrap"><span>Authored by <a href="https://home.microprediction.org/">Peter Cotton</a>. Corrections welcome by <a href="https://github.com/microprediction/conformalprediction/issues">issue</a> or <a href="https://github.com/microprediction/conformalprediction/pulls">PR</a>.</span></div></footer>
+</body>
+</html>
