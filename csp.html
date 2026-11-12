@@ -171,7 +171,7 @@
 
   <table class="bench">
     <thead><tr><th>panel</th><th>series</th><th>CSP better / neither / laplace better</th>
-      <th>median log-score gap (nats)</th><th>CRPS ratio, CSP to laplace</th></tr></thead>
+      <th>median log-score gap (nats)</th><th>median CRPS ratio, CSP to laplace</th></tr></thead>
     <tbody>
       <tr><td>M4 hourly</td><td>414</td><td>144 / 251 / 19</td><td>+0.057</td><td>0.978</td></tr>
       <tr><td>FRED weekly</td><td>3,013</td><td>458 / 1,187 / 1,368</td><td>&minus;0.288</td><td>1.165</td></tr>
@@ -180,9 +180,12 @@
     </tbody>
   </table>
 
-  <p>CSP is better on M4 hourly, the strongly seasonal series it was built for, though by a modest margin.
-  Elsewhere <code>laplace</code> is better on most series by CRPS and log score alike. That is the
-  pattern the common-sense sections predict.</p>
+  <p>The gap and the CRPS ratio are medians over series of each series' own figure, so a CRPS ratio above
+  1 means <code>laplace</code> has the lower CRPS on more than half the series. CSP is better on M4
+  hourly, the strongly seasonal series it was built for, though by a modest margin. On the FRED panels
+  <code>laplace</code> is better on CRPS for most series, and on log score the per-series tests favour it
+  on far more series than CSP: the rest are too close to call. That is the pattern the common-sense
+  sections predict.</p>
 
   <h2>So: a transform, not a basis</h2>
 
