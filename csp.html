@@ -156,6 +156,34 @@
   the forecast. The paper's conformal information gap identity prices what they discard, and no amount
   of calibration wins it back. The paper calls this a permanent structural information sacrifice.</p>
 
+  <h2>Scoring the whole distribution</h2>
+
+  <p>A comparison of CSP with another forecaster can be scored by the Winkler (interval) score at 95%.
+  It is a proper score, but it judges a single interval, the central 95%, which is exactly the interval
+  a conformal method is built to calibrate. That makes it a test of the one thing CSP is designed to get
+  right. A predictive distribution makes claims at every level. CRPS, which integrates over all quantile
+  levels, and the log score check all of them.</p>
+
+  <p>Counting datasets won has a second problem: it gives a 30-series dataset the same weight as a
+  3,000-series one. The table below is per series instead. Each series is scored one step ahead over a
+  rolling test window, and a Diebold&ndash;Mariano test on its log scores decides whether CSP or
+  <code>laplace</code> is better on that series, or neither.</p>
+
+  <table class="bench">
+    <thead><tr><th>panel</th><th>series</th><th>CSP better / neither / laplace better</th>
+      <th>median log-score gap (nats)</th><th>CRPS ratio, CSP to laplace</th></tr></thead>
+    <tbody>
+      <tr><td>M4 hourly</td><td>414</td><td>144 / 251 / 19</td><td>+0.057</td><td>0.978</td></tr>
+      <tr><td>FRED weekly</td><td>3,013</td><td>458 / 1,187 / 1,368</td><td>&minus;0.288</td><td>1.165</td></tr>
+      <tr><td>FRED daily, economic</td><td>2,180</td><td>57 / 397 / 1,726</td><td>&minus;0.438</td><td>1.210</td></tr>
+      <tr><td>FRED daily, prices</td><td>7,680</td><td>4 / 2,817 / 4,859</td><td>&minus;0.128</td><td>1.138</td></tr>
+    </tbody>
+  </table>
+
+  <p>CSP is better on M4 hourly, the strongly seasonal series it was built for, though by a modest margin.
+  Elsewhere <code>laplace</code> is better on most series by CRPS and log score alike. That is the
+  pattern the common-sense sections predict.</p>
+
   <h2>So: a transform, not a basis</h2>
 
   <p>The empirical distribution, conformal calibration included, is a useful transform like all the
@@ -164,10 +192,13 @@
   conformal step when there is something left to model.</p>
 
   <div class="note">
-    <p>Results here are from the July 2026 comparison
+    <p>The table is from the November 2026 run of the canonical skaters study, with CSP from the
+    author's package (csp-forecaster v0.2.0, installed from GitHub as its README directs, default
+    configuration, refit at every step) against the current <code>laplace</code>. The monthly FRED panel
+    is still being scored and will be added. The percentages in the common-sense sections are from the
+    earlier July comparison
     (<a href="https://github.com/microprediction/skaters/tree/main/benchmarks/comparisons/laplace-vs-csp">laplace
-    vs CSP</a>), which used the author's package installed from GitHub as its README directs. A rerun on
-    about 18,800 series under the same protocol as the foundation models will appear on
+    vs CSP</a>). Full results will appear on
     <a href="https://foundationalprediction.com">foundationalprediction.com</a>.</p>
   </div>
 
