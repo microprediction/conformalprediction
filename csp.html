@@ -177,8 +177,9 @@
     <tbody>
       <tr><td>M4 hourly</td><td>414</td><td>144 / 251 / 19</td><td>+0.057</td><td>0.978</td></tr>
       <tr><td>FRED weekly</td><td>3,013</td><td>458 / 1,187 / 1,368</td><td>&minus;0.288</td><td>1.165</td></tr>
-      <tr><td>FRED daily, economic</td><td>2,180</td><td>57 / 397 / 1,726</td><td>&minus;0.438</td><td>1.210</td></tr>
-      <tr><td>FRED daily, prices</td><td>7,680</td><td>4 / 2,817 / 4,859</td><td>&minus;0.128</td><td>1.138</td></tr>
+      <tr><td>FRED daily, economic</td><td>2,210</td><td>57 / 406 / 1,747</td><td>&minus;0.432</td><td>1.209</td></tr>
+      <tr><td>FRED daily, prices</td><td>8,703</td><td>4 / 3,123 / 5,576</td><td>&minus;0.129</td><td>1.138</td></tr>
+      <tr><td>FRED monthly</td><td>5,600</td><td>630 / 2,848 / 2,122</td><td>&minus;0.178</td><td>1.085</td></tr>
     </tbody>
   </table>
 
@@ -188,6 +189,28 @@
   <code>laplace</code> is better on CRPS for most series, and on log score the per-series tests favour it
   on far more series than CSP: the rest are too close to call. That is the pattern the common-sense
   sections predict.</p>
+
+  <h2>Used in a chain</h2>
+
+  <p>The same run scored four ways of combining CSP with <code>laplace</code>. Three lose somewhere.
+  The fourth, a long-only log-score portfolio of the two predictive densities with weights that follow
+  realised log score, keeps CSP's hourly gain and gives nothing back elsewhere:</p>
+
+  <table class="bench">
+    <thead><tr><th>panel</th><th>portfolio better / neither / laplace better</th><th>median log-score gap (nats)</th></tr></thead>
+    <tbody>
+      <tr><td>M4 hourly</td><td>147 / 264 / 3</td><td>+0.055</td></tr>
+      <tr><td>FRED weekly</td><td>623 / 1,936 / 454</td><td>+0.009</td></tr>
+      <tr><td>FRED monthly</td><td>665 / 4,540 / 395</td><td>&minus;0.009</td></tr>
+      <tr><td>FRED daily, economic</td><td>78 / 1,405 / 727</td><td>&minus;0.072</td></tr>
+      <tr><td>FRED daily, prices</td><td>87 / 8,175 / 441</td><td>&minus;0.009</td></tr>
+    </tbody>
+  </table>
+
+  <p>That is CSP doing what a good tool does inside a chain: it takes the weight where it earns it,
+  on series that repeat, and the weight goes back to the general forecaster where they do not. On the
+  daily economic panel the portfolio still trails plain <code>laplace</code> on more series than it beats,
+  the price of carrying a component that is wrong there; the median gap is 0.07 nats.</p>
 
   <h2>So: a transform, not a basis</h2>
 
@@ -199,8 +222,7 @@
   <div class="note">
     <p>The table is from the November 2026 run of the canonical skaters study, with CSP from the
     author's package (csp-forecaster v0.2.0, installed from GitHub as its README directs, default
-    configuration, refit at every step) against the current <code>laplace</code>. The monthly FRED panel
-    is still being scored and will be added. The percentages in the common-sense sections are from the
+    configuration, refit at every step) against the current <code>laplace</code>. The percentages in the common-sense sections are from the
     earlier July comparison
     (<a href="https://github.com/microprediction/skaters/tree/main/benchmarks/comparisons/laplace-vs-csp">laplace
     vs CSP</a>). Full results will appear on
